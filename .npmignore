@@ -1,0 +1,16 @@
+.vscode/
+dev/
+docs/
+docs-src/
+node_modules/
+src/
+test/
+.eleventy.cjs
+.eslintignore
+.eslintrc.json
+.prettierrc.json
+index.html
+rollup.config.js
+tsconfig.json
+web-dev-server.config.js
+web-test-runner.config.js
