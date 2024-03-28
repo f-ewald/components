@@ -1,4 +1,5 @@
 export { AnimateConfetti } from "./animate-confetti.js";
+export { PhotoGallery } from "./photo-gallery.js";
 export { RevealButton } from "./reveal-button.js";
 export { RomanNumeral } from "./roman-numeral.js";
 export { ConfirmDialog } from "./confirm-dialog.js";
