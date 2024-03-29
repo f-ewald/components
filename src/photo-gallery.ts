@@ -9,15 +9,22 @@ export class PhotoGallery extends LitElement {
     }
 
     #container {
-      width: 100%;
       background-color: aliceblue;
       height: 12rem;
+      display: flex;
+      /* flex-grow: 1; */
+      /* align-content: center; */
     }
 
     #controls {
+      z-index: 10;
       display: flex;
+      flex-grow: 1;
       justify-content: space-between;
       align-items: center;
+    }
+    #controls>a {
+      background-color: honeydew;
     }
   `;
 
@@ -25,6 +32,7 @@ export class PhotoGallery extends LitElement {
     return html`
       <div id="photoGallery">
         <div id="container">
+          <!-- <img src="/dev/picture1.jpg" /> -->
           <div id="controls">
             <a href="#previous">Previous</a>
             <a href="#next">Next</a>
