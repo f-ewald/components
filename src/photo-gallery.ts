@@ -15,7 +15,11 @@ export class PhotoGallery extends LitElement {
       display: block;
     }
 
-    #photoGallery > img {
+    figure {
+      margin: 0;
+    }
+
+    #photoGallery > figure > img {
       display: block;
       width: 100%;
     }
@@ -74,7 +78,10 @@ export class PhotoGallery extends LitElement {
     console.log(this.showControls);
     return html`
       <div id="photoGallery">
-        <img src="/dev/picture1.jpg" />
+        <figure>
+          <img src="/dev/picture1.jpg" />
+          <figcaption>A caption</figcaption>
+        </figure>
         <div ?hidden=${!this.showControls} id="controls">
           <a @click="${this._previousImage}" href="#previous">Previous</a>
           <a @click="${this._nextImage}" href="#next">Next</a>
