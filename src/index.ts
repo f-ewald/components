@@ -1,4 +1,6 @@
 export { AnimateConfetti } from "./animate-confetti.js";
+export { GalleryItem } from "./gallery-item.js";
+export { GalleryItemVariant } from "./gallery-item-variant.js";
 export { PhotoGallery } from "./photo-gallery.js";
 export { RevealButton } from "./reveal-button.js";
 export { RomanNumeral } from "./roman-numeral.js";
