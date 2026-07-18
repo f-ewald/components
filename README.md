@@ -1,136 +1,153 @@
-# &lt;drop-down> element
+# @f-ewald/components
 
-A `<drop-down>` element that shows a drop down menu with links.
+[![npm](https://img.shields.io/npm/v/@f-ewald/components)](https://www.npmjs.com/package/@f-ewald/components)
+[![license](https://img.shields.io/badge/license-BSD--3--Clause-blue)](./LICENSE)
 
-# Development
+A collection of self-contained [Lit](https://lit.dev) web components sharing a
+Tailwind-inspired design token system. Every component is individually
+importable and ships its own TypeScript types plus a checked-in
+[`custom-elements.json`](./custom-elements.json) manifest.
 
-## Setup
-
-Install dependencies:
-
-```bash
-npm i
-```
-
-## Build
-
-This sample uses the TypeScript compiler to produce JavaScript that runs in modern browsers.
-
-To build the JavaScript version of your component:
+## Install
 
 ```bash
-npm run build
+npm install @f-ewald/components
 ```
 
-To watch files and rebuild when the files are modified, run the following command in a separate shell:
+## Quick start
+
+Import the whole library (registers every component):
+
+```js
+import "@f-ewald/components";
+```
+
+...or import components individually — this tree-shakes everything else,
+including the `d3` dependency used only by the chart components:
+
+```js
+import "@f-ewald/components/confirm-dialog.js";
+import "@f-ewald/components/roman-numeral.js";
+```
+
+```html
+<confirm-dialog open confirm-label="Delete" cancel-label="Cancel">
+  Are you sure you want to delete this item?
+</confirm-dialog>
+<roman-numeral value="2004"></roman-numeral>
+```
+
+## Components
+
+| Component | Docs |
+| --- | --- |
+| `<address-autocomplete>` | [docs/address-autocomplete.md](./docs/address-autocomplete.md) |
+| `<animate-confetti>` | [docs/animate-confetti.md](./docs/animate-confetti.md) |
+| `<autocomplete-input>` | [docs/autocomplete-input.md](./docs/autocomplete-input.md) |
+| `<confirm-dialog>` | [docs/confirm-dialog.md](./docs/confirm-dialog.md) |
+| `<copy-link-button>` | [docs/copy-link-button.md](./docs/copy-link-button.md) |
+| `<distance-value>` | [docs/distance-value.md](./docs/distance-value.md) |
+| `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
+| `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
+| `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |
+| `<percent-bar-chart>` | [docs/percent-bar-chart.md](./docs/percent-bar-chart.md) |
+| `<price-history-chart>` | [docs/price-history-chart.md](./docs/price-history-chart.md) |
+| `<radio-cards>` | [docs/radio-cards.md](./docs/radio-cards.md) |
+| `<radio-pills>` | [docs/radio-pills.md](./docs/radio-pills.md) |
+| `<relative-time>` | [docs/relative-time.md](./docs/relative-time.md) |
+| `<reveal-button>` | [docs/reveal-button.md](./docs/reveal-button.md) |
+| `<roman-numeral>` | [docs/roman-numeral.md](./docs/roman-numeral.md) |
+| `<slide-panel>` | [docs/slide-panel.md](./docs/slide-panel.md) |
+| `<toast-notification>` | [docs/toast-notification.md](./docs/toast-notification.md) |
+| `<ui-button>` | [docs/ui-button.md](./docs/ui-button.md) |
+| `<user-avatar>` | [docs/user-avatar.md](./docs/user-avatar.md) |
+| `<weight-bar-chart>` | [docs/weight-bar-chart.md](./docs/weight-bar-chart.md) |
+
+Each doc lists the component's attributes/properties, events, slots, and the
+`--ui-*` CSS custom properties it consumes. For a machine-readable summary of
+the whole library in one file, see [`llms.txt`](./llms.txt).
+
+## Theming
+
+Components use Lit `css` with `var(--ui-*, <fallback>)` custom properties, so
+they render correctly out of the box with **zero external CSS** — every
+token has a sensible default baked in as the `var()` fallback.
+
+To retheme, override any `--ui-*` custom property on `:root` (or a closer
+ancestor):
+
+```css
+:root {
+  --ui-primary: #0ea5e9;
+  --ui-radius: 0.75rem;
+}
+```
+
+Or import the generated stylesheet as a starting point and edit it:
+
+```js
+import "@f-ewald/components/tokens.css";
+```
+
+The full token set is defined in [`src/tokens.ts`](./src/tokens.ts).
+
+## Playground / development
 
 ```bash
-npm run build:watch
+npm install
+npm run dev
 ```
 
-Both the TypeScript compiler and lit-analyzer are configured to be very strict. You may want to change `tsconfig.json` to make them less strict.
-
-## Testing
-
-This sample uses modern-web.dev's
-[@web/test-runner](https://www.npmjs.com/package/@web/test-runner) for testing. See the
-[modern-web.dev testing documentation](https://modern-web.dev/docs/test-runner/overview) for
-more information.
-
-Tests can be run with the `test` script, which will run your tests against Lit's development mode (with more verbose errors) as well as against Lit's production mode:
+Opens a live playground (`index.html`) with a rendered, hand-testable example
+of every component, plus a copy-paste usage snippet for each. Component
+sources are imported directly from `src/`, so edits hot-reload.
 
 ```bash
-npm test
+npm run build:demo   # static build of the playground, into demo-dist/
 ```
 
-For local testing during development, the `test:dev:watch` command will run your tests in Lit's development mode (with verbose errors) on every change to your source files:
+## Development commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Vite playground with HMR. |
+| `npm run build` | Compile `src/` with `tsc` into `dist/`, and generate `dist/tokens.css`. |
+| `npm run build:demo` | Build the static playground into `demo-dist/`. |
+| `npm run icons` | Regenerate `src/icons.ts` from the Heroicons package. |
+| `npm run analyze` | Regenerate `custom-elements.json` via the custom-elements-manifest analyzer. |
+| `npm run docs` | Regenerate the manifest, `docs/*.md`, and `llms.txt`. |
+| `npm run test` | Run the Playwright suite against the playground. |
+
+## Contributing
+
+- New components live in `src/`, are exported from `src/index.ts`, restyled
+  to the `--ui-*` design tokens, and get a playground section (`index.html`)
+  and a Playwright spec (`tests/`). See [`CLAUDE.md`](./CLAUDE.md) for the
+  full checklist.
+- Relative imports within `src/` must use `.js` specifiers (not `.ts`), so
+  the `tsc`-emitted `dist/` output resolves correctly for consumers.
+- Run `npm run docs` after changing any component's public API so the
+  generated docs and `llms.txt` stay in sync.
+
+## Publishing
+
+First publish (package is not yet on the npm registry):
 
 ```bash
-npm test:watch
+npm login    # if needed
+npm publish --access public
 ```
 
-Alternatively the `test:prod` and `test:prod:watch` commands will run your tests in Lit's production mode.
-
-## Dev Server
-
-This sample uses modern-web.dev's [@web/dev-server](https://www.npmjs.com/package/@web/dev-server) for previewing the project without additional build steps. Web Dev Server handles resolving Node-style "bare" import specifiers, which aren't supported in browsers. It also automatically transpiles JavaScript and adds polyfills to support older browsers. See [modern-web.dev's Web Dev Server documentation](https://modern-web.dev/docs/dev-server/overview/) for more information.
-
-To run the dev server and open the project in a new browser tab:
+Subsequent releases:
 
 ```bash
-npm run serve
+npm version <patch|minor|major>
+npm publish
 ```
 
-There is a development HTML file located at `/dev/index.html` that you can view at http://localhost:8000/dev/index.html. Note that this command will serve your code using Lit's development mode (with more verbose errors). To serve your code against Lit's production mode, use `npm run serve:prod`.
+`prepublishOnly` runs `build`, `docs`, and `test` automatically before every
+publish.
 
-## Editing
+## License
 
-If you use VS Code, we highly recommend the [lit-plugin extension](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin), which enables some extremely useful features for lit-html templates:
-
-- Syntax highlighting
-- Type-checking
-- Code completion
-- Hover-over docs
-- Jump to definition
-- Linting
-- Quick Fixes
-
-The project is setup to recommend lit-plugin to VS Code users if they don't already have it installed.
-
-## Linting
-
-Linting of TypeScript files is provided by [ESLint](eslint.org) and [TypeScript ESLint](https://github.com/typescript-eslint/typescript-eslint). In addition, [lit-analyzer](https://www.npmjs.com/package/lit-analyzer) is used to type-check and lint lit-html templates with the same engine and rules as lit-plugin.
-
-The rules are mostly the recommended rules from each project, but some have been turned off to make LitElement usage easier. The recommended rules are pretty strict, so you may want to relax them by editing `.eslintrc.json` and `tsconfig.json`.
-
-To lint the project run:
-
-```bash
-npm run lint
-```
-
-## Formatting
-
-[Prettier](https://prettier.io/) is used for code formatting. It has been pre-configured according to the Lit's style. You can change this in `.prettierrc.json`.
-
-Prettier has not been configured to run when committing files, but this can be added with Husky and `pretty-quick`. See the [prettier.io](https://prettier.io/) site for instructions.
-
-## Static Site
-
-This project includes a simple website generated with the [eleventy](https://11ty.dev) static site generator and the templates and pages in `/docs-src`. The site is generated to `/docs` and intended to be checked in so that GitHub pages can serve the site [from `/docs` on the master branch](https://help.github.com/en/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-
-To enable the site go to the GitHub settings and change the GitHub Pages &quot;Source&quot; setting to &quot;master branch /docs folder&quot;.</p>
-
-To build the site, run:
-
-```bash
-npm run docs
-```
-
-To serve the site locally, run:
-
-```bash
-npm run docs:serve
-```
-
-To watch the site files, and re-build automatically, run:
-
-```bash
-npm run docs:watch
-```
-
-The site will usually be served at http://localhost:8000.
-
-**Note**: The project uses Rollup to bundle and minify the source code for the docs site and not to publish to NPM. For bundling and minification, check the [Bundling and minification](#bundling-and-minification) section.
-
-## Bundling and minification
-
-As stated in the [static site generation](#static-site) section, the bundling and minification setup in the Rollup configuration in this project is there specifically for the docs generation.
-
-We recommend publishing components as unoptimized JavaScript modules and performing build-time optimizations at the application level. This gives build tools the best chance to deduplicate code, remove dead code, and so on.
-
-Please check the [Publishing best practices](https://lit.dev/docs/tools/publishing/#publishing-best-practices) for information on publishing reusable Web Components, and [Build for production](https://lit.dev/docs/tools/production/) for building application projects that include LitElement components, on the Lit site.
-
-## More information
-
-See [Get started](https://lit.dev/docs/getting-started/) on the Lit site for more information.
+[BSD-3-Clause](./LICENSE)
