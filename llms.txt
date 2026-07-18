@@ -1,0 +1,506 @@
+# @f-ewald/components
+
+A collection of self-contained Lit web components sharing a Tailwind-inspired
+design token system. Every component is individually importable and ships
+its own TypeScript types and a checked-in custom-elements.json manifest.
+
+Install: `npm install @f-ewald/components`
+
+Import patterns:
+- Whole library: `import "@f-ewald/components";` (registers every component)
+- Individual component: `import "@f-ewald/components/<tag-name>.js";` (tree-shakes
+  everything else, including d3 for non-chart components)
+
+Theming: components use `var(--ui-*, <fallback>)` custom properties, so they
+render correctly with zero external CSS. Override any `--ui-*` property on
+`:root` (or an ancestor) to retheme, or import the optional
+`@f-ewald/components/tokens.css` stylesheet as a starting point.
+
+## <address-autocomplete>
+
+Form-associated text input with a suggestion dropdown. Works as a
+drop-in replacement for a plain `<input name="address">`: consumers keep
+reading `new FormData(form).get("address")` and calling `form.reset()`
+unchanged.
+
+Supports two suggestion sources:
+- **API** (default): fetches from `endpoint`, a Mapbox Geocoding v6-shaped
+  forward-geocode URL, debounced as the user types.
+- **Local array**: set `suggestions` to a fixed `AddressSuggestion[]` and
+  the component filters it client-side instead of making any network
+  request. Useful for small/fixed address lists, offline use, or tests.
+  Takes priority over `endpoint` whenever it's non-null.
+
+Import: `import "@f-ewald/components/address-autocomplete.js";`
+
+Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `types` (attribute `types`) : string, default "address"; `endpoint` (attribute `endpoint`) : string, default "https://api.mapbox.com/search/geocode/v6/forward"; `accessToken` (attribute `access-token`) : string, default ""; `bbox` (attribute `bbox`) : string, default ""; `proximity` (attribute `proximity`) : string, default ""; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `suggestions` (JS property only) : AddressSuggestion[] | null, default null; `selectedSuggestion` (JS property only) : AddressSuggestion | null, default —
+Events: `address-select`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`
+
+Example:
+```html
+<address-autocomplete
+  placeholder="Start typing an address…"
+  access-token="pk.your-mapbox-token"
+></address-autocomplete>
+```
+
+## <animate-confetti>
+
+Fullscreen confetti animation overlay, rendered on a fixed-position canvas.
+Starts automatically on first render and stops after `duration` ms.
+
+Import: `import "@f-ewald/components/animate-confetti.js";`
+
+Properties: `duration` (attribute `duration`) : number, default 6000
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<animate-confetti duration="6000"></animate-confetti>
+```
+
+## <autocomplete-input>
+
+Generic form-associated text input with a suggestion dropdown, for any
+"type to filter a list of `{key, value}` options" use case. Works as a
+drop-in replacement for a plain `<input>` inside a `<form>`: set `name` on
+the element itself and consumers keep reading
+`new FormData(form).get(name)` and calling `form.reset()` unchanged — the
+submitted value is the picked option's `value`, while `key` is available
+via the `option-select` event and the `selectedOption` getter for cases
+that need the underlying id rather than the display text.
+
+Supports two suggestion sources:
+- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`
+  query string, responds with a JSON array of `{key, value}` objects.
+  Requests are debounced as the user types.
+- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the
+  component filters it client-side instead of making any network
+  request. Useful for small/fixed lists, offline use, or tests. Takes
+  priority over `endpoint` whenever it's non-null.
+
+Import: `import "@f-ewald/components/autocomplete-input.js";`
+
+Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `endpoint` (attribute `endpoint`) : string, default ""; `queryParam` (attribute `query-param`) : string, default "q"; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `options` (JS property only) : AutocompleteOption[] | null, default null; `selectedOption` (JS property only) : AutocompleteOption | null, default —
+Events: `option-select`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`
+
+Example:
+```html
+<form>
+  <autocomplete-input name="language" placeholder="Start typing a language…"></autocomplete-input>
+</form>
+<script type="module">
+  // Local mode: filters client-side, no network request.
+  document.querySelector("autocomplete-input").options = [
+    { key: "ts", value: "TypeScript" },
+    { key: "py", value: "Python" },
+  ];
+
+  // API mode: omit `options` and set `endpoint` instead — it's queried as
+  // `${endpoint}?${queryParam}=<text>` and must respond with [{key, value}].
+</script>
+```
+
+## <confirm-dialog>
+
+Reusable confirmation dialog: overlay + centered card with a slotted body,
+an optional error line, and Cancel/Confirm actions. Instant `display:none`
+→ `display:flex` toggle (no transitions). Fires `confirm`/`cancel`
+(bubbling, composed) instead of owning any deletion logic itself —
+callers stay in charge of the request.
+
+Import: `import "@f-ewald/components/confirm-dialog.js";`
+
+Properties: `open` (attribute `open`) : boolean, default false; `confirmLabel` (attribute `confirm-label`) : string, default "Delete"; `cancelLabel` (attribute `cancel-label`) : string, default "Cancel"; `danger` (attribute `danger`) : boolean, default true; `busy` (attribute `busy`) : boolean, default false; `error` (attribute `error`) : string | null, default null
+Events: `confirm`, `cancel`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-overlay`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<confirm-dialog open confirm-label="Delete" cancel-label="Cancel">
+  Are you sure you want to delete this item?
+</confirm-dialog>
+```
+
+## <copy-link-button>
+
+Small icon button that copies `value` to the clipboard and shows a toast
+on success/failure (if a `<toast-notification>` element is present), and
+always dispatches a `copy-success`/`copy-error` CustomEvent so consumers
+without a toast element can react. Defaults to the current page URL if
+`value` is unset.
+
+Import: `import "@f-ewald/components/copy-link-button.js";`
+
+Properties: `value` (attribute `value`) : string, default ""; `label` (attribute `label`) : string, default "Copy link"
+Events: `copy-success`, `copy-error`
+CSS custom properties: `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<copy-link-button value="https://example.com/listing/42" label="Copy listing link"></copy-link-button>
+```
+
+## <distance-value>
+
+Inline distance display. Renders miles/feet or km/m, switching units at
+sensible thresholds (< 0.25 mi → ft; < 0.5 km → m).
+
+Supply exactly one of `miles` or `km`; the other stays null.
+km support is present but reserved for future use.
+
+Import: `import "@f-ewald/components/distance-value.js";`
+
+Properties: `miles` (attribute `miles`) : number | null, default null; `km` (attribute `km`) : number | null, default null
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<distance-value miles="5"></distance-value>
+```
+
+## <distribution-chart>
+
+Renders a KDE distribution curve for a named metric with one or more value
+markers. The SVG viewBox is kept in sync with the element's pixel width via
+ResizeObserver so that font sizes and stroke widths are always in real pixels
+regardless of container width.
+
+Pass `fontSize` to control all text size (default 11). Pass a single
+`{label:'', value}` for a single-value display or multiple
+`{label:'A'|'B'|...}` entries to compare several values.
+
+Import: `import "@f-ewald/components/distribution-chart.js";`
+
+Properties: `metric` (attribute `metric`) : string, default ""; `values` (JS property only) : DistributionValue[], default []; `markerColors` (JS property only) : string[], default ["#4f46e5", "#d97706", "#0d9488", "#e11d48"]; `fontSize` (attribute `font-size`) : number, default 11
+Events: none
+CSS custom properties: `--ui-danger`, `--ui-font-size-sm`, `--ui-radius-sm`, `--ui-text-muted`
+
+Example:
+```html
+<distribution-chart metric="sqft"></distribution-chart>
+<script type="module">
+  document.querySelector("distribution-chart").values = [{ label: "", value: 1450 }];
+</script>
+```
+
+## <map-circle>
+
+A plain circular map marker: a light-to-dark gradient fill with a white
+outer ring, no point/tail (unlike `<map-pin>`) — for markers that don't
+need to visually "point" at their exact coordinate. Purely a visual
+primitive — it has no `mapbox-gl` (or any mapping library) dependency;
+the consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.
+
+Import: `import "@f-ewald/components/map-circle.js";`
+
+Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 18; `ringWidth` (attribute `ring-width`) : number, default 4; `highlighted` (attribute `highlighted`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-font`
+
+Example:
+```html
+<map-circle color="#6b7280"></map-circle>
+<map-circle color="#1a73e8" size="24" ring-width="5" highlighted>1</map-circle>
+```
+
+## <map-pin>
+
+A circular "Apple Maps"-style map pin: a light-to-dark gradient fill with
+a slight point at the bottom. Purely a visual primitive — it has no
+`mapbox-gl` (or any mapping library) dependency; the consumer positions
+it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
+
+Import: `import "@f-ewald/components/map-pin.js";`
+
+Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 32; `highlighted` (attribute `highlighted`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-font`
+
+Example:
+```html
+<map-pin color="#1a73e8" size="30">3</map-pin>
+<map-pin color="#22c55e" size="26" highlighted>🏠</map-pin>
+```
+
+## <percent-bar-chart>
+
+Horizontal bar chart for labeled percentage rows, using D3's linear scale.
+Each group gets its own labeled row; bars are proportional to percentage of 100.
+
+Import: `import "@f-ewald/components/percent-bar-chart.js";`
+
+Properties: `groups` (JS property only) : PercentBarGroup[], default []
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<percent-bar-chart></percent-bar-chart>
+<script type="module">
+  document.querySelector("percent-bar-chart").groups = [
+    { key: "a", label: "White", pct: 45.2, color: "#4f46e5" },
+    { key: "b", label: "Asian", pct: 28.1, color: "#0d9488" },
+  ];
+</script>
+```
+
+## <price-history-chart>
+
+D3-powered SVG line chart for property price history.
+
+Uses scaleTime (X) + scaleLinear (Y) from d3-scale and line/area path
+generators from d3-shape. Adapts to container width via ResizeObserver.
+
+Import: `import "@f-ewald/components/price-history-chart.js";`
+
+Properties: `history` (attribute `history`) : PricePoint[], default []; `yLabels` (attribute `y-labels`) : "auto" | "always" | "never", default "auto"; `maxXLabels` (attribute `max-x-labels`) : number, default 3
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<price-history-chart></price-history-chart>
+<script type="module">
+  document.querySelector("price-history-chart").history = [
+    { date: "2023-01-01", price: 620000, eventType: "Listed" },
+    { date: "2024-02-01", price: 680000, eventType: "Sold" },
+  ];
+</script>
+```
+
+## <radio-cards>
+
+Single-select group of full-width cards, each with a label and optional
+description — for a handful of meaningfully different choices where the
+description matters. For many short, same-shaped options (a color swatch,
+a basemap style), use `radio-pills` instead. Wraps native radio inputs for
+keyboard/a11y and fires `change` rather than relying on form submission.
+
+Import: `import "@f-ewald/components/radio-cards.js";`
+
+Properties: `options` (JS property only) : RadioCardOption[], default []; `value` (attribute `value`) : string, default ""
+Events: `change`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<radio-cards></radio-cards>
+<script type="module">
+  const el = document.querySelector("radio-cards");
+  el.options = [
+    { value: "simple", label: "Simple", description: "Quick-ranking view" },
+    { value: "detailed", label: "Detailed", description: "Every section and layer" },
+  ];
+  el.value = "simple";
+  el.addEventListener("change", (e) => console.log(e.detail.value));
+</script>
+```
+
+## <radio-pills>
+
+Single-select group of compact pill-shaped options — for many short,
+same-shaped choices (a basemap style, a unit toggle). For a handful of
+choices where a description matters, use `radio-cards` instead. Wraps
+native radio inputs for keyboard/a11y and fires `change` rather than
+relying on form submission.
+
+Import: `import "@f-ewald/components/radio-pills.js";`
+
+Properties: `options` (JS property only) : RadioPillOption[], default []; `value` (attribute `value`) : string, default ""
+Events: `change`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-surface-muted`, `--ui-text`
+
+Example:
+```html
+<radio-pills></radio-pills>
+<script type="module">
+  const el = document.querySelector("radio-pills");
+  el.options = [
+    { value: "light", label: "Light" },
+    { value: "streets", label: "Streets" },
+  ];
+  el.value = "light";
+  el.addEventListener("change", (e) => console.log(e.detail.value));
+</script>
+```
+
+## <relative-time>
+
+Inline relative-time display (e.g. "3 hours ago"). Accepts either a
+standard ISO 8601 string or a SQLite `datetime('now')` string
+("YYYY-MM-DD HH:MM:SS", UTC, no zone marker) via `datetime`. Shows the
+full date/time in the viewer's local timezone as a hover tooltip, and
+re-renders on an interval so the text stays current while visible.
+
+Import: `import "@f-ewald/components/relative-time.js";`
+
+Properties: `datetime` (attribute `datetime`) : string | null, default null
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<relative-time datetime="2026-07-17T07:00:00Z"></relative-time>
+```
+
+## <reveal-button>
+
+Button that reveals hidden slotted content when clicked.
+
+Import: `import "@f-ewald/components/reveal-button.js";`
+
+Properties: `label` (attribute `label`) : string, default "Reveal hidden content"
+Events: none
+CSS custom properties: `--ui-font`, `--ui-font-size`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`
+
+Example:
+```html
+<reveal-button label="Show the secret">
+  Surprise! This content was hidden.
+</reveal-button>
+```
+
+## <roman-numeral>
+
+Converts an integer to a roman numeral inline.
+
+Import: `import "@f-ewald/components/roman-numeral.js";`
+
+Properties: `value` (attribute `value`) : number | undefined, default —
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<roman-numeral value="2004"></roman-numeral>
+```
+
+## <slide-panel>
+
+Generic sliding panel shell. Handles positioning, open/close animation,
+header chrome, and a close button. Body content is provided via the
+default slot; the consumer controls its own padding and overflow.
+
+Desktop: 300 px fixed right-side panel that slides from the right.
+Mobile (≤768px): bottom-sheet drawer (60vh) — reserved for future use.
+
+Import: `import "@f-ewald/components/slide-panel.js";`
+
+Properties: `open` (attribute `open`) : boolean, default false; `heading` (attribute `heading`) : string, default ""
+Events: `panel-close`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<slide-panel open heading="Property details">
+  Panel body content goes here.
+</slide-panel>
+```
+
+## <toast-notification>
+
+Fixed-position stack of dismissible notifications, anchored top-right
+(top-full-width on mobile). Not wired to any app state yet — callers add
+toasts imperatively via the `show()` method on a live element reference,
+e.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,
+or via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers
+exported from this file. Each toast auto-dismisses after `duration` ms and
+can also be dismissed via its ✕ button. Appears/disappears instantly — no
+slide/fade transitions.
+
+Import: `import "@f-ewald/components/toast-notification.js";`
+
+Properties: none
+Events: none
+CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-success`, `--ui-text`
+
+Example:
+```html
+<toast-notification></toast-notification>
+<script type="module">
+  import { notifySuccess } from "@f-ewald/components/toast-notification.js";
+  notifySuccess("Saved!");
+</script>
+```
+
+## <ui-button>
+
+Button (or link styled as one) with an optional leading icon, in three
+visual weights. Set `href` to render an `<a>` instead of a `<button>` —
+same styling either way — for cross-page navigation that should look like
+an action button; a disabled/busy link stays a real `<a>` with
+`aria-disabled` + `pointer-events: none` rather than losing its href.
+Put the icon in the `icon` slot and the label in the default slot.
+
+Form-associated (`type="submit"`/`"reset"`): the actual `<button>` lives in
+this element's shadow root, which native HTML form association does not
+cross into from an ancestor light-DOM `<form>`. `type="submit"`/`"reset"`
+is instead wired through `ElementInternals.form` — the same mechanism
+`address-autocomplete` uses to associate with an ancestor form.
+
+Import: `import "@f-ewald/components/ui-button.js";`
+
+Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<ui-button variant="primary">
+  <span slot="icon">...</span>
+  New property
+</ui-button>
+<ui-button variant="danger">Delete</ui-button>
+<ui-button variant="secondary" href="/properties?edit=42">Edit</ui-button>
+```
+
+## <user-avatar>
+
+Circular avatar. Shows `src` when it loads successfully; falls back to the
+first letter of `name` (uppercased) if `src` is unset or fails to load
+(e.g. an expired OAuth profile-photo URL); falls back further to a generic
+person icon if `name` is also unset. A broken image never leaves a blank
+circle.
+
+Import: `import "@f-ewald/components/user-avatar.js";`
+
+Properties: `src` (attribute `src`) : string | null, default null; `name` (attribute `name`) : string | null, default null; `size` (attribute `size`) : number, default 32
+Events: none
+CSS custom properties: `--ui-font`, `--ui-primary`
+
+Example:
+```html
+<user-avatar src="https://example.com/photo.jpg" name="Freddy" size="40"></user-avatar>
+```
+
+## <weight-bar-chart>
+
+Sorted horizontal bar chart of labeled weights (normalized fractions
+summing to ~1). Bars sort descending — the order IS the priority ranking.
+Widths scale relative to the largest weight (which fills its track); the
+percent labels carry the absolute values. Rows are keyed by item id
+(repeat directive) so a re-render with new weights moves the existing
+rows; bar widths animate via CSS, re-sorting is instant.
+
+Import: `import "@f-ewald/components/weight-bar-chart.js";`
+
+Properties: `items` (JS property only) : WeightBarItem[], default []
+Events: none
+CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<weight-bar-chart></weight-bar-chart>
+<script type="module">
+  document.querySelector("weight-bar-chart").items = [
+    { id: "price", label: "Price", value: 0.4 },
+    { id: "schools", label: "Schools", value: 0.35 },
+    { id: "commute", label: "Commute", value: 0.25 },
+  ];
+</script>
+```

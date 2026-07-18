@@ -1,0 +1,4216 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/address-autocomplete.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Form-associated text input with a suggestion dropdown. Works as a\ndrop-in replacement for a plain `<input name=\"address\">`: consumers keep\nreading `new FormData(form).get(\"address\")` and calling `form.reset()`\nunchanged.\n\nSupports two suggestion sources:\n- **API** (default): fetches from `endpoint`, a Mapbox Geocoding v6-shaped\n  forward-geocode URL, debounced as the user types.\n- **Local array**: set `suggestions` to a fixed `AddressSuggestion[]` and\n  the component filters it client-side instead of making any network\n  request. Useful for small/fixed address lists, offline use, or tests.\n  Takes priority over `endpoint` whenever it's non-null.",
+          "name": "AddressAutocomplete",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "types",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"address\"",
+              "description": "Mapbox `types` param, e.g. \"address\" or \"address,poi\".",
+              "attribute": "types"
+            },
+            {
+              "kind": "field",
+              "name": "endpoint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"https://api.mapbox.com/search/geocode/v6/forward\"",
+              "description": "Geocoding endpoint URL. Defaults to the Mapbox Geocoding v6 forward URL.",
+              "attribute": "endpoint"
+            },
+            {
+              "kind": "field",
+              "name": "accessToken",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Mapbox access token. Required for requests to succeed.",
+              "attribute": "access-token"
+            },
+            {
+              "kind": "field",
+              "name": "bbox",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional bounding box bias, comma-separated `west,south,east,north`.",
+              "attribute": "bbox"
+            },
+            {
+              "kind": "field",
+              "name": "proximity",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional proximity bias, comma-separated `lng,lat`.",
+              "attribute": "proximity"
+            },
+            {
+              "kind": "field",
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Debounce delay (ms) before firing a geocode request after typing.",
+              "attribute": "debounce"
+            },
+            {
+              "kind": "field",
+              "name": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Minimum query length before suggestions are fetched.",
+              "attribute": "min-length"
+            },
+            {
+              "kind": "field",
+              "name": "suggestions",
+              "type": {
+                "text": "AddressSuggestion[] | null"
+              },
+              "default": "null",
+              "description": "Fixed candidate list to filter locally instead of fetching from\n`endpoint`. When set (non-null), no network request is ever made —\nthis takes priority over the API mode."
+            },
+            {
+              "kind": "field",
+              "name": "_suggestions",
+              "type": {
+                "text": "AddressSuggestion[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#lastPicked",
+              "privacy": "private",
+              "type": {
+                "text": "AddressSuggestion | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#debounceTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#abortController",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "selectedSuggestion",
+              "type": {
+                "text": "AddressSuggestion | null"
+              },
+              "description": "Last-picked suggestion, or null once the input diverges from it.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "description": "Resets to empty on `form.reset()`, per the form-associated custom element contract."
+            },
+            {
+              "kind": "method",
+              "name": "onInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "InputEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleFetch",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#filterLocalSuggestions",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Filters the locally-supplied `suggestions` list for `query`, case-insensitively."
+            },
+            {
+              "kind": "method",
+              "name": "#fetchSuggestions",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Fetches suggestions for `query`, cancelling any request still in flight."
+            },
+            {
+              "kind": "method",
+              "name": "#buildUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#moveActive",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleEnter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleEscape",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onBlur",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#selectSuggestion",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "s",
+                  "type": {
+                    "text": "AddressSuggestion"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSuggestionMousedown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                },
+                {
+                  "name": "s",
+                  "type": {
+                    "text": "AddressSuggestion"
+                  }
+                }
+              ],
+              "description": "Selects on mousedown (not click) so it wins over the input's blur, which closes the list."
+            },
+            {
+              "kind": "method",
+              "name": "renderSuggestions",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "address-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A suggestion was picked; detail: AddressSuggestion."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "fieldName": "value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "fieldName": "required"
+            },
+            {
+              "name": "types",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"address\"",
+              "description": "Mapbox `types` param, e.g. \"address\" or \"address,poi\".",
+              "fieldName": "types"
+            },
+            {
+              "name": "endpoint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"https://api.mapbox.com/search/geocode/v6/forward\"",
+              "description": "Geocoding endpoint URL. Defaults to the Mapbox Geocoding v6 forward URL.",
+              "fieldName": "endpoint"
+            },
+            {
+              "name": "access-token",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Mapbox access token. Required for requests to succeed.",
+              "fieldName": "accessToken"
+            },
+            {
+              "name": "bbox",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional bounding box bias, comma-separated `west,south,east,north`.",
+              "fieldName": "bbox"
+            },
+            {
+              "name": "proximity",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional proximity bias, comma-separated `lng,lat`.",
+              "fieldName": "proximity"
+            },
+            {
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Debounce delay (ms) before firing a geocode request after typing.",
+              "fieldName": "debounce"
+            },
+            {
+              "name": "min-length",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Minimum query length before suggestions are fetched.",
+              "fieldName": "minLength"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "address-autocomplete",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AddressAutocomplete",
+          "declaration": {
+            "name": "AddressAutocomplete",
+            "module": "src/address-autocomplete.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "address-autocomplete",
+          "declaration": {
+            "name": "AddressAutocomplete",
+            "module": "src/address-autocomplete.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/animate-confetti.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Fullscreen confetti animation overlay, rendered on a fixed-position canvas.\nStarts automatically on first render and stops after `duration` ms.",
+          "name": "AnimateConfetti",
+          "members": [
+            {
+              "kind": "field",
+              "name": "duration",
+              "type": {
+                "text": "number"
+              },
+              "default": "6000",
+              "description": "How long the confetti streams before stopping, in ms.",
+              "attribute": "duration"
+            },
+            {
+              "kind": "field",
+              "name": "maxParticleCount",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "150"
+            },
+            {
+              "kind": "field",
+              "name": "particleSpeed",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "2"
+            },
+            {
+              "kind": "field",
+              "name": "particles",
+              "type": {
+                "text": "Particle[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "streamingConfetti",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "colors",
+              "type": {
+                "text": "array"
+              },
+              "privacy": "private",
+              "default": "[ \"DodgerBlue\", \"OliveDrab\", \"Gold\", \"Pink\", \"SlateBlue\", \"LightBlue\", \"Violet\", \"PaleGreen\", \"SteelBlue\", \"SandyBrown\", \"Chocolate\", \"Crimson\", ]"
+            },
+            {
+              "kind": "field",
+              "name": "waveAngle",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0.0"
+            },
+            {
+              "kind": "field",
+              "name": "animationTimer",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_canvas",
+              "type": {
+                "text": "HTMLCanvasElement"
+              },
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_handleResize",
+              "privacy": "private",
+              "description": "Resize canvas to browser size."
+            },
+            {
+              "kind": "method",
+              "name": "startConfetti",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "runAnimation",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "stopConfetti",
+              "privacy": "private",
+              "description": "Stop confetti and clean up after reasonable time."
+            },
+            {
+              "kind": "method",
+              "name": "_cleanup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Removes any associated particle data from internal storage to regain memory."
+            },
+            {
+              "kind": "method",
+              "name": "updateParticles",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "drawParticles",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "resetParticle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Particle"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "particle",
+                  "type": {
+                    "text": "Particle"
+                  }
+                },
+                {
+                  "name": "width",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "height",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "duration",
+              "type": {
+                "text": "number"
+              },
+              "default": "6000",
+              "description": "How long the confetti streams before stopping, in ms.",
+              "fieldName": "duration"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "animate-confetti",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AnimateConfetti",
+          "declaration": {
+            "name": "AnimateConfetti",
+            "module": "src/animate-confetti.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "animate-confetti",
+          "declaration": {
+            "name": "AnimateConfetti",
+            "module": "src/animate-confetti.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/autocomplete-input.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Generic form-associated text input with a suggestion dropdown, for any\n\"type to filter a list of `{key, value}` options\" use case. Works as a\ndrop-in replacement for a plain `<input>` inside a `<form>`: set `name` on\nthe element itself and consumers keep reading\n`new FormData(form).get(name)` and calling `form.reset()` unchanged — the\nsubmitted value is the picked option's `value`, while `key` is available\nvia the `option-select` event and the `selectedOption` getter for cases\nthat need the underlying id rather than the display text.\n\nSupports two suggestion sources:\n- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`\n  query string, responds with a JSON array of `{key, value}` objects.\n  Requests are debounced as the user types.\n- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the\n  component filters it client-side instead of making any network\n  request. Useful for small/fixed lists, offline use, or tests. Takes\n  priority over `endpoint` whenever it's non-null.",
+          "name": "AutocompleteInput",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "endpoint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "API endpoint queried in API mode. Ignored when `options` is set.",
+              "attribute": "endpoint"
+            },
+            {
+              "kind": "field",
+              "name": "queryParam",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"q\"",
+              "description": "Query string parameter name the current input text is sent under.",
+              "attribute": "query-param"
+            },
+            {
+              "kind": "field",
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Debounce delay (ms) before firing a request/filter after typing.",
+              "attribute": "debounce"
+            },
+            {
+              "kind": "field",
+              "name": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Minimum query length before suggestions are shown.",
+              "attribute": "min-length"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "AutocompleteOption[] | null"
+              },
+              "default": "null",
+              "description": "Fixed candidate list to filter locally instead of fetching from\n`endpoint`. When set (non-null), no network request is ever made —\nthis takes priority over the API mode."
+            },
+            {
+              "kind": "field",
+              "name": "_suggestions",
+              "type": {
+                "text": "AutocompleteOption[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#lastPicked",
+              "privacy": "private",
+              "type": {
+                "text": "AutocompleteOption | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#debounceTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#abortController",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "selectedOption",
+              "type": {
+                "text": "AutocompleteOption | null"
+              },
+              "description": "Last-picked option, or null once the input diverges from it.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "description": "Resets to empty on `form.reset()`, per the form-associated custom element contract."
+            },
+            {
+              "kind": "method",
+              "name": "onInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "InputEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleFetch",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#filterLocalOptions",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Filters the locally-supplied `options` list for `query`, case-insensitively."
+            },
+            {
+              "kind": "method",
+              "name": "#fetchOptions",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Fetches options for `query` from `endpoint`, cancelling any request still in flight."
+            },
+            {
+              "kind": "method",
+              "name": "#buildUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#moveActive",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleEnter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleEscape",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onBlur",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#selectOption",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "o",
+                  "type": {
+                    "text": "AutocompleteOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSuggestionMousedown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                },
+                {
+                  "name": "o",
+                  "type": {
+                    "text": "AutocompleteOption"
+                  }
+                }
+              ],
+              "description": "Selects on mousedown (not click) so it wins over the input's blur, which closes the list."
+            },
+            {
+              "kind": "method",
+              "name": "renderSuggestions",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "option-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "An option was picked; detail: AutocompleteOption."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "fieldName": "value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "fieldName": "required"
+            },
+            {
+              "name": "endpoint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "API endpoint queried in API mode. Ignored when `options` is set.",
+              "fieldName": "endpoint"
+            },
+            {
+              "name": "query-param",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"q\"",
+              "description": "Query string parameter name the current input text is sent under.",
+              "fieldName": "queryParam"
+            },
+            {
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Debounce delay (ms) before firing a request/filter after typing.",
+              "fieldName": "debounce"
+            },
+            {
+              "name": "min-length",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Minimum query length before suggestions are shown.",
+              "fieldName": "minLength"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "autocomplete-input",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AutocompleteInput",
+          "declaration": {
+            "name": "AutocompleteInput",
+            "module": "src/autocomplete-input.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "autocomplete-input",
+          "declaration": {
+            "name": "AutocompleteInput",
+            "module": "src/autocomplete-input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/confirm-dialog.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Reusable confirmation dialog: overlay + centered card with a slotted body,\nan optional error line, and Cancel/Confirm actions. Instant `display:none`\n→ `display:flex` toggle (no transitions). Fires `confirm`/`cancel`\n(bubbling, composed) instead of owning any deletion logic itself —\ncallers stay in charge of the request.",
+          "name": "ConfirmDialog",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the dialog is visible.",
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "confirmLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Delete\"",
+              "description": "Label for the confirm button.",
+              "attribute": "confirm-label"
+            },
+            {
+              "kind": "field",
+              "name": "cancelLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Cancel\"",
+              "description": "Label for the cancel button.",
+              "attribute": "cancel-label"
+            },
+            {
+              "kind": "field",
+              "name": "danger",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Danger (red) vs. primary (indigo) styling for the confirm button.",
+              "attribute": "danger"
+            },
+            {
+              "kind": "field",
+              "name": "busy",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a spinner and disables both buttons while a request is in flight.",
+              "attribute": "busy"
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Inline error line shown below the body, or null for none.",
+              "attribute": "error"
+            },
+            {
+              "kind": "method",
+              "name": "_confirm",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_cancel",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "confirm",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked the confirm button."
+            },
+            {
+              "name": "cancel",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked the cancel button."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the dialog is visible.",
+              "fieldName": "open"
+            },
+            {
+              "name": "confirm-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Delete\"",
+              "description": "Label for the confirm button.",
+              "fieldName": "confirmLabel"
+            },
+            {
+              "name": "cancel-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Cancel\"",
+              "description": "Label for the cancel button.",
+              "fieldName": "cancelLabel"
+            },
+            {
+              "name": "danger",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Danger (red) vs. primary (indigo) styling for the confirm button.",
+              "fieldName": "danger"
+            },
+            {
+              "name": "busy",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a spinner and disables both buttons while a request is in flight.",
+              "fieldName": "busy"
+            },
+            {
+              "name": "error",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Inline error line shown below the body, or null for none.",
+              "fieldName": "error"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "confirm-dialog",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ConfirmDialog",
+          "declaration": {
+            "name": "ConfirmDialog",
+            "module": "src/confirm-dialog.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "confirm-dialog",
+          "declaration": {
+            "name": "ConfirmDialog",
+            "module": "src/confirm-dialog.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/copy-link-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Small icon button that copies `value` to the clipboard and shows a toast\non success/failure (if a `<toast-notification>` element is present), and\nalways dispatches a `copy-success`/`copy-error` CustomEvent so consumers\nwithout a toast element can react. Defaults to the current page URL if\n`value` is unset.",
+          "name": "CopyLinkButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text to copy. Defaults to `window.location.href` at click time.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Copy link\"",
+              "description": "Accessible label / tooltip text.",
+              "attribute": "label"
+            },
+            {
+              "kind": "method",
+              "name": "_onClick",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "copy-success",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The value was copied to the clipboard."
+            },
+            {
+              "name": "copy-error",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Copying to the clipboard failed."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text to copy. Defaults to `window.location.href` at click time.",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Copy link\"",
+              "description": "Accessible label / tooltip text.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "copy-link-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CopyLinkButton",
+          "declaration": {
+            "name": "CopyLinkButton",
+            "module": "src/copy-link-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "copy-link-button",
+          "declaration": {
+            "name": "CopyLinkButton",
+            "module": "src/copy-link-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/distance-value.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Inline distance display. Renders miles/feet or km/m, switching units at\nsensible thresholds (< 0.25 mi → ft; < 0.5 km → m).\n\nSupply exactly one of `miles` or `km`; the other stays null.\nkm support is present but reserved for future use.",
+          "name": "DistanceValue",
+          "members": [
+            {
+              "kind": "field",
+              "name": "miles",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Distance in miles (imperial). Switches to feet below 0.25 mi.",
+              "attribute": "miles"
+            },
+            {
+              "kind": "field",
+              "name": "km",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Distance in kilometers (metric, future). Switches to meters below 0.5 km.",
+              "attribute": "km"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "miles",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Distance in miles (imperial). Switches to feet below 0.25 mi.",
+              "fieldName": "miles"
+            },
+            {
+              "name": "km",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Distance in kilometers (metric, future). Switches to meters below 0.5 km.",
+              "fieldName": "km"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "distance-value",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DistanceValue",
+          "declaration": {
+            "name": "DistanceValue",
+            "module": "src/distance-value.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "distance-value",
+          "declaration": {
+            "name": "DistanceValue",
+            "module": "src/distance-value.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/distribution-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Renders a KDE distribution curve for a named metric with one or more value\nmarkers. The SVG viewBox is kept in sync with the element's pixel width via\nResizeObserver so that font sizes and stroke widths are always in real pixels\nregardless of container width.\n\nPass `fontSize` to control all text size (default 11). Pass a single\n`{label:'', value}` for a single-value display or multiple\n`{label:'A'|'B'|...}` entries to compare several values.",
+          "name": "DistributionChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "metric",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Metric name, fetched from `/api/distribution/<metric>` on change.",
+              "attribute": "metric"
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "type": {
+                "text": "DistributionValue[]"
+              },
+              "default": "[]",
+              "description": "One or more values to mark on the distribution curve."
+            },
+            {
+              "kind": "field",
+              "name": "markerColors",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[\"#4f46e5\", \"#d97706\", \"#0d9488\", \"#e11d48\"]",
+              "description": "Colors assigned to markers in order. Defaults to indigo/amber/teal/rose 600s."
+            },
+            {
+              "kind": "field",
+              "name": "fontSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "11",
+              "description": "Target font size in CSS pixels (default 11). Always renders at this size regardless of container width.",
+              "attribute": "font-size"
+            },
+            {
+              "kind": "field",
+              "name": "_data",
+              "type": {
+                "text": "DistributionData | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_error",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_width",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Measured element width in CSS pixels. 0 until ResizeObserver fires."
+            },
+            {
+              "kind": "field",
+              "name": "_hoverX",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Inner x coordinate (px) of the current hover position, or null when not hovering."
+            },
+            {
+              "kind": "field",
+              "name": "_fetchedFor",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_ro",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_maybeFetch",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderSvg",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "DistributionData"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderLegend",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "DistributionData"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "metric",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Metric name, fetched from `/api/distribution/<metric>` on change.",
+              "fieldName": "metric"
+            },
+            {
+              "name": "font-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "11",
+              "description": "Target font size in CSS pixels (default 11). Always renders at this size regardless of container width.",
+              "fieldName": "fontSize"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "distribution-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DistributionChart",
+          "declaration": {
+            "name": "DistributionChart",
+            "module": "src/distribution-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "distribution-chart",
+          "declaration": {
+            "name": "DistributionChart",
+            "module": "src/distribution-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/icons.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "iconX",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconBars3",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconChevronLeft",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconChevronRight",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconCog",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "20"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconInfo",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "20"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconQuestionMarkCircle",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "20"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconPencil",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconTrash",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconPlus",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconListBullet",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconCurrencyDollar",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconHome",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconMapPin",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconClock",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconTag",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconCalendar",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowsPointingOut",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconMap",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconCheckCircle",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconSun",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconShieldExclamation",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowPath",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "12"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowRight",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "12"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconLink",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconHeart",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconHeartSolid",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconEye",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconEyeSlash",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconShieldCheck",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconUserCircle",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "20"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "iconX",
+          "declaration": {
+            "name": "iconX",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconBars3",
+          "declaration": {
+            "name": "iconBars3",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconChevronLeft",
+          "declaration": {
+            "name": "iconChevronLeft",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconChevronRight",
+          "declaration": {
+            "name": "iconChevronRight",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconCog",
+          "declaration": {
+            "name": "iconCog",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconInfo",
+          "declaration": {
+            "name": "iconInfo",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconQuestionMarkCircle",
+          "declaration": {
+            "name": "iconQuestionMarkCircle",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconPencil",
+          "declaration": {
+            "name": "iconPencil",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconTrash",
+          "declaration": {
+            "name": "iconTrash",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconPlus",
+          "declaration": {
+            "name": "iconPlus",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconListBullet",
+          "declaration": {
+            "name": "iconListBullet",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconCurrencyDollar",
+          "declaration": {
+            "name": "iconCurrencyDollar",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconHome",
+          "declaration": {
+            "name": "iconHome",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconMapPin",
+          "declaration": {
+            "name": "iconMapPin",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconClock",
+          "declaration": {
+            "name": "iconClock",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconTag",
+          "declaration": {
+            "name": "iconTag",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconCalendar",
+          "declaration": {
+            "name": "iconCalendar",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowsPointingOut",
+          "declaration": {
+            "name": "iconArrowsPointingOut",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconMap",
+          "declaration": {
+            "name": "iconMap",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconCheckCircle",
+          "declaration": {
+            "name": "iconCheckCircle",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconSun",
+          "declaration": {
+            "name": "iconSun",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconShieldExclamation",
+          "declaration": {
+            "name": "iconShieldExclamation",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowPath",
+          "declaration": {
+            "name": "iconArrowPath",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowRight",
+          "declaration": {
+            "name": "iconArrowRight",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconLink",
+          "declaration": {
+            "name": "iconLink",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconHeart",
+          "declaration": {
+            "name": "iconHeart",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconHeartSolid",
+          "declaration": {
+            "name": "iconHeartSolid",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconEye",
+          "declaration": {
+            "name": "iconEye",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconEyeSlash",
+          "declaration": {
+            "name": "iconEyeSlash",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconShieldCheck",
+          "declaration": {
+            "name": "iconShieldCheck",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconUserCircle",
+          "declaration": {
+            "name": "iconUserCircle",
+            "module": "src/icons.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AnimateConfetti",
+          "declaration": {
+            "name": "AnimateConfetti",
+            "module": "./animate-confetti.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RevealButton",
+          "declaration": {
+            "name": "RevealButton",
+            "module": "./reveal-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RomanNumeral",
+          "declaration": {
+            "name": "RomanNumeral",
+            "module": "./roman-numeral.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ConfirmDialog",
+          "declaration": {
+            "name": "ConfirmDialog",
+            "module": "./confirm-dialog.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ToastNotification",
+          "declaration": {
+            "name": "ToastNotification",
+            "module": "./toast-notification.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifySuccess",
+          "declaration": {
+            "name": "notifySuccess",
+            "module": "./toast-notification.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifyError",
+          "declaration": {
+            "name": "notifyError",
+            "module": "./toast-notification.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifyInfo",
+          "declaration": {
+            "name": "notifyInfo",
+            "module": "./toast-notification.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ToastVariant",
+          "declaration": {
+            "name": "ToastVariant",
+            "module": "./toast-notification.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SlidePanel",
+          "declaration": {
+            "name": "SlidePanel",
+            "module": "./slide-panel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CopyLinkButton",
+          "declaration": {
+            "name": "CopyLinkButton",
+            "module": "./copy-link-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RelativeTime",
+          "declaration": {
+            "name": "RelativeTime",
+            "module": "./relative-time.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DistanceValue",
+          "declaration": {
+            "name": "DistanceValue",
+            "module": "./distance-value.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PriceHistoryChart",
+          "declaration": {
+            "name": "PriceHistoryChart",
+            "module": "./price-history-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PricePoint",
+          "declaration": {
+            "name": "PricePoint",
+            "module": "./price-history-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DistributionChart",
+          "declaration": {
+            "name": "DistributionChart",
+            "module": "./distribution-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DistributionValue",
+          "declaration": {
+            "name": "DistributionValue",
+            "module": "./distribution-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PercentBarChart",
+          "declaration": {
+            "name": "PercentBarChart",
+            "module": "./percent-bar-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PercentBarGroup",
+          "declaration": {
+            "name": "PercentBarGroup",
+            "module": "./percent-bar-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WeightBarChart",
+          "declaration": {
+            "name": "WeightBarChart",
+            "module": "./weight-bar-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WeightBarItem",
+          "declaration": {
+            "name": "WeightBarItem",
+            "module": "./weight-bar-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AddressAutocomplete",
+          "declaration": {
+            "name": "AddressAutocomplete",
+            "module": "./address-autocomplete.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AddressSuggestion",
+          "declaration": {
+            "name": "AddressSuggestion",
+            "module": "./address-autocomplete.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AutocompleteInput",
+          "declaration": {
+            "name": "AutocompleteInput",
+            "module": "./autocomplete-input.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AutocompleteOption",
+          "declaration": {
+            "name": "AutocompleteOption",
+            "module": "./autocomplete-input.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "UserAvatar",
+          "declaration": {
+            "name": "UserAvatar",
+            "module": "./user-avatar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MapPin",
+          "declaration": {
+            "name": "MapPin",
+            "module": "./map-pin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MapCircle",
+          "declaration": {
+            "name": "MapCircle",
+            "module": "./map-circle.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RadioCards",
+          "declaration": {
+            "name": "RadioCards",
+            "module": "./radio-cards.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RadioCardOption",
+          "declaration": {
+            "name": "RadioCardOption",
+            "module": "./radio-cards.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RadioPills",
+          "declaration": {
+            "name": "RadioPills",
+            "module": "./radio-pills.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RadioPillOption",
+          "declaration": {
+            "name": "RadioPillOption",
+            "module": "./radio-pills.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "UiButton",
+          "declaration": {
+            "name": "UiButton",
+            "module": "./ui-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ButtonVariant",
+          "declaration": {
+            "name": "ButtonVariant",
+            "module": "./ui-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tokens",
+          "declaration": {
+            "name": "tokens",
+            "module": "./tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tokenValues",
+          "declaration": {
+            "name": "tokenValues",
+            "module": "./tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/icons.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/map-circle.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A plain circular map marker: a light-to-dark gradient fill with a white\nouter ring, no point/tail (unlike `<map-pin>`) — for markers that don't\nneed to visually \"point\" at their exact coordinate. Purely a visual\nprimitive — it has no `mapbox-gl` (or any mapping library) dependency;\nthe consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.",
+          "name": "MapCircle",
+          "slots": [
+            {
+              "description": "Optional badge content shown centered on the circle — a rank number, an emoji, a small icon.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#4f46e5\"",
+              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "18",
+              "description": "Diameter, in CSS pixels.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "ringWidth",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
+              "attribute": "ring-width"
+            },
+            {
+              "kind": "field",
+              "name": "highlighted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Scales and glows the circle — a generic emphasis state (e.g. hover, selection).",
+              "attribute": "highlighted",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_gradId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`map-circle-grad-${gradientIdCounter++}`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#4f46e5\"",
+              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
+              "fieldName": "color"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "18",
+              "description": "Diameter, in CSS pixels.",
+              "fieldName": "size"
+            },
+            {
+              "name": "ring-width",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
+              "fieldName": "ringWidth"
+            },
+            {
+              "name": "highlighted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Scales and glows the circle — a generic emphasis state (e.g. hover, selection).",
+              "fieldName": "highlighted"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "map-circle",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MapCircle",
+          "declaration": {
+            "name": "MapCircle",
+            "module": "src/map-circle.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "map-circle",
+          "declaration": {
+            "name": "MapCircle",
+            "module": "src/map-circle.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/map-pin.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A circular \"Apple Maps\"-style map pin: a light-to-dark gradient fill with\na slight point at the bottom. Purely a visual primitive — it has no\n`mapbox-gl` (or any mapping library) dependency; the consumer positions\nit, e.g. via `new mapboxgl.Marker({ element: pinEl })`.",
+          "name": "MapPin",
+          "slots": [
+            {
+              "description": "Badge content shown centered on the pin's circular head — a rank number, an emoji, a small icon.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#4f46e5\"",
+              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "32",
+              "description": "Diameter of the circular head, in CSS pixels.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "highlighted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Scales and glows the pin — a generic emphasis state (e.g. hover, selection).",
+              "attribute": "highlighted",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_gradId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`map-pin-grad-${gradientIdCounter++}`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#4f46e5\"",
+              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
+              "fieldName": "color"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "32",
+              "description": "Diameter of the circular head, in CSS pixels.",
+              "fieldName": "size"
+            },
+            {
+              "name": "highlighted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Scales and glows the pin — a generic emphasis state (e.g. hover, selection).",
+              "fieldName": "highlighted"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "map-pin",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MapPin",
+          "declaration": {
+            "name": "MapPin",
+            "module": "src/map-pin.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "map-pin",
+          "declaration": {
+            "name": "MapPin",
+            "module": "src/map-pin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/percent-bar-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Horizontal bar chart for labeled percentage rows, using D3's linear scale.\nEach group gets its own labeled row; bars are proportional to percentage of 100.",
+          "name": "PercentBarChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "groups",
+              "type": {
+                "text": "PercentBarGroup[]"
+              },
+              "default": "[]",
+              "description": "Rows to render, one per group."
+            },
+            {
+              "kind": "field",
+              "name": "_width",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_ro",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "percent-bar-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PercentBarChart",
+          "declaration": {
+            "name": "PercentBarChart",
+            "module": "src/percent-bar-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "percent-bar-chart",
+          "declaration": {
+            "name": "PercentBarChart",
+            "module": "src/percent-bar-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/price-history-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "D3-powered SVG line chart for property price history.\n\nUses scaleTime (X) + scaleLinear (Y) from d3-scale and line/area path\ngenerators from d3-shape. Adapts to container width via ResizeObserver.",
+          "name": "PriceHistoryChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "history",
+              "type": {
+                "text": "PricePoint[]"
+              },
+              "default": "[]",
+              "description": "Array of price points (points with null price/date are skipped).",
+              "attribute": "history"
+            },
+            {
+              "kind": "field",
+              "name": "yLabels",
+              "type": {
+                "text": "\"auto\" | \"always\" | \"never\""
+              },
+              "default": "\"auto\"",
+              "description": "\"auto\" (default) | \"always\" | \"never\"",
+              "attribute": "y-labels"
+            },
+            {
+              "kind": "field",
+              "name": "maxXLabels",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Max X-axis date ticks (default 3).",
+              "attribute": "max-x-labels"
+            },
+            {
+              "kind": "field",
+              "name": "_width",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_hoveredIdx",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_ro",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "validPoints",
+              "type": {
+                "text": "PricePoint[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "showY",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "computeLayout",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "history",
+              "type": {
+                "text": "PricePoint[]"
+              },
+              "default": "[]",
+              "description": "Array of price points (points with null price/date are skipped).",
+              "fieldName": "history"
+            },
+            {
+              "name": "y-labels",
+              "type": {
+                "text": "\"auto\" | \"always\" | \"never\""
+              },
+              "default": "\"auto\"",
+              "description": "\"auto\" (default) | \"always\" | \"never\"",
+              "fieldName": "yLabels"
+            },
+            {
+              "name": "max-x-labels",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Max X-axis date ticks (default 3).",
+              "fieldName": "maxXLabels"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "price-history-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PriceHistoryChart",
+          "declaration": {
+            "name": "PriceHistoryChart",
+            "module": "src/price-history-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "price-history-chart",
+          "declaration": {
+            "name": "PriceHistoryChart",
+            "module": "src/price-history-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/radio-cards.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Single-select group of full-width cards, each with a label and optional\ndescription — for a handful of meaningfully different choices where the\ndescription matters. For many short, same-shaped options (a color swatch,\na basemap style), use `radio-pills` instead. Wraps native radio inputs for\nkeyboard/a11y and fires `change` rather than relying on form submission.",
+          "name": "RadioCards",
+          "members": [
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "RadioCardOption[]"
+              },
+              "default": "[]",
+              "description": "Options to render, one card each."
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "#name",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`radio-cards-${++instanceCount}`"
+            },
+            {
+              "kind": "method",
+              "name": "_onChange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A card was selected; detail: { value }."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value.",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "radio-cards",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RadioCards",
+          "declaration": {
+            "name": "RadioCards",
+            "module": "src/radio-cards.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "radio-cards",
+          "declaration": {
+            "name": "RadioCards",
+            "module": "src/radio-cards.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/radio-pills.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Single-select group of compact pill-shaped options — for many short,\nsame-shaped choices (a basemap style, a unit toggle). For a handful of\nchoices where a description matters, use `radio-cards` instead. Wraps\nnative radio inputs for keyboard/a11y and fires `change` rather than\nrelying on form submission.",
+          "name": "RadioPills",
+          "members": [
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "RadioPillOption[]"
+              },
+              "default": "[]",
+              "description": "Options to render, one pill each."
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "#name",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`radio-pills-${++instanceCount}`"
+            },
+            {
+              "kind": "method",
+              "name": "_onChange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A pill was selected; detail: { value }."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value.",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "radio-pills",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RadioPills",
+          "declaration": {
+            "name": "RadioPills",
+            "module": "src/radio-pills.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "radio-pills",
+          "declaration": {
+            "name": "RadioPills",
+            "module": "src/radio-pills.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/relative-time.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Inline relative-time display (e.g. \"3 hours ago\"). Accepts either a\nstandard ISO 8601 string or a SQLite `datetime('now')` string\n(\"YYYY-MM-DD HH:MM:SS\", UTC, no zone marker) via `datetime`. Shows the\nfull date/time in the viewer's local timezone as a hover tooltip, and\nre-renders on an interval so the text stays current while visible.",
+          "name": "RelativeTime",
+          "members": [
+            {
+              "kind": "field",
+              "name": "datetime",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Timestamp to render, relative to now.",
+              "attribute": "datetime"
+            },
+            {
+              "kind": "field",
+              "name": "_now",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_timer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "datetime",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Timestamp to render, relative to now.",
+              "fieldName": "datetime"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "relative-time",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RelativeTime",
+          "declaration": {
+            "name": "RelativeTime",
+            "module": "src/relative-time.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "relative-time",
+          "declaration": {
+            "name": "RelativeTime",
+            "module": "src/relative-time.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/reveal-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Button that reveals hidden slotted content when clicked.",
+          "name": "RevealButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Reveal hidden content\"",
+              "description": "Label shown on the button before it's clicked.",
+              "attribute": "label"
+            },
+            {
+              "kind": "method",
+              "name": "_reveal",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Reveal hidden content\"",
+              "description": "Label shown on the button before it's clicked.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "reveal-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RevealButton",
+          "declaration": {
+            "name": "RevealButton",
+            "module": "src/reveal-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "reveal-button",
+          "declaration": {
+            "name": "RevealButton",
+            "module": "src/reveal-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/roman-numeral.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Converts an integer to a roman numeral inline.",
+          "name": "RomanNumeral",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Integer value to render as a roman numeral.",
+              "attribute": "value"
+            },
+            {
+              "kind": "method",
+              "name": "_convertToRoman",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "num",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Integer value to render as a roman numeral.",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "roman-numeral",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RomanNumeral",
+          "declaration": {
+            "name": "RomanNumeral",
+            "module": "src/roman-numeral.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "roman-numeral",
+          "declaration": {
+            "name": "RomanNumeral",
+            "module": "src/roman-numeral.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/slide-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Generic sliding panel shell. Handles positioning, open/close animation,\nheader chrome, and a close button. Body content is provided via the\ndefault slot; the consumer controls its own padding and overflow.\n\nDesktop: 300 px fixed right-side panel that slides from the right.\nMobile (≤768px): bottom-sheet drawer (60vh) — reserved for future use.",
+          "name": "SlidePanel",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the panel is currently visible.",
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Title text shown in the panel header (overridable via slot=\"title\").",
+              "attribute": "heading"
+            },
+            {
+              "kind": "method",
+              "name": "_close",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "panel-close",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked the close (✕) button."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the panel is currently visible.",
+              "fieldName": "open"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Title text shown in the panel header (overridable via slot=\"title\").",
+              "fieldName": "heading"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "slide-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SlidePanel",
+          "declaration": {
+            "name": "SlidePanel",
+            "module": "src/slide-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "slide-panel",
+          "declaration": {
+            "name": "SlidePanel",
+            "module": "src/slide-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/toast-notification.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Fixed-position stack of dismissible notifications, anchored top-right\n(top-full-width on mobile). Not wired to any app state yet — callers add\ntoasts imperatively via the `show()` method on a live element reference,\ne.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,\nor via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers\nexported from this file. Each toast auto-dismisses after `duration` ms and\ncan also be dismissed via its ✕ button. Appears/disappears instantly — no\nslide/fade transitions.",
+          "name": "ToastNotification",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_toasts",
+              "type": {
+                "text": "Toast[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_nextId",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_timers",
+              "privacy": "private",
+              "default": "new Map<number, ReturnType<typeof setTimeout>>()"
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "Text to show."
+                },
+                {
+                  "name": "options",
+                  "default": "{}",
+                  "type": {
+                    "text": "ToastOptions"
+                  },
+                  "description": "Variant + auto-dismiss duration (see {@link ToastOptions}).\n   * "
+                }
+              ],
+              "description": "Queues a toast for display."
+            },
+            {
+              "kind": "method",
+              "name": "dismiss",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  },
+                  "description": "The id returned by `show()`."
+                }
+              ],
+              "description": "Removes a toast immediately, cancelling its pending auto-dismiss timer if any."
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "toast-notification",
+          "customElement": true
+        },
+        {
+          "kind": "function",
+          "name": "notifyError",
+          "parameters": [
+            {
+              "name": "message",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Shows an error toast. Use for connection/network failures, not validation errors."
+        },
+        {
+          "kind": "function",
+          "name": "notifySuccess",
+          "parameters": [
+            {
+              "name": "message",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Shows a success toast."
+        },
+        {
+          "kind": "function",
+          "name": "notifyInfo",
+          "parameters": [
+            {
+              "name": "message",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Shows an info toast."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ToastNotification",
+          "declaration": {
+            "name": "ToastNotification",
+            "module": "src/toast-notification.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "toast-notification",
+          "declaration": {
+            "name": "ToastNotification",
+            "module": "src/toast-notification.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifyError",
+          "declaration": {
+            "name": "notifyError",
+            "module": "src/toast-notification.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifySuccess",
+          "declaration": {
+            "name": "notifySuccess",
+            "module": "src/toast-notification.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifyInfo",
+          "declaration": {
+            "name": "notifyInfo",
+            "module": "src/toast-notification.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tokenValues",
+          "type": {
+            "text": "Record<string, string>"
+          },
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-size\": \"0.875rem\", \"--ui-font-size-sm\": \"0.75rem\", }",
+          "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
+        },
+        {
+          "kind": "variable",
+          "name": "tokens",
+          "default": "css` :host { --ui-primary: var(--ui-primary, #4f46e5); --ui-primary-hover: var(--ui-primary-hover, #4338ca); --ui-danger: var(--ui-danger, #dc2626); --ui-danger-hover: var(--ui-danger-hover, #b91c1c); --ui-success: var(--ui-success, #16a34a); --ui-text: var(--ui-text, #0f172a); --ui-text-muted: var(--ui-text-muted, #64748b); --ui-border: var(--ui-border, #e2e8f0); --ui-surface: var(--ui-surface, #ffffff); --ui-surface-muted: var(--ui-surface-muted, #f8fafc); --ui-overlay: var(--ui-overlay, rgb(15 23 42 / 0.45)); --ui-radius: var(--ui-radius, 0.5rem); --ui-radius-sm: var(--ui-radius-sm, 0.25rem); --ui-shadow: var( --ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) ); --ui-shadow-lg: var( --ui-shadow-lg, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) ); --ui-focus-ring: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)); --ui-font: var( --ui-font, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\" ); --ui-font-size: var(--ui-font-size, 0.875rem); --ui-font-size-sm: var(--ui-font-size-sm, 0.75rem); } `",
+          "description": "A shared `:host` stylesheet that establishes the token custom properties\nwith their fallback values. Import and include this in every component's\n`static styles` array alongside its component-specific `css` block."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tokenValues",
+          "declaration": {
+            "name": "tokenValues",
+            "module": "src/tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tokens",
+          "declaration": {
+            "name": "tokens",
+            "module": "src/tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/ui-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Button (or link styled as one) with an optional leading icon, in three\nvisual weights. Set `href` to render an `<a>` instead of a `<button>` —\nsame styling either way — for cross-page navigation that should look like\nan action button; a disabled/busy link stays a real `<a>` with\n`aria-disabled` + `pointer-events: none` rather than losing its href.\nPut the icon in the `icon` slot and the label in the default slot.\n\nForm-associated (`type=\"submit\"`/`\"reset\"`): the actual `<button>` lives in\nthis element's shadow root, which native HTML form association does not\ncross into from an ancestor light-DOM `<form>`. `type=\"submit\"`/`\"reset\"`\nis instead wired through `ElementInternals.form` — the same mechanism\n`address-autocomplete` uses to associate with an ancestor form.",
+          "name": "UiButton",
+          "slots": [
+            {
+              "description": "Optional leading icon (e.g. an inline SVG).",
+              "name": "icon"
+            },
+            {
+              "description": "Button label.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "ButtonVariant"
+              },
+              "default": "\"primary\"",
+              "description": "Visual weight.",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Renders an `<a href=\"...\">` instead of a `<button>` when set.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "\"button\" | \"submit\" | \"reset\""
+              },
+              "default": "\"button\"",
+              "description": "Native button `type`. Ignored when `href` is set.",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the control and dims it.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "busy",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a spinner in place of the icon slot and disables the control.",
+              "attribute": "busy"
+            },
+            {
+              "kind": "method",
+              "name": "_onClick",
+              "privacy": "private",
+              "description": "Drives submit/reset on the ancestor form via ElementInternals, since a shadow-DOM button can't do it natively."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "ButtonVariant"
+              },
+              "default": "\"primary\"",
+              "description": "Visual weight.",
+              "fieldName": "variant"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Renders an `<a href=\"...\">` instead of a `<button>` when set.",
+              "fieldName": "href"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "\"button\" | \"submit\" | \"reset\""
+              },
+              "default": "\"button\"",
+              "description": "Native button `type`. Ignored when `href` is set.",
+              "fieldName": "type"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the control and dims it.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "busy",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a spinner in place of the icon slot and disables the control.",
+              "fieldName": "busy"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "ui-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "UiButton",
+          "declaration": {
+            "name": "UiButton",
+            "module": "src/ui-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ui-button",
+          "declaration": {
+            "name": "UiButton",
+            "module": "src/ui-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/user-avatar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Circular avatar. Shows `src` when it loads successfully; falls back to the\nfirst letter of `name` (uppercased) if `src` is unset or fails to load\n(e.g. an expired OAuth profile-photo URL); falls back further to a generic\nperson icon if `name` is also unset. A broken image never leaves a blank\ncircle.",
+          "name": "UserAvatar",
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Image URL to show. Falls back to initials/icon if unset or it fails to load.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Source string for the fallback initial (e.g. a display name or email) — first character, uppercased.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "32",
+              "description": "Diameter in CSS pixels.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "_imgError",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Image URL to show. Falls back to initials/icon if unset or it fails to load.",
+              "fieldName": "src"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Source string for the fallback initial (e.g. a display name or email) — first character, uppercased.",
+              "fieldName": "name"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "32",
+              "description": "Diameter in CSS pixels.",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "user-avatar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "UserAvatar",
+          "declaration": {
+            "name": "UserAvatar",
+            "module": "src/user-avatar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "user-avatar",
+          "declaration": {
+            "name": "UserAvatar",
+            "module": "src/user-avatar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/weight-bar-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Sorted horizontal bar chart of labeled weights (normalized fractions\nsumming to ~1). Bars sort descending — the order IS the priority ranking.\nWidths scale relative to the largest weight (which fills its track); the\npercent labels carry the absolute values. Rows are keyed by item id\n(repeat directive) so a re-render with new weights moves the existing\nrows; bar widths animate via CSS, re-sorting is instant.",
+          "name": "WeightBarChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "WeightBarItem[]"
+              },
+              "default": "[]",
+              "description": "Items to render as weighted rows, sorted descending by value."
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "weight-bar-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "WeightBarChart",
+          "declaration": {
+            "name": "WeightBarChart",
+            "module": "src/weight-bar-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "weight-bar-chart",
+          "declaration": {
+            "name": "WeightBarChart",
+            "module": "src/weight-bar-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/color.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "mixHex",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "base",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "weightPercent",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Linearly interpolates `base` toward `target` by `weightPercent`% (0-100)\nin RGB space, returning a 6-digit hex string. Used to derive gradient\nlight/dark stops from a single base color — SVG presentation attributes\n(`stop-color`) can't consume `color-mix()`/CSS custom properties, so this\ncomputes plain hex instead (see CLAUDE.md's SVG token rule)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "mixHex",
+          "declaration": {
+            "name": "mixHex",
+            "module": "src/utils/color.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/distance.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "formatMiles",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "miles",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Formats a distance in miles, switching to feet below 0.25 mi.\nAt ≥10 mi precision drops to whole miles."
+        },
+        {
+          "kind": "function",
+          "name": "formatKm",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "km",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Formats a distance in kilometers, switching to meters below 0.5 km.\nAt ≥10 km precision drops to whole kilometers. (Future use.)"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "formatMiles",
+          "declaration": {
+            "name": "formatMiles",
+            "module": "src/utils/distance.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatKm",
+          "declaration": {
+            "name": "formatKm",
+            "module": "src/utils/distance.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/time.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "parseTimestamp",
+          "return": {
+            "type": {
+              "text": "Date"
+            }
+          },
+          "parameters": [
+            {
+              "name": "s",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parses a timestamp from either SQLite's `datetime('now')` (a space-separated\nUTC string with no zone marker, e.g. \"2026-07-15 10:23:00\") or a standard\nISO 8601 string. JS's `Date` parser treats the space-separated form as\nlocal time, so it's coerced to `T...Z` first to anchor it to UTC."
+        },
+        {
+          "kind": "function",
+          "name": "formatRelativeTime",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "Date"
+              }
+            },
+            {
+              "name": "now",
+              "default": "Date.now()",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Formats `date` relative to `now` (e.g. \"3 hours ago\", \"in 2 days\")."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "parseTimestamp",
+          "declaration": {
+            "name": "parseTimestamp",
+            "module": "src/utils/time.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatRelativeTime",
+          "declaration": {
+            "name": "formatRelativeTime",
+            "module": "src/utils/time.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
