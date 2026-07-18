@@ -1,9 +1,9 @@
 /node_modules/
 /lib/
-/test/
-custom-elements.json
-
 dist/
+demo-dist/
+test-results/
+playwright-report/
 
 # only generated for size check
 bundled.js

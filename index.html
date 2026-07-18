@@ -1,11 +1,555 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Drop down element</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@f-ewald/components — Playground</title>
+    <link rel="stylesheet" href="/demo/demo.css" />
   </head>
   <body>
-    <a href="/dev/index.html">Click here to go to demo</a>
+    <div class="flex min-h-screen flex-col lg:flex-row">
+      <aside class="border-b border-slate-200 bg-slate-50 lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r">
+        <div class="p-6">
+          <h1 class="text-lg font-semibold text-slate-900">@f-ewald/components</h1>
+          <p class="mt-1 text-xs text-slate-500">Playground</p>
+        </div>
+        <nav class="demo-nav flex flex-col gap-0.5 px-3 pb-6 text-sm" data-testid="nav">
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#animate-confetti">animate-confetti</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#reveal-button">reveal-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#roman-numeral">roman-numeral</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#confirm-dialog">confirm-dialog</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#toast-notification">toast-notification</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#slide-panel">slide-panel</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#copy-link-button">copy-link-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#relative-time">relative-time</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distance-value">distance-value</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#price-history-chart">price-history-chart</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#percent-bar-chart">percent-bar-chart</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#weight-bar-chart">weight-bar-chart</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#address-autocomplete">address-autocomplete</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#user-avatar">user-avatar</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#radio-cards">radio-cards</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#radio-pills">radio-pills</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-button">ui-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
+        </nav>
+      </aside>
+
+      <main class="mx-auto w-full max-w-3xl flex-1 px-6 py-10 lg:px-12">
+        <header class="border-b border-slate-100 pb-8">
+          <h2 class="text-3xl font-bold tracking-tight text-slate-900">Component playground</h2>
+          <p class="mt-2 text-slate-500">
+            Live, hand-testable examples of every component in <code>@f-ewald/components</code>.
+          </p>
+        </header>
+
+        <section id="animate-confetti" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-animate-confetti">
+          <h3 class="text-xl font-semibold text-slate-900">animate-confetti</h3>
+          <p class="mt-1 text-sm text-slate-500">Fullscreen confetti burst overlay.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <button
+              id="confetti-trigger"
+              data-testid="confetti-trigger"
+              type="button"
+              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Launch confetti
+            </button>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/animate-confetti.js";
+
+&lt;animate-confetti duration="6000"&gt;&lt;/animate-confetti&gt;</code></pre>
+        </section>
+
+        <section id="reveal-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-reveal-button">
+          <h3 class="text-xl font-semibold text-slate-900">reveal-button</h3>
+          <p class="mt-1 text-sm text-slate-500">Button that reveals hidden slotted content when clicked.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <reveal-button id="reveal-button-demo" data-testid="reveal-button-demo" label="Show the secret">
+              Surprise! This content was hidden.
+            </reveal-button>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/reveal-button.js";
+
+&lt;reveal-button label="Show the secret"&gt;
+  Surprise! This content was hidden.
+&lt;/reveal-button&gt;</code></pre>
+        </section>
+
+        <section id="roman-numeral" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-roman-numeral">
+          <h3 class="text-xl font-semibold text-slate-900">roman-numeral</h3>
+          <p class="mt-1 text-sm text-slate-500">Converts an integer to a roman numeral inline.</p>
+          <div class="mt-6 flex items-center gap-4 rounded-lg border border-slate-200 p-6">
+            <label class="text-sm text-slate-600">
+              Value
+              <input
+                id="roman-input"
+                data-testid="roman-input"
+                type="number"
+                value="2004"
+                class="ml-2 w-24 rounded-md border border-slate-300 px-2 py-1 text-sm"
+              />
+            </label>
+            <span class="text-lg font-medium text-slate-900">
+              <roman-numeral id="roman-output" data-testid="roman-output" value="2004"></roman-numeral>
+            </span>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/roman-numeral.js";
+
+&lt;roman-numeral value="2004"&gt;&lt;/roman-numeral&gt;</code></pre>
+        </section>
+
+        <section id="confirm-dialog" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-confirm-dialog">
+          <h3 class="text-xl font-semibold text-slate-900">confirm-dialog</h3>
+          <p class="mt-1 text-sm text-slate-500">Overlay confirmation dialog with Cancel/Confirm actions.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <button
+              id="confirm-open"
+              data-testid="confirm-open"
+              type="button"
+              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Delete item
+            </button>
+            <p class="mt-3 text-sm text-slate-500">
+              confirm: <span id="confirm-count" data-testid="confirm-count">0</span> · cancel:
+              <span id="cancel-count" data-testid="cancel-count">0</span>
+            </p>
+            <confirm-dialog id="confirm-demo" data-testid="confirm-demo" confirm-label="Delete" cancel-label="Cancel">
+              Are you sure you want to delete this item? This cannot be undone.
+            </confirm-dialog>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/confirm-dialog.js";
+
+&lt;confirm-dialog open confirm-label="Delete" cancel-label="Cancel"&gt;
+  Are you sure you want to delete this item?
+&lt;/confirm-dialog&gt;</code></pre>
+        </section>
+
+        <section id="toast-notification" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-toast-notification">
+          <h3 class="text-xl font-semibold text-slate-900">toast-notification</h3>
+          <p class="mt-1 text-sm text-slate-500">Fixed-position stack of dismissible notifications.</p>
+          <div class="mt-6 flex gap-3 rounded-lg border border-slate-200 p-6">
+            <button
+              id="toast-success"
+              data-testid="toast-success"
+              type="button"
+              class="rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700"
+            >
+              Success
+            </button>
+            <button
+              id="toast-error"
+              data-testid="toast-error"
+              type="button"
+              class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Error
+            </button>
+            <button
+              id="toast-info"
+              data-testid="toast-info"
+              type="button"
+              class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Info
+            </button>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/toast-notification.js";
+import { notifySuccess } from "@f-ewald/components/toast-notification.js";
+
+&lt;toast-notification&gt;&lt;/toast-notification&gt;
+&lt;script&gt;notifySuccess("Saved!");&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="slide-panel" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-slide-panel">
+          <h3 class="text-xl font-semibold text-slate-900">slide-panel</h3>
+          <p class="mt-1 text-sm text-slate-500">Sliding panel shell with header chrome and a close button.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <button
+              id="panel-open"
+              data-testid="panel-open"
+              type="button"
+              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Open panel
+            </button>
+            <slide-panel id="panel-demo" data-testid="panel-demo" heading="Property details">
+              <div class="p-4 text-sm text-slate-600">Panel body content goes here.</div>
+            </slide-panel>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/slide-panel.js";
+
+&lt;slide-panel open heading="Property details"&gt;
+  Panel body content goes here.
+&lt;/slide-panel&gt;</code></pre>
+        </section>
+
+        <section id="copy-link-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-copy-link-button">
+          <h3 class="text-xl font-semibold text-slate-900">copy-link-button</h3>
+          <p class="mt-1 text-sm text-slate-500">Icon button that copies a value to the clipboard.</p>
+          <div class="mt-6 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
+            <copy-link-button
+              id="copy-demo"
+              data-testid="copy-demo"
+              value="https://example.com/listing/42"
+              label="Copy listing link"
+            ></copy-link-button>
+            <span id="copy-status" data-testid="copy-status" class="text-sm text-slate-500"></span>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/copy-link-button.js";
+
+&lt;copy-link-button value="https://example.com/listing/42" label="Copy listing link"&gt;&lt;/copy-link-button&gt;</code></pre>
+        </section>
+
+        <section id="relative-time" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-relative-time">
+          <h3 class="text-xl font-semibold text-slate-900">relative-time</h3>
+          <p class="mt-1 text-sm text-slate-500">Inline relative-time display (e.g. "3 hours ago").</p>
+          <div class="mt-6 flex items-center gap-4 rounded-lg border border-slate-200 p-6">
+            <label class="text-sm text-slate-600">
+              Hours ago
+              <input
+                id="relative-input"
+                data-testid="relative-input"
+                type="number"
+                value="3"
+                class="ml-2 w-20 rounded-md border border-slate-300 px-2 py-1 text-sm"
+              />
+            </label>
+            <span class="text-sm text-slate-900">
+              <relative-time id="relative-output" data-testid="relative-output"></relative-time>
+            </span>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/relative-time.js";
+
+&lt;relative-time datetime="2026-07-17T07:00:00Z"&gt;&lt;/relative-time&gt;</code></pre>
+        </section>
+
+        <section id="distance-value" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-distance-value">
+          <h3 class="text-xl font-semibold text-slate-900">distance-value</h3>
+          <p class="mt-1 text-sm text-slate-500">Inline distance display, switching units at sensible thresholds.</p>
+          <div class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6 text-sm">
+            <label class="flex items-center gap-2 text-slate-600">
+              Miles
+              <input
+                id="distance-miles-input"
+                data-testid="distance-miles-input"
+                type="number"
+                step="0.01"
+                value="0.1"
+                class="w-24 rounded-md border border-slate-300 px-2 py-1"
+              />
+              <distance-value id="distance-miles-output" data-testid="distance-miles-output" miles="0.1"></distance-value>
+            </label>
+            <label class="flex items-center gap-2 text-slate-600">
+              Miles (long)
+              <input
+                id="distance-miles-long-input"
+                data-testid="distance-miles-long-input"
+                type="number"
+                step="0.1"
+                value="5"
+                class="w-24 rounded-md border border-slate-300 px-2 py-1"
+              />
+              <distance-value id="distance-miles-long-output" data-testid="distance-miles-long-output" miles="5"></distance-value>
+            </label>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/distance-value.js";
+
+&lt;distance-value miles="5"&gt;&lt;/distance-value&gt;</code></pre>
+        </section>
+
+        <section id="price-history-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-price-history-chart">
+          <h3 class="text-xl font-semibold text-slate-900">price-history-chart</h3>
+          <p class="mt-1 text-sm text-slate-500">D3-powered SVG line chart for a property's price history.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <price-history-chart id="price-history-demo" data-testid="price-history-demo"></price-history-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/price-history-chart.js";
+
+const el = document.querySelector("price-history-chart");
+el.history = [
+  { date: "2023-01-01", price: 620000, eventType: "Listed" },
+  { date: "2023-06-01", price: 645000, eventType: "Price change" },
+  { date: "2024-02-01", price: 680000, eventType: "Sold" },
+];</code></pre>
+        </section>
+
+        <section id="distribution-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-distribution-chart">
+          <h3 class="text-xl font-semibold text-slate-900">distribution-chart</h3>
+          <p class="mt-1 text-sm text-slate-500">KDE distribution curve for a named metric with value markers.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <distribution-chart id="distribution-demo" data-testid="distribution-demo"></distribution-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/distribution-chart.js";
+
+&lt;distribution-chart metric="sqft"&gt;&lt;/distribution-chart&gt;
+&lt;script&gt;
+  document.querySelector("distribution-chart").values = [{ label: "", value: 1450 }];
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="percent-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-percent-bar-chart">
+          <h3 class="text-xl font-semibold text-slate-900">percent-bar-chart</h3>
+          <p class="mt-1 text-sm text-slate-500">Horizontal bar chart of labeled percentage rows.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <percent-bar-chart id="percent-bar-demo" data-testid="percent-bar-demo"></percent-bar-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/percent-bar-chart.js";
+
+document.querySelector("percent-bar-chart").groups = [
+  { key: "a", label: "White", pct: 45.2, color: "#4f46e5" },
+  { key: "b", label: "Asian", pct: 28.1, color: "#0d9488" },
+];</code></pre>
+        </section>
+
+        <section id="weight-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-weight-bar-chart">
+          <h3 class="text-xl font-semibold text-slate-900">weight-bar-chart</h3>
+          <p class="mt-1 text-sm text-slate-500">Sorted horizontal bar chart of normalized weights.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <button
+              id="weight-shuffle"
+              data-testid="weight-shuffle"
+              type="button"
+              class="mb-4 rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Shuffle weights
+            </button>
+            <weight-bar-chart id="weight-bar-demo" data-testid="weight-bar-demo"></weight-bar-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/weight-bar-chart.js";
+
+document.querySelector("weight-bar-chart").items = [
+  { id: "price", label: "Price", value: 0.4 },
+  { id: "schools", label: "Schools", value: 0.35 },
+  { id: "commute", label: "Commute", value: 0.25 },
+];</code></pre>
+        </section>
+
+        <section id="address-autocomplete" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-address-autocomplete">
+          <h3 class="text-xl font-semibold text-slate-900">address-autocomplete</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Form-associated address input with a suggestion dropdown — backed here by a local
+            array (try "St", "Ave", or "London"), or point <code>endpoint</code> at a geocoding API instead.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <address-autocomplete
+              id="address-demo"
+              data-testid="address-demo"
+              placeholder="Start typing an address…"
+            ></address-autocomplete>
+            <p id="address-selected" data-testid="address-selected" class="mt-3 text-sm text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/address-autocomplete.js";
+
+&lt;address-autocomplete placeholder="Start typing an address…"&gt;&lt;/address-autocomplete&gt;
+&lt;script type="module"&gt;
+  // Local mode: filters client-side, no network request.
+  document.querySelector("address-autocomplete").suggestions = [
+    { address: "1 Infinite Loop, Cupertino, CA", lat: 37.3318, lng: -122.0312 },
+    { address: "10 Downing Street, London", lat: 51.5034, lng: -0.1276 },
+  ];
+
+  // API mode: omit `suggestions` and set `endpoint` + `access-token` instead.
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="autocomplete-input" class="scroll-mt-8 py-10" data-testid="section-autocomplete-input">
+          <h3 class="text-xl font-semibold text-slate-900">autocomplete-input</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Generic form-associated autocomplete for any <code>{key, value}</code> option list —
+            backed here by a local array (try "Type" or "Java"), or point <code>endpoint</code> at
+            an API that returns <code>[{key, value}]</code> for a query string instead.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <form id="autocomplete-form" data-testid="autocomplete-form">
+              <autocomplete-input
+                id="autocomplete-demo"
+                data-testid="autocomplete-demo"
+                name="language"
+                placeholder="Start typing a language…"
+              ></autocomplete-input>
+              <button
+                type="submit"
+                class="mt-3 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              >
+                Submit
+              </button>
+            </form>
+            <p id="autocomplete-selected" data-testid="autocomplete-selected" class="mt-3 text-sm text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/autocomplete-input.js";
+
+&lt;form&gt;
+  &lt;autocomplete-input name="language" placeholder="Start typing a language…"&gt;&lt;/autocomplete-input&gt;
+&lt;/form&gt;
+&lt;script type="module"&gt;
+  // Local mode: filters client-side, no network request.
+  document.querySelector("autocomplete-input").options = [
+    { key: "ts", value: "TypeScript" },
+    { key: "py", value: "Python" },
+  ];
+
+  // API mode: omit `options` and set `endpoint` instead — it's queried as
+  // `${endpoint}?${queryParam}=<text>` and must respond with [{key, value}].
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="user-avatar" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-user-avatar">
+          <h3 class="text-xl font-semibold text-slate-900">user-avatar</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Circular avatar — shows an image, falling back to an initial, falling back further to a generic icon.
+          </p>
+          <div class="mt-6 flex items-center gap-4 rounded-lg border border-slate-200 p-6">
+            <user-avatar id="avatar-image" data-testid="avatar-image" src="https://i.pravatar.cc/64?img=12" size="40"></user-avatar>
+            <user-avatar id="avatar-initial" data-testid="avatar-initial" name="Freddy" size="40"></user-avatar>
+            <user-avatar id="avatar-fallback" data-testid="avatar-fallback" size="40"></user-avatar>
+            <user-avatar id="avatar-broken" data-testid="avatar-broken" src="https://example.invalid/broken.jpg" name="Broken" size="40"></user-avatar>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/user-avatar.js";
+
+&lt;user-avatar src="https://example.com/photo.jpg" name="Freddy" size="40"&gt;&lt;/user-avatar&gt;</code></pre>
+        </section>
+
+        <section id="radio-cards" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-radio-cards">
+          <h3 class="text-xl font-semibold text-slate-900">radio-cards</h3>
+          <p class="mt-1 text-sm text-slate-500">Single-select cards with a label and optional description.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <radio-cards id="radio-cards-demo" data-testid="radio-cards-demo"></radio-cards>
+            <p class="mt-3 text-sm text-slate-500">Selected: <span id="radio-cards-selected" data-testid="radio-cards-selected"></span></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/radio-cards.js";
+
+const el = document.querySelector("radio-cards");
+el.options = [
+  { value: "simple", label: "Simple", description: "Quick-ranking view" },
+  { value: "detailed", label: "Detailed", description: "Every section and layer" },
+];
+el.value = "simple";
+el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pre>
+        </section>
+
+        <section id="radio-pills" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-radio-pills">
+          <h3 class="text-xl font-semibold text-slate-900">radio-pills</h3>
+          <p class="mt-1 text-sm text-slate-500">Single-select compact pills for many short, same-shaped options.</p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <radio-pills id="radio-pills-demo" data-testid="radio-pills-demo"></radio-pills>
+            <p class="mt-3 text-sm text-slate-500">Selected: <span id="radio-pills-selected" data-testid="radio-pills-selected"></span></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/radio-pills.js";
+
+const el = document.querySelector("radio-pills");
+el.options = [
+  { value: "light", label: "Light" },
+  { value: "streets", label: "Streets" },
+  { value: "satellite", label: "Satellite" },
+];
+el.value = "light";
+el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pre>
+        </section>
+
+        <section id="ui-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-button">
+          <h3 class="text-xl font-semibold text-slate-900">ui-button</h3>
+          <p class="mt-1 text-sm text-slate-500">Button (or link) with an optional icon, in three visual weights.</p>
+          <div class="mt-6 flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 p-6">
+            <ui-button id="button-primary" data-testid="button-primary" variant="primary">
+              <span slot="icon">+</span>
+              New property
+            </ui-button>
+            <ui-button id="button-secondary" data-testid="button-secondary" variant="secondary">Cancel</ui-button>
+            <ui-button id="button-danger" data-testid="button-danger" variant="danger">Delete</ui-button>
+            <ui-button id="button-busy" data-testid="button-busy" variant="primary" busy>Saving</ui-button>
+            <ui-button id="button-link" data-testid="button-link" variant="secondary" href="#ui-button">Edit (as link)</ui-button>
+          </div>
+          <form id="button-form" data-testid="button-form" class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
+            <input name="note" placeholder="Required field" required class="rounded-md border border-slate-300 px-2 py-1 text-sm" />
+            <ui-button type="submit" variant="primary">Submit (type="submit")</ui-button>
+            <span id="button-form-result" data-testid="button-form-result" class="text-sm text-slate-500"></span>
+          </form>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/ui-button.js";
+
+&lt;ui-button variant="primary"&gt;
+  &lt;span slot="icon"&gt;...&lt;/span&gt;
+  New property
+&lt;/ui-button&gt;
+&lt;ui-button variant="danger"&gt;Delete&lt;/ui-button&gt;
+&lt;ui-button variant="secondary" href="/properties?edit=42"&gt;Edit&lt;/ui-button&gt;</code></pre>
+        </section>
+
+        <section id="map-pin" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-map-pin">
+          <h3 class="text-xl font-semibold text-slate-900">map-pin</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Circular "Apple Maps"-style pin — a light-to-dark gradient fill with a slight point at the bottom. No mapping-library dependency; the consumer positions it (e.g. via a <code>mapboxgl.Marker</code>).
+          </p>
+          <div class="mt-6 flex flex-wrap items-end gap-4 rounded-lg border border-slate-200 p-6">
+            <map-pin id="pin-rank-1" data-testid="pin-rank-1" color="#1a73e8" size="30">1</map-pin>
+            <map-pin id="pin-rank-2" data-testid="pin-rank-2" color="#1a73e8" size="30">2</map-pin>
+            <map-pin id="pin-home" data-testid="pin-home" color="#22c55e" size="26">🏠</map-pin>
+            <map-pin id="pin-work" data-testid="pin-work" color="#3b82f6" size="26">💼</map-pin>
+            <map-pin id="pin-school" data-testid="pin-school" color="#f59e0b" size="26">🎓</map-pin>
+            <map-pin id="pin-large" data-testid="pin-large" color="#4f46e5" size="48">★</map-pin>
+          </div>
+          <div class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
+            <map-pin id="pin-highlight-demo" data-testid="pin-highlight-demo" color="#1a73e8" size="32">3</map-pin>
+            <button
+              id="pin-highlight-toggle"
+              data-testid="pin-highlight-toggle"
+              type="button"
+              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Toggle highlighted
+            </button>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/map-pin.js";
+
+&lt;map-pin color="#1a73e8" size="30"&gt;3&lt;/map-pin&gt;
+&lt;map-pin color="#22c55e" size="26" highlighted&gt;🏠&lt;/map-pin&gt;</code></pre>
+        </section>
+
+        <section id="map-circle" class="scroll-mt-8 py-10" data-testid="section-map-circle">
+          <h3 class="text-xl font-semibold text-slate-900">map-circle</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Plain circular marker — a light-to-dark gradient fill with a white outer ring, no point/tail. No mapping-library dependency; the consumer positions it (e.g. via a <code>mapboxgl.Marker</code>).
+          </p>
+          <div class="mt-6 flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 p-6">
+            <map-circle id="circle-plain" data-testid="circle-plain" color="#6b7280"></map-circle>
+            <map-circle id="circle-home" data-testid="circle-home" color="#22c55e"></map-circle>
+            <map-circle id="circle-work" data-testid="circle-work" color="#3b82f6"></map-circle>
+            <map-circle id="circle-rank" data-testid="circle-rank" color="#1a73e8" size="24">1</map-circle>
+            <map-circle id="circle-large" data-testid="circle-large" color="#4f46e5" size="48"></map-circle>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Configurable ring-width and size</p>
+          <div class="mt-2 flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 p-6">
+            <map-circle id="circle-thin-ring" data-testid="circle-thin-ring" color="#3b82f6" ring-width="1.5"></map-circle>
+            <map-circle id="circle-default-ring" data-testid="circle-default-ring" color="#3b82f6"></map-circle>
+            <map-circle id="circle-thick-ring" data-testid="circle-thick-ring" color="#3b82f6" ring-width="6"></map-circle>
+            <map-circle id="circle-small" data-testid="circle-small" color="#3b82f6" size="12" ring-width="3"></map-circle>
+            <map-circle id="circle-big" data-testid="circle-big" color="#3b82f6" size="36" ring-width="5"></map-circle>
+          </div>
+          <div class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
+            <map-circle id="circle-highlight-demo" data-testid="circle-highlight-demo" color="#1a73e8"></map-circle>
+            <button
+              id="circle-highlight-toggle"
+              data-testid="circle-highlight-toggle"
+              type="button"
+              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Toggle highlighted
+            </button>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/map-circle.js";
+
+&lt;map-circle color="#6b7280"&gt;&lt;/map-circle&gt;
+&lt;map-circle color="#1a73e8" size="24" ring-width="5" highlighted&gt;1&lt;/map-circle&gt;</code></pre>
+        </section>
+      </main>
+    </div>
+
+    <toast-notification></toast-notification>
+
+    <script type="module" src="/demo/main.ts"></script>
   </body>
 </html>
