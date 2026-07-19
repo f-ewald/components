@@ -1,5 +1,14 @@
 # @f-ewald/components
 
+## 0.4.0
+
+- Added `map-point`: a small plain-colored map marker (gradient fill, thin
+  white ring, no slotted content) for dense point layers — transit stops,
+  amenities, hazard points, etc. Unlike `map-pin`/`map-circle`, it carries no
+  per-marker content, since it's meant to be rasterized once per color and
+  used as a Mapbox `icon-image` on a `symbol` layer rather than mounted as
+  individual DOM markers.
+
 ## 0.2.1
 
 - Fixed `ui-button`: `type="submit"`/`"reset"` now actually submits/resets

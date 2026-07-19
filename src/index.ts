@@ -28,6 +28,7 @@ export {
 export { UserAvatar } from "./user-avatar.js";
 export { MapPin } from "./map-pin.js";
 export { MapCircle } from "./map-circle.js";
+export { MapPoint } from "./map-point.js";
 export { RadioCards, type RadioCardOption } from "./radio-cards.js";
 export { RadioPills, type RadioPillOption } from "./radio-pills.js";
 export { UiButton, type ButtonVariant } from "./ui-button.js";
