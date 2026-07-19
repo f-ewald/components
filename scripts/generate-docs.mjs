@@ -13,6 +13,12 @@ const docsDir = path.join(rootDir, "docs");
  * they're curated here — the set is small and stable. */
 const SLOTS = {
   "reveal-button": [{ name: "(default)", description: "Content to reveal when clicked." }],
+  "photo-gallery": [
+    { name: "(default)", description: "Declarative `gallery-item` elements rendered as slides." },
+  ],
+  "gallery-item": [
+    { name: "(default)", description: "Optional `gallery-item-variant` responsive image sources." },
+  ],
   "confirm-dialog": [{ name: "(default)", description: "Dialog body content." }],
   "slide-panel": [
     { name: "(default)", description: "Panel body content." },
@@ -36,6 +42,38 @@ const EXAMPLES = {
   "reveal-button": `<reveal-button label="Show the secret">
   Surprise! This content was hidden.
 </reveal-button>`,
+  "gallery-item-variant": `<gallery-item-variant
+  media="(max-width: 640px)"
+  srcset="/photos/coast-portrait.jpg"
+></gallery-item-variant>`,
+  "gallery-item": `<gallery-item
+  src="/photos/coast.jpg"
+  alt="Rocky California coastline"
+  caption="California coast"
+>
+  <gallery-item-variant
+    media="(max-width: 640px)"
+    srcset="/photos/coast-portrait.jpg"
+  ></gallery-item-variant>
+</gallery-item>`,
+  "photo-gallery": `<photo-gallery delay="5000" show-counter show-indicators>
+  <gallery-item
+    src="/photos/coast.jpg"
+    alt="Rocky California coastline"
+    caption="California coast"
+  >
+    <gallery-item-variant
+      media="(max-width: 640px)"
+      srcset="/photos/coast-portrait.jpg"
+    ></gallery-item-variant>
+  </gallery-item>
+  <gallery-item src="/photos/bridge.jpg" alt="Golden Gate Bridge"></gallery-item>
+</photo-gallery>
+<script type="module">
+  document.querySelector("photo-gallery").addEventListener("slide-change", (event) => {
+    console.log(event.detail.currentIndex);
+  });
+</script>`,
   "roman-numeral": `<roman-numeral value="2004"></roman-numeral>`,
   "confirm-dialog": `<confirm-dialog open confirm-label="Delete" cancel-label="Cancel">
   Are you sure you want to delete this item?
