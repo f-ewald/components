@@ -17,6 +17,9 @@ import {
   type MapPin,
   type MapCircle,
   type StatMeter,
+  type EditableText,
+  type LiveTimer,
+  type ChatMessage,
 } from "../src/index.js";
 
 /**
@@ -285,6 +288,33 @@ document.getElementById("meter-randomize")?.addEventListener("click", () => {
   if (meterCpu) meterCpu.percent = Math.round(Math.random() * 100);
   if (meterMem) meterMem.percent = Math.round(Math.random() * 100);
 });
+
+// editable-text (log committed changes)
+const editableChangeLog = document.getElementById("editable-change-log")!;
+for (const id of ["editable-title", "editable-description"]) {
+  const el = document.getElementById(id) as EditableText;
+  el?.addEventListener("change", (e) => {
+    editableChangeLog.textContent = `${id}: ${(e as CustomEvent).detail.value}`;
+  });
+}
+
+// live-timer (start both demo timers from "now" on click)
+const timerSeconds = document.getElementById("timer-seconds") as LiveTimer;
+const timerCompact = document.getElementById("timer-compact") as LiveTimer;
+document.getElementById("timer-start")?.addEventListener("click", () => {
+  const now = new Date().toISOString();
+  if (timerSeconds) timerSeconds.since = now;
+  if (timerCompact) timerCompact.since = now;
+});
+
+// chat-message (log collapsible toggles)
+const chatToggleLog = document.getElementById("chat-toggle-log")!;
+for (const id of ["msg-tool", "msg-thinking"]) {
+  const el = document.getElementById(id) as ChatMessage;
+  el?.addEventListener("toggle", (e) => {
+    chatToggleLog.textContent = `${id} collapsed: ${(e as CustomEvent).detail.collapsed}`;
+  });
+}
 
 // Active nav link highlighting.
 const sections = Array.from(document.querySelectorAll("main section[id]"));
