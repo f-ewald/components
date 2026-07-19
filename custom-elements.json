@@ -1166,6 +1166,201 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/chat-message.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One conversation entry in a chat-style activity feed. Tool calls and\n\"thinking\" traces are variants of this component rather than separate\nones — they share the same header, collapse behavior, and body card as a\nnormal message, just dimmed and collapsible with an always-visible summary.",
+          "name": "ChatMessage",
+          "slots": [
+            {
+              "description": "Message body (consumers slot in already-rendered content, e.g. sanitized markdown HTML).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "ChatMessageRole"
+              },
+              "default": "\"agent\"",
+              "description": "Whose message this is; drives the card background/border.",
+              "attribute": "role",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "ChatMessageVariant"
+              },
+              "default": "\"normal\"",
+              "description": "`tool`/`thinking` render dimmed and smaller, with `tool` using monospace for its body.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "author",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Header label, e.g. \"Freddy\" or \"Architect\".",
+              "attribute": "author"
+            },
+            {
+              "kind": "field",
+              "name": "timestamp",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO-8601 timestamp, rendered via `relative-time` in the header.",
+              "attribute": "timestamp"
+            },
+            {
+              "kind": "field",
+              "name": "summary",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Always-visible one-liner for `tool`/`thinking` variants (e.g. a truncated args preview).",
+              "attribute": "summary"
+            },
+            {
+              "kind": "field",
+              "name": "collapsible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether clicking the header/summary toggles the body slot.",
+              "attribute": "collapsible"
+            },
+            {
+              "kind": "field",
+              "name": "collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Current collapse state (reflected as an attribute).",
+              "attribute": "collapsed",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_toggle",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired with `{ collapsed: boolean }` when the header/summary is clicked in collapsible mode."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "role",
+              "type": {
+                "text": "ChatMessageRole"
+              },
+              "default": "\"agent\"",
+              "description": "Whose message this is; drives the card background/border.",
+              "fieldName": "role"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "ChatMessageVariant"
+              },
+              "default": "\"normal\"",
+              "description": "`tool`/`thinking` render dimmed and smaller, with `tool` using monospace for its body.",
+              "fieldName": "variant"
+            },
+            {
+              "name": "author",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Header label, e.g. \"Freddy\" or \"Architect\".",
+              "fieldName": "author"
+            },
+            {
+              "name": "timestamp",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO-8601 timestamp, rendered via `relative-time` in the header.",
+              "fieldName": "timestamp"
+            },
+            {
+              "name": "summary",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Always-visible one-liner for `tool`/`thinking` variants (e.g. a truncated args preview).",
+              "fieldName": "summary"
+            },
+            {
+              "name": "collapsible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether clicking the header/summary toggles the body slot.",
+              "fieldName": "collapsible"
+            },
+            {
+              "name": "collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Current collapse state (reflected as an attribute).",
+              "fieldName": "collapsed"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "chat-message",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ChatMessage",
+          "declaration": {
+            "name": "ChatMessage",
+            "module": "src/chat-message.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "chat-message",
+          "declaration": {
+            "name": "ChatMessage",
+            "module": "src/chat-message.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/confirm-dialog.ts",
       "declarations": [
         {
@@ -1705,6 +1900,238 @@
           "declaration": {
             "name": "DistributionChart",
             "module": "src/distribution-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/editable-text.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Jira/GitHub-style click-to-edit text: a display span that turns into an\n`<input>` (or auto-growing `<textarea>` when `multiline`) on click. The\ninput/textarea inherits the host's font, so a title wrapped in an `<h1>`\nedits at title size.",
+          "name": "EditableText",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current text.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "multiline",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "`false` renders an `<input>`, `true` an auto-growing `<textarea>`.",
+              "attribute": "multiline"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Muted placeholder text shown when `value` is empty, and as the input's placeholder.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables entering edit mode.",
+              "attribute": "readonly"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "`aria-label` applied to the input/textarea.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "_editing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_draft",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_field",
+              "type": {
+                "text": "HTMLInputElement | HTMLTextAreaElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_startEdit",
+              "privacy": "private",
+              "description": "Enters edit mode, seeding the draft from the current value."
+            },
+            {
+              "kind": "method",
+              "name": "_commit",
+              "privacy": "private",
+              "description": "Commits the draft (reverting an empty single-line commit) and exits edit mode.\n\nGuarded on `_editing`: removing the focused input/textarea from the DOM\n(which happens as soon as `_editing` flips to false) makes the browser\nfire a native `blur` on it, re-invoking this handler a second time after\na cancel already ran — the guard makes that second call a no-op instead\nof re-committing the stale draft."
+            },
+            {
+              "kind": "method",
+              "name": "_cancel",
+              "privacy": "private",
+              "description": "Discards the draft and exits edit mode without committing."
+            },
+            {
+              "kind": "method",
+              "name": "_onInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onSingleLineKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onMultilineKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_resize",
+              "privacy": "private",
+              "description": "Grows the textarea's height to fit its content."
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired with `{ value: string }` when the committed value differs from the previous one."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current text.",
+              "fieldName": "value"
+            },
+            {
+              "name": "multiline",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "`false` renders an `<input>`, `true` an auto-growing `<textarea>`.",
+              "fieldName": "multiline"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Muted placeholder text shown when `value` is empty, and as the input's placeholder.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables entering edit mode.",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "`aria-label` applied to the input/textarea.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "editable-text",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "EditableText",
+          "declaration": {
+            "name": "EditableText",
+            "module": "src/editable-text.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "editable-text",
+          "declaration": {
+            "name": "EditableText",
+            "module": "src/editable-text.ts"
           }
         }
       ]
@@ -2570,6 +2997,78 @@
         },
         {
           "kind": "js",
+          "name": "StatusPill",
+          "declaration": {
+            "name": "StatusPill",
+            "module": "./status-pill.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StatusPillColor",
+          "declaration": {
+            "name": "StatusPillColor",
+            "module": "./status-pill.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "EditableText",
+          "declaration": {
+            "name": "EditableText",
+            "module": "./editable-text.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LiveTimer",
+          "declaration": {
+            "name": "LiveTimer",
+            "module": "./live-timer.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChatMessage",
+          "declaration": {
+            "name": "ChatMessage",
+            "module": "./chat-message.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChatMessageRole",
+          "declaration": {
+            "name": "ChatMessageRole",
+            "module": "./chat-message.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChatMessageVariant",
+          "declaration": {
+            "name": "ChatMessageVariant",
+            "module": "./chat-message.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatDuration",
+          "declaration": {
+            "name": "formatDuration",
+            "module": "./utils/duration.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DurationFormat",
+          "declaration": {
+            "name": "DurationFormat",
+            "module": "./utils/duration.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "tokens",
           "declaration": {
             "name": "tokens",
@@ -2590,6 +3089,135 @@
           "declaration": {
             "name": "*",
             "module": "src/icons.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/live-timer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Per-second ticking count-up timer, e.g. a live \"running for 12s\" or\n\"Sleeping for 3 seconds\" indicator. Renders nothing while `since` is unset\nor unparseable.",
+          "name": "LiveTimer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "since",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO-8601 start instant; elapsed time is measured from here.",
+              "attribute": "since"
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "type": {
+                "text": "DurationFormat"
+              },
+              "default": "\"seconds\"",
+              "description": "`\"seconds\"` -> \"1 second\", \"12 seconds\"; `\"compact\"` -> \"12s\", \"3m 12s\", \"1h 03m 12s\".",
+              "attribute": "format"
+            },
+            {
+              "kind": "field",
+              "name": "prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered before the formatted value.",
+              "attribute": "prefix"
+            },
+            {
+              "kind": "field",
+              "name": "suffix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered after the formatted value.",
+              "attribute": "suffix"
+            },
+            {
+              "kind": "field",
+              "name": "_now",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_timer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "since",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO-8601 start instant; elapsed time is measured from here.",
+              "fieldName": "since"
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "DurationFormat"
+              },
+              "default": "\"seconds\"",
+              "description": "`\"seconds\"` -> \"1 second\", \"12 seconds\"; `\"compact\"` -> \"12s\", \"3m 12s\", \"1h 03m 12s\".",
+              "fieldName": "format"
+            },
+            {
+              "name": "prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered before the formatted value.",
+              "fieldName": "prefix"
+            },
+            {
+              "name": "suffix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered after the formatted value.",
+              "fieldName": "suffix"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "live-timer",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LiveTimer",
+          "declaration": {
+            "name": "LiveTimer",
+            "module": "src/live-timer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "live-timer",
+          "declaration": {
+            "name": "LiveTimer",
+            "module": "src/live-timer.ts"
           }
         }
       ]
@@ -3737,6 +4365,102 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/status-pill.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Small colored status pill, optionally with a spinning icon — for task/run\nstates (\"Open\", \"Blocked\", \"Done\") and live-activity indicators (\"Running\").",
+          "name": "StatusPill",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text shown inside the pill.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "StatusPillColor"
+              },
+              "default": "\"neutral\"",
+              "description": "Color variant.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "spinner",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders a small spinning icon before the label.",
+              "attribute": "spinner"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text shown inside the pill.",
+              "fieldName": "label"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "StatusPillColor"
+              },
+              "default": "\"neutral\"",
+              "description": "Color variant.",
+              "fieldName": "color"
+            },
+            {
+              "name": "spinner",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders a small spinning icon before the label.",
+              "fieldName": "spinner"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "status-pill",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "StatusPill",
+          "declaration": {
+            "name": "StatusPill",
+            "module": "src/status-pill.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "status-pill",
+          "declaration": {
+            "name": "StatusPill",
+            "module": "src/status-pill.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/toast-notification.ts",
       "declarations": [
         {
@@ -4356,6 +5080,46 @@
           "declaration": {
             "name": "formatKm",
             "module": "src/utils/distance.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/duration.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "formatDuration",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "ms",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "DurationFormat"
+              }
+            }
+          ],
+          "description": "Formats a millisecond duration for display.\n\n`\"seconds\"` renders a whole-second count with a pluralized unit word (e.g.\n\"1 second\", \"12 seconds\"). `\"compact\"` renders the shortest sensible\n`Xh Ym Zs` form, dropping leading-zero units (`\"12s\"`, `\"3m 12s\"`,\n`\"1h 03m 12s\"`) — minutes/seconds are zero-padded only once a larger unit\nis present."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "formatDuration",
+          "declaration": {
+            "name": "formatDuration",
+            "module": "src/utils/duration.ts"
           }
         }
       ]

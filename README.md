@@ -44,10 +44,13 @@ import "@f-ewald/components/roman-numeral.js";
 | `<address-autocomplete>` | [docs/address-autocomplete.md](./docs/address-autocomplete.md) |
 | `<animate-confetti>` | [docs/animate-confetti.md](./docs/animate-confetti.md) |
 | `<autocomplete-input>` | [docs/autocomplete-input.md](./docs/autocomplete-input.md) |
+| `<chat-message>` | [docs/chat-message.md](./docs/chat-message.md) |
 | `<confirm-dialog>` | [docs/confirm-dialog.md](./docs/confirm-dialog.md) |
 | `<copy-link-button>` | [docs/copy-link-button.md](./docs/copy-link-button.md) |
 | `<distance-value>` | [docs/distance-value.md](./docs/distance-value.md) |
 | `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
+| `<editable-text>` | [docs/editable-text.md](./docs/editable-text.md) |
+| `<live-timer>` | [docs/live-timer.md](./docs/live-timer.md) |
 | `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
 | `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |
 | `<map-point>` | [docs/map-point.md](./docs/map-point.md) |
@@ -60,6 +63,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<roman-numeral>` | [docs/roman-numeral.md](./docs/roman-numeral.md) |
 | `<slide-panel>` | [docs/slide-panel.md](./docs/slide-panel.md) |
 | `<stat-meter>` | [docs/stat-meter.md](./docs/stat-meter.md) |
+| `<status-pill>` | [docs/status-pill.md](./docs/status-pill.md) |
 | `<toast-notification>` | [docs/toast-notification.md](./docs/toast-notification.md) |
 | `<ui-button>` | [docs/ui-button.md](./docs/ui-button.md) |
 | `<user-avatar>` | [docs/user-avatar.md](./docs/user-avatar.md) |

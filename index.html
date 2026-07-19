@@ -37,6 +37,10 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-point">map-point</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#status-pill">status-pill</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chat-message">chat-message</a>
         </nav>
       </aside>
 
@@ -605,6 +609,130 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
 &lt;stat-meter label="MEM" percent="76"&gt;&lt;/stat-meter&gt;
 &lt;stat-meter label="I/O"&gt;&lt;/stat-meter&gt; &lt;!-- percent unset -&gt; null -&gt; renders "—" --&gt;
 &lt;stat-meter label="GPU" percent="88" color="#dc2626"&gt;&lt;/stat-meter&gt;</code></pre>
+        </section>
+
+        <section id="status-pill" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-status-pill">
+          <h3 class="text-xl font-semibold text-slate-900">status-pill</h3>
+          <p class="mt-1 text-sm text-slate-500">Colored status pill, optionally with a spinning icon.</p>
+          <div class="mt-6 flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 p-6">
+            <status-pill id="pill-neutral" data-testid="pill-neutral" label="Backlog" color="neutral"></status-pill>
+            <status-pill id="pill-info" data-testid="pill-info" label="Open" color="info"></status-pill>
+            <status-pill id="pill-primary" data-testid="pill-primary" label="Running" color="primary" spinner></status-pill>
+            <status-pill id="pill-success" data-testid="pill-success" label="Done" color="success"></status-pill>
+            <status-pill id="pill-warning" data-testid="pill-warning" label="Waiting for user" color="warning"></status-pill>
+            <status-pill id="pill-danger" data-testid="pill-danger" label="Blocked" color="danger"></status-pill>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/status-pill.js";
+
+&lt;status-pill label="Running" color="primary" spinner&gt;&lt;/status-pill&gt;
+&lt;status-pill label="Blocked" color="danger"&gt;&lt;/status-pill&gt;</code></pre>
+        </section>
+
+        <section id="editable-text" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-editable-text">
+          <h3 class="text-xl font-semibold text-slate-900">editable-text</h3>
+          <p class="mt-1 text-sm text-slate-500">Click-to-edit text: a display span that turns into an input/textarea on click.</p>
+          <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
+            <div>
+              <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Single-line (title)</p>
+              <h4 class="text-lg font-semibold text-slate-900">
+                <editable-text id="editable-title" data-testid="editable-title" value="Write the quarterly report" label="Title"></editable-text>
+              </h4>
+            </div>
+            <div>
+              <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Multiline (description)</p>
+              <editable-text
+                id="editable-description"
+                data-testid="editable-description"
+                multiline
+                placeholder="Add a description…"
+                label="Description"
+              ></editable-text>
+            </div>
+            <p id="editable-change-log" data-testid="editable-change-log" class="text-xs text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/editable-text.js";
+
+&lt;editable-text value="Write the quarterly report" label="Title"&gt;&lt;/editable-text&gt;
+&lt;editable-text multiline placeholder="Add a description…" label="Description"&gt;&lt;/editable-text&gt;</code></pre>
+        </section>
+
+        <section id="live-timer" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-live-timer">
+          <h3 class="text-xl font-semibold text-slate-900">live-timer</h3>
+          <p class="mt-1 text-sm text-slate-500">Per-second ticking count-up timer.</p>
+          <div class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6 text-sm">
+            <div>
+              Sleeping:
+              <live-timer id="timer-seconds" data-testid="timer-seconds" prefix="Sleeping for "></live-timer>
+            </div>
+            <div>
+              Running:
+              <live-timer id="timer-compact" data-testid="timer-compact" format="compact" prefix="running for "></live-timer>
+            </div>
+            <button
+              id="timer-start"
+              data-testid="timer-start"
+              type="button"
+              class="w-fit rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Start timers
+            </button>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/live-timer.js";
+
+&lt;live-timer since="2026-07-19T12:00:00Z" prefix="Sleeping for "&gt;&lt;/live-timer&gt;
+&lt;live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "&gt;&lt;/live-timer&gt;</code></pre>
+        </section>
+
+        <section id="chat-message" class="scroll-mt-8 py-10" data-testid="section-chat-message">
+          <h3 class="text-xl font-semibold text-slate-900">chat-message</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            One conversation entry — tool calls and thinking traces are dimmed, collapsible
+            variants of the same component.
+          </p>
+          <div class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6">
+            <chat-message id="msg-user" data-testid="msg-user" role="user" author="Freddy" timestamp="2026-07-19T12:00:00Z">
+              Write notes.md containing a haiku.
+            </chat-message>
+            <chat-message id="msg-agent" data-testid="msg-agent" role="agent" author="Architect" timestamp="2026-07-19T12:00:05Z">
+              Done — I wrote a haiku about the changing seasons to notes.md.
+            </chat-message>
+            <chat-message
+              id="msg-tool"
+              data-testid="msg-tool"
+              role="agent"
+              variant="tool"
+              collapsible
+              collapsed
+              summary='file_write · {"filename": "notes.md"}'
+            >
+              <pre>directory: .
+filename: notes.md
+content: |
+  Autumn leaves falling...</pre>
+            </chat-message>
+            <chat-message
+              id="msg-thinking"
+              data-testid="msg-thinking"
+              role="agent"
+              variant="thinking"
+              collapsible
+              collapsed
+              summary="Thinking…"
+            >
+              I should pick a seasonal image that reads naturally in 5-7-5 syllables.
+            </chat-message>
+            <chat-message id="msg-system" data-testid="msg-system" role="system">Delegated to Researcher</chat-message>
+            <p id="chat-toggle-log" data-testid="chat-toggle-log" class="text-xs text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/chat-message.js";
+
+&lt;chat-message role="user" author="Freddy" timestamp="2026-07-19T12:00:00Z"&gt;
+  Write notes.md containing a haiku.
+&lt;/chat-message&gt;
+&lt;chat-message role="agent" variant="tool" collapsible collapsed summary='file_write · {"filename": "notes.md"}'&gt;
+  directory: .
+  filename: notes.md
+&lt;/chat-message&gt;</code></pre>
         </section>
       </main>
     </div>

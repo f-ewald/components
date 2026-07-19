@@ -104,6 +104,30 @@ Example:
 </script>
 ```
 
+## <chat-message>
+
+One conversation entry in a chat-style activity feed. Tool calls and
+"thinking" traces are variants of this component rather than separate
+ones — they share the same header, collapse behavior, and body card as a
+normal message, just dimmed and collapsible with an always-visible summary.
+
+Import: `import "@f-ewald/components/chat-message.js";`
+
+Properties: `role` (attribute `role`) : ChatMessageRole, default "agent"; `variant` (attribute `variant`) : ChatMessageVariant, default "normal"; `author` (attribute `author`) : string, default ""; `timestamp` (attribute `timestamp`) : string | null, default null; `summary` (attribute `summary`) : string, default ""; `collapsible` (attribute `collapsible`) : boolean, default false; `collapsed` (attribute `collapsed`) : boolean, default false
+Events: `toggle`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-primary`, `--ui-radius`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<chat-message role="user" author="Freddy" timestamp="2026-07-19T12:00:00Z">
+  Write notes.md containing a haiku.
+</chat-message>
+<chat-message role="agent" variant="tool" collapsible collapsed summary='file_write · {"filename": "notes.md"}'>
+  directory: .
+  filename: notes.md
+</chat-message>
+```
+
 ## <confirm-dialog>
 
 Reusable confirmation dialog: overlay + centered card with a slotted body,
@@ -186,6 +210,43 @@ Example:
 <script type="module">
   document.querySelector("distribution-chart").values = [{ label: "", value: 1450 }];
 </script>
+```
+
+## <editable-text>
+
+Jira/GitHub-style click-to-edit text: a display span that turns into an
+`<input>` (or auto-growing `<textarea>` when `multiline`) on click. The
+input/textarea inherits the host's font, so a title wrapped in an `<h1>`
+edits at title size.
+
+Import: `import "@f-ewald/components/editable-text.js";`
+
+Properties: `value` (attribute `value`) : string, default ""; `multiline` (attribute `multiline`) : boolean, default false; `placeholder` (attribute `placeholder`) : string, default ""; `readonly` (attribute `readonly`) : boolean, default false; `label` (attribute `label`) : string, default ""
+Events: `change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`
+
+Example:
+```html
+<editable-text value="Write the quarterly report" label="Title"></editable-text>
+<editable-text multiline placeholder="Add a description…" label="Description"></editable-text>
+```
+
+## <live-timer>
+
+Per-second ticking count-up timer, e.g. a live "running for 12s" or
+"Sleeping for 3 seconds" indicator. Renders nothing while `since` is unset
+or unparseable.
+
+Import: `import "@f-ewald/components/live-timer.js";`
+
+Properties: `since` (attribute `since`) : string | null, default null; `format` (attribute `format`) : DurationFormat, default "seconds"; `prefix` (attribute `prefix`) : string, default ""; `suffix` (attribute `suffix`) : string, default ""
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<live-timer since="2026-07-19T12:00:00Z" prefix="Sleeping for "></live-timer>
+<live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "></live-timer>
 ```
 
 ## <map-circle>
@@ -445,6 +506,23 @@ Example:
 <stat-meter label="MEM" percent="76"></stat-meter>
 <stat-meter label="I/O"></stat-meter> <!-- percent unset -> null -> renders "—" -->
 <stat-meter label="GPU" percent="88" color="#dc2626"></stat-meter>
+```
+
+## <status-pill>
+
+Small colored status pill, optionally with a spinning icon — for task/run
+states ("Open", "Blocked", "Done") and live-activity indicators ("Running").
+
+Import: `import "@f-ewald/components/status-pill.js";`
+
+Properties: `label` (attribute `label`) : string, default ""; `color` (attribute `color`) : StatusPillColor, default "neutral"; `spinner` (attribute `spinner`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-primary`, `--ui-success`, `--ui-text-muted`
+
+Example:
+```html
+<status-pill label="Running" color="primary" spinner></status-pill>
+<status-pill label="Blocked" color="danger"></status-pill>
 ```
 
 ## <toast-notification>
