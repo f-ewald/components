@@ -36,6 +36,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-point">map-point</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
         </nav>
       </aside>
 
@@ -570,6 +571,40 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
 
 &lt;map-point color="#0099D8"&gt;&lt;/map-point&gt;
 &lt;map-point color="#fb8072" size="10" ring-width="2"&gt;&lt;/map-point&gt;</code></pre>
+        </section>
+
+        <section id="stat-meter" class="scroll-mt-8 py-10" data-testid="section-stat-meter">
+          <h3 class="text-xl font-semibold text-slate-900">stat-meter</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Compact labeled meter for a single percentage reading — CPU/memory usage in a
+            dashboard header, for example. <code>percent</code> accepts <code>null</code> for
+            "no reading yet", rendering an empty bar and a "—" instead of "0%".
+          </p>
+          <div class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6">
+            <div class="flex flex-wrap items-center gap-6">
+              <stat-meter id="meter-cpu" data-testid="meter-cpu" label="CPU" percent="42"></stat-meter>
+              <stat-meter id="meter-mem" data-testid="meter-mem" label="MEM" percent="76"></stat-meter>
+              <stat-meter id="meter-pending" data-testid="meter-pending" label="I/O"></stat-meter>
+            </div>
+            <button
+              id="meter-randomize"
+              data-testid="meter-randomize"
+              type="button"
+              class="w-fit rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Randomize readings
+            </button>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Custom fill color</p>
+          <div class="mt-2 flex flex-wrap items-center gap-6 rounded-lg border border-slate-200 p-6">
+            <stat-meter id="meter-color" data-testid="meter-color" label="GPU" percent="88" color="#dc2626"></stat-meter>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/stat-meter.js";
+
+&lt;stat-meter label="CPU" percent="42"&gt;&lt;/stat-meter&gt;
+&lt;stat-meter label="MEM" percent="76"&gt;&lt;/stat-meter&gt;
+&lt;stat-meter label="I/O"&gt;&lt;/stat-meter&gt; &lt;!-- percent unset -&gt; null -&gt; renders "—" --&gt;
+&lt;stat-meter label="GPU" percent="88" color="#dc2626"&gt;&lt;/stat-meter&gt;</code></pre>
         </section>
       </main>
     </div>

@@ -125,6 +125,12 @@ const EXAMPLES = {
 <map-pin color="#22c55e" size="26" highlighted>🏠</map-pin>`,
   "map-circle": `<map-circle color="#6b7280"></map-circle>
 <map-circle color="#1a73e8" size="24" ring-width="5" highlighted>1</map-circle>`,
+  "map-point": `<map-point color="#0099D8"></map-point>
+<map-point color="#fb8072" size="10" ring-width="2"></map-point>`,
+  "stat-meter": `<stat-meter label="CPU" percent="42"></stat-meter>
+<stat-meter label="MEM" percent="76"></stat-meter>
+<stat-meter label="I/O"></stat-meter> <!-- percent unset -> null -> renders "—" -->
+<stat-meter label="GPU" percent="88" color="#dc2626"></stat-meter>`,
 };
 
 const manifest = JSON.parse(await readFile(path.join(rootDir, "custom-elements.json"), "utf8"));

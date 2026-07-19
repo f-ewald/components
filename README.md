@@ -50,6 +50,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
 | `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
 | `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |
+| `<map-point>` | [docs/map-point.md](./docs/map-point.md) |
 | `<percent-bar-chart>` | [docs/percent-bar-chart.md](./docs/percent-bar-chart.md) |
 | `<price-history-chart>` | [docs/price-history-chart.md](./docs/price-history-chart.md) |
 | `<radio-cards>` | [docs/radio-cards.md](./docs/radio-cards.md) |
@@ -58,6 +59,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<reveal-button>` | [docs/reveal-button.md](./docs/reveal-button.md) |
 | `<roman-numeral>` | [docs/roman-numeral.md](./docs/roman-numeral.md) |
 | `<slide-panel>` | [docs/slide-panel.md](./docs/slide-panel.md) |
+| `<stat-meter>` | [docs/stat-meter.md](./docs/stat-meter.md) |
 | `<toast-notification>` | [docs/toast-notification.md](./docs/toast-notification.md) |
 | `<ui-button>` | [docs/ui-button.md](./docs/ui-button.md) |
 | `<user-avatar>` | [docs/user-avatar.md](./docs/user-avatar.md) |

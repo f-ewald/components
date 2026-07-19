@@ -227,6 +227,30 @@ Example:
 <map-pin color="#22c55e" size="26" highlighted>🏠</map-pin>
 ```
 
+## <map-point>
+
+A small plain-colored map marker for dense point layers (transit stops,
+amenities, hazard points, etc.): a light-to-dark gradient fill with a thin
+white ring, no badge/content slot — every instance on a given layer shares
+the same look, so there's nothing to render per-feature (unlike
+`<map-pin>`/`<map-circle>`, which carry per-marker slotted content).
+Purely a visual primitive — it has no `mapbox-gl` (or any mapping library)
+dependency; typically rasterized once per color and used as a Mapbox
+`icon-image` on a `symbol` layer rather than mounted as individual DOM
+markers, so a whole layer's worth of points shares one icon image.
+
+Import: `import "@f-ewald/components/map-point.js";`
+
+Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 14; `ringWidth` (attribute `ring-width`) : number, default 3
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<map-point color="#0099D8"></map-point>
+<map-point color="#fb8072" size="10" ring-width="2"></map-point>
+```
+
 ## <percent-bar-chart>
 
 Horizontal bar chart for labeled percentage rows, using D3's linear scale.
@@ -400,6 +424,27 @@ Example:
 <slide-panel open heading="Property details">
   Panel body content goes here.
 </slide-panel>
+```
+
+## <stat-meter>
+
+A compact labeled meter for a single percentage reading — e.g. CPU or
+memory usage in a dashboard header. `percent` may be `null` when no
+reading is available yet (e.g. the first tick of a polling metric); the
+bar then renders empty and the value shows an em dash instead of "0%".
+
+Import: `import "@f-ewald/components/stat-meter.js";`
+
+Properties: `label` (attribute `label`) : string, default ""; `percent` (attribute `percent`) : number | null, default null; `color` (attribute `color`) : string, default ""
+Events: none
+CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<stat-meter label="CPU" percent="42"></stat-meter>
+<stat-meter label="MEM" percent="76"></stat-meter>
+<stat-meter label="I/O"></stat-meter> <!-- percent unset -> null -> renders "—" -->
+<stat-meter label="GPU" percent="88" color="#dc2626"></stat-meter>
 ```
 
 ## <toast-notification>
