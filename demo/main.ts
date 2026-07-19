@@ -16,6 +16,7 @@ import {
   type RadioPills,
   type MapPin,
   type MapCircle,
+  type StatMeter,
 } from "../src/index.js";
 
 /**
@@ -275,6 +276,14 @@ document.getElementById("pin-highlight-toggle")?.addEventListener("click", () =>
 const circleHighlightDemo = document.getElementById("circle-highlight-demo") as MapCircle;
 document.getElementById("circle-highlight-toggle")?.addEventListener("click", () => {
   if (circleHighlightDemo) circleHighlightDemo.highlighted = !circleHighlightDemo.highlighted;
+});
+
+// stat-meter (randomize CPU/MEM readings; I/O stays unset to show the null state)
+const meterCpu = document.getElementById("meter-cpu") as StatMeter;
+const meterMem = document.getElementById("meter-mem") as StatMeter;
+document.getElementById("meter-randomize")?.addEventListener("click", () => {
+  if (meterCpu) meterCpu.percent = Math.round(Math.random() * 100);
+  if (meterMem) meterMem.percent = Math.round(Math.random() * 100);
 });
 
 // Active nav link highlighting.

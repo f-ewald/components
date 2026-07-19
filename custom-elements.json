@@ -2506,6 +2506,14 @@
         },
         {
           "kind": "js",
+          "name": "MapPoint",
+          "declaration": {
+            "name": "MapPoint",
+            "module": "./map-point.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "RadioCards",
           "declaration": {
             "name": "RadioCards",
@@ -2550,6 +2558,14 @@
           "declaration": {
             "name": "ButtonVariant",
             "module": "./ui-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StatMeter",
+          "declaration": {
+            "name": "StatMeter",
+            "module": "./stat-meter.js"
           }
         },
         {
@@ -2813,6 +2829,109 @@
           "declaration": {
             "name": "MapPin",
             "module": "src/map-pin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/map-point.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A small plain-colored map marker for dense point layers (transit stops,\namenities, hazard points, etc.): a light-to-dark gradient fill with a thin\nwhite ring, no badge/content slot — every instance on a given layer shares\nthe same look, so there's nothing to render per-feature (unlike\n`<map-pin>`/`<map-circle>`, which carry per-marker slotted content).\nPurely a visual primitive — it has no `mapbox-gl` (or any mapping library)\ndependency; typically rasterized once per color and used as a Mapbox\n`icon-image` on a `symbol` layer rather than mounted as individual DOM\nmarkers, so a whole layer's worth of points shares one icon image.",
+          "name": "MapPoint",
+          "members": [
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#4f46e5\"",
+              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "14",
+              "description": "Diameter, in CSS pixels.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "ringWidth",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
+              "attribute": "ring-width"
+            },
+            {
+              "kind": "field",
+              "name": "_gradId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`map-point-grad-${gradientIdCounter++}`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#4f46e5\"",
+              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
+              "fieldName": "color"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "14",
+              "description": "Diameter, in CSS pixels.",
+              "fieldName": "size"
+            },
+            {
+              "name": "ring-width",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
+              "fieldName": "ringWidth"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "map-point",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MapPoint",
+          "declaration": {
+            "name": "MapPoint",
+            "module": "src/map-point.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "map-point",
+          "declaration": {
+            "name": "MapPoint",
+            "module": "src/map-point.ts"
           }
         }
       ]
@@ -3516,6 +3635,102 @@
           "declaration": {
             "name": "SlidePanel",
             "module": "src/slide-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/stat-meter.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A compact labeled meter for a single percentage reading — e.g. CPU or\nmemory usage in a dashboard header. `percent` may be `null` when no\nreading is available yet (e.g. the first tick of a polling metric); the\nbar then renders empty and the value shows an em dash instead of \"0%\".",
+          "name": "StatMeter",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Short label shown before the bar, e.g. \"CPU\" or \"MEM\".",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "percent",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Percentage 0-100. `null` renders an empty bar and a \"—\" value instead of \"0%\".",
+              "attribute": "percent"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Fill color override; falls back to the `--ui-success` token.",
+              "attribute": "color"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Short label shown before the bar, e.g. \"CPU\" or \"MEM\".",
+              "fieldName": "label"
+            },
+            {
+              "name": "percent",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Percentage 0-100. `null` renders an empty bar and a \"—\" value instead of \"0%\".",
+              "fieldName": "percent"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Fill color override; falls back to the `--ui-success` token.",
+              "fieldName": "color"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "stat-meter",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "StatMeter",
+          "declaration": {
+            "name": "StatMeter",
+            "module": "src/stat-meter.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "stat-meter",
+          "declaration": {
+            "name": "StatMeter",
+            "module": "src/stat-meter.ts"
           }
         }
       ]
