@@ -1711,6 +1711,195 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gallery-item-variant.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Responsive image source metadata for a parent `gallery-item`.",
+          "name": "GalleryItemVariant",
+          "members": [
+            {
+              "kind": "field",
+              "name": "media",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional media query that controls when this source is selected.",
+              "attribute": "media",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Responsive image candidate string passed to a generated `<source>`.",
+              "attribute": "srcset",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "media",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional media query that controls when this source is selected.",
+              "fieldName": "media"
+            },
+            {
+              "name": "srcset",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Responsive image candidate string passed to a generated `<source>`.",
+              "fieldName": "srcset"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "gallery-item-variant",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GalleryItemVariant",
+          "declaration": {
+            "name": "GalleryItemVariant",
+            "module": "src/gallery-item-variant.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "gallery-item-variant",
+          "declaration": {
+            "name": "GalleryItemVariant",
+            "module": "src/gallery-item-variant.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gallery-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Declarative image metadata consumed by a parent `photo-gallery`.",
+          "name": "GalleryItem",
+          "slots": [
+            {
+              "description": "Optional `gallery-item-variant` elements for responsive sources.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the fallback image.",
+              "attribute": "src",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Required alternative text for the image.",
+              "attribute": "alt",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional visible caption rendered below the image.",
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variants",
+              "type": {
+                "text": "GalleryItemVariant[]"
+              },
+              "readonly": true,
+              "description": "Responsive source variants declared inside this item."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the fallback image.",
+              "fieldName": "src"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Required alternative text for the image.",
+              "fieldName": "alt"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional visible caption rendered below the image.",
+              "fieldName": "caption"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "gallery-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GalleryItem",
+          "declaration": {
+            "name": "GalleryItem",
+            "module": "src/gallery-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "gallery-item",
+          "declaration": {
+            "name": "GalleryItem",
+            "module": "src/gallery-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/icons.ts",
       "declarations": [
         {
@@ -2286,6 +2475,54 @@
           "declaration": {
             "name": "AnimateConfetti",
             "module": "./animate-confetti.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GalleryItem",
+          "declaration": {
+            "name": "GalleryItem",
+            "module": "./gallery-item.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GalleryItemVariant",
+          "declaration": {
+            "name": "GalleryItemVariant",
+            "module": "./gallery-item-variant.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PhotoGallery",
+          "declaration": {
+            "name": "PhotoGallery",
+            "module": "./photo-gallery.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PhotoGalleryChangeReason",
+          "declaration": {
+            "name": "PhotoGalleryChangeReason",
+            "module": "./photo-gallery.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PhotoGalleryObjectFit",
+          "declaration": {
+            "name": "PhotoGalleryObjectFit",
+            "module": "./photo-gallery.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PhotoGallerySlideChangeDetail",
+          "declaration": {
+            "name": "PhotoGallerySlideChangeDetail",
+            "module": "./photo-gallery.js"
           }
         },
         {
@@ -2996,6 +3233,697 @@
           "declaration": {
             "name": "PercentBarChart",
             "module": "src/percent-bar-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/photo-gallery.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Responsive, accessible image carousel composed from declarative\n`gallery-item` children.",
+          "name": "PhotoGallery",
+          "slots": [
+            {
+              "description": "`gallery-item` elements rendered as slides.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "currentIndex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Zero-based active image index.",
+              "attribute": "current-index",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Autoplay interval in milliseconds. Set to zero to disable autoplay.",
+              "attribute": "delay"
+            },
+            {
+              "kind": "field",
+              "name": "showControls",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether previous and next buttons are shown.",
+              "attribute": "show-controls"
+            },
+            {
+              "kind": "field",
+              "name": "showCounter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a current/total counter is shown.",
+              "attribute": "show-counter"
+            },
+            {
+              "kind": "field",
+              "name": "showIndicators",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether clickable slide indicators are shown.",
+              "attribute": "show-indicators"
+            },
+            {
+              "kind": "field",
+              "name": "showAutoplayControl",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether autoplay includes a built-in pause/play control.",
+              "attribute": "show-autoplay-control"
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether autoplay is explicitly paused.",
+              "attribute": "paused",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "aspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"16 / 9\"",
+              "description": "CSS aspect ratio used by the image viewport.",
+              "attribute": "aspect-ratio"
+            },
+            {
+              "kind": "field",
+              "name": "objectFit",
+              "type": {
+                "text": "PhotoGalleryObjectFit"
+              },
+              "default": "\"cover\"",
+              "description": "How images fit within the stable viewport.",
+              "attribute": "object-fit"
+            },
+            {
+              "kind": "field",
+              "name": "_galleryItems",
+              "type": {
+                "text": "GalleryItem[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_previousIndex",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_itemsVersion",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_autoplayTimer",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_transitionTimer",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_metadataObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_hovered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_focusWithin",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_nextChangeReason",
+              "type": {
+                "text": "PhotoGalleryChangeReason | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pendingChange",
+              "type": {
+                "text": "PhotoGallerySlideChangeDetail | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_pointerStart",
+              "type": {
+                "text": "{ id: number; x: number; y: number } | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_itemsChanged",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_activeItem",
+              "type": {
+                "text": "GalleryItem | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_renderedIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "_normalizeIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Wraps any requested index into the current item range."
+            },
+            {
+              "kind": "method",
+              "name": "_variantsFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "GalleryItemVariant[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "GalleryItem"
+                  }
+                }
+              ],
+              "description": "Returns responsive variants declared directly under an item."
+            },
+            {
+              "kind": "method",
+              "name": "_goTo",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "reason",
+                  "type": {
+                    "text": "PhotoGalleryChangeReason"
+                  }
+                }
+              ],
+              "description": "Changes slides through the shared state and event path."
+            },
+            {
+              "kind": "method",
+              "name": "_showPrevious",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "reason",
+                  "default": "\"previous\"",
+                  "type": {
+                    "text": "PhotoGalleryChangeReason"
+                  }
+                }
+              ],
+              "description": "Moves to the previous image."
+            },
+            {
+              "kind": "method",
+              "name": "_showNext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "reason",
+                  "default": "\"next\"",
+                  "type": {
+                    "text": "PhotoGalleryChangeReason"
+                  }
+                }
+              ],
+              "description": "Moves to the next image."
+            },
+            {
+              "kind": "method",
+              "name": "_togglePaused",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Toggles explicit autoplay pause state."
+            },
+            {
+              "kind": "method",
+              "name": "_restartAutoplay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears and conditionally schedules the next autoplay advance."
+            },
+            {
+              "kind": "method",
+              "name": "_canAutoplay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Reports whether autoplay may currently schedule a transition."
+            },
+            {
+              "kind": "method",
+              "name": "_clearAutoplay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the pending autoplay timeout."
+            },
+            {
+              "kind": "method",
+              "name": "_scheduleTransitionCleanup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Removes the outgoing crossfade layer after the animation completes."
+            },
+            {
+              "kind": "method",
+              "name": "_clearTransition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears pending transition cleanup."
+            },
+            {
+              "kind": "method",
+              "name": "_handleMetadataChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Refreshes item metadata and clamps the active index after light-DOM changes."
+            },
+            {
+              "kind": "method",
+              "name": "_handleSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Refreshes item state after the default slot changes."
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseEnter",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Temporarily pauses autoplay while the pointer is over the gallery."
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseLeave",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Resumes autoplay with a fresh delay after hover ends."
+            },
+            {
+              "kind": "method",
+              "name": "_handleFocusIn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Temporarily pauses autoplay while focus is inside the gallery."
+            },
+            {
+              "kind": "method",
+              "name": "_handleFocusOut",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Resumes autoplay with a fresh delay after focus leaves the gallery."
+            },
+            {
+              "kind": "field",
+              "name": "_handleVisibilityChange",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Pauses or resumes scheduling when page visibility changes."
+            },
+            {
+              "kind": "method",
+              "name": "_handleKeyDown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handles Left and Right arrow keyboard navigation."
+            },
+            {
+              "kind": "method",
+              "name": "_handlePointerDown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ],
+              "description": "Records the starting point of a primary pointer gesture."
+            },
+            {
+              "kind": "method",
+              "name": "_handlePointerUp",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ],
+              "description": "Converts a sufficiently horizontal pointer gesture into navigation."
+            },
+            {
+              "kind": "method",
+              "name": "_handlePointerCancel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Cancels an incomplete pointer gesture."
+            },
+            {
+              "kind": "method",
+              "name": "_renderPicture",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "\"current\" | \"previous\""
+                  }
+                }
+              ],
+              "description": "Renders one responsive image layer for the crossfade stack."
+            },
+            {
+              "kind": "method",
+              "name": "_renderFooter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "itemCount",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Renders enabled counter, indicator, and autoplay controls."
+            }
+          ],
+          "events": [
+            {
+              "name": "slide-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The active image changed."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "current-index",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Zero-based active image index.",
+              "fieldName": "currentIndex"
+            },
+            {
+              "name": "delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Autoplay interval in milliseconds. Set to zero to disable autoplay.",
+              "fieldName": "delay"
+            },
+            {
+              "name": "show-controls",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether previous and next buttons are shown.",
+              "fieldName": "showControls"
+            },
+            {
+              "name": "show-counter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a current/total counter is shown.",
+              "fieldName": "showCounter"
+            },
+            {
+              "name": "show-indicators",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether clickable slide indicators are shown.",
+              "fieldName": "showIndicators"
+            },
+            {
+              "name": "show-autoplay-control",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether autoplay includes a built-in pause/play control.",
+              "fieldName": "showAutoplayControl"
+            },
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether autoplay is explicitly paused.",
+              "fieldName": "paused"
+            },
+            {
+              "name": "aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"16 / 9\"",
+              "description": "CSS aspect ratio used by the image viewport.",
+              "fieldName": "aspectRatio"
+            },
+            {
+              "name": "object-fit",
+              "type": {
+                "text": "PhotoGalleryObjectFit"
+              },
+              "default": "\"cover\"",
+              "description": "How images fit within the stable viewport.",
+              "fieldName": "objectFit"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "photo-gallery",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PhotoGallery",
+          "declaration": {
+            "name": "PhotoGallery",
+            "module": "src/photo-gallery.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "photo-gallery",
+          "declaration": {
+            "name": "PhotoGallery",
+            "module": "src/photo-gallery.ts"
           }
         }
       ]

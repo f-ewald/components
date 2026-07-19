@@ -48,10 +48,13 @@ import "@f-ewald/components/roman-numeral.js";
 | `<copy-link-button>` | [docs/copy-link-button.md](./docs/copy-link-button.md) |
 | `<distance-value>` | [docs/distance-value.md](./docs/distance-value.md) |
 | `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
+| `<gallery-item>` | [docs/gallery-item.md](./docs/gallery-item.md) |
+| `<gallery-item-variant>` | [docs/gallery-item-variant.md](./docs/gallery-item-variant.md) |
 | `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
 | `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |
 | `<map-point>` | [docs/map-point.md](./docs/map-point.md) |
 | `<percent-bar-chart>` | [docs/percent-bar-chart.md](./docs/percent-bar-chart.md) |
+| `<photo-gallery>` | [docs/photo-gallery.md](./docs/photo-gallery.md) |
 | `<price-history-chart>` | [docs/price-history-chart.md](./docs/price-history-chart.md) |
 | `<radio-cards>` | [docs/radio-cards.md](./docs/radio-cards.md) |
 | `<radio-pills>` | [docs/radio-pills.md](./docs/radio-pills.md) |
