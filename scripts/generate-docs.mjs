@@ -131,6 +131,19 @@ const EXAMPLES = {
 <stat-meter label="MEM" percent="76"></stat-meter>
 <stat-meter label="I/O"></stat-meter> <!-- percent unset -> null -> renders "—" -->
 <stat-meter label="GPU" percent="88" color="#dc2626"></stat-meter>`,
+  "status-pill": `<status-pill label="Running" color="primary" spinner></status-pill>
+<status-pill label="Blocked" color="danger"></status-pill>`,
+  "editable-text": `<editable-text value="Write the quarterly report" label="Title"></editable-text>
+<editable-text multiline placeholder="Add a description…" label="Description"></editable-text>`,
+  "live-timer": `<live-timer since="2026-07-19T12:00:00Z" prefix="Sleeping for "></live-timer>
+<live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "></live-timer>`,
+  "chat-message": `<chat-message role="user" author="Freddy" timestamp="2026-07-19T12:00:00Z">
+  Write notes.md containing a haiku.
+</chat-message>
+<chat-message role="agent" variant="tool" collapsible collapsed summary='file_write · {"filename": "notes.md"}'>
+  directory: .
+  filename: notes.md
+</chat-message>`,
 };
 
 const manifest = JSON.parse(await readFile(path.join(rootDir, "custom-elements.json"), "utf8"));

@@ -33,5 +33,14 @@ export { RadioCards, type RadioCardOption } from "./radio-cards.js";
 export { RadioPills, type RadioPillOption } from "./radio-pills.js";
 export { UiButton, type ButtonVariant } from "./ui-button.js";
 export { StatMeter } from "./stat-meter.js";
+export { StatusPill, type StatusPillColor } from "./status-pill.js";
+export { EditableText } from "./editable-text.js";
+export { LiveTimer } from "./live-timer.js";
+export {
+  ChatMessage,
+  type ChatMessageRole,
+  type ChatMessageVariant,
+} from "./chat-message.js";
+export { formatDuration, type DurationFormat } from "./utils/duration.js";
 export { tokens, tokenValues } from "./tokens.js";
 export * from "./icons.js";
