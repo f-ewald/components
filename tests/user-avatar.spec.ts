@@ -18,4 +18,14 @@ test.describe("user-avatar", () => {
     await expect(brokenAvatar.locator("img")).toHaveCount(0);
     await expect(brokenAvatar).toContainText("B");
   });
+
+  test("resolves named size presets to pixel diameters", async ({ page }) => {
+    await page.goto("/");
+
+    const xs = page.locator("#avatar-preset-xs").locator(".avatar");
+    await expect(xs).toHaveCSS("width", "18px");
+
+    const lg = page.locator("#avatar-preset-lg").locator(".avatar");
+    await expect(lg).toHaveCSS("width", "48px");
+  });
 });

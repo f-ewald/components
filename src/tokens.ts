@@ -39,47 +39,47 @@ export const tokenValues: Record<string, string> = {
 };
 
 /**
- * A shared `:host` stylesheet that establishes the token custom properties
- * with their fallback values. Import and include this in every component's
- * `static styles` array alongside its component-specific `css` block.
+ * Dark-mode overrides for the same `--ui-*` custom properties, applied by
+ * `tokens.css` via `@media (prefers-color-scheme: dark)` and `[data-theme]`
+ * (see generate-tokens-css.mjs). Same Tailwind slate scale as the light
+ * palette, inverted, with primary/danger/success lightened one step (500
+ * instead of 600) for sufficient contrast against dark surfaces. Shape/type
+ * tokens are theme-independent and not repeated here.
  */
-export const tokens = css`
-  :host {
-    --ui-primary: var(--ui-primary, #4f46e5);
-    --ui-primary-hover: var(--ui-primary-hover, #4338ca);
-    --ui-danger: var(--ui-danger, #dc2626);
-    --ui-danger-hover: var(--ui-danger-hover, #b91c1c);
-    --ui-success: var(--ui-success, #16a34a);
-    --ui-text: var(--ui-text, #0f172a);
-    --ui-text-muted: var(--ui-text-muted, #64748b);
-    --ui-border: var(--ui-border, #e2e8f0);
-    --ui-surface: var(--ui-surface, #ffffff);
-    --ui-surface-muted: var(--ui-surface-muted, #f8fafc);
-    --ui-overlay: var(--ui-overlay, rgb(15 23 42 / 0.45));
-    --ui-radius: var(--ui-radius, 0.5rem);
-    --ui-radius-sm: var(--ui-radius-sm, 0.25rem);
-    --ui-shadow: var(
-      --ui-shadow,
-      0 4px 6px -1px rgb(0 0 0 / 0.1),
-      0 2px 4px -2px rgb(0 0 0 / 0.1)
-    );
-    --ui-shadow-lg: var(
-      --ui-shadow-lg,
-      0 20px 25px -5px rgb(0 0 0 / 0.1),
-      0 8px 10px -6px rgb(0 0 0 / 0.1)
-    );
-    --ui-focus-ring: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
-    --ui-font: var(
-      --ui-font,
-      ui-sans-serif,
-      system-ui,
-      sans-serif,
-      "Apple Color Emoji",
-      "Segoe UI Emoji",
-      "Segoe UI Symbol",
-      "Noto Color Emoji"
-    );
-    --ui-font-size: var(--ui-font-size, 0.875rem);
-    --ui-font-size-sm: var(--ui-font-size-sm, 0.75rem);
-  }
-`;
+export const darkTokenValues: Record<string, string> = {
+  "--ui-primary": "#6366f1", // indigo-500
+  "--ui-primary-hover": "#818cf8", // indigo-400
+  "--ui-danger": "#ef4444", // red-500
+  "--ui-danger-hover": "#f87171", // red-400
+  "--ui-success": "#22c55e", // green-500
+  "--ui-text": "#f1f5f9", // slate-100
+  "--ui-text-muted": "#94a3b8", // slate-400
+  "--ui-border": "#334155", // slate-700
+  "--ui-surface": "#0f172a", // slate-900
+  "--ui-surface-muted": "#1e293b", // slate-800
+  "--ui-overlay": "rgb(2 6 23 / 0.6)", // slate-950 / 60%
+  "--ui-focus-ring": "0 0 0 3px rgb(99 102 241 / 0.45)",
+};
+
+/**
+ * Historically a shared `:host { --ui-x: var(--ui-x, fallback); } ` block,
+ * re-declaring every token on each component's own host element as a
+ * "materialize the inherited value, or this fallback" trick. That pattern
+ * turned out to be a genuine bug, not a working default: browsers treat
+ * `--ui-x: var(--ui-x, ...)` on `:host` as a self-referencing declaration
+ * that computes to the guaranteed-invalid value REGARDLESS of what an
+ * ancestor (e.g. `:root`) set — the host's own `:host` rule wins the cascade
+ * over the ancestor's, so this dropped whatever the app actually set and
+ * silently substituted the component's own fallback everywhere. It went
+ * unnoticed because every component's fallback happened to equal the
+ * intended light-mode value — dark mode (a real, different value at
+ * `:root`) exposed it immediately (colors rendering as if no theme were
+ * applied at all). Fix: don't redeclare tokens on `:host` — plain
+ * inheritance already carries `:root`'s values into every shadow root
+ * correctly, and every component already has its own `var(--ui-x, fallback)`
+ * at each point of use, so nothing here is needed for the "zero external
+ * CSS" default to keep working. Kept as an empty export so the existing
+ * `static override styles = [tokens, css\`...\`]` import in every component
+ * keeps compiling.
+ */
+export const tokens = css``;

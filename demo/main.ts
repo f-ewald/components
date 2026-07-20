@@ -20,6 +20,10 @@ import {
   type EditableText,
   type LiveTimer,
   type ChatMessage,
+  type FormSelect,
+  type DataTable,
+  type TileGrid,
+  type PopoverPanel,
 } from "../src/index.js";
 
 /**
@@ -314,6 +318,69 @@ for (const id of ["msg-tool", "msg-thinking"]) {
   el?.addEventListener("toggle", (e) => {
     chatToggleLog.textContent = `${id} collapsed: ${(e as CustomEvent).detail.collapsed}`;
   });
+}
+
+// form-select (seed options, log picked changes)
+const selectState = document.getElementById("select-state") as FormSelect;
+if (selectState) {
+  selectState.options = [
+    { value: "backlog", label: "Backlog" },
+    { value: "open", label: "Open" },
+    { value: "in_progress", label: "In progress" },
+    { value: "done", label: "Done" },
+  ];
+  selectState.value = "open";
+}
+const selectDisabled = document.getElementById("select-disabled") as FormSelect;
+if (selectDisabled) {
+  selectDisabled.options = [{ value: "locked", label: "Locked" }];
+  selectDisabled.value = "locked";
+}
+const selectChangeLog = document.getElementById("select-change-log")!;
+selectState?.addEventListener("change", (e) => {
+  selectChangeLog.textContent = `select-state: ${(e as CustomEvent).detail.value}`;
+});
+
+// popover-panel
+const popoverDemo = document.getElementById("popover-demo") as PopoverPanel;
+document.getElementById("popover-open")?.addEventListener("click", () => {
+  popoverDemo.open = true;
+});
+popoverDemo?.addEventListener("panel-close", () => {
+  popoverDemo.open = false;
+});
+
+const popoverCenteredDemo = document.getElementById("popover-centered-demo") as PopoverPanel;
+document.getElementById("popover-centered-open")?.addEventListener("click", () => {
+  popoverCenteredDemo.open = true;
+});
+popoverCenteredDemo?.addEventListener("panel-close", () => {
+  popoverCenteredDemo.open = false;
+});
+
+// data-table (seed columns/rows, wire a row-click destination)
+const tableTasks = document.getElementById("table-tasks") as DataTable;
+if (tableTasks) {
+  tableTasks.columns = [
+    { key: "title", label: "Title" },
+    { key: "state", label: "State" },
+  ];
+  tableTasks.rows = [
+    { id: "tsk_1", title: "Write onboarding docs", state: "Backlog" },
+    { id: "tsk_2", title: "Fix the login bug", state: "Done" },
+  ];
+  tableTasks.rowHref = (row) => `#${(row as { id: string }).id}`;
+}
+
+// tile-grid
+const gridFiles = document.getElementById("grid-files") as TileGrid;
+if (gridFiles) {
+  gridFiles.items = [
+    { id: "fil_1", name: "notes.txt" },
+    { id: "fil_2", name: "photo.jpg" },
+  ];
+  gridFiles.renderTile = (item) => (item as { name: string }).name;
+  gridFiles.itemHref = (item) => `#${(item as { id: string }).id}`;
 }
 
 // Active nav link highlighting.

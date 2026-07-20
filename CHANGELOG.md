@@ -1,5 +1,20 @@
 # @f-ewald/components
 
+## Unreleased
+
+- Added `tile-grid`: a generic grid shell mirroring `data-table`'s headless
+  pattern — `items`, `renderTile(item)` (default: stringify), optional
+  `itemHref(item)` clickable-tile support with the same nested-`a`/`button`
+  click-hijack guard as `data-table.rowHref`.
+- Added icons: `chevron-down`, `document`, `squares-2x2`,
+  `chat-bubble-left-right`.
+- `popover-panel` gained a `centered` mode: set the `centered` attribute to
+  render a screen-centered modal with a translucent backdrop instead of the
+  default anchored placement; clicking the backdrop closes it like an
+  outside click would.
+- `user-avatar`'s `size` prop now also accepts named presets (`xs`=18,
+  `sm`=24, `md`=32, `lg`=48) in addition to a pixel number.
+
 ## 0.4.0
 
 - Added `map-point`: a small plain-colored map marker (gradient fill, thin

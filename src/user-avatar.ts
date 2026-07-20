@@ -45,21 +45,36 @@ export class UserAvatar extends LitElement {
   @property() src: string | null = null;
   /** Source string for the fallback initial (e.g. a display name or email) — first character, uppercased. */
   @property() name: string | null = null;
-  /** Diameter in CSS pixels. */
-  @property({ type: Number }) size = 32;
+  /** Diameter in CSS pixels, or a preset name (`xs`=18, `sm`=24, `md`=32, `lg`=48). */
+  @property() size: string | number = 32;
 
   @state() private _imgError = false;
+
+  private static readonly SIZE_PRESETS: Record<string, number> = {
+    xs: 18,
+    sm: 24,
+    md: 32,
+    lg: 48,
+  };
+
+  /** Resolves the `size` property (number or preset name) to a pixel diameter. */
+  private resolveSize(): number {
+    const numeric = Number(this.size);
+    if (!Number.isNaN(numeric)) return numeric;
+    return UserAvatar.SIZE_PRESETS[String(this.size)] ?? 32;
+  }
 
   protected override willUpdate(changed: Map<string, unknown>) {
     if (changed.has("src")) this._imgError = false;
   }
 
   override render() {
-    const dim = `${this.size}px`;
+    const size = this.resolveSize();
+    const dim = `${size}px`;
     const showImage = !!this.src && !this._imgError;
     const initial = this.name?.trim()[0]?.toUpperCase();
     return html`
-      <span class="avatar" style="width:${dim};height:${dim};font-size:${this.size * 0.42}px">
+      <span class="avatar" style="width:${dim};height:${dim};font-size:${size * 0.42}px">
         ${showImage
           ? html`<img
               src=${this.src!}
@@ -67,7 +82,7 @@ export class UserAvatar extends LitElement {
               referrerpolicy="no-referrer"
               @error=${() => (this._imgError = true)}
             />`
-          : initial || iconUserCircle(Math.round(this.size * 0.65))}
+          : initial || iconUserCircle(Math.round(size * 0.65))}
       </span>
     `;
   }

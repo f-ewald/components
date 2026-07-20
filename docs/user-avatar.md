@@ -24,7 +24,7 @@ import "@f-ewald/components/user-avatar.js";
 | --- | --- | --- | --- | --- |
 | `src` | `src` | `string | null` | `null` | Image URL to show. Falls back to initials/icon if unset or it fails to load. |
 | `name` | `name` | `string | null` | `null` | Source string for the fallback initial (e.g. a display name or email) — first character, uppercased. |
-| `size` | `size` | `number` | `32` | Diameter in CSS pixels. |
+| `size` | `size` | `string | number` | `32` | Diameter in CSS pixels, or a preset name (`xs`=18, `sm`=24, `md`=32, `lg`=48). |
 
 ## Events
 

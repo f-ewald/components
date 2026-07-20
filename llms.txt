@@ -168,6 +168,40 @@ Example:
 <copy-link-button value="https://example.com/listing/42" label="Copy listing link"></copy-link-button>
 ```
 
+## <data-table>
+
+A generic, presentational table shell: renders a `<thead>` from `columns`
+and one `<tr>` per entry in `rows`, with each cell's content produced by
+`renderCell` (default: plain property lookup on the row object). Knows
+nothing about what a "row" means — callers own the data shape entirely.
+
+Optional `rowHref` makes whole rows clickable (navigating via `location.hash`),
+without hijacking clicks on nested interactive elements (links/buttons) a
+cell's rendered content might contain.
+
+Import: `import "@f-ewald/components/data-table.js";`
+
+Properties: `columns` (JS property only) : DataTableColumn[], default []; `rows` (JS property only) : unknown[], default []; `rowKey` (JS property only) : (row: unknown, index: number) => string | number, default —; `renderCell` (JS property only) : (row: unknown, key: string) => unknown, default —; `rowHref` (JS property only) : ((row: unknown) => string | null) | null, default null
+Events: none
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<data-table></data-table>
+<script type="module">
+  const table = document.querySelector("data-table");
+  table.columns = [
+    { key: "title", label: "Title" },
+    { key: "state", label: "State" },
+  ];
+  table.rows = [
+    { id: "tsk_1", title: "Write onboarding docs", state: "Backlog" },
+    { id: "tsk_2", title: "Fix the login bug", state: "Done" },
+  ];
+  table.rowHref = (row) => `#/tasks/${row.id}`;
+</script>
+```
+
 ## <distance-value>
 
 Inline distance display. Renders miles/feet or km/m, switching units at
@@ -229,6 +263,35 @@ Example:
 ```html
 <editable-text value="Write the quarterly report" label="Title"></editable-text>
 <editable-text multiline placeholder="Add a description…" label="Description"></editable-text>
+```
+
+## <form-select>
+
+A styled dropdown select: a trigger button showing the current option's
+label, opening a listbox popover on click. Drop-in generic replacement for
+a native `<select>` wherever consistent cross-browser styling and a
+`change` event carrying `{ value }` are wanted (e.g. a task's status
+picker).
+
+Import: `import "@f-ewald/components/form-select.js";`
+
+Properties: `options` (JS property only) : SelectOption[], default []; `value` (attribute `value`) : string, default ""; `label` (attribute `label`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
+Events: `change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<form-select label="Task state"></form-select>
+<script type="module">
+  const select = document.querySelector("form-select");
+  select.options = [
+    { value: "open", label: "Open" },
+    { value: "in_progress", label: "In progress" },
+    { value: "done", label: "Done" },
+  ];
+  select.value = "open";
+  select.addEventListener("change", (e) => console.log(e.detail.value));
+</script>
 ```
 
 ## <live-timer>
@@ -331,6 +394,39 @@ Example:
     { key: "a", label: "White", pct: 45.2, color: "#4f46e5" },
     { key: "b", label: "Asian", pct: 28.1, color: "#0d9488" },
   ];
+</script>
+```
+
+## <popover-panel>
+
+Generic anchored popover shell: a floating card positioned relative to its
+nearest `position: relative` ancestor (place it next to its trigger button
+inside such a wrapper), as opposed to `slide-panel`'s fixed screen-edge
+drawer. Closes on outside click or Escape. Header chrome and close button
+match `slide-panel`'s API (`heading`, `panel-close`) so either can be
+swapped in for the other with no consumer-side changes beyond the wrapper.
+
+Set `centered` to render as a screen-centered modal with a translucent
+backdrop instead of the default anchored placement.
+
+Import: `import "@f-ewald/components/popover-panel.js";`
+
+Properties: `open` (attribute `open`) : boolean, default false; `heading` (attribute `heading`) : string, default ""; `centered` (attribute `centered`) : boolean, default false
+Events: `panel-close`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<div style="position: relative; display: inline-block;">
+  <button id="new-task-btn">New task</button>
+  <popover-panel heading="New task">
+    Popover body content goes here.
+  </popover-panel>
+</div>
+<script type="module">
+  const popover = document.querySelector("popover-panel");
+  document.querySelector("#new-task-btn").addEventListener("click", () => (popover.open = true));
+  popover.addEventListener("panel-close", () => (popover.open = false));
 </script>
 ```
 
@@ -525,6 +621,36 @@ Example:
 <status-pill label="Blocked" color="danger"></status-pill>
 ```
 
+## <tile-grid>
+
+A generic, presentational grid shell: renders one bordered card per entry
+in `items`, with each tile's content produced by `renderTile` (default:
+stringify). Knows nothing about what an "item" means — callers own the
+data shape entirely. Modeled directly on `data-table`'s headless pattern.
+
+Optional `itemHref` makes whole tiles clickable (navigating via
+`location.hash`), without hijacking clicks on nested interactive elements
+(links/buttons) a tile's rendered content might contain.
+
+Import: `import "@f-ewald/components/tile-grid.js";`
+
+Properties: `items` (JS property only) : unknown[], default []; `itemKey` (JS property only) : (item: unknown, index: number) => string | number, default —; `renderTile` (JS property only) : (item: unknown) => unknown, default —; `itemHref` (JS property only) : ((item: unknown) => string | null) | null, default null
+Events: none
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius`, `--ui-surface-muted`, `--ui-text`
+
+Example:
+```html
+<tile-grid></tile-grid>
+<script type="module">
+  const grid = document.querySelector("tile-grid");
+  grid.items = [
+    { name: "notes.txt" },
+    { name: "photo.jpg" },
+  ];
+  grid.renderTile = (item) => item.name;
+</script>
+```
+
 ## <toast-notification>
 
 Fixed-position stack of dismissible notifications, anchored top-right
@@ -592,7 +718,7 @@ circle.
 
 Import: `import "@f-ewald/components/user-avatar.js";`
 
-Properties: `src` (attribute `src`) : string | null, default null; `name` (attribute `name`) : string | null, default null; `size` (attribute `size`) : number, default 32
+Properties: `src` (attribute `src`) : string | null, default null; `name` (attribute `name`) : string | null, default null; `size` (attribute `size`) : string | number, default 32
 Events: none
 CSS custom properties: `--ui-font`, `--ui-primary`
 
