@@ -2010,6 +2010,203 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/dropdown-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A primary-styled button with a label and chevron that opens an anchored\nmenu of actions — essentially `form-select` minus \"current value\"\nsemantics: a menu, not a select. Use for a set of mutually exclusive\nnext-step actions (e.g. a failed task's Retry / Close / Backlog).",
+          "name": "DropdownButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The trigger button's label.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "DropdownOption[]"
+              },
+              "default": "[]",
+              "description": "The menu's actions."
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the trigger, preventing the menu from opening.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "#onWindowMousedown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#select",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "DropdownOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onTriggerKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#moveActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#confirmActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderMenu",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired with `{ value: string }` when a menu item is picked."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The trigger button's label.",
+              "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the trigger, preventing the menu from opening.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "dropdown-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DropdownButton",
+          "declaration": {
+            "name": "DropdownButton",
+            "module": "src/dropdown-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "dropdown-button",
+          "declaration": {
+            "name": "DropdownButton",
+            "module": "src/dropdown-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/editable-text.ts",
       "declarations": [
         {
@@ -3780,6 +3977,22 @@
           "declaration": {
             "name": "PopoverPanel",
             "module": "./popover-panel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropdownButton",
+          "declaration": {
+            "name": "DropdownButton",
+            "module": "./dropdown-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropdownOption",
+          "declaration": {
+            "name": "DropdownOption",
+            "module": "./dropdown-button.js"
           }
         },
         {

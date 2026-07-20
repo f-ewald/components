@@ -53,6 +53,7 @@ export { FormSelect, type SelectOption } from "./form-select.js";
 export { DataTable, type DataTableColumn } from "./data-table.js";
 export { TileGrid } from "./tile-grid.js";
 export { PopoverPanel } from "./popover-panel.js";
+export { DropdownButton, type DropdownOption } from "./dropdown-button.js";
 export { formatDuration, type DurationFormat } from "./utils/duration.js";
 export { tokens, tokenValues, darkTokenValues } from "./tokens.js";
 export * from "./icons.js";
