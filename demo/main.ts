@@ -24,6 +24,11 @@ import {
   type DataTable,
   type TileGrid,
   type PopoverPanel,
+  type PhotoGallery,
+  type PhotoGalleryObjectFit,
+  type PhotoGallerySlideChangeDetail,
+  type GalleryItem,
+  type GalleryItemVariant,
 } from "../src/index.js";
 
 /**
@@ -63,6 +68,49 @@ document.getElementById("confetti-trigger")?.addEventListener("click", () => {
   el.duration = 4000;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 5000);
+});
+
+// photo-gallery
+const galleryDemo = document.getElementById("photo-gallery-demo") as PhotoGallery;
+const galleryStatus = document.getElementById("gallery-status")!;
+const galleryIndex = document.getElementById("gallery-current-index") as HTMLSelectElement;
+const galleryCoast = document.getElementById("gallery-coast") as GalleryItem;
+const galleryBridge = document.getElementById("gallery-bridge") as GalleryItem;
+const galleryCliffs = document.getElementById("gallery-cliffs") as GalleryItem;
+const galleryCoastMobile = document.getElementById("gallery-coast-mobile") as GalleryItemVariant;
+galleryCoast.src = new URL("./assets/photo-gallery/coast-landscape.jpg", import.meta.url).href;
+galleryBridge.src = new URL("./assets/photo-gallery/golden-gate.jpg", import.meta.url).href;
+galleryCliffs.src = new URL("./assets/photo-gallery/coast-portrait.jpg", import.meta.url).href;
+galleryCoastMobile.srcset = new URL("./assets/photo-gallery/coast-portrait.jpg", import.meta.url).href;
+
+document.getElementById("gallery-show-controls")?.addEventListener("change", (event) => {
+  galleryDemo.showControls = (event.target as HTMLInputElement).checked;
+});
+document.getElementById("gallery-show-counter")?.addEventListener("change", (event) => {
+  galleryDemo.showCounter = (event.target as HTMLInputElement).checked;
+});
+document.getElementById("gallery-show-indicators")?.addEventListener("change", (event) => {
+  galleryDemo.showIndicators = (event.target as HTMLInputElement).checked;
+});
+document.getElementById("gallery-autoplay")?.addEventListener("change", (event) => {
+  galleryDemo.delay = (event.target as HTMLInputElement).checked ? 4000 : 0;
+});
+document.getElementById("gallery-show-autoplay-control")?.addEventListener("change", (event) => {
+  galleryDemo.showAutoplayControl = (event.target as HTMLInputElement).checked;
+});
+galleryIndex?.addEventListener("change", () => {
+  galleryDemo.currentIndex = Number(galleryIndex.value);
+});
+document.getElementById("gallery-aspect-ratio")?.addEventListener("change", (event) => {
+  galleryDemo.aspectRatio = (event.target as HTMLSelectElement).value;
+});
+document.getElementById("gallery-object-fit")?.addEventListener("change", (event) => {
+  galleryDemo.objectFit = (event.target as HTMLSelectElement).value as PhotoGalleryObjectFit;
+});
+galleryDemo?.addEventListener("slide-change", (event) => {
+  const detail = (event as CustomEvent<PhotoGallerySlideChangeDetail>).detail;
+  galleryIndex.value = String(detail.currentIndex);
+  galleryStatus.textContent = `Showing image ${detail.currentIndex + 1} of 3 (${detail.reason})`;
 });
 
 // roman-numeral
