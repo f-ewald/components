@@ -30,17 +30,21 @@
     "docs"
   ],
   "sideEffects": [
-    "./dist/**/*.js"
+    "./dist/**/*.js",
+    "./src/**/*.ts"
   ],
   "scripts": {
     "dev": "vite",
     "build": "rm -rf dist && tsc && node scripts/generate-tokens-css.mjs && chmod +x dist/mcp-server.js",
     "build:demo": "vite build",
+    "build:site": "node scripts/generate-docs.mjs --site && vite build --base=./ --outDir=pages-dist/playground",
+    "preview:site": "vite preview --outDir=pages-dist",
     "analyze": "cem analyze --litelement --globs \"src/**/*.ts\"",
     "docs": "npm run analyze && node scripts/generate-docs.mjs",
     "icons": "node scripts/generate-icons.mjs",
     "mcp": "node dist/mcp-server.js",
     "test": "playwright test",
+    "test:site": "playwright test --config playwright.site.config.ts",
     "prepublishOnly": "npm run build && npm run docs && npm run test"
   },
   "keywords": [

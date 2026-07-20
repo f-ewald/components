@@ -27,10 +27,19 @@ use — non-chart components pull in zero `d3` code.
   playground.
 - `docs/` — **generated** per-component markdown, plus the hand-written
   `mcp-evaluation.md`.
+- `site/` — hand-written static styling for the generated GitHub Pages
+  documentation.
+- `site-tests/` + `playwright.site.config.ts` — smoke tests for the complete
+  Pages artifact.
 - `scripts/` — codegen: `generate-icons.mjs`, `generate-tokens-css.mjs`,
   `generate-docs.mjs`.
+- `.github/workflows/pages.yml` — read-only source build that deploys the
+  generated Pages artifact after both Playwright suites pass.
 - `dist/` — **generated** `tsc` build output; this is the npm-published
   artifact (unbundled JS + `.d.ts` + source maps + `tokens.css`).
+- `demo-dist/` — **generated**, ignored standalone playground build.
+- `pages-dist/` — **generated**, ignored GitHub Pages artifact: documentation
+  at the root and the Vite playground under `playground/`.
 
 ## Styling / token rules
 
@@ -107,12 +116,34 @@ script and run `npm run icons`.
 | `npm run dev` | Playground with HMR. |
 | `npm run build` | `tsc` → `dist/` + `dist/tokens.css`, `chmod +x dist/mcp-server.js`. |
 | `npm run build:demo` | Static playground build → `demo-dist/`. |
+| `npm run build:site` | Static docs + nested playground build → `pages-dist/`; writes no tracked files. |
+| `npm run preview:site` | Preview `pages-dist/` locally. |
 | `npm run icons` | Regenerate `src/icons.ts`. |
 | `npm run analyze` | Regenerate `custom-elements.json`. |
 | `npm run docs` | `analyze` + regenerate `docs/*.md` and `llms.txt`. |
 | `npm run mcp` | Run the MCP server directly (`node dist/mcp-server.js`) — mostly for manual smoke-testing; consumers launch it the same way via `.mcp.json`. |
 | `npm run test` | Playwright suite (auto-starts the dev server). |
+| `npm run test:site` | Playwright smoke suite against the built `pages-dist/` artifact. |
 | `npm run prepublishOnly` | `build` + `docs` + `test` — runs automatically before `npm publish`. |
+
+## GitHub Pages
+
+The public documentation is at `https://f-ewald.github.io/components/`; the
+live playground is under `/components/playground/`. `npm run build:site`
+invokes `generate-docs.mjs --site`, which reads the checked-in
+`custom-elements.json` and `llms.txt`, writes static HTML only beneath
+`pages-dist/`, then builds the existing Vite playground into
+`pages-dist/playground/` with relative asset URLs. It does **not** run
+`npm run docs` or modify tracked generated documentation.
+
+`.github/workflows/pages.yml` deploys on pushes to `main` and manual dispatch.
+It uses only GitHub-authored actions, checks out with
+`persist-credentials: false`, has `contents: read` rather than write, and
+fails if the build changes tracked or staged files. Its only write permission
+is in the deploy job for the GitHub Pages deployment; it cannot commit, push,
+tag, open pull requests, publish releases, or change repository settings.
+Pages must be manually configured to use **GitHub Actions** as its source
+before the first run.
 
 ## MCP server
 

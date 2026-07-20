@@ -2,6 +2,7 @@
 /lib/
 dist/
 demo-dist/
+pages-dist/
 test-results/
 playwright-report/
 
