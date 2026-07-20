@@ -1,19 +1,40 @@
 # @f-ewald/components
 
-## Unreleased
+## 0.6.0
 
+- Added `data-table`: a generic, presentational table shell — renders a
+  `<thead>` from `columns` and one `<tr>` per `rows` entry, with each cell
+  produced by `renderCell` (default: plain property lookup). Optional
+  `rowHref` makes whole rows clickable without hijacking clicks on nested
+  interactive elements a cell's content might contain.
+- Added `form-select`: a styled dropdown select — a trigger button showing
+  the current option's label, opening a listbox popover on click, firing
+  `change` with `{ value }`. Drop-in generic replacement for a native
+  `<select>` wherever consistent cross-browser styling is wanted.
+- Added `popover-panel`: a generic anchored popover shell, positioned
+  relative to its nearest `position: relative` ancestor, closing on outside
+  click or Escape. Shares `slide-panel`'s header/close-button API so either
+  can be swapped in for the other. Also gained a `centered` mode: set the
+  `centered` attribute to render as a screen-centered modal with a
+  translucent backdrop instead of the default anchored placement; clicking
+  the backdrop closes it like an outside click would.
 - Added `tile-grid`: a generic grid shell mirroring `data-table`'s headless
   pattern — `items`, `renderTile(item)` (default: stringify), optional
   `itemHref(item)` clickable-tile support with the same nested-`a`/`button`
   click-hijack guard as `data-table.rowHref`.
 - Added icons: `chevron-down`, `document`, `squares-2x2`,
   `chat-bubble-left-right`.
-- `popover-panel` gained a `centered` mode: set the `centered` attribute to
-  render a screen-centered modal with a translucent backdrop instead of the
-  default anchored placement; clicking the backdrop closes it like an
-  outside click would.
 - `user-avatar`'s `size` prop now also accepts named presets (`xs`=18,
   `sm`=24, `md`=32, `lg`=48) in addition to a pixel number.
+- Fixed a dark-mode bug in the shared token stylesheet: every component's
+  `:host` block re-declared each `--ui-*` custom property as
+  `--ui-x: var(--ui-x, fallback)`, which computed to the guaranteed-invalid
+  value instead of inheriting `:root`'s value — silently discarding any
+  consumer override, including the new dark palette. Only unnoticed because
+  every fallback happened to equal the light-mode default. Replaced with
+  plain inheritance (nothing redeclared on `:host`) plus a `darkTokenValues`
+  palette applied via `tokens.css`'s `@media (prefers-color-scheme: dark)` /
+  `[data-theme]` rules.
 
 ## 0.4.0
 
