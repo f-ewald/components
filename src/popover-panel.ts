@@ -16,6 +16,9 @@ import { tokens } from "./tokens.js";
  *
  * @element popover-panel
  * @fires panel-close - User clicked the close (✕) button, pressed Escape, or clicked outside/the backdrop.
+ * @slot title - Overrides the plain `heading` text with custom markup.
+ * @slot actions - Extra header controls (e.g. an icon+label link) rendered between the title and the close button.
+ * @slot - Popover body content.
  */
 @customElement("popover-panel")
 export class PopoverPanel extends LitElement {
@@ -81,6 +84,13 @@ export class PopoverPanel extends LitElement {
         text-overflow: ellipsis;
         padding-right: 0.5rem;
       }
+      .panel-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 0 0 auto;
+        margin-right: 0.25rem;
+      }
       .close-btn {
         background: none;
         border: none;
@@ -142,6 +152,7 @@ export class PopoverPanel extends LitElement {
           <slot name="title">
             ${this.heading ? html`<span class="panel-title">${this.heading}</span>` : null}
           </slot>
+          <span class="panel-actions"><slot name="actions"></slot></span>
           <button class="close-btn" aria-label="Close popover" @click=${() => this.#close()}>
             ${iconX(18)}
           </button>

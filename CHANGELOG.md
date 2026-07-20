@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- `popover-panel` gained a new `actions` named slot, rendered in the header
+  between the title and the close button, for extra controls like an
+  icon+label link. `form-select`'s trigger button now fills its host's
+  width (`justify-content: space-between` keeps the chevron pinned to the
+  far edge); the host itself is still `display: inline-block`, so existing
+  auto-width usages are unaffected — set `form-select { width: 100%; }` on
+  the host to actually go full-width. Added the `ArrowTopRightOnSquare`
+  heroicon.
 - Added `icon-button`: a borderless button wrapping a passed-in icon
   (`icon: TemplateResult | null`, same pattern as slowmo's `nav-item.icon`
   prop), with a rounded hover-highlight background and a required `label`

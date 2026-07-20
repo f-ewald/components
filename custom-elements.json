@@ -2443,7 +2443,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A styled dropdown select: a trigger button showing the current option's\nlabel, opening a listbox popover on click. Drop-in generic replacement for\na native `<select>` wherever consistent cross-browser styling and a\n`change` event carrying `{ value }` are wanted (e.g. a task's status\npicker).",
+          "description": "A styled dropdown select: a trigger button showing the current option's\nlabel, opening a listbox popover on click. Drop-in generic replacement for\na native `<select>` wherever consistent cross-browser styling and a\n`change` event carrying `{ value }` are wanted (e.g. a task's status\npicker).\n\nThe trigger fills its host's width (`justify-content: space-between`\npushes the chevron to the far edge), but the host itself stays\n`display: inline-block` — so usages that never size the host (a filter\nbar, a status picker) keep shrink-to-fit auto-width unchanged. To make an\ninstance full-width, size the host itself: `form-select { width: 100%; }`.",
           "name": "FormSelect",
           "members": [
             {
@@ -3317,6 +3317,16 @@
               "default": "18"
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowTopRightOnSquare",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
         }
       ],
       "exports": [
@@ -3621,6 +3631,14 @@
           "name": "iconChatBubbleLeftRight",
           "declaration": {
             "name": "iconChatBubbleLeftRight",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowTopRightOnSquare",
+          "declaration": {
+            "name": "iconArrowTopRightOnSquare",
             "module": "src/icons.ts"
           }
         }
@@ -5385,6 +5403,20 @@
           "kind": "class",
           "description": "Generic anchored popover shell: a floating card positioned relative to its\nnearest `position: relative` ancestor (place it next to its trigger button\ninside such a wrapper), as opposed to `slide-panel`'s fixed screen-edge\ndrawer. Closes on outside click or Escape. Header chrome and close button\nmatch `slide-panel`'s API (`heading`, `panel-close`) so either can be\nswapped in for the other with no consumer-side changes beyond the wrapper.\n\nSet `centered` to render as a screen-centered modal with a translucent\nbackdrop instead of the default anchored placement.",
           "name": "PopoverPanel",
+          "slots": [
+            {
+              "description": "Overrides the plain `heading` text with custom markup.",
+              "name": "title"
+            },
+            {
+              "description": "Extra header controls (e.g. an icon+label link) rendered between the title and the close button.",
+              "name": "actions"
+            },
+            {
+              "description": "Popover body content.",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "field",

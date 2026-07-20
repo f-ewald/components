@@ -48,7 +48,11 @@ import "@f-ewald/components/popover-panel.js";
 
 ## Slots
 
-_None._
+| Slot | Description |
+| --- | --- |
+| `(default)` | Popover body content. |
+| `title` | Overrides the plain `heading` text with custom markup. |
+| `actions` | Extra header controls (e.g. an icon+label link) rendered between the title and the close button. |
 
 ## CSS custom properties
 

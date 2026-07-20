@@ -48,6 +48,7 @@ const ICONS = {
   Document: { slug: "document", size: 18 },
   Squares2x2: { slug: "squares-2x2", size: 18 },
   ChatBubbleLeftRight: { slug: "chat-bubble-left-right", size: 18 },
+  ArrowTopRightOnSquare: { slug: "arrow-top-right-on-square", size: 16 },
 };
 
 /**

@@ -6,6 +6,12 @@ a native `<select>` wherever consistent cross-browser styling and a
 `change` event carrying `{ value }` are wanted (e.g. a task's status
 picker).
 
+The trigger fills its host's width (`justify-content: space-between`
+pushes the chevron to the far edge), but the host itself stays
+`display: inline-block` — so usages that never size the host (a filter
+bar, a status picker) keep shrink-to-fit auto-width unchanged. To make an
+instance full-width, size the host itself: `form-select { width: 100%; }`.
+
 ## Install
 
 ```js
