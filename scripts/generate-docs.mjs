@@ -1,13 +1,21 @@
 #!/usr/bin/env node
 // Reads custom-elements.json (produced by `npm run analyze`) and writes
 // docs/<tag-name>.md per component plus llms.txt at the repo root.
-import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, "..");
 const docsDir = path.join(rootDir, "docs");
+const siteDir = path.join(rootDir, "pages-dist");
+const args = process.argv.slice(2);
+
+if (args.length > 1 || (args.length === 1 && args[0] !== "--site")) {
+  throw new Error("Usage: node scripts/generate-docs.mjs [--site]");
+}
+
+const siteOnly = args[0] === "--site";
 
 /** Slots aren't auto-detected by the analyzer without JSDoc @slot tags, so
  * they're curated here — the set is small and stable. */
@@ -51,6 +59,13 @@ const SLOTS = {
       description: "Declarative `calendar-entry` elements spanning the displayed year, re-projected into each month.",
     },
   ],
+};
+
+/** Metadata-only components are demonstrated through their visual parent. */
+const PLAYGROUND_ANCHORS = {
+  "calendar-entry": "calendar-month",
+  "gallery-item": "photo-gallery",
+  "gallery-item-variant": "photo-gallery",
 };
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
@@ -349,68 +364,349 @@ function cssPropsTable(tokens) {
   return ["| Custom property |", "| --- |", ...tokens.map((t) => `| \`${t}\` |`)].join("\n");
 }
 
-await mkdir(docsDir, { recursive: true });
+/** Escapes untrusted manifest and package text for HTML text and attributes. */
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
 
-const llmsSections = [];
+/** Renders the small inline Markdown subset used by component JSDoc. */
+function inlineHtml(value) {
+  return escapeHtml(value)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+}
 
-for (const c of components) {
-  const tokens = await cssTokensUsedBy(c.sourcePath);
-  const importLine = `import "@f-ewald/components/${path.basename(c.sourcePath, ".ts")}.js";`;
-  const example = EXAMPLES[c.tagName] ?? `<${c.tagName}></${c.tagName}>`;
+/** Renders paragraphs and simple unordered lists from component descriptions. */
+function descriptionHtml(value) {
+  if (!value) return '<p class="empty">No description provided.</p>';
+  return String(value)
+    .trim()
+    .split(/\n{2,}/)
+    .map((block) => {
+      const lines = block.split("\n").map((line) => line.trim());
+      if (lines.every((line) => line.startsWith("- "))) {
+        return `<ul>${lines.map((line) => `<li>${inlineHtml(line.slice(2))}</li>`).join("")}</ul>`;
+      }
+      return `<p>${lines.map(inlineHtml).join("<br />")}</p>`;
+    })
+    .join("\n");
+}
 
-  const md = `# \`<${c.tagName}>\`
+/** Returns a concise plain-text description for cards and metadata. */
+function descriptionSummary(value) {
+  return String(value ?? "")
+    .split(/\n{2,}/, 1)[0]
+    .replace(/\n/g, " ")
+    .replace(/[`*]/g, "")
+    .trim();
+}
 
-${c.description}
+/** Renders a semantic API table or a consistent empty-state paragraph. */
+function apiTableHtml(headers, rows) {
+  if (rows.length === 0) return '<p class="empty">None.</p>';
+  return `<div class="table-wrap">
+  <table>
+    <thead><tr>${headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table>
+</div>`;
+}
+
+/** Renders the public properties for a component. */
+function propertiesHtml(properties) {
+  return apiTableHtml(
+    ["Property", "Attribute", "Type", "Default", "Description"],
+    properties.map((property) => [
+      `<code>${escapeHtml(property.name)}</code>`,
+      property.attribute
+        ? `<code>${escapeHtml(property.attribute)}</code>`
+        : "<em>JS property only</em>",
+      `<code>${escapeHtml(property.type?.text ?? "unknown")}</code>`,
+      `<code>${escapeHtml(property.default ?? "-")}</code>`,
+      `${inlineHtml((property.description ?? "").replace(/\n/g, " "))}${
+        property.readonly ? ' <span class="badge">read-only</span>' : ""
+      }`,
+    ])
+  );
+}
+
+/** Renders the custom events for a component. */
+function eventsHtml(events) {
+  return apiTableHtml(
+    ["Event", "Description"],
+    events.map((event) => [
+      `<code>${escapeHtml(event.name)}</code>`,
+      inlineHtml((event.description ?? "").replace(/\n/g, " ")),
+    ])
+  );
+}
+
+/** Renders the curated slots for a component. */
+function slotsHtml(tagName) {
+  return apiTableHtml(
+    ["Slot", "Description"],
+    (SLOTS[tagName] ?? []).map((slot) => [
+      `<code>${escapeHtml(slot.name)}</code>`,
+      inlineHtml(slot.description),
+    ])
+  );
+}
+
+/** Renders the CSS custom properties consumed by a component. */
+function cssPropertiesHtml(tokens) {
+  return apiTableHtml(
+    ["Custom property"],
+    tokens.map((token) => [`<code>${escapeHtml(token)}</code>`])
+  );
+}
+
+/** Renders the shared component navigation for API pages. */
+function componentNavigationHtml(componentDocs, currentTag) {
+  return `<nav class="component-nav" aria-label="Component documentation">
+  <h2>Components</h2>
+  <ul>
+    ${componentDocs
+      .map(
+        (component) =>
+          `<li><a href="./${encodeURIComponent(component.tagName)}.html"${
+            component.tagName === currentTag ? ' aria-current="page"' : ""
+          }>${escapeHtml(component.tagName)}</a></li>`
+      )
+      .join("\n    ")}
+  </ul>
+</nav>`;
+}
+
+/** Wraps generated documentation content in the shared static page shell. */
+function pageHtml({ title, description, stylesheet, homeHref, body }) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="${escapeHtml(description)}" />
+    <title>${escapeHtml(title)}</title>
+    <link rel="stylesheet" href="${stylesheet}" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="${homeHref}">@f-ewald/components</a>
+      <nav aria-label="Primary">
+        <a href="${homeHref}">Documentation</a>
+        <a href="${homeHref}playground/">Playground</a>
+        <a href="https://github.com/f-ewald/components">GitHub</a>
+      </nav>
+    </header>
+    ${body}
+    <footer>
+      <p>Generated from <code>custom-elements.json</code> by @f-ewald/components.</p>
+    </footer>
+  </body>
+</html>
+`;
+}
+
+/** Renders the documentation landing page. */
+function landingPageHtml(componentDocs, packageJson) {
+  const cards = componentDocs
+    .map(
+      (component) => `<li class="component-card">
+  <a href="./docs/${encodeURIComponent(component.tagName)}.html">
+    <code>&lt;${escapeHtml(component.tagName)}&gt;</code>
+    <span>${escapeHtml(descriptionSummary(component.description))}</span>
+  </a>
+</li>`
+    )
+    .join("\n");
+
+  const body = `<main>
+  <section class="hero">
+    <p class="eyebrow">Lit web components</p>
+    <h1>Reusable components, documented and ready to explore.</h1>
+    <p class="lede">${escapeHtml(packageJson.description)}</p>
+    <div class="actions">
+      <a class="button primary" href="./playground/">Open the playground</a>
+      <a class="button" href="https://www.npmjs.com/package/%40f-ewald%2Fcomponents">View on npm</a>
+    </div>
+  </section>
+
+  <section aria-labelledby="install-heading">
+    <h2 id="install-heading">Install</h2>
+    <pre><code>npm install @f-ewald/components</code></pre>
+    <p>Import the whole library, or use a component subpath so applications only load what they use.</p>
+    <pre><code>import &quot;@f-ewald/components&quot;;
+import &quot;@f-ewald/components/confirm-dialog.js&quot;;</code></pre>
+  </section>
+
+  <section aria-labelledby="components-heading">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">${componentDocs.length} components</p>
+        <h2 id="components-heading">Component reference</h2>
+      </div>
+      <a href="./playground/">See every component live</a>
+    </div>
+    <ul class="component-grid">${cards}</ul>
+  </section>
+
+  <section class="split" aria-labelledby="theming-heading">
+    <div>
+      <h2 id="theming-heading">Theme with CSS properties</h2>
+      <p>Every component includes token fallbacks and works without global CSS. Override any <code>--ui-*</code> property on an ancestor to apply a theme.</p>
+    </div>
+    <pre><code>:root {
+  --ui-primary: #0ea5e9;
+  --ui-radius: 0.75rem;
+}</code></pre>
+  </section>
+
+  <section aria-labelledby="resources-heading">
+    <h2 id="resources-heading">Machine-readable resources</h2>
+    <ul class="resource-list">
+      <li><a href="./custom-elements.json"><code>custom-elements.json</code></a> - Custom Elements Manifest</li>
+      <li><a href="./llms.txt"><code>llms.txt</code></a> - compact AI-oriented component reference</li>
+    </ul>
+  </section>
+</main>`;
+
+  return pageHtml({
+    title: `${packageJson.name} - Documentation`,
+    description: packageJson.description,
+    stylesheet: "./assets/docs.css",
+    homeHref: "./",
+    body,
+  });
+}
+
+/** Renders one component API reference page. */
+function componentPageHtml(component, componentDocs) {
+  const tag = escapeHtml(component.tagName);
+  const playgroundAnchor = PLAYGROUND_ANCHORS[component.tagName] ?? component.tagName;
+  const body = `<main class="docs-layout">
+  ${componentNavigationHtml(componentDocs, component.tagName)}
+  <article class="api-doc">
+    <p class="breadcrumbs"><a href="../">Documentation</a> / ${tag}</p>
+    <div class="api-heading">
+      <div>
+        <p class="eyebrow">Component API</p>
+        <h1><code>&lt;${tag}&gt;</code></h1>
+      </div>
+      <a class="button primary" href="../playground/#${encodeURIComponent(playgroundAnchor)}">Open live example</a>
+    </div>
+    <div class="description">${descriptionHtml(component.description)}</div>
+
+    <section>
+      <h2>Install</h2>
+      <pre><code>${escapeHtml(component.importLine)}</code></pre>
+    </section>
+    <section>
+      <h2>Usage</h2>
+      <pre><code>${escapeHtml(component.example)}</code></pre>
+    </section>
+    <section>
+      <h2>Attributes / properties</h2>
+      ${propertiesHtml(component.properties)}
+    </section>
+    <section>
+      <h2>Events</h2>
+      ${eventsHtml(component.events)}
+    </section>
+    <section>
+      <h2>Slots</h2>
+      ${slotsHtml(component.tagName)}
+    </section>
+    <section>
+      <h2>CSS custom properties</h2>
+      ${cssPropertiesHtml(component.tokens)}
+    </section>
+  </article>
+</main>`;
+
+  return pageHtml({
+    title: `<${component.tagName}> - @f-ewald/components`,
+    description: descriptionSummary(component.description),
+    stylesheet: "../assets/docs.css",
+    homeHref: "../",
+    body,
+  });
+}
+
+/** Builds the shared documentation model once for Markdown and HTML renderers. */
+async function componentDocumentation() {
+  return Promise.all(
+    components.map(async (component) => ({
+      ...component,
+      tokens: await cssTokensUsedBy(component.sourcePath),
+      importLine: `import "@f-ewald/components/${path.basename(component.sourcePath, ".ts")}.js";`,
+      example: EXAMPLES[component.tagName] ?? `<${component.tagName}></${component.tagName}>`,
+    }))
+  );
+}
+
+/** Writes the checked-in Markdown docs and compact LLM reference. */
+async function writeMarkdownDocumentation(componentDocs) {
+  await mkdir(docsDir, { recursive: true });
+  const llmsSections = [];
+
+  for (const component of componentDocs) {
+    const md = `# \`<${component.tagName}>\`
+
+${component.description}
 
 ## Install
 
 \`\`\`js
-${importLine}
+${component.importLine}
 \`\`\`
 
 ## Usage
 
 \`\`\`html
-${example}
+${component.example}
 \`\`\`
 
 ## Attributes / properties
 
-${propertiesTable(c.properties)}
+${propertiesTable(component.properties)}
 
 ## Events
 
-${eventsTable(c.events)}
+${eventsTable(component.events)}
 
 ## Slots
 
-${slotsTable(c.tagName)}
+${slotsTable(component.tagName)}
 
 ## CSS custom properties
 
-${cssPropsTable(tokens)}
+${cssPropsTable(component.tokens)}
 `;
 
-  await writeFile(path.join(docsDir, `${c.tagName}.md`), md, "utf8");
+    await writeFile(path.join(docsDir, `${component.tagName}.md`), md, "utf8");
 
-  llmsSections.push(`## <${c.tagName}>
+    llmsSections.push(`## <${component.tagName}>
 
-${c.description}
+${component.description}
 
-Import: \`${importLine}\`
+Import: \`${component.importLine}\`
 
-Properties: ${c.properties.length === 0 ? "none" : c.properties.map((p) => `\`${p.name}\`${p.attribute ? ` (attribute \`${p.attribute}\`)` : " (JS property only)"} : ${p.type?.text ?? "unknown"}, default ${p.default ?? "—"}`).join("; ")}
-Events: ${c.events.length === 0 ? "none" : c.events.map((e) => `\`${e.name}\``).join(", ")}
-CSS custom properties: ${tokens.length === 0 ? "none" : tokens.map((t) => `\`${t}\``).join(", ")}
+Properties: ${component.properties.length === 0 ? "none" : component.properties.map((p) => `\`${p.name}\`${p.attribute ? ` (attribute \`${p.attribute}\`)` : " (JS property only)"} : ${p.type?.text ?? "unknown"}, default ${p.default ?? "—"}`).join("; ")}
+Events: ${component.events.length === 0 ? "none" : component.events.map((e) => `\`${e.name}\``).join(", ")}
+CSS custom properties: ${component.tokens.length === 0 ? "none" : component.tokens.map((t) => `\`${t}\``).join(", ")}
 
 Example:
 \`\`\`html
-${example}
+${component.example}
 \`\`\`
 `);
-}
+  }
 
-const llmsTxt = `# @f-ewald/components
+  const llmsTxt = `# @f-ewald/components
 
 A collection of self-contained Lit web components sharing a Tailwind-inspired
 design token system. Every component is individually importable and ships
@@ -430,6 +726,39 @@ render correctly with zero external CSS. Override any \`--ui-*\` property on
 
 ${llmsSections.join("\n")}`;
 
-await writeFile(path.join(rootDir, "llms.txt"), llmsTxt, "utf8");
+  await writeFile(path.join(rootDir, "llms.txt"), llmsTxt, "utf8");
+  console.log(`Wrote ${componentDocs.length} docs/*.md files and llms.txt`);
+}
 
-console.log(`Wrote ${components.length} docs/*.md files and llms.txt`);
+/** Writes the disposable static artifact consumed by GitHub Pages. */
+async function writeSiteDocumentation(componentDocs) {
+  const packageJson = JSON.parse(await readFile(path.join(rootDir, "package.json"), "utf8"));
+  await rm(siteDir, { recursive: true, force: true });
+  await Promise.all([
+    mkdir(path.join(siteDir, "assets"), { recursive: true }),
+    mkdir(path.join(siteDir, "docs"), { recursive: true }),
+  ]);
+
+  await Promise.all([
+    writeFile(path.join(siteDir, "index.html"), landingPageHtml(componentDocs, packageJson), "utf8"),
+    copyFile(path.join(rootDir, "custom-elements.json"), path.join(siteDir, "custom-elements.json")),
+    copyFile(path.join(rootDir, "llms.txt"), path.join(siteDir, "llms.txt")),
+    copyFile(path.join(rootDir, "site", "docs.css"), path.join(siteDir, "assets", "docs.css")),
+    ...componentDocs.map((component) =>
+      writeFile(
+        path.join(siteDir, "docs", `${component.tagName}.html`),
+        componentPageHtml(component, componentDocs),
+        "utf8"
+      )
+    ),
+  ]);
+
+  console.log(`Wrote static documentation for ${componentDocs.length} components to pages-dist/`);
+}
+
+const componentDocs = await componentDocumentation();
+if (siteOnly) {
+  await writeSiteDocumentation(componentDocs);
+} else {
+  await writeMarkdownDocumentation(componentDocs);
+}
