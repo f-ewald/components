@@ -16,6 +16,7 @@
         <nav class="demo-nav flex flex-col gap-0.5 px-3 pb-6 text-sm" data-testid="nav">
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#animate-confetti">animate-confetti</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#reveal-button">reveal-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#photo-gallery">photo-gallery</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#roman-numeral">roman-numeral</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#confirm-dialog">confirm-dialog</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#toast-notification">toast-notification</a>
@@ -87,6 +88,110 @@
 &lt;reveal-button label="Show the secret"&gt;
   Surprise! This content was hidden.
 &lt;/reveal-button&gt;</code></pre>
+        </section>
+
+        <section id="photo-gallery" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-photo-gallery">
+          <h3 class="text-xl font-semibold text-slate-900">photo-gallery</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Responsive carousel with accessible controls, autoplay, keyboard navigation, swipe gestures, and declarative image metadata.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <photo-gallery
+              id="photo-gallery-demo"
+              data-testid="photo-gallery-demo"
+              delay="4000"
+              show-counter
+              show-indicators
+            >
+              <gallery-item
+                id="gallery-coast"
+                src="/demo/assets/photo-gallery/coast-landscape.jpg"
+                alt="Rocky California coastline beneath a cloudy sky"
+                caption="California coast"
+              >
+                <gallery-item-variant
+                  id="gallery-coast-mobile"
+                  media="(max-width: 640px)"
+                  srcset="/demo/assets/photo-gallery/coast-portrait.jpg"
+                ></gallery-item-variant>
+              </gallery-item>
+              <gallery-item
+                id="gallery-bridge"
+                src="/demo/assets/photo-gallery/golden-gate.jpg"
+                alt="Golden Gate Bridge stretching across San Francisco Bay"
+                caption="Golden Gate Bridge"
+              ></gallery-item>
+              <gallery-item
+                id="gallery-cliffs"
+                src="/demo/assets/photo-gallery/coast-portrait.jpg"
+                alt="Cliffs and ocean along the California coast"
+              ></gallery-item>
+            </photo-gallery>
+
+            <div class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+              <label class="flex items-center gap-2">
+                <input id="gallery-show-controls" type="checkbox" checked />
+                Previous/next buttons
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="gallery-show-counter" type="checkbox" checked />
+                Current/total counter
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="gallery-show-indicators" type="checkbox" checked />
+                Clickable indicators
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="gallery-autoplay" type="checkbox" checked />
+                Autoplay
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="gallery-show-autoplay-control" type="checkbox" checked />
+                Pause/play control
+              </label>
+              <label class="flex items-center justify-between gap-3">
+                Active image
+                <select id="gallery-current-index" class="rounded border border-slate-300 px-2 py-1">
+                  <option value="0">1</option>
+                  <option value="1">2</option>
+                  <option value="2">3</option>
+                </select>
+              </label>
+              <label class="flex items-center justify-between gap-3">
+                Aspect ratio
+                <select id="gallery-aspect-ratio" class="rounded border border-slate-300 px-2 py-1">
+                  <option value="16 / 9">16 / 9</option>
+                  <option value="4 / 3">4 / 3</option>
+                  <option value="3 / 2">3 / 2</option>
+                </select>
+              </label>
+              <label class="flex items-center justify-between gap-3">
+                Image fit
+                <select id="gallery-object-fit" class="rounded border border-slate-300 px-2 py-1">
+                  <option value="cover">cover</option>
+                  <option value="contain">contain</option>
+                </select>
+              </label>
+            </div>
+            <p id="gallery-status" data-testid="gallery-status" class="mt-4 text-xs text-slate-500">
+              Showing image 1 of 3
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/photo-gallery.js";
+
+&lt;photo-gallery delay="5000" show-counter show-indicators&gt;
+  &lt;gallery-item
+    src="/photos/coast.jpg"
+    alt="Rocky California coastline"
+    caption="California coast"
+  &gt;
+    &lt;gallery-item-variant
+      media="(max-width: 640px)"
+      srcset="/photos/coast-portrait.jpg"
+    &gt;&lt;/gallery-item-variant&gt;
+  &lt;/gallery-item&gt;
+  &lt;gallery-item src="/photos/bridge.jpg" alt="Golden Gate Bridge"&gt;&lt;/gallery-item&gt;
+&lt;/photo-gallery&gt;</code></pre>
         </section>
 
         <section id="roman-numeral" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-roman-numeral">
