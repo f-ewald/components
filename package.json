@@ -1,7 +1,7 @@
 {
   "name": "@f-ewald/components",
   "private": false,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A collection of universally usable web components for various tasks.",
   "type": "module",
   "main": "dist/index.js",
