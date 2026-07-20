@@ -32,6 +32,7 @@ import {
   type PhotoGallerySlideChangeDetail,
   type GalleryItem,
   type GalleryItemVariant,
+  type CalendarYear,
 } from "../src/index.js";
 
 /**
@@ -465,6 +466,13 @@ if (gridFiles) {
   gridFiles.renderTile = (item) => (item as { name: string }).name;
   gridFiles.itemHref = (item) => `#${(item as { id: string }).id}`;
 }
+
+// calendar-year
+const calendarYearSelect = document.getElementById("calendar-year-select") as HTMLSelectElement | null;
+const calendarYearDemo = document.getElementById("calendar-year-demo") as CalendarYear | null;
+calendarYearSelect?.addEventListener("change", () => {
+  if (calendarYearDemo) calendarYearDemo.year = Number(calendarYearSelect.value);
+});
 
 // Active nav link highlighting.
 const sections = Array.from(document.querySelectorAll("main section[id]"));

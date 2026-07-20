@@ -1166,6 +1166,426 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/calendar-entry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Declarative metadata for one calendar event, consumed by a parent\n`calendar-month` or `calendar-year`. Read-only/non-interactive; renders\nnothing itself.",
+          "name": "CalendarEntry",
+          "slots": [
+            {
+              "description": "Reserved for future rich content; unused today.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "start",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Inclusive start date, `\"YYYY-MM-DD\"`.",
+              "attribute": "start",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "end",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Inclusive end date, `\"YYYY-MM-DD\"`. Falls back to `start` when unset (single-day entry).",
+              "attribute": "end",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text shown on the entry's first visible day within a given month.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "StatusPillColor"
+              },
+              "default": "\"neutral\"",
+              "description": "Color variant, reusing `status-pill`'s palette.",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional link target; the parent renders the entry as an `<a>` when set.",
+              "attribute": "href",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "start",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Inclusive start date, `\"YYYY-MM-DD\"`.",
+              "fieldName": "start"
+            },
+            {
+              "name": "end",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Inclusive end date, `\"YYYY-MM-DD\"`. Falls back to `start` when unset (single-day entry).",
+              "fieldName": "end"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text shown on the entry's first visible day within a given month.",
+              "fieldName": "label"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "StatusPillColor"
+              },
+              "default": "\"neutral\"",
+              "description": "Color variant, reusing `status-pill`'s palette.",
+              "fieldName": "color"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional link target; the parent renders the entry as an `<a>` when set.",
+              "fieldName": "href"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "calendar-entry",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CalendarEntry",
+          "declaration": {
+            "name": "CalendarEntry",
+            "module": "src/calendar-entry.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "calendar-entry",
+          "declaration": {
+            "name": "CalendarEntry",
+            "module": "src/calendar-entry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/calendar-month.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One month rendered as a top-to-bottom list of days — weekends and today\nhighlighted, with declarative `calendar-entry` children shown as colored\nbars spanning the days they cover. Overlapping entries stack into\nside-by-side lanes rather than being layered/hidden. Read-only.\n\nLanes are computed independently per instance, from only the entries\noverlapping this month — an entry spanning a month boundary may therefore\nland in a different lane index in the adjacent month's `calendar-month`.\nThis is an accepted v1 limitation: cross-month lane continuity would\nrequire a shared parent (`calendar-year`) to assign lanes globally.\n\nA standalone `calendar-month` (used outside `calendar-year`) also won't\nre-render if a consumer mutates one of its hand-authored `calendar-entry`\nchildren's attributes in place after the initial render — only slot\ninsertion/removal is observed. `calendar-year` avoids this by always\nreplacing (never mutating) the synthetic entries it projects down.",
+          "name": "CalendarMonth",
+          "slots": [
+            {
+              "description": "Declarative `calendar-entry` elements to render for this month.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "year",
+              "type": {
+                "text": "number"
+              },
+              "description": "Calendar year, e.g. `2026`.",
+              "attribute": "year",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "month",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Calendar month, 1-12 (January = 1).",
+              "attribute": "month",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_entryElements",
+              "type": {
+                "text": "CalendarEntry[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_entriesVersion",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Bumped on every slotchange purely to force a re-render — `_entryElements` is a live query, not a cache."
+            },
+            {
+              "kind": "method",
+              "name": "_handleSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-renders when declarative `calendar-entry` children are added or removed."
+            },
+            {
+              "kind": "method",
+              "name": "_entryFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "LanedEntry | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "laned",
+                  "type": {
+                    "text": "LanedEntry[]"
+                  }
+                },
+                {
+                  "name": "lane",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Finds the laned entry (if any) covering `date` in a given lane."
+            },
+            {
+              "kind": "method",
+              "name": "_renderLaneCell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "laned",
+                  "type": {
+                    "text": "LanedEntry[]"
+                  }
+                },
+                {
+                  "name": "lane",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "monthStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Renders a single lane's cell for one day: an entry bar, or an empty alignment spacer."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "year",
+              "type": {
+                "text": "number"
+              },
+              "description": "Calendar year, e.g. `2026`.",
+              "fieldName": "year"
+            },
+            {
+              "name": "month",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Calendar month, 1-12 (January = 1).",
+              "fieldName": "month"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "calendar-month",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CalendarMonth",
+          "declaration": {
+            "name": "CalendarMonth",
+            "module": "src/calendar-month.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "calendar-month",
+          "declaration": {
+            "name": "CalendarMonth",
+            "module": "src/calendar-month.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/calendar-year.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A full year of `calendar-month` blocks, generated from declarative\n`calendar-entry` children. Each entry is re-projected into the\n`calendar-month` blocks it overlaps as a freshly-created `calendar-entry`\nelement — the original elements stay slotted here and are never moved,\nsince a DOM node can only have one parent. Read-only.",
+          "name": "CalendarYear",
+          "slots": [
+            {
+              "description": "Declarative `calendar-entry` elements spanning the displayed year.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "year",
+              "type": {
+                "text": "number"
+              },
+              "description": "Calendar year to render all 12 months for, e.g. `2026`.",
+              "attribute": "year",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_entryElements",
+              "type": {
+                "text": "CalendarEntry[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_entriesVersion",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Bumped whenever slotted entries are inserted/removed or a tracked attribute mutates, to force a re-render."
+            },
+            {
+              "kind": "field",
+              "name": "_entriesObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-renders when declarative `calendar-entry` children are added or removed."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "year",
+              "type": {
+                "text": "number"
+              },
+              "description": "Calendar year to render all 12 months for, e.g. `2026`.",
+              "fieldName": "year"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "calendar-year",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CalendarYear",
+          "declaration": {
+            "name": "CalendarYear",
+            "module": "src/calendar-year.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "calendar-year",
+          "declaration": {
+            "name": "CalendarYear",
+            "module": "src/calendar-year.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/chat-message.ts",
       "declarations": [
         {
@@ -4187,6 +4607,30 @@
         },
         {
           "kind": "js",
+          "name": "CalendarEntry",
+          "declaration": {
+            "name": "CalendarEntry",
+            "module": "./calendar-entry.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CalendarMonth",
+          "declaration": {
+            "name": "CalendarMonth",
+            "module": "./calendar-month.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CalendarYear",
+          "declaration": {
+            "name": "CalendarYear",
+            "module": "./calendar-year.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "formatDuration",
           "declaration": {
             "name": "formatDuration",
@@ -7088,6 +7532,283 @@
           "declaration": {
             "name": "WeightBarChart",
             "module": "src/weight-bar-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/calendar.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "daysInMonth",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "year",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "month",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Number of days in `month` (1-12) of `year`, leap years included."
+        },
+        {
+          "kind": "function",
+          "name": "parseIsoDate",
+          "return": {
+            "type": {
+              "text": "Date | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "iso",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parses `\"YYYY-MM-DD\"` as a local-midnight `Date`. Returns `null` for\nanything that doesn't match or doesn't round-trip (e.g. \"2026-02-30\") —\ndeliberately never uses `new Date(iso)`/`.toISOString()`, both of which\nare UTC-based and would silently shift the date in negative-UTC-offset\ntimezones."
+        },
+        {
+          "kind": "function",
+          "name": "toIsoDate",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "Formats a `Date`'s local year/month/day as `\"YYYY-MM-DD\"`."
+        },
+        {
+          "kind": "function",
+          "name": "monthName",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "month",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Locale-aware full month name for `month` (1-12)."
+        },
+        {
+          "kind": "variable",
+          "name": "WEEKDAY_ABBR",
+          "type": {
+            "text": "readonly string[]"
+          },
+          "default": "[\"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"]",
+          "description": "Sunday-first weekday abbreviations, indexed by `Date.getDay()` (0 = Sunday)."
+        },
+        {
+          "kind": "function",
+          "name": "isWeekend",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "Whether `date` falls on a Saturday or Sunday, per JS's `Date.getDay()`\nconvention (Sunday = 0 .. Saturday = 6) — note this differs from Python's\n`calendar` module (Monday = 0), which the original reference\nimplementation this component's layout is based on used."
+        },
+        {
+          "kind": "function",
+          "name": "readCalendarEntryElement",
+          "return": {
+            "type": {
+              "text": "CalendarEntryData"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "CalendarEntry"
+              }
+            }
+          ],
+          "description": "Reads a `calendar-entry` element's properties into a plain data object."
+        },
+        {
+          "kind": "function",
+          "name": "resolveEntry",
+          "return": {
+            "type": {
+              "text": "ResolvedCalendarEntry | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "data",
+              "type": {
+                "text": "CalendarEntryData"
+              }
+            }
+          ],
+          "description": "Resolves a `CalendarEntryData`'s date strings to `Date`s. Returns `null`\nwhen `start` is missing or unparseable — such entries are dropped\nsilently rather than thrown, since this reads declarative markup a\nconsumer authored, not validated user input. A blank `end` defaults to\n`start` (single-day entry); an `end` before `start` is clamped up to\n`start` rather than treated as an error."
+        },
+        {
+          "kind": "function",
+          "name": "overlapsRange",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "entry",
+              "type": {
+                "text": "ResolvedCalendarEntry"
+              }
+            },
+            {
+              "name": "rangeStart",
+              "type": {
+                "text": "Date"
+              }
+            },
+            {
+              "name": "rangeEnd",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "Whether `entry`'s inclusive date range intersects the inclusive `[rangeStart, rangeEnd]` range."
+        },
+        {
+          "kind": "function",
+          "name": "assignLanes",
+          "return": {
+            "type": {
+              "text": "{\n  entries: LanedEntry[];\n  laneCount: number;\n}"
+            }
+          },
+          "parameters": [
+            {
+              "name": "entries",
+              "type": {
+                "text": "ResolvedCalendarEntry[]"
+              }
+            }
+          ],
+          "description": "Assigns each entry a 0-based stacking lane via greedy interval\npartitioning (\"meeting rooms II\"): entries are sorted by start date, then\neach is placed in the lowest-numbered lane whose current occupant ends\nstrictly before the entry starts. Because entry ranges are\ninclusive-inclusive, an entry ending on day X and one starting on day X\nboth occupy day X and must not share a lane — hence the strict `<`.\n\nLane assignment is meant to be computed independently per `calendar-month`\n(from only the entries overlapping that month); an entry spanning a month\nboundary may therefore land in a different lane in adjacent months. This\nis an accepted v1 limitation, not a bug."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "daysInMonth",
+          "declaration": {
+            "name": "daysInMonth",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseIsoDate",
+          "declaration": {
+            "name": "parseIsoDate",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toIsoDate",
+          "declaration": {
+            "name": "toIsoDate",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "monthName",
+          "declaration": {
+            "name": "monthName",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WEEKDAY_ABBR",
+          "declaration": {
+            "name": "WEEKDAY_ABBR",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isWeekend",
+          "declaration": {
+            "name": "isWeekend",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "readCalendarEntryElement",
+          "declaration": {
+            "name": "readCalendarEntryElement",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveEntry",
+          "declaration": {
+            "name": "resolveEntry",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "overlapsRange",
+          "declaration": {
+            "name": "overlapsRange",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "assignLanes",
+          "declaration": {
+            "name": "assignLanes",
+            "module": "src/utils/calendar.ts"
           }
         }
       ]

@@ -44,6 +44,9 @@ import "@f-ewald/components/roman-numeral.js";
 | `<address-autocomplete>` | [docs/address-autocomplete.md](./docs/address-autocomplete.md) |
 | `<animate-confetti>` | [docs/animate-confetti.md](./docs/animate-confetti.md) |
 | `<autocomplete-input>` | [docs/autocomplete-input.md](./docs/autocomplete-input.md) |
+| `<calendar-entry>` | [docs/calendar-entry.md](./docs/calendar-entry.md) |
+| `<calendar-month>` | [docs/calendar-month.md](./docs/calendar-month.md) |
+| `<calendar-year>` | [docs/calendar-year.md](./docs/calendar-year.md) |
 | `<chat-message>` | [docs/chat-message.md](./docs/chat-message.md) |
 | `<confirm-dialog>` | [docs/confirm-dialog.md](./docs/confirm-dialog.md) |
 | `<copy-link-button>` | [docs/copy-link-button.md](./docs/copy-link-button.md) |
