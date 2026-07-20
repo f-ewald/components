@@ -47,14 +47,17 @@ import "@f-ewald/components/roman-numeral.js";
 | `<chat-message>` | [docs/chat-message.md](./docs/chat-message.md) |
 | `<confirm-dialog>` | [docs/confirm-dialog.md](./docs/confirm-dialog.md) |
 | `<copy-link-button>` | [docs/copy-link-button.md](./docs/copy-link-button.md) |
+| `<data-table>` | [docs/data-table.md](./docs/data-table.md) |
 | `<distance-value>` | [docs/distance-value.md](./docs/distance-value.md) |
 | `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
 | `<editable-text>` | [docs/editable-text.md](./docs/editable-text.md) |
+| `<form-select>` | [docs/form-select.md](./docs/form-select.md) |
 | `<live-timer>` | [docs/live-timer.md](./docs/live-timer.md) |
 | `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
 | `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |
 | `<map-point>` | [docs/map-point.md](./docs/map-point.md) |
 | `<percent-bar-chart>` | [docs/percent-bar-chart.md](./docs/percent-bar-chart.md) |
+| `<popover-panel>` | [docs/popover-panel.md](./docs/popover-panel.md) |
 | `<price-history-chart>` | [docs/price-history-chart.md](./docs/price-history-chart.md) |
 | `<radio-cards>` | [docs/radio-cards.md](./docs/radio-cards.md) |
 | `<radio-pills>` | [docs/radio-pills.md](./docs/radio-pills.md) |
@@ -64,6 +67,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<slide-panel>` | [docs/slide-panel.md](./docs/slide-panel.md) |
 | `<stat-meter>` | [docs/stat-meter.md](./docs/stat-meter.md) |
 | `<status-pill>` | [docs/status-pill.md](./docs/status-pill.md) |
+| `<tile-grid>` | [docs/tile-grid.md](./docs/tile-grid.md) |
 | `<toast-notification>` | [docs/toast-notification.md](./docs/toast-notification.md) |
 | `<ui-button>` | [docs/ui-button.md](./docs/ui-button.md) |
 | `<user-avatar>` | [docs/user-avatar.md](./docs/user-avatar.md) |
@@ -94,6 +98,22 @@ Or import the generated stylesheet as a starting point and edit it:
 ```js
 import "@f-ewald/components/tokens.css";
 ```
+
+### Dark mode
+
+`tokens.css` also ships a dark palette (see `darkTokenValues` in
+[`src/tokens.ts`](./src/tokens.ts)), applied automatically via
+`@media (prefers-color-scheme: dark)`. A consumer can force either mode
+regardless of the OS preference by setting `data-theme="dark"` or
+`data-theme="light"` on `<html>` — that attribute wins in both directions.
+Components need no changes to support this: every token is read via
+`var(--ui-x, fallback)` at its point of use, so it just follows whatever
+`:root` resolves to. (Note: `tokens` — the `:host` stylesheet component
+files import alongside their own `css` block — intentionally declares no
+custom properties itself; an earlier version re-declared them there as
+`--ui-x: var(--ui-x, fallback)`, which computed to the guaranteed-invalid
+value instead of the inherited one, silently discarding whatever `:root`
+set. Don't reintroduce that pattern.)
 
 The full token set is defined in [`src/tokens.ts`](./src/tokens.ts).
 

@@ -144,6 +144,50 @@ const EXAMPLES = {
   directory: .
   filename: notes.md
 </chat-message>`,
+  "form-select": `<form-select label="Task state"></form-select>
+<script type="module">
+  const select = document.querySelector("form-select");
+  select.options = [
+    { value: "open", label: "Open" },
+    { value: "in_progress", label: "In progress" },
+    { value: "done", label: "Done" },
+  ];
+  select.value = "open";
+  select.addEventListener("change", (e) => console.log(e.detail.value));
+</script>`,
+  "data-table": `<data-table></data-table>
+<script type="module">
+  const table = document.querySelector("data-table");
+  table.columns = [
+    { key: "title", label: "Title" },
+    { key: "state", label: "State" },
+  ];
+  table.rows = [
+    { id: "tsk_1", title: "Write onboarding docs", state: "Backlog" },
+    { id: "tsk_2", title: "Fix the login bug", state: "Done" },
+  ];
+  table.rowHref = (row) => \`#/tasks/\${row.id}\`;
+</script>`,
+  "tile-grid": `<tile-grid></tile-grid>
+<script type="module">
+  const grid = document.querySelector("tile-grid");
+  grid.items = [
+    { name: "notes.txt" },
+    { name: "photo.jpg" },
+  ];
+  grid.renderTile = (item) => item.name;
+</script>`,
+  "popover-panel": `<div style="position: relative; display: inline-block;">
+  <button id="new-task-btn">New task</button>
+  <popover-panel heading="New task">
+    Popover body content goes here.
+  </popover-panel>
+</div>
+<script type="module">
+  const popover = document.querySelector("popover-panel");
+  document.querySelector("#new-task-btn").addEventListener("click", () => (popover.open = true));
+  popover.addEventListener("panel-close", () => (popover.open = false));
+</script>`,
 };
 
 const manifest = JSON.parse(await readFile(path.join(rootDir, "custom-elements.json"), "utf8"));
