@@ -48,6 +48,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#frame-box">frame-box</a>
         </nav>
       </aside>
 
@@ -1023,6 +1024,24 @@ const btn = document.querySelector("icon-button");
 btn.icon = iconPencil(16);
 btn.label = "Edit";
 btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
+        </section>
+
+        <section id="frame-box" class="scroll-mt-8 py-10" data-testid="section-frame-box">
+          <h3 class="text-xl font-semibold text-slate-900">frame-box</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A titled frame around a slot — a gray border with a small uppercase, muted label
+            overlapping the top edge. Generic; the label text is up to the consumer.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <frame-box id="frame-box-demo" data-testid="frame-box-demo" label="Debug">
+              <p class="m-0 text-sm text-slate-600">Framed content goes here.</p>
+            </frame-box>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/frame-box.js";
+
+&lt;frame-box label="Debug"&gt;
+  Framed content goes here.
+&lt;/frame-box&gt;</code></pre>
         </section>
       </main>
     </div>

@@ -2655,6 +2655,70 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/frame-box.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A titled frame around a slot: a gray border with a small uppercase,\nmuted label overlapping the top edge (fieldset/legend-style). Generic —\nthe label text is entirely up to the consumer (e.g. \"Debug\" to visually\nfence off dev-only chrome from the product UI).",
+          "name": "FrameBox",
+          "slots": [
+            {
+              "description": "Framed content.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The overlapping title label, e.g. \"Debug\".",
+              "attribute": "label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The overlapping title label, e.g. \"Debug\".",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "frame-box",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FrameBox",
+          "declaration": {
+            "name": "FrameBox",
+            "module": "src/frame-box.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "frame-box",
+          "declaration": {
+            "name": "FrameBox",
+            "module": "src/frame-box.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gallery-item-variant.ts",
       "declarations": [
         {
@@ -4111,6 +4175,14 @@
           "declaration": {
             "name": "IconButton",
             "module": "./icon-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FrameBox",
+          "declaration": {
+            "name": "FrameBox",
+            "module": "./frame-box.js"
           }
         },
         {

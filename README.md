@@ -53,6 +53,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<dropdown-button>` | [docs/dropdown-button.md](./docs/dropdown-button.md) |
 | `<editable-text>` | [docs/editable-text.md](./docs/editable-text.md) |
 | `<form-select>` | [docs/form-select.md](./docs/form-select.md) |
+| `<frame-box>` | [docs/frame-box.md](./docs/frame-box.md) |
 | `<gallery-item>` | [docs/gallery-item.md](./docs/gallery-item.md) |
 | `<gallery-item-variant>` | [docs/gallery-item-variant.md](./docs/gallery-item-variant.md) |
 | `<icon-button>` | [docs/icon-button.md](./docs/icon-button.md) |
