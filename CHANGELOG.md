@@ -2,6 +2,12 @@
 
 ## 0.6.0
 
+- Added `photo-gallery`: a responsive, accessible image carousel composed
+  from declarative `gallery-item` (image slide, with an optional
+  `gallery-item-variant` per breakpoint/object-fit) children — prev/next
+  controls, a current/total counter, clickable indicators, autoplay with an
+  optional pause/play control, and swipe/keyboard navigation, firing
+  `slide-change` with the active index and the reason it changed.
 - Added `data-table`: a generic, presentational table shell — renders a
   `<thead>` from `columns` and one `<tr>` per `rows` entry, with each cell
   produced by `renderCell` (default: plain property lookup). Optional
