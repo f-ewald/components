@@ -25,6 +25,8 @@ import {
   type TileGrid,
   type PopoverPanel,
   type DropdownButton,
+  type IconButton,
+  iconPencil,
   type PhotoGallery,
   type PhotoGalleryObjectFit,
   type PhotoGallerySlideChangeDetail,
@@ -423,6 +425,20 @@ dropdownResolve?.addEventListener("select", (e) => {
 const dropdownDisabled = document.getElementById("dropdown-disabled") as DropdownButton;
 if (dropdownDisabled) {
   dropdownDisabled.options = [{ value: "x", label: "X" }];
+}
+
+// icon-button (wire an icon, log clicks)
+const iconButtonEdit = document.getElementById("icon-button-edit") as IconButton;
+const iconButtonClickLog = document.getElementById("icon-button-click-log")!;
+if (iconButtonEdit) {
+  iconButtonEdit.icon = iconPencil(16);
+  iconButtonEdit.addEventListener("click", () => {
+    iconButtonClickLog.textContent = "icon-button-edit: clicked";
+  });
+}
+const iconButtonDisabled = document.getElementById("icon-button-disabled") as IconButton;
+if (iconButtonDisabled) {
+  iconButtonDisabled.icon = iconPencil(16);
 }
 
 // data-table (seed columns/rows, wire a row-click destination)

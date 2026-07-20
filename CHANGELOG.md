@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added `icon-button`: a borderless button wrapping a passed-in icon
+  (`icon: TemplateResult | null`, same pattern as slowmo's `nav-item.icon`
+  prop), with a rounded hover-highlight background and a required `label`
+  applied as `aria-label`/`title`. Built to replace a bordered `ui-button`
+  for low-emphasis row actions (e.g. an Edit pencil).
 - Added `dropdown-button`: a primary-styled button with a label and chevron
   that opens an anchored menu of actions, firing `select` with `{ value }`.
   Essentially `form-select` minus "current value" semantics — a menu, not a

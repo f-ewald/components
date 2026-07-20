@@ -2844,6 +2844,98 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/icon-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A borderless button wrapping a passed-in icon, with a rounded\nhover-highlight background. Use for a low-emphasis affordance next to\ncontent it acts on (e.g. an \"Edit\" pencil at the end of a table row)\nwhere a bordered `ui-button` would be too heavy.",
+          "name": "IconButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "TemplateResult | null"
+              },
+              "default": "null",
+              "description": "Pre-rendered icon template, e.g. `iconPencil(16)` from this package's icon set."
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Required accessible label, applied as `aria-label`/`title`.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the button and dims it.",
+              "attribute": "disabled"
+            }
+          ],
+          "events": [
+            {
+              "description": "Native click, bubbling as usual — listen on the element itself.",
+              "name": "click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Required accessible label, applied as `aria-label`/`title`.",
+              "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the button and dims it.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "icon-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IconButton",
+          "declaration": {
+            "name": "IconButton",
+            "module": "src/icon-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "icon-button",
+          "declaration": {
+            "name": "IconButton",
+            "module": "src/icon-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/icons.ts",
       "declarations": [
         {
@@ -3993,6 +4085,14 @@
           "declaration": {
             "name": "DropdownOption",
             "module": "./dropdown-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "IconButton",
+          "declaration": {
+            "name": "IconButton",
+            "module": "./icon-button.js"
           }
         },
         {

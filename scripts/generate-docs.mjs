@@ -203,6 +203,13 @@ const EXAMPLES = {
   ];
   dropdown.addEventListener("select", (e) => console.log(e.detail.value));
 </script>`,
+  "icon-button": `<icon-button label="Edit"></icon-button>
+<script type="module">
+  import { iconPencil } from "@f-ewald/components/icons.js";
+  const btn = document.querySelector("icon-button");
+  btn.icon = iconPencil(16);
+  btn.addEventListener("click", () => console.log("edit clicked"));
+</script>`,
   "data-table": `<data-table></data-table>
 <script type="module">
   const table = document.querySelector("data-table");
