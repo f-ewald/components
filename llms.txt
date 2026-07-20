@@ -294,6 +294,48 @@ Example:
 </script>
 ```
 
+## <gallery-item>
+
+Declarative image metadata consumed by a parent `photo-gallery`.
+
+Import: `import "@f-ewald/components/gallery-item.js";`
+
+Properties: `src` (attribute `src`) : string, default ""; `alt` (attribute `alt`) : string, default ""; `caption` (attribute `caption`) : string | undefined, default —; `variants` (JS property only) : GalleryItemVariant[], default —
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<gallery-item
+  src="/photos/coast.jpg"
+  alt="Rocky California coastline"
+  caption="California coast"
+>
+  <gallery-item-variant
+    media="(max-width: 640px)"
+    srcset="/photos/coast-portrait.jpg"
+  ></gallery-item-variant>
+</gallery-item>
+```
+
+## <gallery-item-variant>
+
+Responsive image source metadata for a parent `gallery-item`.
+
+Import: `import "@f-ewald/components/gallery-item-variant.js";`
+
+Properties: `media` (attribute `media`) : string | undefined, default —; `srcset` (attribute `srcset`) : string, default ""
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<gallery-item-variant
+  media="(max-width: 640px)"
+  srcset="/photos/coast-portrait.jpg"
+></gallery-item-variant>
+```
+
 ## <live-timer>
 
 Per-second ticking count-up timer, e.g. a live "running for 12s" or
@@ -394,6 +436,39 @@ Example:
     { key: "a", label: "White", pct: 45.2, color: "#4f46e5" },
     { key: "b", label: "Asian", pct: 28.1, color: "#0d9488" },
   ];
+</script>
+```
+
+## <photo-gallery>
+
+Responsive, accessible image carousel composed from declarative
+`gallery-item` children.
+
+Import: `import "@f-ewald/components/photo-gallery.js";`
+
+Properties: `currentIndex` (attribute `current-index`) : number, default 0; `delay` (attribute `delay`) : number, default 0; `showControls` (attribute `show-controls`) : boolean, default true; `showCounter` (attribute `show-counter`) : boolean, default false; `showIndicators` (attribute `show-indicators`) : boolean, default false; `showAutoplayControl` (attribute `show-autoplay-control`) : boolean, default true; `paused` (attribute `paused`) : boolean, default false; `aspectRatio` (attribute `aspect-ratio`) : string, default "16 / 9"; `objectFit` (attribute `object-fit`) : PhotoGalleryObjectFit, default "cover"
+Events: `slide-change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<photo-gallery delay="5000" show-counter show-indicators>
+  <gallery-item
+    src="/photos/coast.jpg"
+    alt="Rocky California coastline"
+    caption="California coast"
+  >
+    <gallery-item-variant
+      media="(max-width: 640px)"
+      srcset="/photos/coast-portrait.jpg"
+    ></gallery-item-variant>
+  </gallery-item>
+  <gallery-item src="/photos/bridge.jpg" alt="Golden Gate Bridge"></gallery-item>
+</photo-gallery>
+<script type="module">
+  document.querySelector("photo-gallery").addEventListener("slide-change", (event) => {
+    console.log(event.detail.currentIndex);
+  });
 </script>
 ```
 
