@@ -215,6 +215,9 @@ const EXAMPLES = {
   btn.icon = iconPencil(16);
   btn.addEventListener("click", () => console.log("edit clicked"));
 </script>`,
+  "frame-box": `<frame-box label="Debug">
+  Framed content goes here.
+</frame-box>`,
   "data-table": `<data-table></data-table>
 <script type="module">
   const table = document.querySelector("data-table");
