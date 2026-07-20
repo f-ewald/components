@@ -18,6 +18,9 @@ use — non-chart components pull in zero `d3` code.
   - `src/icons.ts` — **generated**, do not hand-edit (see below).
   - `src/utils/` — small pure helpers shared by a couple of components
     (`time.ts`, `distance.ts`).
+  - `src/mcp-server.ts` — stdio MCP server (see "MCP server" below), compiled
+    to `dist/mcp-server.js` by the normal `tsc` build like everything else in
+    `src/`.
 - `demo/` + root `index.html` — the Vite playground. Imports component
   *sources* directly (`../src/index.ts`) for live HMR while developing.
 - `tests/` — one Playwright spec per component tag, run against the
@@ -102,13 +105,49 @@ script and run `npm run icons`.
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Playground with HMR. |
-| `npm run build` | `tsc` → `dist/` + `dist/tokens.css`. |
+| `npm run build` | `tsc` → `dist/` + `dist/tokens.css`, `chmod +x dist/mcp-server.js`. |
 | `npm run build:demo` | Static playground build → `demo-dist/`. |
 | `npm run icons` | Regenerate `src/icons.ts`. |
 | `npm run analyze` | Regenerate `custom-elements.json`. |
 | `npm run docs` | `analyze` + regenerate `docs/*.md` and `llms.txt`. |
+| `npm run mcp` | Run the MCP server directly (`node dist/mcp-server.js`) — mostly for manual smoke-testing; consumers launch it the same way via `.mcp.json`. |
 | `npm run test` | Playwright suite (auto-starts the dev server). |
 | `npm run prepublishOnly` | `build` + `docs` + `test` — runs automatically before `npm publish`. |
+
+## MCP server
+
+`src/mcp-server.ts` is a thin stdio MCP server exposing the component catalog
+to AI coding assistants, per the upgrade path in `docs/mcp-evaluation.md`. It
+adds no new data source — it's read-only over the same `custom-elements.json`
+and `docs/*.md` that `npm run docs` already generates and ships.
+
+Two tools:
+- `list_components` — every tag + one-line description.
+- `get_component_docs(tag)` — the full generated Markdown doc for one tag.
+
+Consuming projects (currently `real-estate-map`, `slowmo`) wire it up via a
+`.mcp.json` at their repo root pointing `node` at this repo's built
+`dist/mcp-server.js` by absolute path — no npm publish or `npm link` needed,
+since it's just a script invocation, not a package import:
+
+```json
+{
+  "mcpServers": {
+    "f-ewald-components": {
+      "command": "node",
+      "args": ["/Users/fe/Development/components/dist/mcp-server.js"]
+    }
+  }
+}
+```
+
+Run `npm run build` here after any change to `src/mcp-server.ts`,
+`custom-elements.json`, or `docs/*.md` for consumers to see the update (they
+spawn the compiled `dist/mcp-server.js` fresh per session, no reinstall
+needed). If this is ever published, a `bin` entry
+(`f-ewald-components-mcp` → `dist/mcp-server.js`) is already in place for
+consumers that prefer `npx @f-ewald/components f-ewald-components-mcp`
+instead of the absolute local path.
 
 ## Testing changes against a consumer before publishing
 

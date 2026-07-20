@@ -1,5 +1,14 @@
 # @f-ewald/components
 
+## Unreleased
+
+- Added a stdio MCP server (`src/mcp-server.ts` → `dist/mcp-server.js`,
+  `npm run mcp`) exposing the component catalog to AI coding assistants:
+  `list_components` and `get_component_docs(tag)`, backed by the existing
+  `custom-elements.json`/`docs/*.md`. See the "MCP server" section in
+  `CLAUDE.md` and `docs/mcp-evaluation.md` for design details and how
+  consuming projects wire it up via `.mcp.json`.
+
 ## 0.6.0
 
 - Added `photo-gallery`: a responsive, accessible image carousel composed
