@@ -1638,6 +1638,110 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/data-table.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A generic, presentational table shell: renders a `<thead>` from `columns`\nand one `<tr>` per entry in `rows`, with each cell's content produced by\n`renderCell` (default: plain property lookup on the row object). Knows\nnothing about what a \"row\" means — callers own the data shape entirely.\n\nOptional `rowHref` makes whole rows clickable (navigating via `location.hash`),\nwithout hijacking clicks on nested interactive elements (links/buttons) a\ncell's rendered content might contain.",
+          "name": "DataTable",
+          "members": [
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "DataTableColumn[]"
+              },
+              "default": "[]",
+              "description": "Column headers, in display order."
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "unknown[]"
+              },
+              "default": "[]",
+              "description": "Row data; opaque to this component beyond what `renderCell` does with it."
+            },
+            {
+              "kind": "field",
+              "name": "rowKey",
+              "type": {
+                "text": "(row: unknown, index: number) => string | number"
+              },
+              "description": "Stable identity for `rows[i]`, used as the repeat-directive key. Defaults to the row's index."
+            },
+            {
+              "kind": "field",
+              "name": "renderCell",
+              "type": {
+                "text": "(row: unknown, key: string) => unknown"
+              },
+              "description": "Produces a cell's rendered content for `row`/`column.key`. Default: `row[key]`."
+            },
+            {
+              "kind": "field",
+              "name": "rowHref",
+              "type": {
+                "text": "((row: unknown) => string | null) | null"
+              },
+              "default": "null",
+              "description": "When set, clicking a row (outside any nested link/button) navigates to this hash."
+            },
+            {
+              "kind": "method",
+              "name": "#onRowClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "data-table",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DataTable",
+          "declaration": {
+            "name": "DataTable",
+            "module": "src/data-table.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "data-table",
+          "declaration": {
+            "name": "DataTable",
+            "module": "src/data-table.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/distance-value.ts",
       "declarations": [
         {
@@ -2138,6 +2242,222 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/form-select.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A styled dropdown select: a trigger button showing the current option's\nlabel, opening a listbox popover on click. Drop-in generic replacement for\na native `<select>` wherever consistent cross-browser styling and a\n`change` event carrying `{ value }` are wanted (e.g. a task's status\npicker).",
+          "name": "FormSelect",
+          "members": [
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "SelectOption[]"
+              },
+              "default": "[]",
+              "description": "The full list of selectable options."
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value; must match one of `options[].value`.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "`aria-label` applied to the trigger button.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the trigger, preventing the popover from opening.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "#onWindowMousedown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#select",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "SelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onTriggerKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#moveActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#confirmActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderListbox",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired with `{ value: string }` when a different option is picked."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value; must match one of `options[].value`.",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "`aria-label` applied to the trigger button.",
+              "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the trigger, preventing the popover from opening.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "form-select",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FormSelect",
+          "declaration": {
+            "name": "FormSelect",
+            "module": "src/form-select.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "form-select",
+          "declaration": {
+            "name": "FormSelect",
+            "module": "src/form-select.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/icons.ts",
       "declarations": [
         {
@@ -2449,6 +2769,76 @@
               "default": "20"
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "iconClipboardDocumentList",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconCpuChip",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconFolder",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconChevronDown",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconDocument",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconSquares2x2",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconChatBubbleLeftRight",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
         }
       ],
       "exports": [
@@ -2697,6 +3087,62 @@
           "name": "iconUserCircle",
           "declaration": {
             "name": "iconUserCircle",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconClipboardDocumentList",
+          "declaration": {
+            "name": "iconClipboardDocumentList",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconCpuChip",
+          "declaration": {
+            "name": "iconCpuChip",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconFolder",
+          "declaration": {
+            "name": "iconFolder",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconChevronDown",
+          "declaration": {
+            "name": "iconChevronDown",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconDocument",
+          "declaration": {
+            "name": "iconDocument",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconSquares2x2",
+          "declaration": {
+            "name": "iconSquares2x2",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconChatBubbleLeftRight",
+          "declaration": {
+            "name": "iconChatBubbleLeftRight",
             "module": "src/icons.ts"
           }
         }
@@ -3053,6 +3499,54 @@
         },
         {
           "kind": "js",
+          "name": "FormSelect",
+          "declaration": {
+            "name": "FormSelect",
+            "module": "./form-select.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SelectOption",
+          "declaration": {
+            "name": "SelectOption",
+            "module": "./form-select.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DataTable",
+          "declaration": {
+            "name": "DataTable",
+            "module": "./data-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DataTableColumn",
+          "declaration": {
+            "name": "DataTableColumn",
+            "module": "./data-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TileGrid",
+          "declaration": {
+            "name": "TileGrid",
+            "module": "./tile-grid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PopoverPanel",
+          "declaration": {
+            "name": "PopoverPanel",
+            "module": "./popover-panel.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "formatDuration",
           "declaration": {
             "name": "formatDuration",
@@ -3080,6 +3574,14 @@
           "name": "tokenValues",
           "declaration": {
             "name": "tokenValues",
+            "module": "./tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "darkTokenValues",
+          "declaration": {
+            "name": "darkTokenValues",
             "module": "./tokens.js"
           }
         },
@@ -3624,6 +4126,133 @@
           "declaration": {
             "name": "PercentBarChart",
             "module": "src/percent-bar-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/popover-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Generic anchored popover shell: a floating card positioned relative to its\nnearest `position: relative` ancestor (place it next to its trigger button\ninside such a wrapper), as opposed to `slide-panel`'s fixed screen-edge\ndrawer. Closes on outside click or Escape. Header chrome and close button\nmatch `slide-panel`'s API (`heading`, `panel-close`) so either can be\nswapped in for the other with no consumer-side changes beyond the wrapper.\n\nSet `centered` to render as a screen-centered modal with a translucent\nbackdrop instead of the default anchored placement.",
+          "name": "PopoverPanel",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the popover is currently visible.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Title text shown in the popover header.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "centered",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Render as a screen-centered modal with a backdrop instead of anchored placement.",
+              "attribute": "centered",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#onWindowMousedown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onWindowKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#close",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "panel-close",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked the close (✕) button, pressed Escape, or clicked outside/the backdrop."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the popover is currently visible.",
+              "fieldName": "open"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Title text shown in the popover header.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "centered",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Render as a screen-centered modal with a backdrop instead of anchored placement.",
+              "fieldName": "centered"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "popover-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PopoverPanel",
+          "declaration": {
+            "name": "PopoverPanel",
+            "module": "src/popover-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "popover-panel",
+          "declaration": {
+            "name": "PopoverPanel",
+            "module": "src/popover-panel.ts"
           }
         }
       ]
@@ -4461,6 +5090,101 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/tile-grid.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A generic, presentational grid shell: renders one bordered card per entry\nin `items`, with each tile's content produced by `renderTile` (default:\nstringify). Knows nothing about what an \"item\" means — callers own the\ndata shape entirely. Modeled directly on `data-table`'s headless pattern.\n\nOptional `itemHref` makes whole tiles clickable (navigating via\n`location.hash`), without hijacking clicks on nested interactive elements\n(links/buttons) a tile's rendered content might contain.",
+          "name": "TileGrid",
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "unknown[]"
+              },
+              "default": "[]",
+              "description": "Tile data; opaque to this component beyond what `renderTile` does with it."
+            },
+            {
+              "kind": "field",
+              "name": "itemKey",
+              "type": {
+                "text": "(item: unknown, index: number) => string | number"
+              },
+              "description": "Stable identity for `items[i]`, used as the repeat-directive key. Defaults to the item's index."
+            },
+            {
+              "kind": "field",
+              "name": "renderTile",
+              "type": {
+                "text": "(item: unknown) => unknown"
+              },
+              "description": "Produces a tile's rendered content for `item`. Default: stringify."
+            },
+            {
+              "kind": "field",
+              "name": "itemHref",
+              "type": {
+                "text": "((item: unknown) => string | null) | null"
+              },
+              "default": "null",
+              "description": "When set, clicking a tile (outside any nested link/button) navigates to this hash."
+            },
+            {
+              "kind": "method",
+              "name": "#onTileClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tile-grid",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TileGrid",
+          "declaration": {
+            "name": "TileGrid",
+            "module": "src/tile-grid.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tile-grid",
+          "declaration": {
+            "name": "TileGrid",
+            "module": "src/tile-grid.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/toast-notification.ts",
       "declarations": [
         {
@@ -4639,9 +5363,18 @@
         },
         {
           "kind": "variable",
+          "name": "darkTokenValues",
+          "type": {
+            "text": "Record<string, string>"
+          },
+          "default": "{ \"--ui-primary\": \"#6366f1\", // indigo-500 \"--ui-primary-hover\": \"#818cf8\", // indigo-400 \"--ui-danger\": \"#ef4444\", // red-500 \"--ui-danger-hover\": \"#f87171\", // red-400 \"--ui-success\": \"#22c55e\", // green-500 \"--ui-text\": \"#f1f5f9\", // slate-100 \"--ui-text-muted\": \"#94a3b8\", // slate-400 \"--ui-border\": \"#334155\", // slate-700 \"--ui-surface\": \"#0f172a\", // slate-900 \"--ui-surface-muted\": \"#1e293b\", // slate-800 \"--ui-overlay\": \"rgb(2 6 23 / 0.6)\", // slate-950 / 60% \"--ui-focus-ring\": \"0 0 0 3px rgb(99 102 241 / 0.45)\", }",
+          "description": "Dark-mode overrides for the same `--ui-*` custom properties, applied by\n`tokens.css` via `@media (prefers-color-scheme: dark)` and `[data-theme]`\n(see generate-tokens-css.mjs). Same Tailwind slate scale as the light\npalette, inverted, with primary/danger/success lightened one step (500\ninstead of 600) for sufficient contrast against dark surfaces. Shape/type\ntokens are theme-independent and not repeated here."
+        },
+        {
+          "kind": "variable",
           "name": "tokens",
-          "default": "css` :host { --ui-primary: var(--ui-primary, #4f46e5); --ui-primary-hover: var(--ui-primary-hover, #4338ca); --ui-danger: var(--ui-danger, #dc2626); --ui-danger-hover: var(--ui-danger-hover, #b91c1c); --ui-success: var(--ui-success, #16a34a); --ui-text: var(--ui-text, #0f172a); --ui-text-muted: var(--ui-text-muted, #64748b); --ui-border: var(--ui-border, #e2e8f0); --ui-surface: var(--ui-surface, #ffffff); --ui-surface-muted: var(--ui-surface-muted, #f8fafc); --ui-overlay: var(--ui-overlay, rgb(15 23 42 / 0.45)); --ui-radius: var(--ui-radius, 0.5rem); --ui-radius-sm: var(--ui-radius-sm, 0.25rem); --ui-shadow: var( --ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) ); --ui-shadow-lg: var( --ui-shadow-lg, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) ); --ui-focus-ring: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)); --ui-font: var( --ui-font, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\" ); --ui-font-size: var(--ui-font-size, 0.875rem); --ui-font-size-sm: var(--ui-font-size-sm, 0.75rem); } `",
-          "description": "A shared `:host` stylesheet that establishes the token custom properties\nwith their fallback values. Import and include this in every component's\n`static styles` array alongside its component-specific `css` block."
+          "default": "css``",
+          "description": "Historically a shared `:host { --ui-x: var(--ui-x, fallback); } ` block,\nre-declaring every token on each component's own host element as a\n\"materialize the inherited value, or this fallback\" trick. That pattern\nturned out to be a genuine bug, not a working default: browsers treat\n`--ui-x: var(--ui-x, ...)` on `:host` as a self-referencing declaration\nthat computes to the guaranteed-invalid value REGARDLESS of what an\nancestor (e.g. `:root`) set — the host's own `:host` rule wins the cascade\nover the ancestor's, so this dropped whatever the app actually set and\nsilently substituted the component's own fallback everywhere. It went\nunnoticed because every component's fallback happened to equal the\nintended light-mode value — dark mode (a real, different value at\n`:root`) exposed it immediately (colors rendering as if no theme were\napplied at all). Fix: don't redeclare tokens on `:host` — plain\ninheritance already carries `:root`'s values into every shadow root\ncorrectly, and every component already has its own `var(--ui-x, fallback)`\nat each point of use, so nothing here is needed for the \"zero external\nCSS\" default to keep working. Kept as an empty export so the existing\n`static override styles = [tokens, css\\`...\\`]` import in every component\nkeeps compiling."
         }
       ],
       "exports": [
@@ -4650,6 +5383,14 @@
           "name": "tokenValues",
           "declaration": {
             "name": "tokenValues",
+            "module": "src/tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "darkTokenValues",
+          "declaration": {
+            "name": "darkTokenValues",
             "module": "src/tokens.ts"
           }
         },
@@ -4860,10 +5601,10 @@
               "kind": "field",
               "name": "size",
               "type": {
-                "text": "number"
+                "text": "string | number"
               },
               "default": "32",
-              "description": "Diameter in CSS pixels.",
+              "description": "Diameter in CSS pixels, or a preset name (`xs`=18, `sm`=24, `md`=32, `lg`=48).",
               "attribute": "size"
             },
             {
@@ -4874,6 +5615,28 @@
               },
               "privacy": "private",
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "SIZE_PRESETS",
+              "type": {
+                "text": "Record<string, number>"
+              },
+              "privacy": "private",
+              "static": true,
+              "readonly": true,
+              "default": "{ xs: 18, sm: 24, md: 32, lg: 48, }"
+            },
+            {
+              "kind": "method",
+              "name": "resolveSize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "Resolves the `size` property (number or preset name) to a pixel diameter."
             }
           ],
           "attributes": [
@@ -4898,10 +5661,10 @@
             {
               "name": "size",
               "type": {
-                "text": "number"
+                "text": "string | number"
               },
               "default": "32",
-              "description": "Diameter in CSS pixels.",
+              "description": "Diameter in CSS pixels, or a preset name (`xs`=18, `sm`=24, `md`=32, `lg`=48).",
               "fieldName": "size"
             }
           ],

@@ -41,6 +41,10 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chat-message">chat-message</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tile-grid">tile-grid</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
         </nav>
       </aside>
 
@@ -414,10 +418,13 @@ document.querySelector("weight-bar-chart").items = [
             <user-avatar id="avatar-initial" data-testid="avatar-initial" name="Freddy" size="40"></user-avatar>
             <user-avatar id="avatar-fallback" data-testid="avatar-fallback" size="40"></user-avatar>
             <user-avatar id="avatar-broken" data-testid="avatar-broken" src="https://example.invalid/broken.jpg" name="Broken" size="40"></user-avatar>
+            <user-avatar id="avatar-preset-xs" data-testid="avatar-preset-xs" name="Freddy" size="xs"></user-avatar>
+            <user-avatar id="avatar-preset-lg" data-testid="avatar-preset-lg" name="Freddy" size="lg"></user-avatar>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/user-avatar.js";
 
-&lt;user-avatar src="https://example.com/photo.jpg" name="Freddy" size="40"&gt;&lt;/user-avatar&gt;</code></pre>
+&lt;user-avatar src="https://example.com/photo.jpg" name="Freddy" size="40"&gt;&lt;/user-avatar&gt;
+&lt;user-avatar name="Freddy" size="sm"&gt;&lt;/user-avatar&gt;</code></pre>
         </section>
 
         <section id="radio-cards" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-radio-cards">
@@ -683,7 +690,7 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
 &lt;live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "&gt;&lt;/live-timer&gt;</code></pre>
         </section>
 
-        <section id="chat-message" class="scroll-mt-8 py-10" data-testid="section-chat-message">
+        <section id="chat-message" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-chat-message">
           <h3 class="text-xl font-semibold text-slate-900">chat-message</h3>
           <p class="mt-1 text-sm text-slate-500">
             One conversation entry — tool calls and thinking traces are dimmed, collapsible
@@ -733,6 +740,119 @@ content: |
   directory: .
   filename: notes.md
 &lt;/chat-message&gt;</code></pre>
+        </section>
+
+        <section id="form-select" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-form-select">
+          <h3 class="text-xl font-semibold text-slate-900">form-select</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Styled dropdown select: a trigger button opening a listbox popover, firing
+            <code>change</code> with <code>{ value }</code>.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
+            <form-select id="select-state" data-testid="select-state" label="Task state"></form-select>
+            <form-select id="select-disabled" data-testid="select-disabled" label="Disabled" disabled></form-select>
+            <p id="select-change-log" data-testid="select-change-log" class="text-xs text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/form-select.js";
+
+const select = document.querySelector("form-select");
+select.options = [
+  { value: "open", label: "Open" },
+  { value: "in_progress", label: "In progress" },
+  { value: "done", label: "Done" },
+];
+select.value = "open";
+select.addEventListener("change", (e) => console.log(e.detail.value));</code></pre>
+        </section>
+
+        <section id="data-table" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-data-table">
+          <h3 class="text-xl font-semibold text-slate-900">data-table</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Generic table shell: a header from <code>columns</code>, one row per <code>rows</code>
+            entry, cell content from <code>renderCell</code>. Optional <code>rowHref</code> makes
+            whole rows clickable.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <data-table id="table-tasks" data-testid="table-tasks"></data-table>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/data-table.js";
+
+const table = document.querySelector("data-table");
+table.columns = [
+  { key: "title", label: "Title" },
+  { key: "state", label: "State" },
+];
+table.rows = [
+  { id: "tsk_1", title: "Write onboarding docs", state: "Backlog" },
+  { id: "tsk_2", title: "Fix the login bug", state: "Done" },
+];
+table.rowHref = (row) => `#/tasks/${row.id}`;</code></pre>
+        </section>
+
+        <section id="tile-grid" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-tile-grid">
+          <h3 class="text-xl font-semibold text-slate-900">tile-grid</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Generic grid shell: one bordered tile per <code>items</code> entry, content from
+            <code>renderTile</code>. Optional <code>itemHref</code> makes whole tiles clickable.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <tile-grid id="grid-files" data-testid="grid-files"></tile-grid>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/tile-grid.js";
+
+const grid = document.querySelector("tile-grid");
+grid.items = [
+  { name: "notes.txt" },
+  { name: "photo.jpg" },
+];
+grid.renderTile = (item) => item.name;</code></pre>
+        </section>
+
+        <section id="popover-panel" class="scroll-mt-8 py-10" data-testid="section-popover-panel">
+          <h3 class="text-xl font-semibold text-slate-900">popover-panel</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Anchored floating popover — like <code>slide-panel</code>, but positioned relative to
+            its trigger instead of docked to the screen edge. Closes on outside click or Escape.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <div style="position: relative; display: inline-block;">
+              <button
+                id="popover-open"
+                data-testid="popover-open"
+                type="button"
+                class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              >
+                New task
+              </button>
+              <popover-panel id="popover-demo" data-testid="popover-demo" heading="New task">
+                <div class="p-4 text-sm text-slate-600">Popover body content goes here.</div>
+              </popover-panel>
+            </div>
+            <button
+              id="popover-centered-open"
+              data-testid="popover-centered-open"
+              type="button"
+              class="ml-3 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              New task (centered)
+            </button>
+            <popover-panel id="popover-centered-demo" data-testid="popover-centered-demo" centered heading="New task">
+              <div class="p-4 text-sm text-slate-600">Popover body content goes here.</div>
+            </popover-panel>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/popover-panel.js";
+
+&lt;div style="position: relative; display: inline-block;"&gt;
+  &lt;button&gt;New task&lt;/button&gt;
+  &lt;popover-panel open heading="New task"&gt;
+    Popover body content goes here.
+  &lt;/popover-panel&gt;
+&lt;/div&gt;
+
+&lt;!-- Screen-centered modal variant --&gt;
+&lt;popover-panel centered open heading="New task"&gt;
+  Popover body content goes here.
+&lt;/popover-panel&gt;</code></pre>
         </section>
       </main>
     </div>

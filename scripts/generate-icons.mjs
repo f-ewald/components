@@ -41,6 +41,13 @@ const ICONS = {
   EyeSlash: { slug: "eye-slash", size: 16 },
   ShieldCheck: { slug: "shield-check", size: 16 },
   UserCircle: { slug: "user-circle", size: 20 },
+  ClipboardDocumentList: { slug: "clipboard-document-list", size: 18 },
+  CpuChip: { slug: "cpu-chip", size: 18 },
+  Folder: { slug: "folder", size: 18 },
+  ChevronDown: { slug: "chevron-down", size: 16 },
+  Document: { slug: "document", size: 18 },
+  Squares2x2: { slug: "squares-2x2", size: 18 },
+  ChatBubbleLeftRight: { slug: "chat-bubble-left-right", size: 18 },
 };
 
 /**
