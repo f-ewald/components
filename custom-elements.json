@@ -4305,6 +4305,12 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/mcp-server.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/percent-bar-chart.ts",
       "declarations": [
         {
