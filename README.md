@@ -52,11 +52,14 @@ import "@f-ewald/components/roman-numeral.js";
 | `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
 | `<editable-text>` | [docs/editable-text.md](./docs/editable-text.md) |
 | `<form-select>` | [docs/form-select.md](./docs/form-select.md) |
+| `<gallery-item>` | [docs/gallery-item.md](./docs/gallery-item.md) |
+| `<gallery-item-variant>` | [docs/gallery-item-variant.md](./docs/gallery-item-variant.md) |
 | `<live-timer>` | [docs/live-timer.md](./docs/live-timer.md) |
 | `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
 | `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |
 | `<map-point>` | [docs/map-point.md](./docs/map-point.md) |
 | `<percent-bar-chart>` | [docs/percent-bar-chart.md](./docs/percent-bar-chart.md) |
+| `<photo-gallery>` | [docs/photo-gallery.md](./docs/photo-gallery.md) |
 | `<popover-panel>` | [docs/popover-panel.md](./docs/popover-panel.md) |
 | `<price-history-chart>` | [docs/price-history-chart.md](./docs/price-history-chart.md) |
 | `<radio-cards>` | [docs/radio-cards.md](./docs/radio-cards.md) |
