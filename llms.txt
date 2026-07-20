@@ -363,6 +363,30 @@ Example:
 ></gallery-item-variant>
 ```
 
+## <icon-button>
+
+A borderless button wrapping a passed-in icon, with a rounded
+hover-highlight background. Use for a low-emphasis affordance next to
+content it acts on (e.g. an "Edit" pencil at the end of a table row)
+where a bordered `ui-button` would be too heavy.
+
+Import: `import "@f-ewald/components/icon-button.js";`
+
+Properties: `icon` (JS property only) : TemplateResult | null, default null; `label` (attribute `label`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
+Events: `click`
+CSS custom properties: `--ui-focus-ring`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<icon-button label="Edit"></icon-button>
+<script type="module">
+  import { iconPencil } from "@f-ewald/components/icons.js";
+  const btn = document.querySelector("icon-button");
+  btn.icon = iconPencil(16);
+  btn.addEventListener("click", () => console.log("edit clicked"));
+</script>
+```
+
 ## <live-timer>
 
 Per-second ticking count-up timer, e.g. a live "running for 12s" or

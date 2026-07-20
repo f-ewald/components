@@ -55,6 +55,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<form-select>` | [docs/form-select.md](./docs/form-select.md) |
 | `<gallery-item>` | [docs/gallery-item.md](./docs/gallery-item.md) |
 | `<gallery-item-variant>` | [docs/gallery-item-variant.md](./docs/gallery-item-variant.md) |
+| `<icon-button>` | [docs/icon-button.md](./docs/icon-button.md) |
 | `<live-timer>` | [docs/live-timer.md](./docs/live-timer.md) |
 | `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
 | `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |

@@ -47,6 +47,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tile-grid">tile-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
         </nav>
       </aside>
 
@@ -987,6 +988,31 @@ dropdown.options = [
   { value: "backlog", label: "Backlog" },
 ];
 dropdown.addEventListener("select", (e) => console.log(e.detail.value));</code></pre>
+        </section>
+
+        <section id="icon-button" class="scroll-mt-8 py-10" data-testid="section-icon-button">
+          <h3 class="text-xl font-semibold text-slate-900">icon-button</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A borderless button wrapping a passed-in icon, with a rounded hover-highlight
+            background — a low-emphasis affordance next to content it acts on.
+          </p>
+          <div class="mt-6 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
+            <icon-button id="icon-button-edit" data-testid="icon-button-edit" label="Edit"></icon-button>
+            <icon-button
+              id="icon-button-disabled"
+              data-testid="icon-button-disabled"
+              label="Disabled"
+              disabled
+            ></icon-button>
+            <p id="icon-button-click-log" data-testid="icon-button-click-log" class="text-xs text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/icon-button.js";
+import { iconPencil } from "@f-ewald/components/icons.js";
+
+const btn = document.querySelector("icon-button");
+btn.icon = iconPencil(16);
+btn.label = "Edit";
+btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
         </section>
       </main>
     </div>
