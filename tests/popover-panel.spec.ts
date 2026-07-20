@@ -36,6 +36,14 @@ test.describe("popover-panel", () => {
     await expect(popover).not.toBeVisible();
   });
 
+  test("the actions slot renders next to the close button", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("#popover-open").click();
+    const actionsLink = page.locator("#popover-actions-link");
+    await expect(actionsLink).toBeVisible();
+    await expect(actionsLink).toHaveText(/Full page/);
+  });
+
   test("centered mode shows a backdrop and closes on backdrop click", async ({ page }) => {
     await page.goto("/");
     const popover = page.locator("#popover-centered-demo");

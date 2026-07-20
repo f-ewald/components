@@ -34,6 +34,11 @@ const SLOTS = {
   "map-circle": [
     { name: "(default)", description: "Optional badge content shown centered on the circle — a rank number, an emoji, a small icon." },
   ],
+  "popover-panel": [
+    { name: "(default)", description: "Popover body content." },
+    { name: "title", description: "Overrides the plain `heading` text with custom markup." },
+    { name: "actions", description: "Extra header controls (e.g. an icon+label link) rendered between the title and the close button." },
+  ],
 };
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
