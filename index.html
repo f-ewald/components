@@ -49,6 +49,8 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#frame-box">frame-box</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-month">calendar-month</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-year">calendar-year</a>
         </nav>
       </aside>
 
@@ -1026,7 +1028,7 @@ btn.label = "Edit";
 btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
         </section>
 
-        <section id="frame-box" class="scroll-mt-8 py-10" data-testid="section-frame-box">
+        <section id="frame-box" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-frame-box">
           <h3 class="text-xl font-semibold text-slate-900">frame-box</h3>
           <p class="mt-1 text-sm text-slate-500">
             A titled frame around a slot — a gray border with a small uppercase, muted label
@@ -1042,6 +1044,104 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
 &lt;frame-box label="Debug"&gt;
   Framed content goes here.
 &lt;/frame-box&gt;</code></pre>
+        </section>
+
+        <section id="calendar-month" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-calendar-month">
+          <h3 class="text-xl font-semibold text-slate-900">calendar-month</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            One month as a top-to-bottom day list. Weekends are highlighted, today is marked,
+            and overlapping declarative <code>calendar-entry</code> children stack into aligned
+            lanes rather than hiding one another.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <calendar-month id="calendar-month-demo" data-testid="calendar-month-demo" year="2026" month="7">
+              <calendar-entry
+                id="cm-entry-vacation"
+                start="2026-07-10"
+                end="2026-07-18"
+                label="Vacation"
+                color="success"
+              ></calendar-entry>
+              <calendar-entry
+                id="cm-entry-conference"
+                start="2026-07-15"
+                end="2026-07-20"
+                label="Conference"
+                color="warning"
+                href="#conf"
+              ></calendar-entry>
+            </calendar-month>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-month.js";
+
+&lt;calendar-month year="2026" month="7"&gt;
+  &lt;calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-15" end="2026-07-20" label="Conference" color="warning" href="#conf"&gt;&lt;/calendar-entry&gt;
+&lt;/calendar-month&gt;</code></pre>
+        </section>
+
+        <section id="calendar-year" class="scroll-mt-8 py-10" data-testid="section-calendar-year">
+          <h3 class="text-xl font-semibold text-slate-900">calendar-year</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A full year of <code>calendar-month</code> blocks generated from declarative
+            <code>calendar-entry</code> children — including entries that cross a month
+            boundary or extend past the edges of the displayed year.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <label class="mb-4 flex items-center justify-between gap-3 text-sm text-slate-600">
+              Year
+              <select id="calendar-year-select" class="rounded border border-slate-300 px-2 py-1">
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+              </select>
+            </label>
+            <calendar-year id="calendar-year-demo" data-testid="calendar-year-demo" year="2026">
+              <calendar-entry
+                id="cy-entry-offsite"
+                start="2026-01-28"
+                end="2026-02-03"
+                label="Offsite"
+                color="primary"
+                href="#offsite"
+              ></calendar-entry>
+              <calendar-entry
+                id="cy-entry-planning"
+                start="2026-02-01"
+                end="2026-02-01"
+                label="Q1 Planning"
+                color="info"
+              ></calendar-entry>
+              <calendar-entry
+                id="cy-entry-vacation"
+                start="2026-07-10"
+                end="2026-07-18"
+                label="Vacation"
+                color="success"
+              ></calendar-entry>
+              <calendar-entry
+                id="cy-entry-conference"
+                start="2026-07-15"
+                end="2026-07-20"
+                label="Conference"
+                color="warning"
+                href="#conf"
+              ></calendar-entry>
+              <calendar-entry
+                id="cy-entry-renewal"
+                start="2026-12-31"
+                end="2027-01-02"
+                label="Renewal"
+                color="danger"
+              ></calendar-entry>
+            </calendar-year>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-year.js";
+
+&lt;calendar-year year="2026"&gt;
+  &lt;calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"&gt;&lt;/calendar-entry&gt;
+&lt;/calendar-year&gt;</code></pre>
         </section>
       </main>
     </div>

@@ -104,6 +104,83 @@ Example:
 </script>
 ```
 
+## <calendar-entry>
+
+Declarative metadata for one calendar event, consumed by a parent
+`calendar-month` or `calendar-year`. Read-only/non-interactive; renders
+nothing itself.
+
+Import: `import "@f-ewald/components/calendar-entry.js";`
+
+Properties: `start` (attribute `start`) : string, default ""; `end` (attribute `end`) : string, default ""; `label` (attribute `label`) : string, default ""; `color` (attribute `color`) : StatusPillColor, default "neutral"; `href` (attribute `href`) : string | undefined, default —
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<calendar-entry
+  start="2026-07-10"
+  end="2026-07-18"
+  label="Vacation"
+  color="success"
+></calendar-entry>
+```
+
+## <calendar-month>
+
+One month rendered as a top-to-bottom list of days — weekends and today
+highlighted, with declarative `calendar-entry` children shown as colored
+bars spanning the days they cover. Overlapping entries stack into
+side-by-side lanes rather than being layered/hidden. Read-only.
+
+Lanes are computed independently per instance, from only the entries
+overlapping this month — an entry spanning a month boundary may therefore
+land in a different lane index in the adjacent month's `calendar-month`.
+This is an accepted v1 limitation: cross-month lane continuity would
+require a shared parent (`calendar-year`) to assign lanes globally.
+
+A standalone `calendar-month` (used outside `calendar-year`) also won't
+re-render if a consumer mutates one of its hand-authored `calendar-entry`
+children's attributes in place after the initial render — only slot
+insertion/removal is observed. `calendar-year` avoids this by always
+replacing (never mutating) the synthetic entries it projects down.
+
+Import: `import "@f-ewald/components/calendar-month.js";`
+
+Properties: `year` (attribute `year`) : number, default —; `month` (attribute `month`) : number, default 1
+Events: none
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<calendar-month year="2026" month="7">
+  <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
+  <calendar-entry start="2026-07-15" end="2026-07-20" label="Conference" color="warning" href="#conf"></calendar-entry>
+</calendar-month>
+```
+
+## <calendar-year>
+
+A full year of `calendar-month` blocks, generated from declarative
+`calendar-entry` children. Each entry is re-projected into the
+`calendar-month` blocks it overlaps as a freshly-created `calendar-entry`
+element — the original elements stay slotted here and are never moved,
+since a DOM node can only have one parent. Read-only.
+
+Import: `import "@f-ewald/components/calendar-year.js";`
+
+Properties: `year` (attribute `year`) : number, default —
+Events: none
+CSS custom properties: `--ui-font`
+
+Example:
+```html
+<calendar-year year="2026">
+  <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite"></calendar-entry>
+  <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
+</calendar-year>
+```
+
 ## <chat-message>
 
 One conversation entry in a chat-style activity feed. Tool calls and

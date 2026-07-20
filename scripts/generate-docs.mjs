@@ -39,6 +39,18 @@ const SLOTS = {
     { name: "title", description: "Overrides the plain `heading` text with custom markup." },
     { name: "actions", description: "Extra header controls (e.g. an icon+label link) rendered between the title and the close button." },
   ],
+  "calendar-entry": [
+    { name: "(default)", description: "Reserved for future use; no slotted content is required today." },
+  ],
+  "calendar-month": [
+    { name: "(default)", description: "Declarative `calendar-entry` elements to render for this month." },
+  ],
+  "calendar-year": [
+    {
+      name: "(default)",
+      description: "Declarative `calendar-entry` elements spanning the displayed year, re-projected into each month.",
+    },
+  ],
 };
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
@@ -218,6 +230,20 @@ const EXAMPLES = {
   "frame-box": `<frame-box label="Debug">
   Framed content goes here.
 </frame-box>`,
+  "calendar-entry": `<calendar-entry
+  start="2026-07-10"
+  end="2026-07-18"
+  label="Vacation"
+  color="success"
+></calendar-entry>`,
+  "calendar-month": `<calendar-month year="2026" month="7">
+  <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
+  <calendar-entry start="2026-07-15" end="2026-07-20" label="Conference" color="warning" href="#conf"></calendar-entry>
+</calendar-month>`,
+  "calendar-year": `<calendar-year year="2026">
+  <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite"></calendar-entry>
+  <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
+</calendar-year>`,
   "data-table": `<data-table></data-table>
 <script type="module">
   const table = document.querySelector("data-table");
