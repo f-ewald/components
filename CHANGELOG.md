@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added `frame-box`: a titled frame around a slot — a gray border with a
+  small uppercase, muted label overlapping the top edge (fieldset/legend
+  style). Generic; built for slowmo to fence off dev-only "Debug" chrome
+  from the product UI, but the label text is entirely up to the consumer.
 - `popover-panel` gained a new `actions` named slot, rendered in the header
   between the title and the close button, for extra controls like an
   icon+label link. `form-select`'s trigger button now fills its host's
