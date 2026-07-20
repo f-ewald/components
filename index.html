@@ -46,6 +46,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tile-grid">tile-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
         </nav>
       </aside>
 
@@ -958,6 +959,34 @@ grid.renderTile = (item) => item.name;</code></pre>
 &lt;popover-panel centered open heading="New task"&gt;
   Popover body content goes here.
 &lt;/popover-panel&gt;</code></pre>
+        </section>
+
+        <section id="dropdown-button" class="scroll-mt-8 py-10" data-testid="section-dropdown-button">
+          <h3 class="text-xl font-semibold text-slate-900">dropdown-button</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A primary-styled button with a label and chevron that opens an anchored menu of
+            actions, firing <code>select</code> with <code>{ value }</code>.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
+            <dropdown-button id="dropdown-resolve" data-testid="dropdown-resolve" label="Resolve…"></dropdown-button>
+            <dropdown-button
+              id="dropdown-disabled"
+              data-testid="dropdown-disabled"
+              label="Disabled"
+              disabled
+            ></dropdown-button>
+            <p id="dropdown-select-log" data-testid="dropdown-select-log" class="text-xs text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/dropdown-button.js";
+
+const dropdown = document.querySelector("dropdown-button");
+dropdown.label = "Resolve…";
+dropdown.options = [
+  { value: "retry", label: "Retry" },
+  { value: "close", label: "Close" },
+  { value: "backlog", label: "Backlog" },
+];
+dropdown.addEventListener("select", (e) => console.log(e.detail.value));</code></pre>
         </section>
       </main>
     </div>

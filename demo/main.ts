@@ -24,6 +24,7 @@ import {
   type DataTable,
   type TileGrid,
   type PopoverPanel,
+  type DropdownButton,
   type PhotoGallery,
   type PhotoGalleryObjectFit,
   type PhotoGallerySlideChangeDetail,
@@ -405,6 +406,24 @@ document.getElementById("popover-centered-open")?.addEventListener("click", () =
 popoverCenteredDemo?.addEventListener("panel-close", () => {
   popoverCenteredDemo.open = false;
 });
+
+// dropdown-button (seed options, log picked actions)
+const dropdownResolve = document.getElementById("dropdown-resolve") as DropdownButton;
+if (dropdownResolve) {
+  dropdownResolve.options = [
+    { value: "retry", label: "Retry" },
+    { value: "close", label: "Close" },
+    { value: "backlog", label: "Backlog" },
+  ];
+}
+const dropdownSelectLog = document.getElementById("dropdown-select-log")!;
+dropdownResolve?.addEventListener("select", (e) => {
+  dropdownSelectLog.textContent = `dropdown-resolve: ${(e as CustomEvent).detail.value}`;
+});
+const dropdownDisabled = document.getElementById("dropdown-disabled") as DropdownButton;
+if (dropdownDisabled) {
+  dropdownDisabled.options = [{ value: "x", label: "X" }];
+}
 
 // data-table (seed columns/rows, wire a row-click destination)
 const tableTasks = document.getElementById("table-tasks") as DataTable;

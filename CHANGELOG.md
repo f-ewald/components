@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added `dropdown-button`: a primary-styled button with a label and chevron
+  that opens an anchored menu of actions, firing `select` with `{ value }`.
+  Essentially `form-select` minus "current value" semantics — a menu, not a
+  select. Built for slowmo's failed-task Retry/Close/Backlog action, reusing
+  `form-select`'s popover/outside-click/Escape/keyboard-nav pattern.
 - Added a stdio MCP server (`src/mcp-server.ts` → `dist/mcp-server.js`,
   `npm run mcp`) exposing the component catalog to AI coding assistants:
   `list_components` and `get_component_docs(tag)`, backed by the existing
