@@ -120,6 +120,36 @@ set. Don't reintroduce that pattern.)
 
 The full token set is defined in [`src/tokens.ts`](./src/tokens.ts).
 
+## MCP server
+
+`npm run mcp` (or `node dist/mcp-server.js` after `npm run build`) starts a
+stdio [MCP](https://modelcontextprotocol.io) server exposing the component
+catalog to AI coding assistants, with two tools:
+
+- `list_components` — every tag + one-line description.
+- `get_component_docs(tag)` — the full generated Markdown doc for one tag
+  (install snippet, usage example, attributes/properties, events, slots,
+  CSS custom properties).
+
+It's read-only over the same `custom-elements.json`/`docs/*.md` this package
+already generates via `npm run docs` — no separate data source to maintain.
+A consuming project wires it up with a `.mcp.json` at its repo root:
+
+```json
+{
+  "mcpServers": {
+    "f-ewald-components": {
+      "command": "node",
+      "args": ["/absolute/path/to/components/dist/mcp-server.js"]
+    }
+  }
+}
+```
+
+See the "MCP server" section in [`CLAUDE.md`](./CLAUDE.md) for more, and
+[`docs/mcp-evaluation.md`](./docs/mcp-evaluation.md) for why this was built
+now rather than earlier.
+
 ## Playground / development
 
 ```bash
@@ -145,6 +175,7 @@ npm run build:demo   # static build of the playground, into demo-dist/
 | `npm run icons` | Regenerate `src/icons.ts` from the Heroicons package. |
 | `npm run analyze` | Regenerate `custom-elements.json` via the custom-elements-manifest analyzer. |
 | `npm run docs` | Regenerate the manifest, `docs/*.md`, and `llms.txt`. |
+| `npm run mcp` | Run the MCP server (`dist/mcp-server.js`) directly, for manual testing. |
 | `npm run test` | Run the Playwright suite against the playground. |
 
 ## Contributing
