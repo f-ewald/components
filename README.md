@@ -3,6 +3,9 @@
 [![npm](https://img.shields.io/npm/v/@f-ewald/components)](https://www.npmjs.com/package/@f-ewald/components)
 [![license](https://img.shields.io/badge/license-BSD--3--Clause-blue)](./LICENSE)
 
+[Documentation](https://f-ewald.github.io/components/) ·
+[Playground](https://f-ewald.github.io/components/playground/)
+
 A collection of self-contained [Lit](https://lit.dev) web components sharing a
 Tailwind-inspired design token system. Every component is individually
 importable and ships its own TypeScript types plus a checked-in
@@ -41,46 +44,46 @@ import "@f-ewald/components/roman-numeral.js";
 
 | Component | Docs |
 | --- | --- |
-| `<address-autocomplete>` | [docs/address-autocomplete.md](./docs/address-autocomplete.md) |
-| `<animate-confetti>` | [docs/animate-confetti.md](./docs/animate-confetti.md) |
-| `<autocomplete-input>` | [docs/autocomplete-input.md](./docs/autocomplete-input.md) |
-| `<calendar-entry>` | [docs/calendar-entry.md](./docs/calendar-entry.md) |
-| `<calendar-month>` | [docs/calendar-month.md](./docs/calendar-month.md) |
-| `<calendar-year>` | [docs/calendar-year.md](./docs/calendar-year.md) |
-| `<chat-message>` | [docs/chat-message.md](./docs/chat-message.md) |
-| `<confirm-dialog>` | [docs/confirm-dialog.md](./docs/confirm-dialog.md) |
-| `<copy-link-button>` | [docs/copy-link-button.md](./docs/copy-link-button.md) |
-| `<data-table>` | [docs/data-table.md](./docs/data-table.md) |
-| `<distance-value>` | [docs/distance-value.md](./docs/distance-value.md) |
-| `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
-| `<dropdown-button>` | [docs/dropdown-button.md](./docs/dropdown-button.md) |
-| `<editable-text>` | [docs/editable-text.md](./docs/editable-text.md) |
-| `<form-select>` | [docs/form-select.md](./docs/form-select.md) |
-| `<frame-box>` | [docs/frame-box.md](./docs/frame-box.md) |
-| `<gallery-item>` | [docs/gallery-item.md](./docs/gallery-item.md) |
-| `<gallery-item-variant>` | [docs/gallery-item-variant.md](./docs/gallery-item-variant.md) |
-| `<icon-button>` | [docs/icon-button.md](./docs/icon-button.md) |
-| `<live-timer>` | [docs/live-timer.md](./docs/live-timer.md) |
-| `<map-circle>` | [docs/map-circle.md](./docs/map-circle.md) |
-| `<map-pin>` | [docs/map-pin.md](./docs/map-pin.md) |
-| `<map-point>` | [docs/map-point.md](./docs/map-point.md) |
-| `<percent-bar-chart>` | [docs/percent-bar-chart.md](./docs/percent-bar-chart.md) |
-| `<photo-gallery>` | [docs/photo-gallery.md](./docs/photo-gallery.md) |
-| `<popover-panel>` | [docs/popover-panel.md](./docs/popover-panel.md) |
-| `<price-history-chart>` | [docs/price-history-chart.md](./docs/price-history-chart.md) |
-| `<radio-cards>` | [docs/radio-cards.md](./docs/radio-cards.md) |
-| `<radio-pills>` | [docs/radio-pills.md](./docs/radio-pills.md) |
-| `<relative-time>` | [docs/relative-time.md](./docs/relative-time.md) |
-| `<reveal-button>` | [docs/reveal-button.md](./docs/reveal-button.md) |
-| `<roman-numeral>` | [docs/roman-numeral.md](./docs/roman-numeral.md) |
-| `<slide-panel>` | [docs/slide-panel.md](./docs/slide-panel.md) |
-| `<stat-meter>` | [docs/stat-meter.md](./docs/stat-meter.md) |
-| `<status-pill>` | [docs/status-pill.md](./docs/status-pill.md) |
-| `<tile-grid>` | [docs/tile-grid.md](./docs/tile-grid.md) |
-| `<toast-notification>` | [docs/toast-notification.md](./docs/toast-notification.md) |
-| `<ui-button>` | [docs/ui-button.md](./docs/ui-button.md) |
-| `<user-avatar>` | [docs/user-avatar.md](./docs/user-avatar.md) |
-| `<weight-bar-chart>` | [docs/weight-bar-chart.md](./docs/weight-bar-chart.md) |
+| `<address-autocomplete>` | [API reference](https://f-ewald.github.io/components/docs/address-autocomplete.html) |
+| `<animate-confetti>` | [API reference](https://f-ewald.github.io/components/docs/animate-confetti.html) |
+| `<autocomplete-input>` | [API reference](https://f-ewald.github.io/components/docs/autocomplete-input.html) |
+| `<calendar-entry>` | [API reference](https://f-ewald.github.io/components/docs/calendar-entry.html) |
+| `<calendar-month>` | [API reference](https://f-ewald.github.io/components/docs/calendar-month.html) |
+| `<calendar-year>` | [API reference](https://f-ewald.github.io/components/docs/calendar-year.html) |
+| `<chat-message>` | [API reference](https://f-ewald.github.io/components/docs/chat-message.html) |
+| `<confirm-dialog>` | [API reference](https://f-ewald.github.io/components/docs/confirm-dialog.html) |
+| `<copy-link-button>` | [API reference](https://f-ewald.github.io/components/docs/copy-link-button.html) |
+| `<data-table>` | [API reference](https://f-ewald.github.io/components/docs/data-table.html) |
+| `<distance-value>` | [API reference](https://f-ewald.github.io/components/docs/distance-value.html) |
+| `<distribution-chart>` | [API reference](https://f-ewald.github.io/components/docs/distribution-chart.html) |
+| `<dropdown-button>` | [API reference](https://f-ewald.github.io/components/docs/dropdown-button.html) |
+| `<editable-text>` | [API reference](https://f-ewald.github.io/components/docs/editable-text.html) |
+| `<form-select>` | [API reference](https://f-ewald.github.io/components/docs/form-select.html) |
+| `<frame-box>` | [API reference](https://f-ewald.github.io/components/docs/frame-box.html) |
+| `<gallery-item>` | [API reference](https://f-ewald.github.io/components/docs/gallery-item.html) |
+| `<gallery-item-variant>` | [API reference](https://f-ewald.github.io/components/docs/gallery-item-variant.html) |
+| `<icon-button>` | [API reference](https://f-ewald.github.io/components/docs/icon-button.html) |
+| `<live-timer>` | [API reference](https://f-ewald.github.io/components/docs/live-timer.html) |
+| `<map-circle>` | [API reference](https://f-ewald.github.io/components/docs/map-circle.html) |
+| `<map-pin>` | [API reference](https://f-ewald.github.io/components/docs/map-pin.html) |
+| `<map-point>` | [API reference](https://f-ewald.github.io/components/docs/map-point.html) |
+| `<percent-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/percent-bar-chart.html) |
+| `<photo-gallery>` | [API reference](https://f-ewald.github.io/components/docs/photo-gallery.html) |
+| `<popover-panel>` | [API reference](https://f-ewald.github.io/components/docs/popover-panel.html) |
+| `<price-history-chart>` | [API reference](https://f-ewald.github.io/components/docs/price-history-chart.html) |
+| `<radio-cards>` | [API reference](https://f-ewald.github.io/components/docs/radio-cards.html) |
+| `<radio-pills>` | [API reference](https://f-ewald.github.io/components/docs/radio-pills.html) |
+| `<relative-time>` | [API reference](https://f-ewald.github.io/components/docs/relative-time.html) |
+| `<reveal-button>` | [API reference](https://f-ewald.github.io/components/docs/reveal-button.html) |
+| `<roman-numeral>` | [API reference](https://f-ewald.github.io/components/docs/roman-numeral.html) |
+| `<slide-panel>` | [API reference](https://f-ewald.github.io/components/docs/slide-panel.html) |
+| `<stat-meter>` | [API reference](https://f-ewald.github.io/components/docs/stat-meter.html) |
+| `<status-pill>` | [API reference](https://f-ewald.github.io/components/docs/status-pill.html) |
+| `<tile-grid>` | [API reference](https://f-ewald.github.io/components/docs/tile-grid.html) |
+| `<toast-notification>` | [API reference](https://f-ewald.github.io/components/docs/toast-notification.html) |
+| `<ui-button>` | [API reference](https://f-ewald.github.io/components/docs/ui-button.html) |
+| `<user-avatar>` | [API reference](https://f-ewald.github.io/components/docs/user-avatar.html) |
+| `<weight-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/weight-bar-chart.html) |
 
 Each doc lists the component's attributes/properties, events, slots, and the
 `--ui-*` CSS custom properties it consumes. For a machine-readable summary of
@@ -169,7 +172,16 @@ sources are imported directly from `src/`, so edits hot-reload.
 
 ```bash
 npm run build:demo   # static build of the playground, into demo-dist/
+npm run build:site   # docs + playground Pages artifact, into pages-dist/
+npm run preview:site # preview the exact Pages artifact locally
+npm run test:site    # smoke-test the built documentation and playground
 ```
+
+The combined site is deployed automatically from `main` to
+[GitHub Pages](https://f-ewald.github.io/components/). The workflow reads the
+repository and publishes `pages-dist/`; it has no permission or persisted
+credential capable of changing repository files, branches, tags, or pull
+requests.
 
 ## Development commands
 
@@ -178,11 +190,14 @@ npm run build:demo   # static build of the playground, into demo-dist/
 | `npm run dev` | Start the Vite playground with HMR. |
 | `npm run build` | Compile `src/` with `tsc` into `dist/`, and generate `dist/tokens.css`. |
 | `npm run build:demo` | Build the static playground into `demo-dist/`. |
+| `npm run build:site` | Build the static documentation and nested playground into `pages-dist/`. |
+| `npm run preview:site` | Preview the built Pages artifact locally. |
 | `npm run icons` | Regenerate `src/icons.ts` from the Heroicons package. |
 | `npm run analyze` | Regenerate `custom-elements.json` via the custom-elements-manifest analyzer. |
 | `npm run docs` | Regenerate the manifest, `docs/*.md`, and `llms.txt`. |
 | `npm run mcp` | Run the MCP server (`dist/mcp-server.js`) directly, for manual testing. |
 | `npm run test` | Run the Playwright suite against the playground. |
+| `npm run test:site` | Run the Playwright smoke suite against `pages-dist/`. |
 
 ## Contributing
 
@@ -194,6 +209,8 @@ npm run build:demo   # static build of the playground, into demo-dist/
   the `tsc`-emitted `dist/` output resolves correctly for consumers.
 - Run `npm run docs` after changing any component's public API so the
   generated docs and `llms.txt` stay in sync.
+- `npm run build:site` only reads those checked-in documentation inputs and
+  writes ignored `pages-dist/`; it never updates tracked generated files.
 
 ## Publishing
 
