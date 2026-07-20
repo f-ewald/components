@@ -932,6 +932,15 @@ grid.renderTile = (item) => item.name;</code></pre>
                 New task
               </button>
               <popover-panel id="popover-demo" data-testid="popover-demo" heading="New task">
+                <a
+                  slot="actions"
+                  href="#"
+                  id="popover-actions-link"
+                  data-testid="popover-actions-link"
+                  class="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900"
+                >
+                  Full page ↗
+                </a>
                 <div class="p-4 text-sm text-slate-600">Popover body content goes here.</div>
               </popover-panel>
             </div>
@@ -952,6 +961,7 @@ grid.renderTile = (item) => item.name;</code></pre>
 &lt;div style="position: relative; display: inline-block;"&gt;
   &lt;button&gt;New task&lt;/button&gt;
   &lt;popover-panel open heading="New task"&gt;
+    &lt;a slot="actions" href="#/tasks/new"&gt;Full page ↗&lt;/a&gt;
     Popover body content goes here.
   &lt;/popover-panel&gt;
 &lt;/div&gt;

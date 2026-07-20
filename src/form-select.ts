@@ -16,6 +16,12 @@ export interface SelectOption {
  * `change` event carrying `{ value }` are wanted (e.g. a task's status
  * picker).
  *
+ * The trigger fills its host's width (`justify-content: space-between`
+ * pushes the chevron to the far edge), but the host itself stays
+ * `display: inline-block` — so usages that never size the host (a filter
+ * bar, a status picker) keep shrink-to-fit auto-width unchanged. To make an
+ * instance full-width, size the host itself: `form-select { width: 100%; }`.
+ *
  * @element form-select
  * @fires change - Fired with `{ value: string }` when a different option is picked.
  */
@@ -33,7 +39,10 @@ export class FormSelect extends LitElement {
       button.trigger {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 0.35rem;
+        width: 100%;
+        box-sizing: border-box;
         font: inherit;
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #fff);
