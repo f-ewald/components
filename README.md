@@ -50,6 +50,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<data-table>` | [docs/data-table.md](./docs/data-table.md) |
 | `<distance-value>` | [docs/distance-value.md](./docs/distance-value.md) |
 | `<distribution-chart>` | [docs/distribution-chart.md](./docs/distribution-chart.md) |
+| `<dropdown-button>` | [docs/dropdown-button.md](./docs/dropdown-button.md) |
 | `<editable-text>` | [docs/editable-text.md](./docs/editable-text.md) |
 | `<form-select>` | [docs/form-select.md](./docs/form-select.md) |
 | `<gallery-item>` | [docs/gallery-item.md](./docs/gallery-item.md) |

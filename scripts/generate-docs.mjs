@@ -193,6 +193,16 @@ const EXAMPLES = {
   select.value = "open";
   select.addEventListener("change", (e) => console.log(e.detail.value));
 </script>`,
+  "dropdown-button": `<dropdown-button label="Resolve…"></dropdown-button>
+<script type="module">
+  const dropdown = document.querySelector("dropdown-button");
+  dropdown.options = [
+    { value: "retry", label: "Retry" },
+    { value: "close", label: "Close" },
+    { value: "backlog", label: "Backlog" },
+  ];
+  dropdown.addEventListener("select", (e) => console.log(e.detail.value));
+</script>`,
   "data-table": `<data-table></data-table>
 <script type="module">
   const table = document.querySelector("data-table");
