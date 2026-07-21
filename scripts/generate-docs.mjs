@@ -219,13 +219,17 @@ const EXAMPLES = {
   directory: .
   filename: notes.md
 </chat-message>`,
-  "form-select": `<form-select label="Task state"></form-select>
+  "form-select": `<form-select label="Task state" searchable></form-select>
 <script type="module">
+  import { iconArrowPath, iconCheckCircle, iconListBullet } from "@f-ewald/components/icons.js";
+
   const select = document.querySelector("form-select");
   select.options = [
+    { value: "backlog", label: "Backlog", icon: iconListBullet(14), iconSize: 14 },
     { value: "open", label: "Open" },
-    { value: "in_progress", label: "In progress" },
-    { value: "done", label: "Done" },
+    { value: "in_progress", label: "In progress", icon: iconArrowPath(16), iconSize: 16 },
+    { value: "review", label: "Needs review" },
+    { value: "done", label: "Done", icon: iconCheckCircle(16), iconSize: 16 },
   ];
   select.value = "open";
   select.addEventListener("change", (e) => console.log(e.detail.value));

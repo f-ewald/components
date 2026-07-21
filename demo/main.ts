@@ -26,6 +26,10 @@ import {
   type PopoverPanel,
   type DropdownButton,
   type IconButton,
+  iconArrowPath,
+  iconCheckCircle,
+  iconEye,
+  iconListBullet,
   iconPencil,
   type PhotoGallery,
   type PhotoGalleryObjectFit,
@@ -373,15 +377,22 @@ for (const id of ["msg-tool", "msg-thinking"]) {
 }
 
 // form-select (seed options, log picked changes)
+const selectOptions = [
+  { value: "backlog", label: "Backlog", icon: iconListBullet(14), iconSize: 14 },
+  { value: "open", label: "Open" },
+  { value: "in_progress", label: "In progress", icon: iconArrowPath(16), iconSize: 16 },
+  { value: "review", label: "Needs review", icon: iconEye(18), iconSize: 18 },
+  { value: "done", label: "Done", icon: iconCheckCircle(16), iconSize: 16 },
+];
 const selectState = document.getElementById("select-state") as FormSelect;
 if (selectState) {
-  selectState.options = [
-    { value: "backlog", label: "Backlog" },
-    { value: "open", label: "Open" },
-    { value: "in_progress", label: "In progress" },
-    { value: "done", label: "Done" },
-  ];
+  selectState.options = selectOptions;
   selectState.value = "open";
+}
+const selectSearchable = document.getElementById("select-searchable") as FormSelect;
+if (selectSearchable) {
+  selectSearchable.options = selectOptions;
+  selectSearchable.value = "open";
 }
 const selectDisabled = document.getElementById("select-disabled") as FormSelect;
 if (selectDisabled) {
@@ -391,6 +402,10 @@ if (selectDisabled) {
 const selectChangeLog = document.getElementById("select-change-log")!;
 selectState?.addEventListener("change", (e) => {
   selectChangeLog.textContent = `select-state: ${(e as CustomEvent).detail.value}`;
+});
+const selectSearchableLog = document.getElementById("select-searchable-log")!;
+selectSearchable?.addEventListener("change", (e) => {
+  selectSearchableLog.textContent = `select-searchable: ${(e as CustomEvent).detail.value}`;
 });
 
 // popover-panel

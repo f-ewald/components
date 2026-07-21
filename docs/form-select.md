@@ -12,6 +12,13 @@ pushes the chevron to the far edge), but the host itself stays
 bar, a status picker) keep shrink-to-fit auto-width unchanged. To make an
 instance full-width, size the host itself: `form-select { width: 100%; }`.
 
+Set `searchable` to replace the button trigger with an editable combobox
+that filters the predefined options by case-insensitive label infix. Typed
+text is only a query: `value` changes exclusively when an actual option is
+selected, and an uncommitted query is discarded when the list closes.
+Each option may also provide a pre-rendered `icon` and square `iconSize`;
+iconless options reserve no leading space.
+
 ## Install
 
 ```js
@@ -21,13 +28,17 @@ import "@f-ewald/components/form-select.js";
 ## Usage
 
 ```html
-<form-select label="Task state"></form-select>
+<form-select label="Task state" searchable></form-select>
 <script type="module">
+  import { iconArrowPath, iconCheckCircle, iconListBullet } from "@f-ewald/components/icons.js";
+
   const select = document.querySelector("form-select");
   select.options = [
+    { value: "backlog", label: "Backlog", icon: iconListBullet(14), iconSize: 14 },
     { value: "open", label: "Open" },
-    { value: "in_progress", label: "In progress" },
-    { value: "done", label: "Done" },
+    { value: "in_progress", label: "In progress", icon: iconArrowPath(16), iconSize: 16 },
+    { value: "review", label: "Needs review" },
+    { value: "done", label: "Done", icon: iconCheckCircle(16), iconSize: 16 },
   ];
   select.value = "open";
   select.addEventListener("change", (e) => console.log(e.detail.value));
@@ -42,6 +53,7 @@ import "@f-ewald/components/form-select.js";
 | `value` | `value` | `string` | `""` | Currently selected value; must match one of `options[].value`. |
 | `label` | `label` | `string` | `""` | `aria-label` applied to the trigger button. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables the trigger, preventing the popover from opening. |
+| `searchable` | `searchable` | `boolean` | `false` | Enables editable, case-insensitive infix filtering by option label. Typed text never becomes the selected `value`. |
 
 ## Events
 
