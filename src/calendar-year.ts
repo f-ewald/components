@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, css, html, nothing } from "lit";
 import { customElement, property, queryAssignedElements, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
@@ -6,6 +6,7 @@ import { CalendarEntry } from "./calendar-entry.js";
 import "./calendar-month.js";
 import { tokens } from "./tokens.js";
 import {
+  CALENDAR_ENTRY_ATTRIBUTES,
   daysInMonth,
   overlapsRange,
   readCalendarEntryElement,
@@ -14,7 +15,6 @@ import {
 } from "./utils/calendar.js";
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
-const ENTRY_ATTRIBUTES = ["start", "end", "label", "color", "href"];
 
 /**
  * A full year of `calendar-month` blocks, generated from declarative
@@ -34,7 +34,7 @@ export class CalendarYear extends LitElement {
   @queryAssignedElements({ selector: "calendar-entry" })
   private readonly _entryElements!: CalendarEntry[];
 
-  /** Bumped whenever slotted entries are inserted/removed or a tracked attribute mutates, to force a re-render. */
+  /** Bumped whenever entry elements, attributes, or slotted text change to force a re-render. */
   @state() private _entriesVersion = 0;
 
   private _entriesObserver?: MutationObserver;
@@ -58,20 +58,21 @@ export class CalendarYear extends LitElement {
   ];
 
   /**
-   * Watches this element's own slotted `calendar-entry` children for
-   * attribute mutations — reflected-property changes on those children
-   * don't fire `slotchange`, so a `MutationObserver` is the only way to
-   * notice a consumer editing a hand-authored entry in place after the
-   * initial render (mirrors `photo-gallery`'s `_metadataObserver`).
+   * Watches slotted `calendar-entry` attributes and title/detail text.
+   * Neither reflected-property changes nor edits inside assigned elements
+   * fire this component's `slotchange`, so a subtree observer keeps the
+   * projected month entries synchronized.
    */
   override connectedCallback(): void {
     super.connectedCallback();
+    this._entriesVersion++;
     this._entriesObserver ??= new MutationObserver(() => this._entriesVersion++);
     this._entriesObserver.observe(this, {
       attributes: true,
-      attributeFilter: ENTRY_ATTRIBUTES,
+      attributeFilter: CALENDAR_ENTRY_ATTRIBUTES,
+      characterData: true,
       childList: true,
-      subtree: false,
+      subtree: true,
     });
   }
 
@@ -105,7 +106,8 @@ export class CalendarYear extends LitElement {
               <calendar-month .year=${this.year} .month=${m}>
                 ${repeat(
                   monthEntries,
-                  (entry) => `${entry.start}|${entry.end}|${entry.label}|${entry.color}|${entry.href ?? ""}`,
+                  (entry) =>
+                    `${entry.start}|${entry.end}|${entry.label}|${(entry.details ?? []).join("|")}|${entry.footer ?? ""}|${entry.color}|${entry.href ?? ""}`,
                   (entry) => html`
                     <calendar-entry
                       start=${entry.start}
@@ -113,7 +115,10 @@ export class CalendarYear extends LitElement {
                       label=${entry.label}
                       color=${entry.color}
                       href=${ifDefined(entry.href)}
-                    ></calendar-entry>
+                    >
+                      ${(entry.details ?? []).map((detail) => html`<span slot="detail">${detail}</span>`)}
+                      ${entry.footer ? html`<span slot="footer">${entry.footer}</span>` : nothing}
+                    </calendar-entry>
                   `,
                 )}
               </calendar-month>

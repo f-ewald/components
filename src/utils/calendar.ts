@@ -6,6 +6,8 @@ export interface CalendarEntryData {
   start: string;
   end: string;
   label: string;
+  details?: string[];
+  footer?: string;
   color: StatusPillColor;
   href?: string;
 }
@@ -22,6 +24,9 @@ export interface LanedEntry extends ResolvedCalendarEntry {
 }
 
 const ISO_DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+/** Attributes whose mutations can change a rendered calendar entry. */
+export const CALENDAR_ENTRY_ATTRIBUTES = ["start", "end", "label", "color", "href", "slot"];
 
 /** Number of days in `month` (1-12) of `year`, leap years included. */
 export function daysInMonth(year: number, month: number): number {
@@ -78,12 +83,22 @@ export function isWeekend(date: Date): boolean {
   return day === 0 || day === 6;
 }
 
-/** Reads a `calendar-entry` element's properties into a plain data object. */
+/** Reads normalized plain-text content from direct children assigned to a named slot. */
+function slottedText(el: CalendarEntry, slotName: string): string[] {
+  return Array.from(el.querySelectorAll<HTMLElement>(`:scope > [slot="${slotName}"]`))
+    .map((node) => (node.textContent ?? "").replace(/\s+/g, " ").trim());
+}
+
+/** Reads a `calendar-entry` element's properties and named text slots into plain data. */
 export function readCalendarEntryElement(el: CalendarEntry): CalendarEntryData {
+  const title = slottedText(el, "title").find((line) => line.length > 0);
+  const footer = slottedText(el, "footer").find((line) => line.length > 0);
   return {
     start: el.start,
     end: el.end,
-    label: el.label,
+    label: title ?? el.label,
+    details: slottedText(el, "detail"),
+    footer,
     color: el.color,
     href: el.href,
   };
@@ -104,6 +119,7 @@ export function resolveEntry(data: CalendarEntryData): ResolvedCalendarEntry | n
   const endDate = parseIsoDate(data.end) ?? startDate;
   return {
     ...data,
+    details: data.details ?? [],
     startDate,
     endDate: endDate < startDate ? startDate : endDate,
   };
