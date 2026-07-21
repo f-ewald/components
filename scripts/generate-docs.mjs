@@ -48,7 +48,12 @@ const SLOTS = {
     { name: "actions", description: "Extra header controls (e.g. an icon+label link) rendered between the title and the close button." },
   ],
   "calendar-entry": [
-    { name: "(default)", description: "Reserved for future use; no slotted content is required today." },
+    { name: "title", description: "Plain-text title shown instead of the `label` fallback." },
+    {
+      name: "detail",
+      description: "Repeatable plain-text details rendered inside the shared body spanning all remaining days.",
+    },
+    { name: "footer", description: "Plain-text ending note pinned to the bottom of the shared body." },
   ],
   "calendar-month": [
     { name: "(default)", description: "Declarative `calendar-entry` elements to render for this month." },
@@ -250,13 +255,35 @@ const EXAMPLES = {
   end="2026-07-18"
   label="Vacation"
   color="success"
-></calendar-entry>`,
+>
+  <span slot="title">Vacation</span>
+  <span slot="detail">Out of office</span>
+  <span slot="detail">Road trip along the California coast with several scenic stops</span>
+  <span slot="footer">Return July 19 at 6 PM</span>
+</calendar-entry>`,
   "calendar-month": `<calendar-month year="2026" month="7">
-  <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
-  <calendar-entry start="2026-07-15" end="2026-07-20" label="Conference" color="warning" href="#conf"></calendar-entry>
+  <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success">
+    <span slot="title">Vacation</span>
+    <span slot="detail">Out of office</span>
+    <span slot="detail">Road trip along the California coast with several scenic stops</span>
+    <span slot="footer">Return July 19 at 6 PM</span>
+  </calendar-entry>
+  <calendar-entry start="2026-07-15" end="2026-07-20" label="Conference" color="warning" href="#conf">
+    <span slot="detail">Talks and workshops</span>
+    <span slot="footer">Closing keynote · July 20</span>
+  </calendar-entry>
 </calendar-month>`,
   "calendar-year": `<calendar-year year="2026">
-  <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite"></calendar-entry>
+  <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite">
+    <span slot="detail">New York</span>
+    <span slot="detail">Team workshops</span>
+    <span slot="footer">Closing dinner Friday</span>
+  </calendar-entry>
+  <calendar-entry start="2026-03-05" end="2026-03-18" label="Product launch" color="success" href="#launch">
+    <span slot="detail">Coordinate the release across engineering, design, support, and marketing.</span>
+    <span slot="detail">Monitor adoption and production health throughout the rollout.</span>
+    <span slot="footer">Public launch · March 18 at 9 AM</span>
+  </calendar-entry>
   <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
 </calendar-year>`,
   "data-table": `<data-table></data-table>

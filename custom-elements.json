@@ -1174,8 +1174,16 @@
           "name": "CalendarEntry",
           "slots": [
             {
-              "description": "Reserved for future rich content; unused today.",
-              "name": ""
+              "description": "Plain-text title shown instead of the `label` fallback.",
+              "name": "title"
+            },
+            {
+              "description": "Repeatable plain-text details rendered inside the shared body spanning all remaining days.",
+              "name": "detail"
+            },
+            {
+              "description": "Plain-text ending note pinned to the bottom of the shared body.",
+              "name": "footer"
             }
           ],
           "members": [
@@ -1208,7 +1216,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "Text shown on the entry's first visible day within a given month.",
+              "description": "Fallback title used when no `title` slot is provided.",
               "attribute": "label",
               "reflects": true
             },
@@ -1259,7 +1267,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "Text shown on the entry's first visible day within a given month.",
+              "description": "Fallback title used when no `title` slot is provided.",
               "fieldName": "label"
             },
             {
@@ -1313,7 +1321,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One month rendered as a top-to-bottom list of days — weekends and today\nhighlighted, with declarative `calendar-entry` children shown as colored\nbars spanning the days they cover. Overlapping entries stack into\nside-by-side lanes rather than being layered/hidden. Read-only.\n\nLanes are computed independently per instance, from only the entries\noverlapping this month — an entry spanning a month boundary may therefore\nland in a different lane index in the adjacent month's `calendar-month`.\nThis is an accepted v1 limitation: cross-month lane continuity would\nrequire a shared parent (`calendar-year`) to assign lanes globally.\n\nA standalone `calendar-month` (used outside `calendar-year`) also won't\nre-render if a consumer mutates one of its hand-authored `calendar-entry`\nchildren's attributes in place after the initial render — only slot\ninsertion/removal is observed. `calendar-year` avoids this by always\nreplacing (never mutating) the synthetic entries it projects down.",
+          "description": "One month rendered as a top-to-bottom list of days — weekends and today\nhighlighted, with declarative `calendar-entry` children shown as colored\nbars spanning the days they cover. An entry's title uses its first visible\nday; every remaining visible day becomes one shared body for wrapped\ndetails and an optional ending footer. Overlapping entries stack into\nside-by-side lanes rather than being layered/hidden. Read-only.\n\nLanes are computed independently per instance, from only the entries\noverlapping this month — an entry spanning a month boundary may therefore\nland in a different lane index in the adjacent month's `calendar-month`.\nThis is an accepted v1 limitation: cross-month lane continuity would\nrequire a shared parent (`calendar-year`) to assign lanes globally.\n\nEntry attributes and slotted title/detail text are observed, so a\nstandalone month re-renders when consumers update declarative metadata.",
           "name": "CalendarMonth",
           "slots": [
             {
@@ -1360,7 +1368,15 @@
               },
               "privacy": "private",
               "default": "0",
-              "description": "Bumped on every slotchange purely to force a re-render — `_entryElements` is a live query, not a cache."
+              "description": "Bumped when entry elements, attributes, or slotted text change to force a re-render."
+            },
+            {
+              "kind": "field",
+              "name": "_entriesObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -1406,6 +1422,136 @@
             },
             {
               "kind": "method",
+              "name": "_segmentClass",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Classifies one day of an entry so only the outer endpoints are rounded."
+            },
+            {
+              "kind": "method",
+              "name": "_renderEntryLink",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "accessibleText",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Renders a transparent full-cell link without wrapping the visible text."
+            },
+            {
+              "kind": "method",
+              "name": "_entryBodyText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "showFooter",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Joins the event title, details, and visible footer for tooltips and accessible link names."
+            },
+            {
+              "kind": "method",
+              "name": "_renderEntryBody",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "showFooter",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "detailLineClamp",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "showTitleFallback",
+                  "default": "false"
+                }
+              ],
+              "description": "Renders the shared details body, with the footer reserved at its bottom edge."
+            },
+            {
+              "kind": "method",
+              "name": "_renderEntryBodyCell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "bodyRows",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "reachesEventEnd",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "showTitleFallback",
+                  "default": "false"
+                }
+              ],
+              "description": "Renders a row-spanning body cell with whole-line detail and footer budgets."
+            },
+            {
+              "kind": "method",
               "name": "_renderLaneCell",
               "privacy": "private",
               "parameters": [
@@ -1432,9 +1578,15 @@
                   "type": {
                     "text": "Date"
                   }
+                },
+                {
+                  "name": "monthEnd",
+                  "type": {
+                    "text": "Date"
+                  }
                 }
               ],
-              "description": "Renders a single lane's cell for one day: an entry bar, or an empty alignment spacer."
+              "description": "Renders a lane's title/body cell, skips rows covered by a body rowspan, or emits an empty spacer."
             }
           ],
           "attributes": [
@@ -1525,7 +1677,7 @@
               },
               "privacy": "private",
               "default": "0",
-              "description": "Bumped whenever slotted entries are inserted/removed or a tracked attribute mutates, to force a re-render."
+              "description": "Bumped whenever entry elements, attributes, or slotted text change to force a re-render."
             },
             {
               "kind": "field",
@@ -7153,7 +7305,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-size\": \"0.875rem\", \"--ui-font-size-sm\": \"0.75rem\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-size\": \"0.875rem\", \"--ui-font-size-sm\": \"0.75rem\", \"--ui-font-size-xs\": \"0.6875rem\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {
@@ -7162,7 +7314,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ \"--ui-primary\": \"#6366f1\", // indigo-500 \"--ui-primary-hover\": \"#818cf8\", // indigo-400 \"--ui-danger\": \"#ef4444\", // red-500 \"--ui-danger-hover\": \"#f87171\", // red-400 \"--ui-success\": \"#22c55e\", // green-500 \"--ui-text\": \"#f1f5f9\", // slate-100 \"--ui-text-muted\": \"#94a3b8\", // slate-400 \"--ui-border\": \"#334155\", // slate-700 \"--ui-surface\": \"#0f172a\", // slate-900 \"--ui-surface-muted\": \"#1e293b\", // slate-800 \"--ui-overlay\": \"rgb(2 6 23 / 0.6)\", // slate-950 / 60% \"--ui-focus-ring\": \"0 0 0 3px rgb(99 102 241 / 0.45)\", }",
+          "default": "{ \"--ui-primary\": \"#6366f1\", // indigo-500 \"--ui-primary-hover\": \"#818cf8\", // indigo-400 \"--ui-danger\": \"#ef4444\", // red-500 \"--ui-danger-hover\": \"#f87171\", // red-400 \"--ui-success\": \"#22c55e\", // green-500 \"--ui-text\": \"#f1f5f9\", // slate-100 \"--ui-text-muted\": \"#94a3b8\", // slate-400 \"--ui-border\": \"#334155\", // slate-700 \"--ui-surface\": \"#0f172a\", // slate-900 \"--ui-surface-muted\": \"#1e293b\", // slate-800 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.12)\", \"--ui-overlay\": \"rgb(2 6 23 / 0.6)\", // slate-950 / 60% \"--ui-focus-ring\": \"0 0 0 3px rgb(99 102 241 / 0.45)\", }",
           "description": "Dark-mode overrides for the same `--ui-*` custom properties, applied by\n`tokens.css` via `@media (prefers-color-scheme: dark)` and `[data-theme]`\n(see generate-tokens-css.mjs). Same Tailwind slate scale as the light\npalette, inverted, with primary/danger/success lightened one step (500\ninstead of 600) for sufficient contrast against dark surfaces. Shape/type\ntokens are theme-independent and not repeated here."
         },
         {
@@ -7541,6 +7693,15 @@
       "path": "src/utils/calendar.ts",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "CALENDAR_ENTRY_ATTRIBUTES",
+          "type": {
+            "text": "array"
+          },
+          "default": "[\"start\", \"end\", \"label\", \"color\", \"href\", \"slot\"]",
+          "description": "Attributes whose mutations can change a rendered calendar entry."
+        },
+        {
           "kind": "function",
           "name": "daysInMonth",
           "return": {
@@ -7661,7 +7822,7 @@
               }
             }
           ],
-          "description": "Reads a `calendar-entry` element's properties into a plain data object."
+          "description": "Reads a `calendar-entry` element's properties and named text slots into plain data."
         },
         {
           "kind": "function",
@@ -7731,6 +7892,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "CALENDAR_ENTRY_ATTRIBUTES",
+          "declaration": {
+            "name": "CALENDAR_ENTRY_ATTRIBUTES",
+            "module": "src/utils/calendar.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "daysInMonth",
