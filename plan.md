@@ -8,7 +8,7 @@ and a 2022-era toolchain (Rollup 2, Eleventy 1, web-dev-server, web-test-runner,
 webcomponentsjs polyfills). The sibling app `/Users/fe/Development/real-estate-map` has grown
 several genuinely reusable Lit components that should live here instead.
 
-Goal: one npm package `@f-ewald/components` (currently **unpublished** — `npm view` 404s) of
+Goal: one npm package `@f-ewald/components` of
 self-contained Lit web components that share a Tailwind-inspired design language, are
 individually importable via subpath exports, have a Vite playground, Playwright tests, and
 LLM-consumable docs.
@@ -22,7 +22,8 @@ Decisions already made with the user — do not re-litigate:
   **Charts may keep their d3 dependencies** (`d3-scale`, `d3-shape`, `d3-array`) — no rewrite.
 - **LLM docs**: files only (`llms.txt`, `custom-elements.json`, per-component markdown).
   **No MCP server now** (evaluation written up in WP7).
-- **Publishing**: manual `npm publish` from the maintainer's machine; no CI release workflow.
+- **Publishing**: superseded by `.github/workflows/npm-publish.yml`; strict
+  `vX.Y.Z` tags publish through npm Trusted Publishing (OIDC).
 
 Environment: Node v26.0.0, npm 11.12.1, macOS. `node_modules` is currently absent.
 Playwright browsers are likely already installed (used by real-estate-map); if not,
@@ -313,15 +314,10 @@ and covers all components.
    requirement 5 (individual imports) and the d3-isolation claim.
 3. Full gate: `npm run build && npm run docs && npm run test` all green (this is also
    `prepublishOnly`).
-4. **Stop before publishing.** The implementing agent must not run any publish command.
-   Leave the repo in a ready-to-publish state and say so in the final report.
-
-   > **Note — first publish:** `@f-ewald/components` is not yet on the npm registry
-   > (`npm view` returned 404, verified 2026-07-17). The first publish is done manually by
-   > the user from their machine: `npm login` if needed, then `npm publish --access public`
-   > — scoped packages default to private without the flag (WP1's
-   > `publishConfig.access: "public"` also covers this, but state it explicitly in the
-   > README). Subsequent releases: `npm version <bump> && npm publish`.
+4. **Stop before publishing.** Leave the repo release-ready. A maintainer
+   creates the version commit and annotated tag with `npm version <bump>`,
+   then pushes `main` and the tag; the tag-triggered workflow performs the
+   publish. Never run `npm publish` manually.
 
 ---
 

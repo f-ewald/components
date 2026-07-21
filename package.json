@@ -52,6 +52,10 @@
   ],
   "author": "Friedrich Ewald",
   "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/f-ewald/components.git"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "d3-array": "^3.2.4",

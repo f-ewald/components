@@ -1,0 +1,75 @@
+name: Publish package to npmjs
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+concurrency:
+  group: npm-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Validate and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Use trusted-publishing-compatible npm
+        run: npm install --global npm@11.13.0
+
+      - name: Verify tag and package versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Expected a release tag in vX.Y.Z format; got: $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+
+          version="${GITHUB_REF_NAME#v}"
+          package_version="$(node -p "require('./package.json').version")"
+          lock_version="$(node -p "require('./package-lock.json').version")"
+          lock_root_version="$(node -p "require('./package-lock.json').packages[''].version")"
+
+          if [[ "$package_version" != "$version" ]]; then
+            echo "Tag version $version does not match package.json $package_version" >&2
+            exit 1
+          fi
+          if [[ "$lock_version" != "$version" || "$lock_root_version" != "$version" ]]; then
+            echo "Tag version $version does not match package-lock.json" >&2
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run prepublish validation
+        run: npm run prepublishOnly
+
+      - name: Verify tracked files are unchanged
+        run: |
+          git diff --exit-code
+          git diff --cached --exit-code
+
+      - name: Publish to npmjs
+        run: npm publish --ignore-scripts --access public

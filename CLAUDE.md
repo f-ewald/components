@@ -202,19 +202,40 @@ wrong, `rm -rf node_modules/@f-ewald/components` and `ln -s
 /Users/fe/Development/components node_modules/@f-ewald/components` manually.
 
 Only publish once the linked consumer round-trips the actual behavior
-end-to-end (not just unit tests here) — ask the user to run `npm publish`
-at that point (see below); don't publish speculatively to see if a fix
-works.
+end-to-end (not just unit tests here). Then use the tagged release workflow
+below; never run `npm publish` speculatively or manually.
 
 ## Publishing
 
-Manual, from the maintainer's machine — there is no CI release workflow.
+`.github/workflows/npm-publish.yml` publishes to npmjs from GitHub-hosted
+Actions whenever a strict `vX.Y.Z` tag is pushed. It validates that the tag,
+`package.json`, and both package-lock version fields agree; runs
+`prepublishOnly`; requires a clean tracked diff; then publishes through npm
+Trusted Publishing (OIDC) with automatic provenance. It has read-only source
+permissions, no persisted Git credentials, and no long-lived npm token.
+
+One-time npmjs setup for `@f-ewald/components`:
+
+1. Open the package's **Settings → Trusted Publisher** on npmjs.
+2. Choose **GitHub Actions**.
+3. Set owner `f-ewald`, repository `components`, and workflow
+   `npm-publish.yml`; leave environment blank.
+4. Set **Allowed actions** to **npm publish** (not stage-only).
+5. After verifying the first release, prefer **Require two-factor
+   authentication and disallow tokens** under Publishing access.
+
+**Every version bump must have a matching annotated `vX.Y.Z` tag on the same
+commit, starting with `v1.0.0`.** Never edit package versions directly or
+push a version commit without its tag. Create releases only after all release
+changes and generated docs are committed:
 
 ```bash
-npm version <patch|minor|major>
-npm publish
+npm version <patch|minor|major>  # updates manifests, commits, creates vX.Y.Z
+test "$(git rev-list -n 1 "v$(node -p "require('./package.json').version")")" = "$(git rev-parse HEAD)"
+git push origin main --follow-tags
 ```
 
-(First publish needs `npm publish --access public`; `publishConfig.access`
-in `package.json` also covers this, but pass the flag explicitly the first
-time since scoped packages default to private.)
+Pushing the tag is the publish action; do not run `npm publish` manually.
+The initial local `v1.0.0` tag was recreated on the commit that introduced
+this workflow before its first push. Never move or recreate a release tag
+after it has been pushed.

@@ -213,22 +213,26 @@ requests.
 
 ## Publishing
 
-First publish (package is not yet on the npm registry):
+Releases are published automatically by
+[`.github/workflows/npm-publish.yml`](./.github/workflows/npm-publish.yml)
+when a strict `vX.Y.Z` tag is pushed. The workflow validates the tag against
+both package manifests, runs the full `prepublishOnly` gate, and publishes via
+npm Trusted Publishing with provenance—no `NPM_TOKEN` repository secret.
 
-```bash
-npm login    # if needed
-npm publish --access public
-```
-
-Subsequent releases:
+Configure the `@f-ewald/components` npmjs package once with a GitHub Actions
+Trusted Publisher for owner `f-ewald`, repository `components`, workflow
+`npm-publish.yml`, no environment, and **Allowed actions: npm publish**. Then
+release only after all source and generated-doc changes are committed:
 
 ```bash
 npm version <patch|minor|major>
-npm publish
+git push origin main --follow-tags
 ```
 
-`prepublishOnly` runs `build`, `docs`, and `test` automatically before every
-publish.
+`npm version` must create the matching annotated `vX.Y.Z` tag on the version
+commit; every version bump requires that tag, beginning with `v1.0.0`. The
+initial local `v1.0.0` tag was moved to the release-workflow commit before
+its first push; published tags must never be moved.
 
 ## License
 
