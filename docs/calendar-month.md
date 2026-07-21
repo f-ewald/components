@@ -71,6 +71,7 @@ _None._
 | `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-success` |
+| `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |

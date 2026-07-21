@@ -1447,6 +1447,67 @@
             },
             {
               "kind": "method",
+              "name": "_entryKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                }
+              ],
+              "description": "Current render key shared by an entry's title and body cells."
+            },
+            {
+              "kind": "method",
+              "name": "_setEntryInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entryKey",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "className",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "active",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Toggles one interaction class on every rendered cell belonging to an entry."
+            },
+            {
+              "kind": "method",
+              "name": "_syncEntryInteractions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Reconciles classes against the links actually hovered or focused after a render."
+            },
+            {
+              "kind": "method",
               "name": "_renderEntryLink",
               "privacy": "private",
               "parameters": [
@@ -1688,6 +1749,22 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "_entryKeys",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new WeakMap<CalendarEntry, string>()"
+            },
+            {
+              "kind": "field",
+              "name": "_nextEntryKey",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
               "kind": "method",
               "name": "_handleSlotChange",
               "privacy": "private",
@@ -1697,6 +1774,25 @@
                 }
               },
               "description": "Re-renders when declarative `calendar-entry` children are added or removed."
+            },
+            {
+              "kind": "method",
+              "name": "_entryKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "CalendarEntry"
+                  }
+                }
+              ],
+              "description": "Returns an immutable identity for each original slotted entry."
             }
           ],
           "attributes": [
@@ -3015,7 +3111,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A styled dropdown select: a trigger button showing the current option's\nlabel, opening a listbox popover on click. Drop-in generic replacement for\na native `<select>` wherever consistent cross-browser styling and a\n`change` event carrying `{ value }` are wanted (e.g. a task's status\npicker).\n\nThe trigger fills its host's width (`justify-content: space-between`\npushes the chevron to the far edge), but the host itself stays\n`display: inline-block` — so usages that never size the host (a filter\nbar, a status picker) keep shrink-to-fit auto-width unchanged. To make an\ninstance full-width, size the host itself: `form-select { width: 100%; }`.",
+          "description": "A styled dropdown select: a trigger button showing the current option's\nlabel, opening a listbox popover on click. Drop-in generic replacement for\na native `<select>` wherever consistent cross-browser styling and a\n`change` event carrying `{ value }` are wanted (e.g. a task's status\npicker).\n\nThe trigger fills its host's width (`justify-content: space-between`\npushes the chevron to the far edge), but the host itself stays\n`display: inline-block` — so usages that never size the host (a filter\nbar, a status picker) keep shrink-to-fit auto-width unchanged. To make an\ninstance full-width, size the host itself: `form-select { width: 100%; }`.\n\nSet `searchable` to replace the button trigger with an editable combobox\nthat filters the predefined options by case-insensitive label infix. Typed\ntext is only a query: `value` changes exclusively when an actual option is\nselected, and an uncommitted query is discarded when the list closes.\nEach option may also provide a pre-rendered `icon` and square `iconSize`;\niconless options reserve no leading space.",
           "name": "FormSelect",
           "members": [
             {
@@ -3059,6 +3155,17 @@
             },
             {
               "kind": "field",
+              "name": "searchable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables editable, case-insensitive infix filtering by option label.\nTyped text never becomes the selected `value`.",
+              "attribute": "searchable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "_open",
               "type": {
                 "text": "boolean"
@@ -3077,6 +3184,87 @@
             },
             {
               "kind": "field",
+              "name": "_query",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listboxPointerDown",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#suppressNextBlur",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#restoringSearchFocus",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#searchSelection",
+              "privacy": "private",
+              "type": {
+                "text": "[number | null, number | null] | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#isComposing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionJustEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionEndTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#blurTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#onWindowMousedown",
               "privacy": "private"
             },
@@ -3087,6 +3275,46 @@
               "return": {
                 "type": {
                   "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#open",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#close",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#initialActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#visibleOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SelectOption[]"
                 }
               }
             },
@@ -3156,8 +3384,262 @@
             },
             {
               "kind": "method",
+              "name": "#onSearchFocus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchMousedown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "InputEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchBlur",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#focusSearchInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onCompositionStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onCompositionEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onListboxMousedown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onOptionMousedown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                },
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "SelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#optionIconSize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "SelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderOptionIcon",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "SelectOption"
+                  }
+                },
+                {
+                  "name": "className",
+                  "default": "\"option-icon\""
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderOptionContent",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "SelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "renderListbox",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderSearchTrigger",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "current",
+                  "type": {
+                    "text": "SelectOption | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderButtonTrigger",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "current",
+                  "type": {
+                    "text": "SelectOption | undefined"
+                  }
+                }
+              ]
             }
           ],
           "events": [
@@ -3196,6 +3678,15 @@
               "default": "false",
               "description": "Disables the trigger, preventing the popover from opening.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "searchable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables editable, case-insensitive infix filtering by option label.\nTyped text never becomes the selected `value`.",
+              "fieldName": "searchable"
             }
           ],
           "superclass": {

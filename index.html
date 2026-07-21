@@ -852,22 +852,49 @@ content: |
           <h3 class="text-xl font-semibold text-slate-900">form-select</h3>
           <p class="mt-1 text-sm text-slate-500">
             Styled dropdown select: a trigger button opening a listbox popover, firing
-            <code>change</code> with <code>{ value }</code>.
+            <code>change</code> with <code>{ value }</code>. Enable
+            <code>searchable</code> for case-insensitive infix filtering while still
+            requiring an explicit option selection.
           </p>
           <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
             <form-select id="select-state" data-testid="select-state" label="Task state"></form-select>
+            <div>
+             <p class="mb-1 text-xs text-slate-500">
+               Searchable (try <code>gress</code> or <code>VIEW</code>)
+             </p>
+             <form-select
+               id="select-searchable"
+               data-testid="select-searchable"
+               label="Search task state"
+               searchable
+             ></form-select>
+             <p
+               id="select-searchable-log"
+               data-testid="select-searchable-log"
+               class="mt-1 text-xs text-slate-500"
+             ></p>
+            </div>
             <form-select id="select-disabled" data-testid="select-disabled" label="Disabled" disabled></form-select>
             <p id="select-change-log" data-testid="select-change-log" class="text-xs text-slate-500"></p>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/form-select.js";
+import {
+  iconArrowPath,
+  iconCheckCircle,
+  iconEye,
+  iconListBullet,
+} from "@f-ewald/components/icons.js";
 
 const select = document.querySelector("form-select");
 select.options = [
+  { value: "backlog", label: "Backlog", icon: iconListBullet(14), iconSize: 14 },
   { value: "open", label: "Open" },
-  { value: "in_progress", label: "In progress" },
-  { value: "done", label: "Done" },
+  { value: "in_progress", label: "In progress", icon: iconArrowPath(16), iconSize: 16 },
+  { value: "review", label: "Needs review", icon: iconEye(18), iconSize: 18 },
+  { value: "done", label: "Done", icon: iconCheckCircle(16), iconSize: 16 },
 ];
 select.value = "open";
+select.searchable = true;
 select.addEventListener("change", (e) => console.log(e.detail.value));</code></pre>
         </section>
 

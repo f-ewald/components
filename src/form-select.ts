@@ -1,4 +1,11 @@
-import { LitElement, css, html, nothing, type PropertyValues } from "lit";
+import {
+  LitElement,
+  css,
+  html,
+  nothing,
+  type PropertyValues,
+  type TemplateResult,
+} from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { iconChevronRight } from "./icons.js";
 import { tokens } from "./tokens.js";
@@ -7,6 +14,10 @@ import { tokens } from "./tokens.js";
 export interface SelectOption {
   value: string;
   label: string;
+  /** Optional pre-rendered icon template displayed before the label. */
+  icon?: TemplateResult;
+  /** Square icon size in pixels. Defaults to 16 when `icon` is set. */
+  iconSize?: number;
 }
 
 /**
@@ -21,6 +32,13 @@ export interface SelectOption {
  * `display: inline-block` — so usages that never size the host (a filter
  * bar, a status picker) keep shrink-to-fit auto-width unchanged. To make an
  * instance full-width, size the host itself: `form-select { width: 100%; }`.
+ *
+ * Set `searchable` to replace the button trigger with an editable combobox
+ * that filters the predefined options by case-insensitive label infix. Typed
+ * text is only a query: `value` changes exclusively when an actual option is
+ * selected, and an uncommitted query is discarded when the list closes.
+ * Each option may also provide a pre-rendered `icon` and square `iconSize`;
+ * iconless options reserve no leading space.
  *
  * @element form-select
  * @fires change - Fired with `{ value: string }` when a different option is picked.
@@ -63,11 +81,55 @@ export class FormSelect extends LitElement {
         border-color: var(--ui-primary, #4f46e5);
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
+      .search-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.35rem;
+        width: 100%;
+        box-sizing: border-box;
+        color: var(--ui-text, #0f172a);
+        background: var(--ui-surface, #fff);
+        border: 1px solid var(--ui-border, #e2e8f0);
+        border-radius: var(--ui-radius-sm, 0.25rem);
+        cursor: text;
+      }
+      .search-trigger:hover:not(.disabled) {
+        background: var(--ui-surface-muted, #f8fafc);
+      }
+      .search-trigger:focus-within {
+        border-color: var(--ui-primary, #4f46e5);
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      .search-trigger.disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      .search-trigger.has-icon input.search-input {
+        padding-left: 0;
+      }
+      input.search-input {
+        min-width: 0;
+        flex: 1;
+        box-sizing: border-box;
+        padding: 0.3rem 0 0.3rem 0.5rem;
+        color: inherit;
+        background: transparent;
+        border: 0;
+        outline: 0;
+        font: inherit;
+      }
       .chevron {
         display: flex;
+        flex: 0 0 auto;
+        margin-right: 0.5rem;
         color: var(--ui-text-muted, #64748b);
+        pointer-events: none;
         transform: rotate(90deg);
         transition: transform 0.1s ease;
+      }
+      button.trigger .chevron {
+        margin-right: 0;
       }
       :host([open]) .chevron {
         transform: rotate(-90deg);
@@ -80,14 +142,25 @@ export class FormSelect extends LitElement {
         min-width: 100%;
         max-height: 40vh;
         overflow-y: auto;
+        scrollbar-gutter: stable;
         margin: 2px 0 0;
         padding: 4px 0;
         list-style: none;
         white-space: nowrap;
+        color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #fff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
+      }
+      ul.options::-webkit-scrollbar {
+        width: 0.75rem;
+      }
+      ul.options::-webkit-scrollbar-thumb {
+        background: var(--ui-border, #e2e8f0);
+        border: 0.2rem solid transparent;
+        border-radius: 999px;
+        background-clip: padding-box;
       }
       li {
         padding: 0.35rem 0.6rem;
@@ -101,6 +174,43 @@ export class FormSelect extends LitElement {
         font-weight: 600;
         color: var(--ui-primary, #4f46e5);
       }
+      .option-content {
+        display: inline-flex;
+        min-width: 0;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      li .option-content {
+        display: flex;
+        width: 100%;
+      }
+      .option-icon {
+        display: inline-flex;
+        width: var(--form-select-icon-size);
+        height: var(--form-select-icon-size);
+        flex: 0 0 var(--form-select-icon-size);
+        align-items: center;
+        justify-content: center;
+      }
+      .option-icon > svg {
+        width: 100%;
+        height: 100%;
+      }
+      .selected-icon {
+        margin-left: 0.5rem;
+      }
+      .option-label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      li.no-options {
+        padding: 0.35rem 0.6rem;
+        color: var(--ui-text-muted, #64748b);
+        cursor: default;
+        font-style: italic;
+      }
     `,
   ];
 
@@ -112,42 +222,110 @@ export class FormSelect extends LitElement {
   @property() label = "";
   /** Disables the trigger, preventing the popover from opening. */
   @property({ type: Boolean }) disabled = false;
+  /**
+   * Enables editable, case-insensitive infix filtering by option label.
+   * Typed text never becomes the selected `value`.
+   */
+  @property({ type: Boolean, reflect: true }) searchable = false;
 
   @state() private _open = false;
   @state() private _activeIndex = -1;
+  @state() private _query: string | null = null;
+
+  #listboxPointerDown = false;
+  #suppressNextBlur = false;
+  #restoringSearchFocus = false;
+  #searchSelection: [number | null, number | null] | null = null;
+  #isComposing = false;
+  #compositionJustEnded = false;
+  #compositionEndTimer: ReturnType<typeof setTimeout> | null = null;
+  #blurTimer: ReturnType<typeof setTimeout> | null = null;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener("mousedown", this.#onWindowMousedown, true);
+    if (this.#blurTimer) clearTimeout(this.#blurTimer);
+    if (this.#compositionEndTimer) clearTimeout(this.#compositionEndTimer);
+    this.#listboxPointerDown = false;
+    this.#suppressNextBlur = false;
+    this.#searchSelection = null;
+    this.#isComposing = false;
+    this.#compositionJustEnded = false;
+    this.#close();
   }
 
   protected override updated(changed: PropertyValues): void {
-    if (!changed.has("_open")) return;
-    this.toggleAttribute("open", this._open);
-    if (this._open) {
-      window.addEventListener("mousedown", this.#onWindowMousedown, true);
-    } else {
-      window.removeEventListener("mousedown", this.#onWindowMousedown, true);
+    if (changed.has("_open")) {
+      this.toggleAttribute("open", this._open);
+      if (this._open) {
+        window.addEventListener("mousedown", this.#onWindowMousedown, true);
+      } else {
+        window.removeEventListener("mousedown", this.#onWindowMousedown, true);
+      }
+    }
+    if ((changed.has("disabled") && this.disabled) || changed.has("searchable")) {
+      this.#close();
+      return;
+    }
+    if (changed.has("options") && this._open) {
+      this._activeIndex = this.#initialActiveIndex();
+    } else if (changed.has("value") && this._open && this._query === null) {
+      this._activeIndex = this.#initialActiveIndex();
+    }
+    if (
+      (changed.has("_activeIndex") || changed.has("_query") || changed.has("options")) &&
+      this._open &&
+      this._activeIndex >= 0
+    ) {
+      this.renderRoot
+        .querySelector<HTMLElement>(`#form-select-option-${this._activeIndex}`)
+        ?.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
   }
 
   #onWindowMousedown = (e: MouseEvent): void => {
-    if (!e.composedPath().includes(this)) this._open = false;
+    if (!e.composedPath().includes(this)) this.#close();
   };
 
   #toggle(): void {
     if (this.disabled) return;
-    this._open = !this._open;
-    if (this._open) {
-      this._activeIndex = Math.max(
-        0,
-        this.options.findIndex((o) => o.value === this.value),
-      );
-    }
+    if (this._open) this.#close();
+    else this.#open();
+  }
+
+  #open(): void {
+    if (this.disabled) return;
+    this._query = null;
+    this._open = true;
+    this._activeIndex = this.#initialActiveIndex();
+  }
+
+  #close(): void {
+    this._open = false;
+    this._query = null;
+    this._activeIndex = -1;
+    this.#searchSelection = null;
+  }
+
+  #initialActiveIndex(): number {
+    const options = this.#visibleOptions();
+    if (options.length === 0) return -1;
+    if (this._query !== null) return 0;
+    const selectedIndex = options.findIndex((option) => option.value === this.value);
+    return selectedIndex >= 0 ? selectedIndex : 0;
+  }
+
+  #visibleOptions(): SelectOption[] {
+    if (!this.searchable || this._query === null) return this.options;
+    const needle = this._query.trim().toLocaleLowerCase();
+    if (!needle) return this.options;
+    return this.options.filter((option) =>
+      option.label.toLocaleLowerCase().includes(needle),
+    );
   }
 
   #select(option: SelectOption): void {
-    this._open = false;
+    this.#close();
     if (option.value === this.value) return;
     this.value = option.value;
     this.dispatchEvent(new CustomEvent("change", { detail: { value: option.value } }));
@@ -165,46 +343,260 @@ export class FormSelect extends LitElement {
       else this.#confirmActive();
     } else if (e.key === "Escape" && this._open) {
       e.preventDefault();
-      this._open = false;
+      this.#close();
     }
   }
 
   #moveActive(delta: number): void {
-    if (this.options.length === 0) return;
-    const n = this.options.length;
+    const options = this.#visibleOptions();
+    if (options.length === 0) return;
+    const n = options.length;
     this._activeIndex = (this._activeIndex + delta + n) % n;
   }
 
   #confirmActive(): void {
-    const option = this.options[this._activeIndex];
+    const options = this.#visibleOptions();
+    const option = options[this._activeIndex] ?? options[0];
     if (option) this.#select(option);
+  }
+
+  #onSearchFocus(e: FocusEvent): void {
+    if (this.disabled) return;
+    if (this.#blurTimer) {
+      clearTimeout(this.#blurTimer);
+      this.#blurTimer = null;
+    }
+    if (!this._open) this.#open();
+    if (!this.#restoringSearchFocus) (e.currentTarget as HTMLInputElement).select();
+  }
+
+  #onSearchClick(e: MouseEvent): void {
+    if (!this._open) this.#open();
+    if (this._query === null) (e.currentTarget as HTMLInputElement).select();
+  }
+
+  #onSearchMousedown(e: MouseEvent): void {
+    if (e.button !== 0) e.preventDefault();
+  }
+
+  #onSearchInput(e: InputEvent): void {
+    this._query = (e.currentTarget as HTMLInputElement).value;
+    this._open = true;
+    const options = this.#visibleOptions();
+    this._activeIndex = options.length > 0 ? 0 : -1;
+  }
+
+  #onSearchKeydown(e: KeyboardEvent): void {
+    if (e.isComposing || e.keyCode === 229 || this.#isComposing || this.#compositionJustEnded) {
+      return;
+    }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (!this._open) {
+        this.#open();
+        return;
+      }
+      this.#moveActive(e.key === "ArrowDown" ? 1 : -1);
+    } else if (e.key === "Enter" && this._open) {
+      e.preventDefault();
+      this.#confirmActive();
+    } else if (e.key === "Escape" && this._open) {
+      e.preventDefault();
+      this.#close();
+    }
+  }
+
+  #onSearchBlur(): void {
+    if (this.#blurTimer) clearTimeout(this.#blurTimer);
+    this.#blurTimer = setTimeout(() => {
+      this.#blurTimer = null;
+      if (!this._open) return;
+      if (!this.#listboxPointerDown && !this.#suppressNextBlur) this.#close();
+    });
+  }
+
+  #focusSearchInput(e: MouseEvent): void {
+    if (
+      e.button !== 0 ||
+      this.disabled ||
+      e.composedPath()[0] instanceof HTMLInputElement
+    ) {
+      return;
+    }
+    e.preventDefault();
+    const input = this.renderRoot.querySelector<HTMLInputElement>("input.search-input");
+    if (!this._open) this.#open();
+    input?.focus();
+    input?.select();
+  }
+
+  #onCompositionStart(): void {
+    if (this.#compositionEndTimer) clearTimeout(this.#compositionEndTimer);
+    this.#compositionEndTimer = null;
+    this.#compositionJustEnded = false;
+    this.#isComposing = true;
+  }
+
+  #onCompositionEnd(): void {
+    this.#isComposing = false;
+    this.#compositionJustEnded = true;
+    if (this.#compositionEndTimer) clearTimeout(this.#compositionEndTimer);
+    this.#compositionEndTimer = setTimeout(() => {
+      this.#compositionJustEnded = false;
+      this.#compositionEndTimer = null;
+    });
+  }
+
+  #onListboxMousedown(e: MouseEvent): void {
+    if (e.button !== 0) return;
+    this.#listboxPointerDown = true;
+    this.#suppressNextBlur = true;
+    const input = this.renderRoot.querySelector<HTMLInputElement>("input.search-input");
+    this.#searchSelection = input
+      ? [input.selectionStart, input.selectionEnd]
+      : null;
+    window.addEventListener(
+      "mouseup",
+      () => {
+        this.#listboxPointerDown = false;
+        if (this._open) {
+          const searchInput =
+            this.renderRoot.querySelector<HTMLInputElement>("input.search-input");
+          if (searchInput) {
+            this.#restoringSearchFocus = true;
+            searchInput.focus({ preventScroll: true });
+            this.#restoringSearchFocus = false;
+            const [start, end] = this.#searchSelection ?? [null, null];
+            if (start !== null && end !== null) searchInput.setSelectionRange(start, end);
+          }
+        }
+        this.#searchSelection = null;
+        setTimeout(() => {
+          this.#suppressNextBlur = false;
+        });
+      },
+      { capture: true, once: true },
+    );
+  }
+
+  #onOptionMousedown(e: MouseEvent, option: SelectOption): void {
+    if (e.button !== 0) return;
+    const optionElement = e.currentTarget as HTMLElement;
+    const listbox = optionElement.parentElement;
+    if (listbox) {
+      const scrollbarWidth = listbox.offsetWidth - listbox.clientWidth;
+      const bounds = listbox.getBoundingClientRect();
+      const isRtl = getComputedStyle(listbox).direction === "rtl";
+      const inScrollbarGutter = isRtl
+        ? e.clientX <= bounds.left + scrollbarWidth
+        : e.clientX >= bounds.right - scrollbarWidth;
+      if (scrollbarWidth > 0 && inScrollbarGutter) return;
+    }
+    e.preventDefault();
+    this.#select(option);
+  }
+
+  #optionIconSize(option: SelectOption): number {
+    const size = option.iconSize ?? 16;
+    return Number.isFinite(size) && size > 0 ? size : 16;
+  }
+
+  #renderOptionIcon(option: SelectOption, className = "option-icon") {
+    if (!option.icon) return nothing;
+    return html`
+      <span
+        class=${className}
+        style=${`--form-select-icon-size: ${this.#optionIconSize(option)}px`}
+        aria-hidden="true"
+      >
+        ${option.icon}
+      </span>
+    `;
+  }
+
+  #renderOptionContent(option: SelectOption) {
+    return html`
+      <span class="option-content">
+        ${this.#renderOptionIcon(option)}
+        <span class="option-label">${option.label}</span>
+      </span>
+    `;
   }
 
   private renderListbox() {
     if (!this._open) return nothing;
+    const options = this.#visibleOptions();
     return html`
-      <ul class="options" role="listbox">
-        ${this.options.map(
+      <ul
+        id="form-select-listbox"
+        class="options"
+        role="listbox"
+        @mousedown=${(e: MouseEvent) => this.#onListboxMousedown(e)}
+      >
+        ${options.map(
           (o, i) => html`
             <li
+              id=${`form-select-option-${i}`}
               role="option"
               aria-selected=${o.value === this.value}
               class=${i === this._activeIndex ? "active" : ""}
-              @mousedown=${(e: MouseEvent) => {
-                e.preventDefault();
-                this.#select(o);
-              }}
+              @mousedown=${(e: MouseEvent) => this.#onOptionMousedown(e, o)}
             >
-              ${o.label}
+              ${this.#renderOptionContent(o)}
             </li>
           `,
         )}
+        ${options.length === 0
+          ? html`<li class="no-options" role="presentation"><span role="status">No options found</span></li>`
+          : nothing}
       </ul>
     `;
   }
 
-  override render() {
-    const current = this.options.find((o) => o.value === this.value);
+  private renderSearchTrigger(current: SelectOption | undefined) {
+    const displayValue = this._query ?? current?.label ?? this.value;
+    const showSelectedIcon = this._query === null && Boolean(current?.icon);
+    const activeDescendant =
+      this._open && this._activeIndex >= 0
+        ? `form-select-option-${this._activeIndex}`
+        : nothing;
+    return html`
+      <div
+        class="search-trigger ${this.disabled ? "disabled" : ""} ${showSelectedIcon
+          ? "has-icon"
+          : ""}"
+        @mousedown=${(e: MouseEvent) => this.#focusSearchInput(e)}
+      >
+        ${showSelectedIcon && current
+          ? this.#renderOptionIcon(current, "option-icon selected-icon")
+          : nothing}
+        <input
+          type="text"
+          class="search-input"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded=${this._open}
+          aria-controls="form-select-listbox"
+          aria-activedescendant=${activeDescendant}
+          aria-label=${this.label || "Select an option"}
+          autocomplete="off"
+          ?disabled=${this.disabled}
+          .value=${displayValue}
+          @mousedown=${(e: MouseEvent) => this.#onSearchMousedown(e)}
+          @focus=${(e: FocusEvent) => this.#onSearchFocus(e)}
+          @click=${(e: MouseEvent) => this.#onSearchClick(e)}
+          @input=${(e: InputEvent) => this.#onSearchInput(e)}
+          @compositionstart=${() => this.#onCompositionStart()}
+          @compositionend=${() => this.#onCompositionEnd()}
+          @keydown=${(e: KeyboardEvent) => this.#onSearchKeydown(e)}
+          @blur=${() => this.#onSearchBlur()}
+        />
+        <span class="chevron">${iconChevronRight(14)}</span>
+      </div>
+    `;
+  }
+
+  private renderButtonTrigger(current: SelectOption | undefined) {
     return html`
       <button
         type="button"
@@ -216,9 +608,20 @@ export class FormSelect extends LitElement {
         @click=${() => this.#toggle()}
         @keydown=${(e: KeyboardEvent) => this.#onTriggerKeydown(e)}
       >
-        <span>${current?.label ?? this.value}</span>
+        ${current
+          ? this.#renderOptionContent(current)
+          : html`<span class="option-label">${this.value}</span>`}
         <span class="chevron">${iconChevronRight(14)}</span>
       </button>
+    `;
+  }
+
+  override render() {
+    const current = this.options.find((o) => o.value === this.value);
+    return html`
+      ${this.searchable
+        ? this.renderSearchTrigger(current)
+        : this.renderButtonTrigger(current)}
       ${this.renderListbox()}
     `;
   }
