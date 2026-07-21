@@ -5050,14 +5050,6 @@
         },
         {
           "kind": "js",
-          "name": "MapPoint",
-          "declaration": {
-            "name": "MapPoint",
-            "module": "./map-point.js"
-          }
-        },
-        {
-          "kind": "js",
           "name": "RadioCards",
           "declaration": {
             "name": "RadioCards",
@@ -5457,7 +5449,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A plain circular map marker: a light-to-dark gradient fill with a white\nouter ring, no point/tail (unlike `<map-pin>`) — for markers that don't\nneed to visually \"point\" at their exact coordinate. Purely a visual\nprimitive — it has no `mapbox-gl` (or any mapping library) dependency;\nthe consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.",
+          "description": "A plain circular map marker: a light-to-dark gradient fill with a white\nouter ring, no point/tail (unlike `<map-pin>`) — for markers that don't\nneed to visually \"point\" at their exact coordinate. Purely a visual\nprimitive — it has no `mapbox-gl` (or any mapping library) dependency;\nthe consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.\nIt can also replace the former `<map-point>` dense-layer primitive: use\n`size=\"14\" ring-width=\"3\"`, leave the slot empty, and rasterize one marker\nper color for use as a map `icon-image`.",
           "name": "MapCircle",
           "slots": [
             {
@@ -5686,109 +5678,6 @@
           "declaration": {
             "name": "MapPin",
             "module": "src/map-pin.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/map-point.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A small plain-colored map marker for dense point layers (transit stops,\namenities, hazard points, etc.): a light-to-dark gradient fill with a thin\nwhite ring, no badge/content slot — every instance on a given layer shares\nthe same look, so there's nothing to render per-feature (unlike\n`<map-pin>`/`<map-circle>`, which carry per-marker slotted content).\nPurely a visual primitive — it has no `mapbox-gl` (or any mapping library)\ndependency; typically rasterized once per color and used as a Mapbox\n`icon-image` on a `symbol` layer rather than mounted as individual DOM\nmarkers, so a whole layer's worth of points shares one icon image.",
-          "name": "MapPoint",
-          "members": [
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"#4f46e5\"",
-              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "14",
-              "description": "Diameter, in CSS pixels.",
-              "attribute": "size"
-            },
-            {
-              "kind": "field",
-              "name": "ringWidth",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
-              "attribute": "ring-width"
-            },
-            {
-              "kind": "field",
-              "name": "_gradId",
-              "privacy": "private",
-              "readonly": true,
-              "default": "`map-point-grad-${gradientIdCounter++}`"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"#4f46e5\"",
-              "description": "Fill color; the gradient's light (top) and dark (bottom) stops are derived from this.",
-              "fieldName": "color"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "14",
-              "description": "Diameter, in CSS pixels.",
-              "fieldName": "size"
-            },
-            {
-              "name": "ring-width",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
-              "fieldName": "ringWidth"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "map-point",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "MapPoint",
-          "declaration": {
-            "name": "MapPoint",
-            "module": "src/map-point.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "map-point",
-          "declaration": {
-            "name": "MapPoint",
-            "module": "src/map-point.ts"
           }
         }
       ]

@@ -1,7 +1,12 @@
 # @f-ewald/components
 
-## Unreleased
+## 1.0.0
 
+- **Breaking:** Removed `<map-point>` and the
+  `@f-ewald/components/map-point.js` subpath. Use
+  `<map-circle size="14" ring-width="3">` instead; it provides the same
+  gradient circle and white ring while also supporting badge content and
+  `highlighted` state when needed.
 - Added opt-in autocomplete to `form-select` via the `searchable` attribute:
   typing filters predefined option labels with case-insensitive infix
   matching, while only an explicit option selection can change `value`.
