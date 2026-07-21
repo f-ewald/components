@@ -85,13 +85,20 @@ test.describe("calendar-year", () => {
     const january = page.locator("#calendar-year-demo calendar-month").nth(0);
     const february = page.locator("#calendar-year-demo calendar-month").nth(1);
     const firstDetail = page.locator('#cy-entry-offsite > [slot="detail"]').first();
+    const januaryTitle = january.locator("tbody tr").nth(27).locator(".entry-title-cell.primary");
+    const januaryBody = january.locator("tbody tr").nth(28).locator(".entry-body-cell.primary");
 
+    await januaryTitle.locator(".entry-link").hover();
+    await expect(januaryTitle).toHaveClass(/entry-hovered/);
+    await expect(januaryBody).toHaveClass(/entry-hovered/);
     await firstDetail.evaluate((element) => {
       element.textContent = "Boston";
     });
 
     await expect(january.locator(".entry-body-cell.primary")).toContainText("Boston");
     await expect(february.locator(".entry-body-cell.primary")).toContainText("Boston");
+    await expect(januaryTitle).toHaveClass(/entry-hovered/);
+    await expect(januaryBody).toHaveClass(/entry-hovered/);
 
     const calendar = page.locator("#calendar-year-demo");
     await calendar.evaluate((element) => {

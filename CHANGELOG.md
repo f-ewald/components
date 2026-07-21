@@ -1,5 +1,12 @@
 # @f-ewald/components
 
+## Unreleased
+
+- Fixed `calendar-month` event fills so continuous entries keep one uniform
+  color across weekdays, weekends, and today rows. Hovering or focusing
+  either linked segment now highlights the complete title/body entry, and
+  title, detail, and footer text share the same left edge.
+
 ## 0.9.0
 
 - Added `calendar-entry`, `calendar-month`, and `calendar-year`: a

@@ -116,8 +116,8 @@ export class CalendarMonth extends LitElement {
         transition: box-shadow 120ms ease;
         white-space: nowrap;
       }
-      .entry-bar:has(.entry-link:hover),
-      .entry-bar:has(.entry-link:focus-visible) {
+      .entry-bar.entry-hovered,
+      .entry-bar.entry-focused {
         box-shadow: inset 0 0 0 100vmax var(--ui-hover-overlay, rgb(255 255 255 / 0.32));
       }
       .entry-bar.segment-single {
@@ -134,27 +134,27 @@ export class CalendarMonth extends LitElement {
         border-bottom: 0;
       }
       .entry-bar.neutral {
-        background: color-mix(in srgb, var(--ui-text-muted, #64748b) 15%, transparent);
+        background: color-mix(in srgb, var(--ui-text-muted, #64748b) 15%, var(--ui-surface, #fff));
         color: var(--ui-text-muted, #64748b);
       }
       .entry-bar.info {
-        background: color-mix(in srgb, #0ea5e9 15%, transparent);
+        background: color-mix(in srgb, #0ea5e9 15%, var(--ui-surface, #fff));
         color: #0ea5e9;
       }
       .entry-bar.primary {
-        background: color-mix(in srgb, var(--ui-primary, #4f46e5) 15%, transparent);
+        background: color-mix(in srgb, var(--ui-primary, #4f46e5) 15%, var(--ui-surface, #fff));
         color: var(--ui-primary, #4f46e5);
       }
       .entry-bar.success {
-        background: color-mix(in srgb, var(--ui-success, #16a34a) 15%, transparent);
+        background: color-mix(in srgb, var(--ui-success, #16a34a) 15%, var(--ui-surface, #fff));
         color: var(--ui-success, #16a34a);
       }
       .entry-bar.warning {
-        background: color-mix(in srgb, #d97706 15%, transparent);
+        background: color-mix(in srgb, #d97706 15%, var(--ui-surface, #fff));
         color: #d97706;
       }
       .entry-bar.danger {
-        background: color-mix(in srgb, var(--ui-danger, #dc2626) 15%, transparent);
+        background: color-mix(in srgb, var(--ui-danger, #dc2626) 15%, var(--ui-surface, #fff));
         color: var(--ui-danger, #dc2626);
       }
       .entry-line {
@@ -267,6 +267,11 @@ export class CalendarMonth extends LitElement {
     super.disconnectedCallback();
   }
 
+  /** Restores hover/focus classes from the live DOM after Lit updates or reuses cells. */
+  protected override updated(): void {
+    this._syncEntryInteractions();
+  }
+
   /** Re-renders when declarative `calendar-entry` children are added or removed. */
   private _handleSlotChange(): void {
     this._entriesVersion++;
@@ -287,13 +292,47 @@ export class CalendarMonth extends LitElement {
     return "segment-middle";
   }
 
+  /** Current render key shared by an entry's title and body cells. */
+  private _entryKey(entry: LanedEntry): string {
+    return `${entry.lane}|${entry.start}|${entry.end}|${entry.label}|${entry.href ?? ""}`;
+  }
+
+  /** Toggles one interaction class on every rendered cell belonging to an entry. */
+  private _setEntryInteraction(entryKey: string, className: string, active: boolean): void {
+    for (const cell of this.renderRoot.querySelectorAll<HTMLElement>(".entry-bar")) {
+      if (cell.dataset.entryKey === entryKey) {
+        cell.classList.toggle(className, active);
+      }
+    }
+  }
+
+  /** Reconciles classes against the links actually hovered or focused after a render. */
+  private _syncEntryInteractions(): void {
+    for (const cell of this.renderRoot.querySelectorAll<HTMLElement>(".entry-bar")) {
+      cell.classList.remove("entry-hovered", "entry-focused");
+    }
+    for (const link of this.renderRoot.querySelectorAll<HTMLElement>(".entry-link:hover")) {
+      this._setEntryInteraction(link.dataset.entryKey ?? "", "entry-hovered", true);
+    }
+    const activeElement = this.shadowRoot?.activeElement;
+    if (activeElement instanceof HTMLElement && activeElement.matches(".entry-link")) {
+      this._setEntryInteraction(activeElement.dataset.entryKey ?? "", "entry-focused", true);
+    }
+  }
+
   /** Renders a transparent full-cell link without wrapping the visible text. */
   private _renderEntryLink(entry: LanedEntry, accessibleText: string) {
+    const entryKey = this._entryKey(entry);
     return entry.href
       ? html`<a
           class="entry-link"
           href=${entry.href}
           aria-label=${accessibleText}
+          data-entry-key=${entryKey}
+          @pointerenter=${() => this._setEntryInteraction(entryKey, "entry-hovered", true)}
+          @pointerleave=${() => this._setEntryInteraction(entryKey, "entry-hovered", false)}
+          @focus=${() => this._setEntryInteraction(entryKey, "entry-focused", true)}
+          @blur=${() => this._setEntryInteraction(entryKey, "entry-focused", false)}
         ></a>`
       : nothing;
   }
@@ -353,6 +392,7 @@ export class CalendarMonth extends LitElement {
     return html`
       <td
         class="lane-cell entry-bar entry-body-cell ${entry.color} ${segmentClass}"
+        data-entry-key=${this._entryKey(entry)}
         rowspan=${bodyRows}
         title=${entry.href ? nothing : bodyText}
       >
@@ -397,6 +437,7 @@ export class CalendarMonth extends LitElement {
     return html`
       <td
         class="lane-cell entry-bar entry-title-cell ${entry.color} ${this._segmentClass(entry, date)}"
+        data-entry-key=${this._entryKey(entry)}
         title=${entry.href ? nothing : entry.label}
       >
         ${this._renderEntryLink(entry, entry.label)}

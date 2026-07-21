@@ -137,6 +137,26 @@ test.describe("calendar-month", () => {
     await expect(vacationBody.locator(".entry-detail").nth(1)).toHaveText(
       "Road trip along the California coast with several scenic stops",
     );
+    const eventFills = await Promise.all(
+      [vacationStart, vacationBody].map((cell) =>
+        cell.evaluate((element) => {
+          const canvas = document.createElement("canvas");
+          canvas.width = 1;
+          canvas.height = 1;
+          const context = canvas.getContext("2d")!;
+          const background = getComputedStyle(element).backgroundColor;
+          context.fillStyle = background;
+          context.fillRect(0, 0, 1, 1);
+          return {
+            background,
+            alpha: context.getImageData(0, 0, 1, 1).data[3],
+          };
+        }),
+      ),
+    );
+    expect(eventFills[0].background).toBe(eventFills[1].background);
+    expect(eventFills[0].alpha).toBe(255);
+    expect(eventFills[1].alpha).toBe(255);
     const footer = vacationBody.locator(".entry-footer");
     await expect(footer).toHaveText("Return July 19 at 6 PM");
     const footerOffset = await vacationBody.evaluate((cell) => {
@@ -368,18 +388,115 @@ test.describe("calendar-month", () => {
 
     const idleShadow = await titleCell.evaluate((element) => getComputedStyle(element).boxShadow);
     await titleLink.hover();
-    const hoverShadow = await titleCell.evaluate((element) => getComputedStyle(element).boxShadow);
-    expect(hoverShadow).not.toBe(idleShadow);
+    await expect(titleCell).toHaveClass(/entry-hovered/);
+    await expect(bodyCell).toHaveClass(/entry-hovered/);
+    const hoverShadows = await Promise.all(
+      [titleCell, bodyCell].map((cell) =>
+        cell.evaluate((element) => getComputedStyle(element).boxShadow),
+      ),
+    );
+    expect(hoverShadows[0]).not.toBe(idleShadow);
+    expect(hoverShadows[1]).not.toBe(idleShadow);
     await expect(titleCell.locator(".entry-title")).toHaveCSS("text-decoration-line", "none");
     await expect(bodyCell.locator(".entry-detail")).toHaveCSS("text-decoration-line", "none");
     await expect(bodyCell.locator(".entry-footer")).toHaveCSS("white-space", "nowrap");
     await expect(bodyCell.locator(".entry-footer")).toHaveCSS("text-overflow", "ellipsis");
+    await page.mouse.move(0, 0);
+    await expect(titleCell).not.toHaveClass(/entry-hovered/);
+    await expect(bodyCell).not.toHaveClass(/entry-hovered/);
+    await bodyLink.hover();
+    await expect(titleCell).toHaveClass(/entry-hovered/);
+    await expect(bodyCell).toHaveClass(/entry-hovered/);
     await page.emulateMedia({ forcedColors: "active" });
     await titleLink.focus();
+    await expect(titleCell).toHaveClass(/entry-focused/);
+    await expect(bodyCell).toHaveClass(/entry-focused/);
     await expect(titleLink).toHaveCSS("outline-style", "solid");
     await page.emulateMedia({ forcedColors: "none" });
     await bodyLink.click({ position: { x: 2, y: 2 } });
     await expect(page).toHaveURL(/#conf$/);
     await expect(el.locator(".entry-bar.success").first().locator("a")).toHaveCount(0);
+  });
+
+  test("keeps linked-entry highlights stable across metadata changes and clears stale state", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const calendar = page.locator("#calendar-month-demo");
+    const entry = page.locator("#cm-entry-conference");
+    const titleCell = calendar.locator("tbody tr").nth(14).locator(".entry-bar.warning");
+    const bodyCell = calendar.locator("tbody tr").nth(15).locator(".entry-body-cell.warning");
+
+    await titleCell.locator(".entry-link").hover();
+    await expect(titleCell).toHaveClass(/entry-hovered/);
+    await expect(bodyCell).toHaveClass(/entry-hovered/);
+
+    await entry.evaluate((element) => {
+      (element as HTMLElement & { label: string }).label = "Updated conference";
+    });
+    await expect(titleCell.locator(".entry-title")).toHaveText("Updated conference");
+    await expect(titleCell).toHaveClass(/entry-hovered/);
+    await expect(bodyCell).toHaveClass(/entry-hovered/);
+
+    await entry.evaluate((element) => {
+      (element as HTMLElement & { href?: string }).href = undefined;
+    });
+    await expect(titleCell.locator(".entry-link")).toHaveCount(0);
+    await expect(titleCell).not.toHaveClass(/entry-hovered/);
+    await expect(bodyCell).not.toHaveClass(/entry-hovered/);
+
+    await page.mouse.move(0, 0);
+    await entry.evaluate((element) => {
+      (element as HTMLElement & { href?: string }).href = "#conf";
+    });
+    await expect(titleCell.locator(".entry-link")).toHaveCount(1);
+    await expect(titleCell).not.toHaveClass(/entry-hovered/);
+    await expect(bodyCell).not.toHaveClass(/entry-hovered/);
+
+    await bodyCell.locator(".entry-link").hover();
+    await expect(titleCell).toHaveClass(/entry-hovered/);
+    await expect(bodyCell).toHaveClass(/entry-hovered/);
+    await entry.evaluate((element) => {
+      const calendarEntry = element as HTMLElement & { start: string; end: string };
+      calendarEntry.start = "2027-07-15";
+      calendarEntry.end = "2027-07-20";
+    });
+    await expect(titleCell).toHaveCount(0);
+    await page.mouse.move(0, 0);
+    await entry.evaluate((element) => {
+      const calendarEntry = element as HTMLElement & { start: string; end: string };
+      calendarEntry.start = "2026-07-15";
+      calendarEntry.end = "2026-07-20";
+    });
+    await expect(titleCell).toHaveCount(1);
+    await expect(titleCell).not.toHaveClass(/entry-hovered/);
+    await expect(bodyCell).not.toHaveClass(/entry-hovered/);
+
+    await titleCell.locator(".entry-link").focus();
+    await entry.evaluate((element) => {
+      const inserted = document.createElement("calendar-entry");
+      inserted.setAttribute("start", "2026-07-15");
+      inserted.setAttribute("end", "2026-07-20");
+      inserted.setAttribute("label", "Inserted event");
+      inserted.setAttribute("color", "danger");
+      inserted.setAttribute("href", "#inserted");
+      element.parentElement!.insertBefore(inserted, element);
+    });
+    await expect(calendar.locator(".entry-title", { hasText: "Inserted event" })).toHaveCount(1);
+    const focusState = await calendar.evaluate((element) => {
+      const root = element.shadowRoot!;
+      const activeKey = (root.activeElement as HTMLElement | null)?.dataset.entryKey ?? null;
+      const focusedKeys = Array.from(
+        root.querySelectorAll<HTMLElement>(".entry-bar.entry-focused"),
+        (cell) => cell.dataset.entryKey,
+      );
+      return { activeKey, focusedKeys };
+    });
+    if (focusState.activeKey) {
+      expect(focusState.focusedKeys).toHaveLength(2);
+      expect(focusState.focusedKeys.every((key) => key === focusState.activeKey)).toBe(true);
+    } else {
+      expect(focusState.focusedKeys).toHaveLength(0);
+    }
   });
 });

@@ -15,6 +15,7 @@ import {
 } from "./utils/calendar.js";
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+type ProjectedCalendarEntry = ResolvedCalendarEntry & { projectionKey: string };
 
 /**
  * A full year of `calendar-month` blocks, generated from declarative
@@ -38,6 +39,8 @@ export class CalendarYear extends LitElement {
   @state() private _entriesVersion = 0;
 
   private _entriesObserver?: MutationObserver;
+  private readonly _entryKeys = new WeakMap<CalendarEntry, string>();
+  private _nextEntryKey = 0;
 
   static override styles = [
     tokens,
@@ -87,11 +90,23 @@ export class CalendarYear extends LitElement {
     this._entriesVersion++;
   }
 
+  /** Returns an immutable identity for each original slotted entry. */
+  private _entryKey(element: CalendarEntry): string {
+    let key = this._entryKeys.get(element);
+    if (!key) {
+      key = `entry-${this._nextEntryKey++}`;
+      this._entryKeys.set(element, key);
+    }
+    return key;
+  }
+
   protected override render() {
     const entries = this._entryElements
-      .map(readCalendarEntryElement)
-      .map(resolveEntry)
-      .filter((entry): entry is ResolvedCalendarEntry => entry !== null);
+      .map((element) => {
+        const entry = resolveEntry(readCalendarEntryElement(element));
+        return entry ? { ...entry, projectionKey: this._entryKey(element) } : null;
+      })
+      .filter((entry): entry is ProjectedCalendarEntry => entry !== null);
 
     return html`
       <div class="year">
@@ -106,8 +121,7 @@ export class CalendarYear extends LitElement {
               <calendar-month .year=${this.year} .month=${m}>
                 ${repeat(
                   monthEntries,
-                  (entry) =>
-                    `${entry.start}|${entry.end}|${entry.label}|${(entry.details ?? []).join("|")}|${entry.footer ?? ""}|${entry.color}|${entry.href ?? ""}`,
+                  (entry) => entry.projectionKey,
                   (entry) => html`
                     <calendar-entry
                       start=${entry.start}
