@@ -5,6 +5,9 @@ outer ring, no point/tail (unlike `<map-pin>`) — for markers that don't
 need to visually "point" at their exact coordinate. Purely a visual
 primitive — it has no `mapbox-gl` (or any mapping library) dependency;
 the consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.
+It can also replace the former `<map-point>` dense-layer primitive: use
+`size="14" ring-width="3"`, leave the slot empty, and rasterize one marker
+per color for use as a map `icon-image`.
 
 ## Install
 
@@ -16,6 +19,7 @@ import "@f-ewald/components/map-circle.js";
 
 ```html
 <map-circle color="#6b7280"></map-circle>
+<map-circle color="#0099D8" size="14" ring-width="3"></map-circle>
 <map-circle color="#1a73e8" size="24" ring-width="5" highlighted>1</map-circle>
 ```
 

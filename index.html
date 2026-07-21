@@ -36,7 +36,6 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-button">ui-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
-          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-point">map-point</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#status-pill">status-pill</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
@@ -631,9 +630,10 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
         <section id="map-circle" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-map-circle">
           <h3 class="text-xl font-semibold text-slate-900">map-circle</h3>
           <p class="mt-1 text-sm text-slate-500">
-            Plain circular marker — a light-to-dark gradient fill with a white outer ring, no point/tail. No mapping-library dependency; the consumer positions it (e.g. via a <code>mapboxgl.Marker</code>).
+            Plain circular marker — a light-to-dark gradient fill with a white outer ring, no point/tail. Use it as an individual DOM marker with optional badge content, or rasterize a small instance once for a dense point layer. No mapping-library dependency.
           </p>
           <div class="mt-6 flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 p-6">
+            <map-circle id="circle-point" data-testid="circle-point" color="#0099D8" size="14" ring-width="3"></map-circle>
             <map-circle id="circle-plain" data-testid="circle-plain" color="#6b7280"></map-circle>
             <map-circle id="circle-home" data-testid="circle-home" color="#22c55e"></map-circle>
             <map-circle id="circle-work" data-testid="circle-work" color="#3b82f6"></map-circle>
@@ -662,32 +662,8 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
           <pre class="usage mt-4"><code>import "@f-ewald/components/map-circle.js";
 
 &lt;map-circle color="#6b7280"&gt;&lt;/map-circle&gt;
+&lt;map-circle color="#0099D8" size="14" ring-width="3"&gt;&lt;/map-circle&gt;
 &lt;map-circle color="#1a73e8" size="24" ring-width="5" highlighted&gt;1&lt;/map-circle&gt;</code></pre>
-        </section>
-
-        <section id="map-point" class="scroll-mt-8 py-10" data-testid="section-map-point">
-          <h3 class="text-xl font-semibold text-slate-900">map-point</h3>
-          <p class="mt-1 text-sm text-slate-500">
-            Small plain-colored marker for dense point layers — a light-to-dark gradient fill with a thin white ring, no slotted content. No mapping-library dependency; typically rasterized once per color and used as a Mapbox <code>icon-image</code> rather than mounted as individual DOM markers.
-          </p>
-          <div class="mt-6 flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 p-6">
-            <map-point id="point-plain" data-testid="point-plain" color="#6b7280"></map-point>
-            <map-point id="point-transit" data-testid="point-transit" color="#0099D8"></map-point>
-            <map-point id="point-food" data-testid="point-food" color="#fb8072"></map-point>
-            <map-point id="point-large" data-testid="point-large" color="#4f46e5" size="32"></map-point>
-          </div>
-          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Configurable ring-width and size</p>
-          <div class="mt-2 flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 p-6">
-            <map-point id="point-thin-ring" data-testid="point-thin-ring" color="#3b82f6" ring-width="1.5"></map-point>
-            <map-point id="point-default-ring" data-testid="point-default-ring" color="#3b82f6"></map-point>
-            <map-point id="point-thick-ring" data-testid="point-thick-ring" color="#3b82f6" ring-width="5"></map-point>
-            <map-point id="point-small" data-testid="point-small" color="#3b82f6" size="8" ring-width="1.5"></map-point>
-            <map-point id="point-big" data-testid="point-big" color="#3b82f6" size="28" ring-width="5"></map-point>
-          </div>
-          <pre class="usage mt-4"><code>import "@f-ewald/components/map-point.js";
-
-&lt;map-point color="#0099D8"&gt;&lt;/map-point&gt;
-&lt;map-point color="#fb8072" size="10" ring-width="2"&gt;&lt;/map-point&gt;</code></pre>
         </section>
 
         <section id="stat-meter" class="scroll-mt-8 py-10" data-testid="section-stat-meter">

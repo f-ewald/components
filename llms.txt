@@ -547,6 +547,9 @@ outer ring, no point/tail (unlike `<map-pin>`) — for markers that don't
 need to visually "point" at their exact coordinate. Purely a visual
 primitive — it has no `mapbox-gl` (or any mapping library) dependency;
 the consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.
+It can also replace the former `<map-point>` dense-layer primitive: use
+`size="14" ring-width="3"`, leave the slot empty, and rasterize one marker
+per color for use as a map `icon-image`.
 
 Import: `import "@f-ewald/components/map-circle.js";`
 
@@ -557,6 +560,7 @@ CSS custom properties: `--ui-font`
 Example:
 ```html
 <map-circle color="#6b7280"></map-circle>
+<map-circle color="#0099D8" size="14" ring-width="3"></map-circle>
 <map-circle color="#1a73e8" size="24" ring-width="5" highlighted>1</map-circle>
 ```
 
@@ -577,30 +581,6 @@ Example:
 ```html
 <map-pin color="#1a73e8" size="30">3</map-pin>
 <map-pin color="#22c55e" size="26" highlighted>🏠</map-pin>
-```
-
-## <map-point>
-
-A small plain-colored map marker for dense point layers (transit stops,
-amenities, hazard points, etc.): a light-to-dark gradient fill with a thin
-white ring, no badge/content slot — every instance on a given layer shares
-the same look, so there's nothing to render per-feature (unlike
-`<map-pin>`/`<map-circle>`, which carry per-marker slotted content).
-Purely a visual primitive — it has no `mapbox-gl` (or any mapping library)
-dependency; typically rasterized once per color and used as a Mapbox
-`icon-image` on a `symbol` layer rather than mounted as individual DOM
-markers, so a whole layer's worth of points shares one icon image.
-
-Import: `import "@f-ewald/components/map-point.js";`
-
-Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 14; `ringWidth` (attribute `ring-width`) : number, default 3
-Events: none
-CSS custom properties: none
-
-Example:
-```html
-<map-point color="#0099D8"></map-point>
-<map-point color="#fb8072" size="10" ring-width="2"></map-point>
 ```
 
 ## <percent-bar-chart>
