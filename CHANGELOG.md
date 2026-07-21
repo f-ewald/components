@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added opt-in autocomplete to `form-select` via the `searchable` attribute:
+  typing filters predefined option labels with case-insensitive infix
+  matching, while only an explicit option selection can change `value`.
+  `SelectOption` also accepts an optional pre-rendered `icon` and square
+  `iconSize`, rendered before labels without reserving space for iconless
+  options.
 - Fixed `calendar-month` event fills so continuous entries keep one uniform
   color across weekdays, weekends, and today rows. Hovering or focusing
   either linked segment now highlights the complete title/body entry, and

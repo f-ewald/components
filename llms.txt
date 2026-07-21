@@ -153,7 +153,7 @@ Import: `import "@f-ewald/components/calendar-month.js";`
 
 Properties: `year` (attribute `year`) : number, default —; `month` (attribute `month`) : number, default 1
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-hover-overlay`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-hover-overlay`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -404,21 +404,32 @@ pushes the chevron to the far edge), but the host itself stays
 bar, a status picker) keep shrink-to-fit auto-width unchanged. To make an
 instance full-width, size the host itself: `form-select { width: 100%; }`.
 
+Set `searchable` to replace the button trigger with an editable combobox
+that filters the predefined options by case-insensitive label infix. Typed
+text is only a query: `value` changes exclusively when an actual option is
+selected, and an uncommitted query is discarded when the list closes.
+Each option may also provide a pre-rendered `icon` and square `iconSize`;
+iconless options reserve no leading space.
+
 Import: `import "@f-ewald/components/form-select.js";`
 
-Properties: `options` (JS property only) : SelectOption[], default []; `value` (attribute `value`) : string, default ""; `label` (attribute `label`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
+Properties: `options` (JS property only) : SelectOption[], default []; `value` (attribute `value`) : string, default ""; `label` (attribute `label`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `searchable` (attribute `searchable`) : boolean, default false
 Events: `change`
 CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
-<form-select label="Task state"></form-select>
+<form-select label="Task state" searchable></form-select>
 <script type="module">
+  import { iconArrowPath, iconCheckCircle, iconListBullet } from "@f-ewald/components/icons.js";
+
   const select = document.querySelector("form-select");
   select.options = [
+    { value: "backlog", label: "Backlog", icon: iconListBullet(14), iconSize: 14 },
     { value: "open", label: "Open" },
-    { value: "in_progress", label: "In progress" },
-    { value: "done", label: "Done" },
+    { value: "in_progress", label: "In progress", icon: iconArrowPath(16), iconSize: 16 },
+    { value: "review", label: "Needs review" },
+    { value: "done", label: "Done", icon: iconCheckCircle(16), iconSize: 16 },
   ];
   select.value = "open";
   select.addEventListener("change", (e) => console.log(e.detail.value));
