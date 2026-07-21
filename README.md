@@ -66,7 +66,6 @@ import "@f-ewald/components/roman-numeral.js";
 | `<live-timer>` | [API reference](https://f-ewald.github.io/components/docs/live-timer.html) |
 | `<map-circle>` | [API reference](https://f-ewald.github.io/components/docs/map-circle.html) |
 | `<map-pin>` | [API reference](https://f-ewald.github.io/components/docs/map-pin.html) |
-| `<map-point>` | [API reference](https://f-ewald.github.io/components/docs/map-point.html) |
 | `<percent-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/percent-bar-chart.html) |
 | `<photo-gallery>` | [API reference](https://f-ewald.github.io/components/docs/photo-gallery.html) |
 | `<popover-panel>` | [API reference](https://f-ewald.github.io/components/docs/popover-panel.html) |

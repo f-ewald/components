@@ -11,6 +11,9 @@ let gradientIdCounter = 0;
  * need to visually "point" at their exact coordinate. Purely a visual
  * primitive — it has no `mapbox-gl` (or any mapping library) dependency;
  * the consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.
+ * It can also replace the former `<map-point>` dense-layer primitive: use
+ * `size="14" ring-width="3"`, leave the slot empty, and rasterize one marker
+ * per color for use as a map `icon-image`.
  *
  * @element map-circle
  * @slot - Optional badge content shown centered on the circle — a rank
