@@ -18,7 +18,12 @@ import "@f-ewald/components/calendar-entry.js";
   end="2026-07-18"
   label="Vacation"
   color="success"
-></calendar-entry>
+>
+  <span slot="title">Vacation</span>
+  <span slot="detail">Out of office</span>
+  <span slot="detail">Road trip along the California coast with several scenic stops</span>
+  <span slot="footer">Return July 19 at 6 PM</span>
+</calendar-entry>
 ```
 
 ## Attributes / properties
@@ -27,7 +32,7 @@ import "@f-ewald/components/calendar-entry.js";
 | --- | --- | --- | --- | --- |
 | `start` | `start` | `string` | `""` | Inclusive start date, `"YYYY-MM-DD"`. |
 | `end` | `end` | `string` | `""` | Inclusive end date, `"YYYY-MM-DD"`. Falls back to `start` when unset (single-day entry). |
-| `label` | `label` | `string` | `""` | Text shown on the entry's first visible day within a given month. |
+| `label` | `label` | `string` | `""` | Fallback title used when no `title` slot is provided. |
 | `color` | `color` | `StatusPillColor` | `"neutral"` | Color variant, reusing `status-pill`'s palette. |
 | `href` | `href` | `string | undefined` | `—` | Optional link target; the parent renders the entry as an `<a>` when set. |
 
@@ -39,7 +44,9 @@ _None._
 
 | Slot | Description |
 | --- | --- |
-| `(default)` | Reserved for future use; no slotted content is required today. |
+| `title` | Plain-text title shown instead of the `label` fallback. |
+| `detail` | Repeatable plain-text details rendered inside the shared body spanning all remaining days. |
+| `footer` | Plain-text ending note pinned to the bottom of the shared body. |
 
 ## CSS custom properties
 

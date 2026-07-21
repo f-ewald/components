@@ -1047,7 +1047,8 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
           <p class="mt-1 text-sm text-slate-500">
             One month as a top-to-bottom day list. Weekends are highlighted, today is marked,
             and overlapping declarative <code>calendar-entry</code> children stack into aligned
-            lanes rather than hiding one another.
+            lanes rather than hiding one another. Named title/detail slots fill one line per
+            visible day, with overflow details hidden automatically.
           </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
             <calendar-month id="calendar-month-demo" data-testid="calendar-month-demo" year="2026" month="7">
@@ -1057,7 +1058,12 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
                 end="2026-07-18"
                 label="Vacation"
                 color="success"
-              ></calendar-entry>
+              >
+                <span slot="title">Vacation</span>
+                <span slot="detail">Out of office</span>
+                <span slot="detail">Road trip along the California coast with several scenic stops</span>
+                <span slot="footer">Return July 19 at 6 PM</span>
+              </calendar-entry>
               <calendar-entry
                 id="cm-entry-conference"
                 start="2026-07-15"
@@ -1065,14 +1071,41 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
                 label="Conference"
                 color="warning"
                 href="#conf"
-              ></calendar-entry>
+              >
+                <span slot="detail">Talks and workshops</span>
+                <span slot="footer">Closing keynote · July 20</span>
+              </calendar-entry>
+              <calendar-entry
+                id="cm-entry-dentist"
+                start="2026-07-23"
+                end="2026-07-23"
+                label="Appointment"
+                color="info"
+              >
+                <span slot="title">Dentist</span>
+                <span slot="detail">Bring insurance card</span>
+                <span slot="footer">Appointment complete</span>
+              </calendar-entry>
             </calendar-month>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-month.js";
 
 &lt;calendar-month year="2026" month="7"&gt;
-  &lt;calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"&gt;&lt;/calendar-entry&gt;
-  &lt;calendar-entry start="2026-07-15" end="2026-07-20" label="Conference" color="warning" href="#conf"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"&gt;
+    &lt;span slot="title"&gt;Vacation&lt;/span&gt;
+    &lt;span slot="detail"&gt;Out of office&lt;/span&gt;
+    &lt;span slot="detail"&gt;Road trip along the California coast with several scenic stops&lt;/span&gt;
+    &lt;span slot="footer"&gt;Return July 19 at 6 PM&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-15" end="2026-07-20" label="Conference" color="warning" href="#conf"&gt;
+    &lt;span slot="detail"&gt;Talks and workshops&lt;/span&gt;
+    &lt;span slot="footer"&gt;Closing keynote · July 20&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-23" end="2026-07-23" label="Appointment" color="info"&gt;
+    &lt;span slot="title"&gt;Dentist&lt;/span&gt;
+    &lt;span slot="detail"&gt;Hidden because this entry only spans one day&lt;/span&gt;
+    &lt;span slot="footer"&gt;Also hidden for a one-day entry&lt;/span&gt;
+  &lt;/calendar-entry&gt;
 &lt;/calendar-month&gt;</code></pre>
         </section>
 
@@ -1100,7 +1133,12 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
                 label="Offsite"
                 color="primary"
                 href="#offsite"
-              ></calendar-entry>
+              >
+                <span slot="title">Offsite</span>
+                <span slot="detail">New York</span>
+                <span slot="detail">Team workshops</span>
+                <span slot="footer">Closing dinner Friday</span>
+              </calendar-entry>
               <calendar-entry
                 id="cy-entry-planning"
                 start="2026-02-01"
@@ -1108,6 +1146,19 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
                 label="Q1 Planning"
                 color="info"
               ></calendar-entry>
+              <calendar-entry
+                id="cy-entry-launch"
+                start="2026-03-05"
+                end="2026-03-18"
+                label="Product launch"
+                color="success"
+                href="#launch"
+              >
+                <span slot="title">Product launch</span>
+                <span slot="detail">Coordinate the release across engineering, design, support, and marketing.</span>
+                <span slot="detail">Monitor adoption and production health throughout the rollout.</span>
+                <span slot="footer">Public launch · March 18 at 9 AM</span>
+              </calendar-entry>
               <calendar-entry
                 id="cy-entry-vacation"
                 start="2026-07-10"
@@ -1135,7 +1186,16 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-year.js";
 
 &lt;calendar-year year="2026"&gt;
-  &lt;calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite"&gt;
+    &lt;span slot="detail"&gt;New York&lt;/span&gt;
+    &lt;span slot="detail"&gt;Team workshops&lt;/span&gt;
+    &lt;span slot="footer"&gt;Closing dinner Friday&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-03-05" end="2026-03-18" label="Product launch" color="success" href="#launch"&gt;
+    &lt;span slot="detail"&gt;Coordinate the release across engineering, design, support, and marketing.&lt;/span&gt;
+    &lt;span slot="detail"&gt;Monitor adoption and production health throughout the rollout.&lt;/span&gt;
+    &lt;span slot="footer"&gt;Public launch · March 18 at 9 AM&lt;/span&gt;
+  &lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"&gt;&lt;/calendar-entry&gt;
 &lt;/calendar-year&gt;</code></pre>
         </section>

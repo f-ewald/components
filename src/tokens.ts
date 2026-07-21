@@ -20,6 +20,7 @@ export const tokenValues: Record<string, string> = {
   "--ui-border": "#e2e8f0", // slate-200
   "--ui-surface": "#ffffff", // white
   "--ui-surface-muted": "#f8fafc", // slate-50
+  "--ui-hover-overlay": "rgb(255 255 255 / 0.32)",
   "--ui-overlay": "rgb(15 23 42 / 0.45)", // slate-900 / 45%
 
   // Shape / depth
@@ -36,6 +37,7 @@ export const tokenValues: Record<string, string> = {
     'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
   "--ui-font-size": "0.875rem",
   "--ui-font-size-sm": "0.75rem",
+  "--ui-font-size-xs": "0.6875rem",
 };
 
 /**
@@ -57,6 +59,7 @@ export const darkTokenValues: Record<string, string> = {
   "--ui-border": "#334155", // slate-700
   "--ui-surface": "#0f172a", // slate-900
   "--ui-surface-muted": "#1e293b", // slate-800
+  "--ui-hover-overlay": "rgb(255 255 255 / 0.12)",
   "--ui-overlay": "rgb(2 6 23 / 0.6)", // slate-950 / 60%
   "--ui-focus-ring": "0 0 0 3px rgb(99 102 241 / 0.45)",
 };

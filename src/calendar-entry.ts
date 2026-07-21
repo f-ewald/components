@@ -9,7 +9,9 @@ import { tokens } from "./tokens.js";
  * nothing itself.
  *
  * @element calendar-entry
- * @slot - Reserved for future rich content; unused today.
+ * @slot title - Plain-text title shown instead of the `label` fallback.
+ * @slot detail - Repeatable plain-text details rendered inside the shared body spanning all remaining days.
+ * @slot footer - Plain-text ending note pinned to the bottom of the shared body.
  */
 @customElement("calendar-entry")
 export class CalendarEntry extends LitElement {
@@ -19,7 +21,7 @@ export class CalendarEntry extends LitElement {
   /** Inclusive end date, `"YYYY-MM-DD"`. Falls back to `start` when unset (single-day entry). */
   @property({ reflect: true }) end = "";
 
-  /** Text shown on the entry's first visible day within a given month. */
+  /** Fallback title used when no `title` slot is provided. */
   @property({ reflect: true }) label = "";
 
   /** Color variant, reusing `status-pill`'s palette. */
@@ -37,9 +39,9 @@ export class CalendarEntry extends LitElement {
     `,
   ];
 
-  /** Keeps the metadata host hidden while retaining any slotted content. */
+  /** Keeps the metadata host hidden while exposing named text slots to the parent calendar. */
   protected override render() {
-    return html`<slot></slot>`;
+    return html`<slot name="title"></slot><slot name="detail"></slot><slot name="footer"></slot>`;
   }
 }
 

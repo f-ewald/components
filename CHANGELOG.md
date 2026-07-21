@@ -1,15 +1,17 @@
 # @f-ewald/components
 
-## Unreleased
+## 0.9.0
 
 - Added `calendar-entry`, `calendar-month`, and `calendar-year`: a
   read-only calendar built from three composable pieces. `calendar-month`
   renders one month as a top-to-bottom day list, with weekends and today
   highlighted; `calendar-year` composes twelve of them from declarative
-  `calendar-entry` children (`start`/`end`/`label`/`color`/`href`),
-  stacking overlapping entries into aligned lanes — like Google
-  Calendar/Outlook multi-day events — and clipping entries cleanly across
-  month and year boundaries.
+  `calendar-entry` children (`start`/`end`/`label`/`color`/`href`) with
+  optional plain-text `title`, repeatable `detail`, and ending `footer`
+  slots. Multi-day entries use continuous lane-spanning bodies with
+  multiline clamping, footer priority, full-box links, and subtle linked
+  hover/focus highlights; overlapping entries stack into aligned lanes and
+  clip cleanly across month and year boundaries.
 - Added `frame-box`: a titled frame around a slot — a gray border with a
   small uppercase, muted label overlapping the top edge (fieldset/legend
   style). Generic; built for slowmo to fence off dev-only "Debug" chrome

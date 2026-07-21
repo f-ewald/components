@@ -22,6 +22,9 @@ test.describe("calendar-entry", () => {
         color: calendarEntry.color,
         href: calendarEntry.href,
         display: getComputedStyle(calendarEntry).display,
+        title: calendarEntry.querySelector('[slot="title"]')?.textContent,
+        details: Array.from(calendarEntry.querySelectorAll('[slot="detail"]'), (detail) => detail.textContent),
+        footer: calendarEntry.querySelector('[slot="footer"]')?.textContent,
       };
     });
 
@@ -31,6 +34,12 @@ test.describe("calendar-entry", () => {
     expect(metadata.color).toBe("success");
     expect(metadata.href).toBeUndefined();
     expect(metadata.display).toBe("none");
+    expect(metadata.title).toBe("Vacation");
+    expect(metadata.details).toEqual([
+      "Out of office",
+      "Road trip along the California coast with several scenic stops",
+    ]);
+    expect(metadata.footer).toBe("Return July 19 at 6 PM");
 
     await expect(page.locator("#calendar-month-demo")).toContainText("Vacation");
   });

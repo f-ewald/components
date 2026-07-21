@@ -16,7 +16,16 @@ import "@f-ewald/components/calendar-year.js";
 
 ```html
 <calendar-year year="2026">
-  <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite"></calendar-entry>
+  <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite">
+    <span slot="detail">New York</span>
+    <span slot="detail">Team workshops</span>
+    <span slot="footer">Closing dinner Friday</span>
+  </calendar-entry>
+  <calendar-entry start="2026-03-05" end="2026-03-18" label="Product launch" color="success" href="#launch">
+    <span slot="detail">Coordinate the release across engineering, design, support, and marketing.</span>
+    <span slot="detail">Monitor adoption and production health throughout the rollout.</span>
+    <span slot="footer">Public launch · March 18 at 9 AM</span>
+  </calendar-entry>
   <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
 </calendar-year>
 ```
