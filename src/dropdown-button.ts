@@ -43,9 +43,20 @@ export class DropdownButton extends LitElement {
         display: flex;
         align-items: center;
         gap: 0.25rem;
-        font: inherit;
+        height: 2rem;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size-sm, 0.75rem);
-        font-weight: 500;
+        font-weight: var(--ui-font-weight-medium, 500);
+        line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-on-accent, #ffffff);
         background: var(--ui-primary, #4f46e5);
         border: 1px solid transparent;

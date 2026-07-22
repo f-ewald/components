@@ -57,8 +57,8 @@ test.describe("tile-grid", () => {
     await expect(icons.first()).toHaveAttribute("aria-hidden", "true");
     const icon = icons.first().locator("svg");
     await expect(icon).toHaveAttribute("aria-hidden", "true");
-    await expect(icon).toHaveAttribute("width", "16");
-    await expect(icon).toHaveAttribute("height", "16");
+    await expect(icon).toHaveAttribute("width", "14");
+    await expect(icon).toHaveAttribute("height", "14");
     await expect(icon).toHaveAttribute("stroke", "currentColor");
     await expect(icon.locator("path")).toHaveAttribute(
       "d",

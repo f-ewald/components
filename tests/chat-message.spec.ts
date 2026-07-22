@@ -20,4 +20,20 @@ test.describe("chat-message", () => {
     await expect(toggle).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator("#chat-toggle-log")).toHaveText("msg-tool collapsed: false");
   });
+
+  test("uses semibold author labels, normal body leading, and an 8px bubble radius", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const user = page.locator("#msg-user");
+    await expect(user.locator(".author")).toHaveCSS("font-weight", "600");
+    const bubble = user.locator(".body-card");
+    await expect(bubble).toHaveCSS("line-height", "21px");
+    await expect(bubble).toHaveCSS("border-radius", "8px");
+    await expect(bubble).toHaveCSS("padding", "12px");
+
+    const toggle = page.locator("#msg-tool button.header");
+    await expect(toggle).toHaveCSS("min-height", "32px");
+    await expect(toggle.locator("svg")).toHaveAttribute("width", "14");
+  });
 });

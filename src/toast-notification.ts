@@ -59,7 +59,7 @@ export class ToastNotification extends LitElement {
         align-items: flex-start;
         gap: 0.5rem;
         border-radius: var(--ui-radius, 0.5rem);
-        padding: 0.5rem 0.75rem;
+        padding: 0.75rem;
         box-shadow: var(
           --ui-shadow-lg,
           0 20px 25px -5px rgb(0 0 0 / 0.1),
@@ -76,7 +76,7 @@ export class ToastNotification extends LitElement {
           "Noto Color Emoji"
         );
         font-size: var(--ui-font-size, 0.875rem);
-        line-height: 1.4;
+        line-height: var(--ui-line-height-normal, 1.5);
         color: var(--ui-on-accent, #ffffff);
         background: var(--ui-text, #0f172a);
       }
@@ -95,14 +95,19 @@ export class ToastNotification extends LitElement {
       }
       .close {
         flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
         background: none;
         border: none;
-        padding: 0.25rem;
+        padding: 0;
         margin: -0.25rem -0.25rem -0.25rem 0;
         color: inherit;
         opacity: 0.8;
         cursor: pointer;
-        line-height: 0;
+        line-height: var(--ui-line-height-glyph, 1);
         border-radius: var(--ui-radius-sm, 0.25rem);
       }
       .close:hover {
@@ -187,7 +192,7 @@ export class ToastNotification extends LitElement {
           >
             <span class="message">${t.message}</span>
             <button class="close" aria-label="Dismiss notification" @click=${() => this.dismiss(t.id)}>
-              <span aria-hidden="true">${iconX(14)}</span>
+              <span aria-hidden="true">${iconX(18)}</span>
             </button>
           </div>
         `,

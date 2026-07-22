@@ -44,4 +44,19 @@ test.describe("radio-cards", () => {
     expect(disabledColors.label).toBe(disabledColors.card);
     expect(disabledColors.description).toBe(disabledColors.card);
   });
+
+  test("uses tokenized selectable-card metrics and 1rem radio inputs", async ({ page }) => {
+    await page.goto("/");
+    const cards = page.locator("#radio-cards-demo");
+    const card = cards.locator(".card").first();
+    await expect(card).toHaveCSS("padding", "8px 12px");
+    await expect(card).toHaveCSS("border-radius", "4px");
+    await expect(card).toHaveCSS("gap", "8px");
+    await expect(card.locator(".card-label")).toHaveCSS("font-weight", "600");
+    await expect(card.locator(".card-description")).toHaveCSS("font-weight", "400");
+
+    const input = card.locator("input");
+    await expect(input).toHaveCSS("width", "16px");
+    await expect(input).toHaveCSS("height", "16px");
+  });
 });

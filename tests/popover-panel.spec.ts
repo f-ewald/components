@@ -110,4 +110,25 @@ test.describe("popover-panel", () => {
     expect(openAfterReconnect).toBe(false);
     await expect(popover).not.toBeVisible();
   });
+
+  test("uses 20rem anchored / 25rem centered widths and a 32px close control", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.locator("#popover-open").click();
+    const anchored = page.locator("#popover-demo .panel");
+    await expect(anchored).toHaveCSS("width", "320px");
+    await expect(anchored).toHaveCSS("border-radius", "8px");
+    const title = page.locator("#popover-demo .panel-title");
+    await expect(title).toHaveCSS("font-weight", "600");
+    await expect(title).toHaveCSS("font-size", "16px");
+    await expect(title).toHaveCSS("line-height", "20px");
+    await expect(page.locator("#popover-demo .panel-header")).toHaveCSS("padding", "12px");
+    const close = page.locator("#popover-demo .close-btn");
+    await expect(close).toHaveCSS("width", "32px");
+    await expect(close).toHaveCSS("height", "32px");
+
+    await page.locator("#popover-centered-open").click();
+    await expect(page.locator("#popover-centered-demo .panel")).toHaveCSS("width", "400px");
+  });
 });

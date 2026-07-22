@@ -60,6 +60,7 @@ _None._
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-weight-semibold` |
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |

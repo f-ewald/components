@@ -129,4 +129,31 @@ test.describe("confirm-dialog", () => {
     await expect(panel.getByRole("dialog")).not.toBeVisible();
     await expect(confirm.getByRole("dialog")).toBeVisible();
   });
+
+  test("applies dialog measurement contract: 25rem width, tokenized body leading, and role-based padding", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.locator("#confirm-open").click();
+    const dialog = page.locator("#confirm-demo .dialog");
+    await expect(dialog).toHaveCSS("border-radius", "8px");
+    await expect(dialog).toHaveCSS("max-width", "400px");
+    await expect(dialog).toHaveCSS("padding", "16px");
+
+    const body = page.locator("#confirm-demo .dialog-text");
+    await expect(body).toHaveCSS("line-height", "21px");
+    await expect(page.locator("#confirm-demo .btn-danger")).toHaveCSS(
+      "font-weight",
+      "500",
+    );
+    await expect(page.locator("#confirm-demo .btn-danger")).toHaveCSS("height", "32px");
+    await expect(page.locator("#confirm-demo .btn-danger")).toHaveCSS("line-height", "15px");
+  });
+
+  test("shrinks dialog body padding at the shared mobile breakpoint", async ({ page }) => {
+    await page.setViewportSize({ width: 640, height: 800 });
+    await page.goto("/");
+    await page.locator("#confirm-open").click();
+    await expect(page.locator("#confirm-demo .dialog")).toHaveCSS("padding", "12px");
+  });
 });

@@ -55,6 +55,9 @@ import "@f-ewald/components/confirm-dialog.js";
 | `--ui-font` |
 | `--ui-font-size` |
 | `--ui-font-size-sm` |
+| `--ui-font-weight-medium` |
+| `--ui-line-height-normal` |
+| `--ui-line-height-tight` |
 | `--ui-on-accent` |
 | `--ui-overlay` |
 | `--ui-primary` |

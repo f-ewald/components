@@ -48,4 +48,15 @@ test.describe("ui-button", () => {
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator("#button-busy .spin")).toHaveCSS("animation-name", "none");
   });
+
+  test("uses tokenized standard button control metrics", async ({ page }) => {
+    await page.goto("/");
+    const btn = page.locator("#button-primary button.btn");
+    await expect(btn).toHaveCSS("font-size", "12px");
+    await expect(btn).toHaveCSS("font-weight", "500");
+    await expect(btn).toHaveCSS("padding", "8px 16px");
+    await expect(btn).toHaveCSS("border-radius", "4px");
+    await expect(btn).toHaveCSS("height", "32px");
+    await expect(btn).toHaveCSS("line-height", "15px");
+  });
 });

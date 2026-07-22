@@ -67,6 +67,7 @@ import "@f-ewald/components/photo-gallery.js";
 | `--ui-font` |
 | `--ui-font-size` |
 | `--ui-font-size-sm` |
+| `--ui-line-height-tight` |
 | `--ui-on-accent` |
 | `--ui-overlay` |
 | `--ui-primary` |

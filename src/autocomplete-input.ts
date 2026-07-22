@@ -56,12 +56,14 @@ export class AutocompleteInput extends LitElement {
           "Noto Color Emoji"
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
+        line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
-        padding: 0.5rem;
+        padding: 0.5rem 0.75rem;
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         width: 100%;
+        height: 2rem;
         box-sizing: border-box;
       }
       input:disabled {

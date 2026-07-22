@@ -10,6 +10,7 @@ test.describe("user-avatar", () => {
     const initialAvatar = page.locator("#avatar-initial");
     await expect(initialAvatar.locator("img")).toHaveCount(0);
     await expect(initialAvatar).toContainText("F");
+    await expect(initialAvatar.locator(".avatar")).toHaveCSS("font-weight", "600");
 
     const fallbackAvatar = page.locator("#avatar-fallback");
     await expect(fallbackAvatar.locator("img")).toHaveCount(0);

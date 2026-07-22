@@ -1,5 +1,14 @@
 # @f-ewald/components
 
+## Unreleased
+
+- Standardized component measurements across a strict 4px spacing grid,
+  11/12/14/16px typography tiers, tokenized weights/leading/tracking, 32px
+  controls, 14px/18px icons, 4px/8px radii, and shared panel dimensions.
+- Aligned controls, overlays, content surfaces, charts, galleries, markers,
+  and selection indicators to the new measurement contract, with explicit
+  domain exceptions and deterministic design checks.
+
 ## 1.0.3
 
 - Lightened the bottom gradient stop of `stat-meter` fills without changing

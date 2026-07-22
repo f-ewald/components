@@ -28,4 +28,15 @@ test.describe("reveal-button", () => {
     await button.click({ force: true });
     await expect(revealButton.locator("div")).toHaveClass(/hidden/);
   });
+
+  test("uses tokenized standard button control metrics", async ({ page }) => {
+    await page.goto("/");
+    const button = page.locator("#reveal-button-demo button");
+    await expect(button).toHaveCSS("font-size", "12px");
+    await expect(button).toHaveCSS("font-weight", "500");
+    await expect(button).toHaveCSS("padding", "8px 16px");
+    await expect(button).toHaveCSS("border-radius", "4px");
+    await expect(button).toHaveCSS("height", "32px");
+    await expect(button).toHaveCSS("line-height", "15px");
+  });
 });

@@ -172,4 +172,13 @@ test.describe("address-autocomplete", () => {
     await input.press("Enter");
     await expect(input).toHaveValue("1600 Pennsylvania Ave NW, Washington, DC");
   });
+
+  test("input uses the tokenized text-field padding", async ({ page }) => {
+    await page.goto("/");
+    const input = page.locator("#address-demo input");
+    await expect(input).toHaveCSS("padding", "8px 12px");
+    await expect(input).toHaveCSS("border-radius", "4px");
+    await expect(input).toHaveCSS("height", "32px");
+    await expect(input).toHaveCSS("line-height", "15px");
+  });
 });

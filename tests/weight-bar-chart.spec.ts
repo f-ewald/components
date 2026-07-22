@@ -22,6 +22,9 @@ test.describe("weight-bar-chart", () => {
     await expect(labels.nth(0)).toHaveText("Schools");
     await expect(labels.nth(1)).toHaveText("Commute");
     await expect(labels.nth(2)).toHaveText("Price");
+
+    // Horizontal progress tracks use fully rounded ends.
+    await expect(chart.locator(".track").first()).toHaveCSS("border-top-left-radius", "9999px");
   });
 
   test("keeps its summary legible and removes width transitions for reduced motion", async ({

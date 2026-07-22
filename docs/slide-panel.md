@@ -48,7 +48,9 @@ import "@f-ewald/components/slide-panel.js";
 | `--ui-border` |
 | `--ui-focus-ring` |
 | `--ui-font` |
-| `--ui-font-size` |
+| `--ui-font-size-lg` |
+| `--ui-font-weight-semibold` |
+| `--ui-line-height-tight` |
 | `--ui-radius` |
 | `--ui-radius-sm` |
 | `--ui-shadow-lg` |

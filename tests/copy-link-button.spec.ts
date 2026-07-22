@@ -24,4 +24,15 @@ test.describe("copy-link-button", () => {
     });
     await expect(button).toBeDisabled();
   });
+
+  test("renders a 32px icon-only target with an 18px standalone icon", async ({ page }) => {
+    await page.goto("/");
+    const button = page.locator("#copy-demo button");
+    await expect(button).toHaveCSS("width", "32px");
+    await expect(button).toHaveCSS("height", "32px");
+    await expect(button).toHaveCSS("padding", "0px");
+    const iconBounds = await page.locator("#copy-demo svg").boundingBox();
+    expect(iconBounds?.width).toBe(18);
+    expect(iconBounds?.height).toBe(18);
+  });
 });

@@ -24,7 +24,7 @@ export class FrameBox extends LitElement {
         min-width: 0;
         margin: 0;
         border: 1px solid var(--ui-border, #e2e8f0);
-        border-radius: var(--ui-radius-sm, 0.25rem);
+        border-radius: var(--ui-radius, 0.5rem);
         padding: 0.75rem;
       }
       .label {
@@ -41,9 +41,9 @@ export class FrameBox extends LitElement {
           "Noto Color Emoji"
         );
         font-size: var(--ui-font-size-xs, 0.6875rem);
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: var(--ui-tracking-wide, 0.04em);
         color: var(--ui-text-muted, #64748b);
       }
     `,
