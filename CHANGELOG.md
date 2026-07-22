@@ -1,6 +1,6 @@
 # @f-ewald/components
 
-## Unreleased
+## 1.1.0
 
 - Standardized component measurements across a strict 4px spacing grid,
   11/12/14/16px typography tiers, tokenized weights/leading/tracking, 32px
