@@ -5,6 +5,7 @@ demo-dist/
 pages-dist/
 test-results/
 playwright-report/
+visual-tests/
 
 # only generated for size check
 bundled.js
