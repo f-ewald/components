@@ -36,7 +36,7 @@ jobs:
         run: npm run test:visual:update
 
       - name: Upload screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: visual-baselines-linux-amd64
           path: visual-tests/__screenshots__/
