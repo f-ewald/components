@@ -60,6 +60,8 @@ test.describe("dropdown-button", () => {
     await expect(trigger).toHaveCSS("line-height", "15px");
 
     await trigger.click();
-    await expect(el.locator("li[role='menuitem']").first()).toHaveCSS("padding", "8px 12px");
+    const firstItem = el.locator("li[role='menuitem']").first();
+    await expect(firstItem).toHaveCSS("padding", "8px 12px");
+    await expect(firstItem).toHaveCSS("font-size", "12px");
   });
 });
