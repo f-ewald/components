@@ -59,8 +59,10 @@ import "@f-ewald/components/popover-panel.js";
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size` |
+| `--ui-overlay` |
 | `--ui-radius` |
 | `--ui-radius-sm` |
 | `--ui-shadow-lg` |

@@ -35,6 +35,7 @@ import "@f-ewald/components/address-autocomplete.js";
 | `value` | `value` | `string` | `""` | Current input value; also the form-associated value submitted with the form. |
 | `placeholder` | `placeholder` | `string` | `""` | Placeholder text shown when the input is empty. |
 | `required` | `required` | `boolean` | `false` | Marks the input as required for native form validation. |
+| `disabled` | `disabled` | `boolean` | `false` | Disables the input and closes its suggestion popup. |
 | `types` | `types` | `string` | `"address"` | Mapbox `types` param, e.g. "address" or "address,poi". |
 | `endpoint` | `endpoint` | `string` | `"https://api.mapbox.com/search/geocode/v6/forward"` | Geocoding endpoint URL. Defaults to the Mapbox Geocoding v6 forward URL. |
 | `accessToken` | `access-token` | `string` | `""` | Mapbox access token. Required for requests to succeed. |
@@ -60,9 +61,13 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-shadow` |
 | `--ui-surface` |
 | `--ui-surface-muted` |
+| `--ui-text` |
+| `--ui-text-muted` |

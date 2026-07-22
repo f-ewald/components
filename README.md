@@ -63,6 +63,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<gallery-item>` | [API reference](https://f-ewald.github.io/components/docs/gallery-item.html) |
 | `<gallery-item-variant>` | [API reference](https://f-ewald.github.io/components/docs/gallery-item-variant.html) |
 | `<icon-button>` | [API reference](https://f-ewald.github.io/components/docs/icon-button.html) |
+| `<kbd-hint>` | [API reference](https://f-ewald.github.io/components/docs/kbd-hint.html) |
 | `<live-timer>` | [API reference](https://f-ewald.github.io/components/docs/live-timer.html) |
 | `<map-circle>` | [API reference](https://f-ewald.github.io/components/docs/map-circle.html) |
 | `<map-pin>` | [API reference](https://f-ewald.github.io/components/docs/map-pin.html) |
@@ -187,6 +188,7 @@ requests.
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start the Vite playground with HMR. |
+| `npm run typecheck` | Check TypeScript without writing build output. |
 | `npm run build` | Compile `src/` with `tsc` into `dist/`, and generate `dist/tokens.css`. |
 | `npm run build:demo` | Build the static playground into `demo-dist/`. |
 | `npm run build:site` | Build the static documentation and nested playground into `pages-dist/`. |
@@ -196,6 +198,8 @@ requests.
 | `npm run docs` | Regenerate the manifest, `docs/*.md`, and `llms.txt`. |
 | `npm run mcp` | Run the MCP server (`dist/mcp-server.js`) directly, for manual testing. |
 | `npm run test` | Run the Playwright suite against the playground. |
+| `npm run test:design` | Check catalog ordering, token fallbacks, and source design contracts. |
+| `npm run test:visual` | Compare light/dark component screenshots. |
 | `npm run test:site` | Run the Playwright smoke suite against `pages-dist/`. |
 
 ## Contributing
@@ -210,6 +214,8 @@ requests.
   generated docs and `llms.txt` stay in sync.
 - `npm run build:site` only reads those checked-in documentation inputs and
   writes ignored `pages-dist/`; it never updates tracked generated files.
+- Component styling and interaction changes follow
+  [`docs/design-language.md`](./docs/design-language.md).
 
 ## Publishing
 

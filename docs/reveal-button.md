@@ -21,6 +21,7 @@ import "@f-ewald/components/reveal-button.js";
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `label` | `label` | `string` | `"Reveal hidden content"` | Label shown on the button before it's clicked. |
+| `disabled` | `disabled` | `boolean` | `false` | Disables revealing the slotted content. |
 
 ## Events
 
@@ -36,8 +37,10 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size` |
+| `--ui-on-accent` |
 | `--ui-primary` |
 | `--ui-primary-hover` |
 | `--ui-radius-sm` |

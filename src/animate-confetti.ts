@@ -1,5 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { tokens } from "./tokens.js";
 
 interface Particle {
   color: string;
@@ -44,6 +45,8 @@ export class AnimateConfetti extends LitElement {
   ];
   private waveAngle: number = 0.0;
   private animationTimer?: number;
+  private stopTimer?: number;
+  private cleanupTimer?: number;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -53,19 +56,22 @@ export class AnimateConfetti extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener("resize", this._handleResize);
-    this.stopConfetti();
+    this._clearTimersAndParticles();
   }
 
-  static override styles = css`
-    #confetti-canvas {
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 999999;
-      pointer-events: none;
-    }
-  `;
+  static override styles = [
+    tokens,
+    css`
+      #confetti-canvas {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999999;
+        pointer-events: none;
+      }
+    `,
+  ];
 
   /**
    * @returns The canvas element
@@ -87,16 +93,21 @@ export class AnimateConfetti extends LitElement {
    * Start confetti once shadow dom has been rendered for the first time.
    */
   protected override firstUpdated(): void {
+    this._handleResize();
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     this.startConfetti();
-    setTimeout(() => {
+    this.stopTimer = window.setTimeout(() => {
+      this.stopTimer = undefined;
       this.stopConfetti();
     }, this.duration);
   }
 
   override render() {
-    return html`<canvas id="confetti-canvas"></canvas>`;
+    return html`<canvas id="confetti-canvas" aria-hidden="true"></canvas>`;
   }
 
+  /** Creates particles and starts the animation frame loop. */
   private startConfetti() {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -127,14 +138,33 @@ export class AnimateConfetti extends LitElement {
    */
   private stopConfetti() {
     this.streamingConfetti = false;
-    setTimeout(this._cleanup, 5000);
+    this.cleanupTimer = window.setTimeout(this._cleanup, 5000);
   }
 
-  /**
-   * Removes any associated particle data from internal storage to regain memory.
-   */
-  private _cleanup(): void {
+  /** Removes particle data and stops the animation frame loop. */
+  private readonly _cleanup = (): void => {
     this.particles = [];
+    if (this.animationTimer !== undefined) {
+      window.cancelAnimationFrame(this.animationTimer);
+      this.animationTimer = undefined;
+    }
+    const canvas = this.shadowRoot?.getElementById("confetti-canvas") as HTMLCanvasElement | null;
+    canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
+    this.cleanupTimer = undefined;
+  };
+
+  /** Cancels all pending work when the component leaves the document. */
+  private _clearTimersAndParticles(): void {
+    if (this.stopTimer !== undefined) {
+      window.clearTimeout(this.stopTimer);
+      this.stopTimer = undefined;
+    }
+    if (this.cleanupTimer !== undefined) {
+      window.clearTimeout(this.cleanupTimer);
+      this.cleanupTimer = undefined;
+    }
+    this.streamingConfetti = false;
+    this._cleanup();
   }
 
   private updateParticles() {

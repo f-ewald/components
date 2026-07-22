@@ -9,6 +9,12 @@ Optional `itemHref` makes whole tiles clickable (navigating via
 `location.hash`), without hijacking clicks on nested interactive elements
 (links/buttons) a tile's rendered content might contain.
 
+Optional `fileIcon` prefixes each tile with a decorative Heroicons
+"document" glyph, for grids whose items represent files — the icon never
+carries its own accessible name since the rendered tile content (e.g. a
+filename) already identifies the item. Off by default, so it consumes no
+layout space or markup for grids of non-file items.
+
 ## Install
 
 ```js
@@ -18,7 +24,7 @@ import "@f-ewald/components/tile-grid.js";
 ## Usage
 
 ```html
-<tile-grid></tile-grid>
+<tile-grid file-icon></tile-grid>
 <script type="module">
   const grid = document.querySelector("tile-grid");
   grid.items = [
@@ -37,6 +43,7 @@ import "@f-ewald/components/tile-grid.js";
 | `itemKey` | _(JS property only)_ | `(item: unknown, index: number) => string | number` | `—` | Stable identity for `items[i]`, used as the repeat-directive key. Defaults to the item's index. |
 | `renderTile` | _(JS property only)_ | `(item: unknown) => unknown` | `—` | Produces a tile's rendered content for `item`. Default: stringify. |
 | `itemHref` | _(JS property only)_ | `((item: unknown) => string | null) | null` | `null` | When set, clicking a tile (outside any nested link/button) navigates to this hash. |
+| `fileIcon` | `file-icon` | `boolean` | `false` | Prefixes each tile with a decorative "document" icon, for grids of file-like items. Off by default. |
 
 ## Events
 
@@ -51,8 +58,10 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-radius` |
 | `--ui-surface-muted` |
 | `--ui-text` |
+| `--ui-text-muted` |

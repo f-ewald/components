@@ -29,4 +29,15 @@ test.describe("map-pin", () => {
     await page.locator("#pin-highlight-toggle").click();
     await expect(pin).not.toHaveAttribute("highlighted", "");
   });
+
+  test("preserves map colors and geometry while removing highlight motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const pin = page.locator("#pin-rank-1");
+
+    await expect(pin.locator("svg")).toHaveAttribute("aria-hidden", "true");
+    await expect(pin.locator("path")).toHaveAttribute("stroke", "#ffffff");
+    await expect(pin.locator("stop").first()).toHaveAttribute("stop-color", "#5f9def");
+    await expect(pin.locator("svg")).toHaveCSS("transition-duration", "0s");
+  });
 });

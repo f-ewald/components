@@ -33,6 +33,7 @@ import "@f-ewald/components/radio-cards.js";
 | --- | --- | --- | --- | --- |
 | `options` | _(JS property only)_ | `RadioCardOption[]` | `[]` | Options to render, one card each. |
 | `value` | `value` | `string` | `""` | Currently selected value. |
+| `disabled` | `disabled` | `boolean` | `false` | Disables every native radio in the group. |
 
 ## Events
 
@@ -49,6 +50,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-primary` |

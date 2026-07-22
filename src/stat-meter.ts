@@ -18,7 +18,7 @@ export class StatMeter extends LitElement {
       :host {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         font-family: var(
           --ui-font,
           ui-sans-serif,
@@ -40,9 +40,9 @@ export class StatMeter extends LitElement {
 
       .track {
         display: block;
-        width: 64px;
-        height: 6px;
-        border-radius: 3px;
+        width: 4rem;
+        height: 0.375rem;
+        border-radius: 9999px;
         background: var(--ui-surface-muted, #f8fafc);
         overflow: hidden;
       }
@@ -50,17 +50,27 @@ export class StatMeter extends LitElement {
       .fill {
         display: block;
         height: 100%;
-        background: var(--fill-color, var(--ui-success, #16a34a));
-        transition: width 0.3s ease;
+        /* Match map-circle's 30% white/black vertical depth while preserving token/color overrides. */
+        background: linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--fill-color, var(--ui-success, #16a34a)) 70%, #ffffff) 0%,
+          color-mix(in srgb, var(--fill-color, var(--ui-success, #16a34a)) 70%, #000000) 100%
+        );
+        transition: width 200ms ease;
       }
 
       .value {
-        min-width: 32px;
+        min-width: 2rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: 500;
         color: var(--ui-text, #0f172a);
         font-variant-numeric: tabular-nums;
         text-align: right;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .fill {
+          transition: none;
+        }
       }
     `,
   ];

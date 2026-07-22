@@ -6,6 +6,22 @@ import { test, expect } from "@playwright/test";
 // overlap pair in July (Vacation/Conference), and a year-boundary crossing
 // entry (Renewal, Dec 31 2026 - Jan 2 2027).
 test.describe("calendar-year", () => {
+  test("uses rem-based responsive month tracks without changing the year projection", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const year = page.locator("#calendar-year-demo");
+    const yearGridRule = await year.evaluate((element) =>
+      element.shadowRoot!.adoptedStyleSheets
+        .flatMap((sheet) => Array.from(sheet.cssRules))
+        .find((rule) => rule instanceof CSSStyleRule && rule.selectorText === ".year")!
+        .cssText,
+    );
+
+    expect(yearGridRule).toContain("minmax(13.75rem, 1fr)");
+    await expect(year.locator("calendar-month")).toHaveCount(12);
+  });
+
   test("renders one calendar-month per month of the year", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("#calendar-year-demo calendar-month")).toHaveCount(12);

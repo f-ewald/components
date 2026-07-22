@@ -4,8 +4,8 @@ Generic sliding panel shell. Handles positioning, open/close animation,
 header chrome, and a close button. Body content is provided via the
 default slot; the consumer controls its own padding and overflow.
 
-Desktop: 300 px fixed right-side panel that slides from the right.
-Mobile (≤768px): bottom-sheet drawer (60vh) — reserved for future use.
+Desktop: fixed right-side panel that slides from the right.
+Mobile (≤48rem): bottom-sheet drawer (60vh) — reserved for future use.
 
 ## Install
 
@@ -46,8 +46,10 @@ import "@f-ewald/components/slide-panel.js";
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size` |
+| `--ui-radius` |
 | `--ui-radius-sm` |
 | `--ui-shadow-lg` |
 | `--ui-surface` |

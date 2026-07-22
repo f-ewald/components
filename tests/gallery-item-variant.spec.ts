@@ -36,5 +36,11 @@ test.describe("gallery-item-variant", () => {
 
     await expect(variant).toHaveAttribute("media", "(max-width: 480px)");
     await expect(variant).toHaveAttribute("srcset", "/photos/mobile.jpg 1x");
+    await expect(variant).toHaveCSS("display", "none");
+    const source = page
+      .locator("#photo-gallery-demo")
+      .locator('picture:not([aria-hidden="true"]) source');
+    await expect(source).toHaveAttribute("media", "(max-width: 480px)");
+    await expect(source).toHaveAttribute("srcset", "/photos/mobile.jpg 1x");
   });
 });

@@ -52,6 +52,17 @@
             },
             {
               "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "types",
               "type": {
                 "text": "string"
@@ -158,6 +169,15 @@
             },
             {
               "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "#internals",
               "privacy": "private"
             },
@@ -190,6 +210,50 @@
             },
             {
               "kind": "field",
+              "name": "#isComposing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionJustEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionEndTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listboxId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`address-autocomplete-listbox-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "selectedSuggestion",
               "type": {
                 "text": "AddressSuggestion | null"
@@ -201,6 +265,19 @@
               "kind": "method",
               "name": "formResetCallback",
               "description": "Resets to empty on `form.reset()`, per the form-associated custom element contract."
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mirrors ancestor fieldset disabled state onto the native input."
             },
             {
               "kind": "method",
@@ -339,6 +416,37 @@
             },
             {
               "kind": "method",
+              "name": "onCompositionStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onCompositionEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resetComposition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears composition state when the control can no longer receive keys."
+            },
+            {
+              "kind": "method",
               "name": "#selectSuggestion",
               "privacy": "private",
               "parameters": [
@@ -412,6 +520,15 @@
               "default": "false",
               "description": "Marks the input as required for native form validation.",
               "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "fieldName": "disabled"
             },
             {
               "name": "types",
@@ -587,6 +704,22 @@
             },
             {
               "kind": "field",
+              "name": "stopTimer",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "cleanupTimer",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "_canvas",
               "type": {
                 "text": "HTMLCanvasElement"
@@ -608,7 +741,8 @@
             {
               "kind": "method",
               "name": "startConfetti",
-              "privacy": "private"
+              "privacy": "private",
+              "description": "Creates particles and starts the animation frame loop."
             },
             {
               "kind": "field",
@@ -622,15 +756,22 @@
               "description": "Stop confetti and clean up after reasonable time."
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "_cleanup",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Removes particle data and stops the animation frame loop."
+            },
+            {
+              "kind": "method",
+              "name": "_clearTimersAndParticles",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
-              "description": "Removes any associated particle data from internal storage to regain memory."
+              "description": "Cancels all pending work when the component leaves the document."
             },
             {
               "kind": "method",
@@ -769,6 +910,17 @@
             },
             {
               "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "endpoint",
               "type": {
                 "text": "string"
@@ -845,6 +997,15 @@
             },
             {
               "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "#internals",
               "privacy": "private"
             },
@@ -877,6 +1038,50 @@
             },
             {
               "kind": "field",
+              "name": "#isComposing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionJustEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionEndTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listboxId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`autocomplete-input-listbox-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "selectedOption",
               "type": {
                 "text": "AutocompleteOption | null"
@@ -888,6 +1093,19 @@
               "kind": "method",
               "name": "formResetCallback",
               "description": "Resets to empty on `form.reset()`, per the form-associated custom element contract."
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mirrors ancestor fieldset disabled state onto the native input."
             },
             {
               "kind": "method",
@@ -1026,6 +1244,37 @@
             },
             {
               "kind": "method",
+              "name": "onCompositionStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onCompositionEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resetComposition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears composition state when the control can no longer receive keys."
+            },
+            {
+              "kind": "method",
               "name": "#selectOption",
               "privacy": "private",
               "parameters": [
@@ -1099,6 +1348,15 @@
               "default": "false",
               "description": "Marks the input as required for native form validation.",
               "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "fieldName": "disabled"
             },
             {
               "name": "endpoint",
@@ -2097,6 +2355,15 @@
               "attribute": "error"
             },
             {
+              "kind": "field",
+              "name": "_previousFocus",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "_confirm",
               "privacy": "private"
@@ -2104,6 +2371,36 @@
             {
               "kind": "method",
               "name": "_cancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_getFocusableElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_focusInitial",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_onDocumentFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onWindowKeydown",
               "privacy": "private"
             }
           ],
@@ -2236,6 +2533,16 @@
               "attribute": "label"
             },
             {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables clipboard copying.",
+              "attribute": "disabled"
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private"
@@ -2275,6 +2582,15 @@
               "default": "\"Copy link\"",
               "description": "Accessible label / tooltip text.",
               "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables clipboard copying.",
+              "fieldName": "disabled"
             }
           ],
           "superclass": {
@@ -2357,6 +2673,15 @@
               "description": "When set, clicking a row (outside any nested link/button) navigates to this hash."
             },
             {
+              "kind": "field",
+              "name": "rowLabel",
+              "type": {
+                "text": "((row: unknown) => string) | null"
+              },
+              "default": "null",
+              "description": "Accessible label for a row's keyboard link; defaults to primitive cell values."
+            },
+            {
               "kind": "method",
               "name": "#onRowClick",
               "privacy": "private",
@@ -2376,6 +2701,48 @@
                   "name": "e",
                   "type": {
                     "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isNestedInteractive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": {
+                    "text": "EventTarget[]"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "EventTarget | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#rowLinkLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "unknown"
                   }
                 }
               ]
@@ -2731,6 +3098,13 @@
               },
               "privacy": "private",
               "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "#menuId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`dropdown-button-menu-${++instanceCount}`"
             },
             {
               "kind": "field",
@@ -3262,6 +3636,13 @@
                 "text": "ReturnType<typeof setTimeout> | null"
               },
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listboxId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`form-select-listbox-${++instanceCount}`"
             },
             {
               "kind": "field",
@@ -5234,6 +5615,22 @@
         },
         {
           "kind": "js",
+          "name": "KbdHint",
+          "declaration": {
+            "name": "KbdHint",
+            "module": "./kbd-hint.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KbdPlatform",
+          "declaration": {
+            "name": "KbdPlatform",
+            "module": "./kbd-hint.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "FrameBox",
           "declaration": {
             "name": "FrameBox",
@@ -5310,6 +5707,103 @@
           "declaration": {
             "name": "*",
             "module": "src/icons.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kbd-hint.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Renders a keyboard shortcut as one boxed keycap per `+`-separated token.\nModifier keys are platform-aware: `Mod` becomes Command on macOS and\nControl elsewhere. Keycaps derive their presentation from `currentColor`,\nso the hint works inside neutral and accent-colored controls.",
+          "name": "KbdHint",
+          "members": [
+            {
+              "kind": "field",
+              "name": "keys",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Shortcut as case-insensitive, `+`-separated tokens, e.g. `\"Mod+Enter\"`.",
+              "attribute": "keys"
+            },
+            {
+              "kind": "field",
+              "name": "platform",
+              "type": {
+                "text": "KbdPlatform"
+              },
+              "default": "\"auto\"",
+              "description": "Platform override; `auto` detects macOS from the browser.",
+              "attribute": "platform"
+            },
+            {
+              "kind": "field",
+              "name": "isMac",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "description": "Whether modifier aliases should use macOS glyphs.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "parsedKeys",
+              "type": {
+                "text": "KeyRender[]"
+              },
+              "privacy": "private",
+              "description": "Parses the shortcut into visual/spoken key descriptors.",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "keys",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Shortcut as case-insensitive, `+`-separated tokens, e.g. `\"Mod+Enter\"`.",
+              "fieldName": "keys"
+            },
+            {
+              "name": "platform",
+              "type": {
+                "text": "KbdPlatform"
+              },
+              "default": "\"auto\"",
+              "description": "Platform override; `auto` detects macOS from the browser.",
+              "fieldName": "platform"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "kbd-hint",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KbdHint",
+          "declaration": {
+            "name": "KbdHint",
+            "module": "src/kbd-hint.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "kbd-hint",
+          "declaration": {
+            "name": "KbdHint",
+            "module": "src/kbd-hint.ts"
           }
         }
       ]
@@ -5723,6 +6217,32 @@
               },
               "privacy": "private",
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_gradIdBase",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`percent-bar-grad-${gradientIdCounter++}`"
+            },
+            {
+              "kind": "method",
+              "name": "_gradId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Per-row gradient id, unique across instances and rows."
             }
           ],
           "superclass": {
@@ -6500,6 +7020,24 @@
             },
             {
               "kind": "field",
+              "name": "#modalActive",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#previousFocus",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#onWindowMousedown",
               "privacy": "private"
             },
@@ -6507,6 +7045,31 @@
               "kind": "field",
               "name": "#onWindowKeydown",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#getFocusableElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#focusInitial",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "method",
@@ -6760,6 +7323,16 @@
             },
             {
               "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every native radio in the group.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
               "name": "#name",
               "privacy": "private",
               "readonly": true,
@@ -6797,6 +7370,15 @@
               "default": "\"\"",
               "description": "Currently selected value.",
               "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every native radio in the group.",
+              "fieldName": "disabled"
             }
           ],
           "superclass": {
@@ -6856,6 +7438,16 @@
             },
             {
               "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every native radio in the group.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
               "name": "#name",
               "privacy": "private",
               "readonly": true,
@@ -6893,6 +7485,15 @@
               "default": "\"\"",
               "description": "Currently selected value.",
               "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every native radio in the group.",
+              "fieldName": "disabled"
             }
           ],
           "superclass": {
@@ -7014,6 +7615,16 @@
               "attribute": "label"
             },
             {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables revealing the slotted content.",
+              "attribute": "disabled"
+            },
+            {
               "kind": "method",
               "name": "_reveal",
               "privacy": "private"
@@ -7028,6 +7639,15 @@
               "default": "\"Reveal hidden content\"",
               "description": "Label shown on the button before it's clicked.",
               "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables revealing the slotted content.",
+              "fieldName": "disabled"
             }
           ],
           "superclass": {
@@ -7138,7 +7758,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Generic sliding panel shell. Handles positioning, open/close animation,\nheader chrome, and a close button. Body content is provided via the\ndefault slot; the consumer controls its own padding and overflow.\n\nDesktop: 300 px fixed right-side panel that slides from the right.\nMobile (≤768px): bottom-sheet drawer (60vh) — reserved for future use.",
+          "description": "Generic sliding panel shell. Handles positioning, open/close animation,\nheader chrome, and a close button. Body content is provided via the\ndefault slot; the consumer controls its own padding and overflow.\n\nDesktop: fixed right-side panel that slides from the right.\nMobile (≤48rem): bottom-sheet drawer (60vh) — reserved for future use.",
           "name": "SlidePanel",
           "members": [
             {
@@ -7162,8 +7782,22 @@
               "attribute": "heading"
             },
             {
+              "kind": "field",
+              "name": "_previousFocus",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "_close",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onWindowKeydown",
               "privacy": "private"
             }
           ],
@@ -7421,7 +8055,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A generic, presentational grid shell: renders one bordered card per entry\nin `items`, with each tile's content produced by `renderTile` (default:\nstringify). Knows nothing about what an \"item\" means — callers own the\ndata shape entirely. Modeled directly on `data-table`'s headless pattern.\n\nOptional `itemHref` makes whole tiles clickable (navigating via\n`location.hash`), without hijacking clicks on nested interactive elements\n(links/buttons) a tile's rendered content might contain.",
+          "description": "A generic, presentational grid shell: renders one bordered card per entry\nin `items`, with each tile's content produced by `renderTile` (default:\nstringify). Knows nothing about what an \"item\" means — callers own the\ndata shape entirely. Modeled directly on `data-table`'s headless pattern.\n\nOptional `itemHref` makes whole tiles clickable (navigating via\n`location.hash`), without hijacking clicks on nested interactive elements\n(links/buttons) a tile's rendered content might contain.\n\nOptional `fileIcon` prefixes each tile with a decorative Heroicons\n\"document\" glyph, for grids whose items represent files — the icon never\ncarries its own accessible name since the rendered tile content (e.g. a\nfilename) already identifies the item. Off by default, so it consumes no\nlayout space or markup for grids of non-file items.",
           "name": "TileGrid",
           "members": [
             {
@@ -7459,6 +8093,16 @@
               "description": "When set, clicking a tile (outside any nested link/button) navigates to this hash."
             },
             {
+              "kind": "field",
+              "name": "fileIcon",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prefixes each tile with a decorative \"document\" icon, for grids of file-like items. Off by default.",
+              "attribute": "file-icon"
+            },
+            {
               "kind": "method",
               "name": "#onTileClick",
               "privacy": "private",
@@ -7481,6 +8125,65 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#onTileKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isNestedInteractive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": {
+                    "text": "EventTarget[]"
+                  }
+                },
+                {
+                  "name": "tile",
+                  "type": {
+                    "text": "EventTarget | null"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "file-icon",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prefixes each tile with a decorative \"document\" icon, for grids of file-like items. Off by default.",
+              "fieldName": "fileIcon"
             }
           ],
           "superclass": {
@@ -7685,7 +8388,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-size\": \"0.875rem\", \"--ui-font-size-sm\": \"0.75rem\", \"--ui-font-size-xs\": \"0.6875rem\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size\": \"0.875rem\", \"--ui-font-size-sm\": \"0.75rem\", \"--ui-font-size-xs\": \"0.6875rem\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {
@@ -7694,7 +8397,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ \"--ui-primary\": \"#6366f1\", // indigo-500 \"--ui-primary-hover\": \"#818cf8\", // indigo-400 \"--ui-danger\": \"#ef4444\", // red-500 \"--ui-danger-hover\": \"#f87171\", // red-400 \"--ui-success\": \"#22c55e\", // green-500 \"--ui-text\": \"#f1f5f9\", // slate-100 \"--ui-text-muted\": \"#94a3b8\", // slate-400 \"--ui-border\": \"#334155\", // slate-700 \"--ui-surface\": \"#0f172a\", // slate-900 \"--ui-surface-muted\": \"#1e293b\", // slate-800 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.12)\", \"--ui-overlay\": \"rgb(2 6 23 / 0.6)\", // slate-950 / 60% \"--ui-focus-ring\": \"0 0 0 3px rgb(99 102 241 / 0.45)\", }",
+          "default": "{ \"--ui-primary\": \"#6366f1\", // indigo-500 \"--ui-primary-hover\": \"#818cf8\", // indigo-400 \"--ui-info\": \"#38bdf8\", // sky-400 \"--ui-info-hover\": \"#7dd3fc\", // sky-300 \"--ui-danger\": \"#ef4444\", // red-500 \"--ui-danger-hover\": \"#f87171\", // red-400 \"--ui-success\": \"#22c55e\", // green-500 \"--ui-warning\": \"#f59e0b\", // amber-500 \"--ui-warning-hover\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#f1f5f9\", // slate-100 \"--ui-text-muted\": \"#94a3b8\", // slate-400 \"--ui-border\": \"#334155\", // slate-700 \"--ui-surface\": \"#0f172a\", // slate-900 \"--ui-surface-muted\": \"#1e293b\", // slate-800 \"--ui-tooltip\": \"#020617\", // slate-950 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.12)\", \"--ui-overlay\": \"rgb(2 6 23 / 0.6)\", // slate-950 / 60% \"--ui-focus-ring\": \"0 0 0 3px rgb(99 102 241 / 0.45)\", }",
           "description": "Dark-mode overrides for the same `--ui-*` custom properties, applied by\n`tokens.css` via `@media (prefers-color-scheme: dark)` and `[data-theme]`\n(see generate-tokens-css.mjs). Same Tailwind slate scale as the light\npalette, inverted, with primary/danger/success lightened one step (500\ninstead of 600) for sufficient contrast against dark surfaces. Shape/type\ntokens are theme-independent and not repeated here."
         },
         {
@@ -7819,6 +8522,20 @@
               "name": "_onClick",
               "privacy": "private",
               "description": "Drives submit/reset on the ancestor form via ElementInternals, since a shadow-DOM button can't do it natively."
+            },
+            {
+              "kind": "method",
+              "name": "_onLinkClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Suppresses navigation while a link-styled button is disabled or busy."
             }
           ],
           "attributes": [
@@ -8504,6 +9221,158 @@
           "declaration": {
             "name": "formatDuration",
             "module": "src/utils/duration.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/form.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "submitWithDefaultButton",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "form",
+              "type": {
+                "text": "HTMLFormElement"
+              }
+            }
+          ],
+          "description": "Submits a form through its default enabled native submit control when present."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "submitWithDefaultButton",
+          "declaration": {
+            "name": "submitWithDefaultButton",
+            "module": "src/utils/form.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/layer-stack.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "activateLayer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "layer",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Registers an open overlay as the current topmost interactive layer."
+        },
+        {
+          "kind": "function",
+          "name": "deactivateLayer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "layer",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Removes a closed or disconnected overlay from the layer stack."
+        },
+        {
+          "kind": "function",
+          "name": "isTopLayer",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "layer",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Whether this overlay currently owns global Escape/focus behavior."
+        },
+        {
+          "kind": "function",
+          "name": "claimEscape",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "layer",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "event",
+              "type": {
+                "text": "KeyboardEvent"
+              }
+            }
+          ],
+          "description": "Claims Escape for the topmost layer and marks it handled for other listeners."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "activateLayer",
+          "declaration": {
+            "name": "activateLayer",
+            "module": "src/utils/layer-stack.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "deactivateLayer",
+          "declaration": {
+            "name": "deactivateLayer",
+            "module": "src/utils/layer-stack.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isTopLayer",
+          "declaration": {
+            "name": "isTopLayer",
+            "module": "src/utils/layer-stack.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "claimEscape",
+          "declaration": {
+            "name": "claimEscape",
+            "module": "src/utils/layer-stack.ts"
           }
         }
       ]

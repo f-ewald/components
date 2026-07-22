@@ -43,4 +43,36 @@ test.describe("calendar-entry", () => {
 
     await expect(page.locator("#calendar-month-demo")).toContainText("Vacation");
   });
+
+  test("remains hidden while reactive metadata updates its parent", async ({ page }) => {
+    await page.goto("/");
+    const entry = page.locator("#cm-entry-vacation");
+    const calendar = page.locator("#calendar-month-demo");
+
+    await entry.evaluate(async (element) => {
+      const calendarEntry = element as HTMLElement & {
+        color: string;
+        href?: string;
+        updateComplete: Promise<boolean>;
+      };
+      calendarEntry.color = "danger";
+      calendarEntry.href = "#updated-vacation";
+      const title = calendarEntry.querySelector<HTMLElement>('[slot="title"]');
+      const detail = calendarEntry.querySelector<HTMLElement>('[slot="detail"]');
+      const footer = calendarEntry.querySelector<HTMLElement>('[slot="footer"]');
+      if (title) title.textContent = "Updated vacation";
+      if (detail) detail.textContent = "Updated itinerary";
+      if (footer) footer.textContent = "Updated return";
+      await calendarEntry.updateComplete;
+    });
+
+    await expect(entry).toHaveCSS("display", "none");
+    await expect(entry).toHaveAttribute("color", "danger");
+    await expect(entry).toHaveAttribute("href", "#updated-vacation");
+    await expect(calendar).toContainText("Updated vacation");
+    await expect(calendar).toContainText("Updated itinerary");
+    await expect(calendar).toContainText("Updated return");
+    await expect(calendar.locator('a[href="#updated-vacation"]').first()).toBeVisible();
+    await expect(calendar.locator(".entry-bar.danger")).not.toHaveCount(0);
+  });
 });
