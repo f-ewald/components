@@ -26,7 +26,10 @@ export class RevealButton extends LitElement {
           "Segoe UI Symbol",
           "Noto Color Emoji"
         );
-        font-size: var(--ui-font-size, 0.875rem);
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-weight: var(--ui-font-weight-medium, 500);
+        line-height: var(--ui-line-height-tight, 1.25);
+        height: 2rem;
         background: var(--ui-primary, #4f46e5);
         color: var(--ui-on-accent, #ffffff);
         border: none;

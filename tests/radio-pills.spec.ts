@@ -30,4 +30,18 @@ test.describe("radio-pills", () => {
     });
     await expect(pills.locator("input:disabled")).toHaveCount(4);
   });
+
+  test("uses compact-pill metrics and 1rem radio inputs", async ({ page }) => {
+    await page.goto("/");
+    const pills = page.locator("#radio-pills-demo");
+    const pill = pills.locator(".pill").first();
+    await expect(pill).toHaveCSS("padding", "4px 8px");
+    await expect(pill).toHaveCSS("gap", "8px");
+    await expect(pill).toHaveCSS("min-height", "32px");
+    await expect(pill).toHaveCSS("line-height", "15px");
+
+    const input = pill.locator("input");
+    await expect(input).toHaveCSS("width", "16px");
+    await expect(input).toHaveCSS("height", "16px");
+  });
 });

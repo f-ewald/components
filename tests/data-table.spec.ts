@@ -73,4 +73,12 @@ test.describe("data-table", () => {
 
     await expect(table.getByRole("link")).toHaveAccessibleName("Open Visible task");
   });
+
+  test("renders compact 12px headers with tokenized semibold weight", async ({ page }) => {
+    await page.goto("/");
+    const table = page.locator("#table-tasks");
+    const header = table.locator("th").first();
+    await expect(header).toHaveCSS("font-weight", "600");
+    await expect(header).toHaveCSS("font-size", "12px");
+  });
 });

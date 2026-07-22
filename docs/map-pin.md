@@ -41,3 +41,5 @@ _None._
 | Custom property |
 | --- |
 | `--ui-font` |
+| `--ui-font-weight-bold` |
+| `--ui-line-height-glyph` |

@@ -25,6 +25,14 @@ test.describe("distribution-chart", () => {
     await expect(svg.locator(".chart-label").first()).toHaveCSS("fill", "rgb(148, 163, 184)");
   });
 
+  test("renders SVG axis labels at the 10px data-label size", async ({ page }) => {
+    await page.goto("/");
+    const chart = page.locator("#distribution-demo");
+    const svg = chart.locator("svg");
+    await expect(svg).toBeVisible({ timeout: 5000 });
+    await expect(svg.locator(".chart-label").first()).toHaveAttribute("font-size", "10");
+  });
+
   test("stops skeleton shimmer for reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");

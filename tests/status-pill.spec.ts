@@ -13,6 +13,9 @@ test.describe("status-pill", () => {
 
     await expect(page.locator("#pill-primary .spin")).toBeVisible();
     await expect(page.locator("#pill-neutral .spin")).toHaveCount(0);
+    // Tokenized medium weight and a 14px inline spinner icon.
+    await expect(dangerPill).toHaveCSS("font-weight", "500");
+    await expect(page.locator("#pill-primary .spin svg")).toHaveAttribute("width", "14");
   });
 
   test("uses semantic dark tokens and makes reduced-motion spinners static", async ({ page }) => {

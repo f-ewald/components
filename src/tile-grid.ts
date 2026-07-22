@@ -143,7 +143,7 @@ export class TileGrid extends LitElement {
                 ${this.fileIcon
                   ? html`
                       <div class="tile-body">
-                        <span class="tile-icon" aria-hidden="true">${iconDocument(16)}</span>
+                        <span class="tile-icon" aria-hidden="true">${iconDocument(14)}</span>
                         <div class="tile-content">${this.renderTile(item)}</div>
                       </div>
                     `

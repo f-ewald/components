@@ -48,8 +48,8 @@ export class ConfirmDialog extends LitElement {
           0 8px 10px -6px rgb(0 0 0 / 0.1)
         );
         width: 100%;
-        max-width: 26.25rem;
-        padding: 1.25rem;
+        max-width: min(25rem, calc(100vw - 2rem));
+        padding: 1rem;
         box-sizing: border-box;
         outline: none;
       }
@@ -67,12 +67,29 @@ export class ConfirmDialog extends LitElement {
           "Noto Color Emoji"
         );
         font-size: var(--ui-font-size, 0.875rem);
-        line-height: 1.45;
+        line-height: var(--ui-line-height-normal, 1.5);
       }
       .dialog-actions {
         display: flex;
         justify-content: flex-end;
         gap: 0.5rem;
+      }
+      .btn-cancel,
+      .btn-danger,
+      .btn-primary {
+        height: 2rem;
+        box-sizing: border-box;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
+        line-height: var(--ui-line-height-tight, 1.25);
       }
       .btn-cancel {
         background: none;
@@ -82,7 +99,6 @@ export class ConfirmDialog extends LitElement {
         padding: 0.5rem 1rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         cursor: pointer;
-        font-family: inherit;
       }
       .btn-cancel:hover:not(:disabled) {
         border-color: var(--ui-text-muted, #64748b);
@@ -93,12 +109,11 @@ export class ConfirmDialog extends LitElement {
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 1rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
-        font-weight: 500;
+        font-weight: var(--ui-font-weight-medium, 500);
         cursor: pointer;
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
-        font-family: inherit;
       }
       .btn-danger {
         background: var(--ui-danger, #dc2626);
@@ -152,6 +167,9 @@ export class ConfirmDialog extends LitElement {
         .overlay {
           padding: 0.75rem;
           overflow-y: auto;
+        }
+        .dialog {
+          padding: 0.75rem;
         }
       }
     `,

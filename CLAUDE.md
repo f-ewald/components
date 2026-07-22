@@ -57,9 +57,23 @@ use — non-chart components pull in zero `d3` code.
   bare hex/px value in a CSS declaration that's covered by an existing
   token. The fallback makes the component render correctly with zero
   external CSS; `tokens.ts` is the single source of truth for what those
-  fallback values are.
-- Spacing is *not* tokenized—use literal `0.25rem` steps. Exceptions are 1px
-  borders, SVG/canvas geometry, percentages, timing, and proportional math.
+  fallback values are. Any new `--ui-*` usage must carry the exact fallback
+  from `tokenValues`.
+- Type is tokenized: sizes (`--ui-font-size`, `-sm`, `-xs`, `-lg` = `1rem`),
+  weights (`--ui-font-weight-regular|medium|semibold|bold` = 400/500/600/700),
+  line heights (`--ui-line-height-glyph|tight|normal` = 1/1.25/1.5), and
+  tracking (`--ui-tracking-normal|wide` = 0/0.04em). Families stay
+  `--ui-font` / `--ui-font-mono`; `font-family: inherit` is reserved for
+  editable-text and inline formatters. SVG presentation attributes and
+  `line-height: 0` icon resets are exempt (see the design contract).
+- Spacing is *not* tokenized—`padding`, `margin`, and `gap` use literal
+  `0.25rem` steps only. Exceptions are 1px borders, SVG/canvas geometry,
+  percentages, timing, proportional math, `0.125rem` optical alignment, and
+  domain geometry. Convert layout pixels to rems.
+- Interactive controls use a 2rem target; text controls follow the canonical
+  field/button/pill padding roles. Inline icons are 14px, standalone action
+  icons are 18px, side/floating panels are 20rem, centered/dialog panels are
+  25rem, and the shared responsive breakpoint is 48rem.
 - SVG presentation attributes (`fill="..."`, `stroke="..."`) can't take
   `var()` — those stay as plain hex, matching the token's fallback value.
 - Every interactive component needs coherent hover, selected, disabled,

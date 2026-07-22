@@ -49,4 +49,17 @@ test.describe("dropdown-button", () => {
       "0s",
     );
   });
+
+  test("uses tokenized button trigger and list-row control metrics", async ({ page }) => {
+    await page.goto("/");
+    const el = page.locator("#dropdown-resolve");
+    const trigger = el.locator("button.trigger");
+    await expect(trigger).toHaveCSS("font-weight", "500");
+    await expect(trigger).toHaveCSS("padding", "8px 16px");
+    await expect(trigger).toHaveCSS("height", "32px");
+    await expect(trigger).toHaveCSS("line-height", "15px");
+
+    await trigger.click();
+    await expect(el.locator("li[role='menuitem']").first()).toHaveCSS("padding", "8px 12px");
+  });
 });

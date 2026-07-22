@@ -173,7 +173,16 @@ export class PhotoGallery extends LitElement {
       }
       button {
         border: 0;
-        font: inherit;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         cursor: pointer;
       }
       button:focus-visible {
@@ -184,8 +193,8 @@ export class PhotoGallery extends LitElement {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2rem;
+        height: 2rem;
         padding: 0;
         color: var(--ui-on-accent, #ffffff);
         background: var(--ui-overlay, rgb(15 23 42 / 0.45));
@@ -217,25 +226,40 @@ export class PhotoGallery extends LitElement {
         flex: 1 1 auto;
         align-items: center;
         justify-content: center;
-        gap: 0.375rem;
+        gap: 0.25rem;
       }
       .indicator {
-        width: 0.625rem;
-        height: 0.625rem;
+        position: relative;
+        width: 2rem;
+        height: 2rem;
         padding: 0;
-        background: var(--ui-border, #e2e8f0);
+        background: transparent;
         border-radius: 9999px;
       }
-      .indicator[aria-current="true"] {
+      .indicator::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0.625rem;
+        height: 0.625rem;
+        background: var(--ui-border, #e2e8f0);
+        border-radius: 9999px;
+        content: "";
+        transform: translate(-50%, -50%);
+      }
+      .indicator[aria-current="true"]::before {
         background: var(--ui-primary, #4f46e5);
       }
       .autoplay-button {
-        padding: 0.25rem 0.625rem;
+        height: 2rem;
+        box-sizing: border-box;
+        padding: 0.25rem 0.5rem;
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface-muted, #f8fafc);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         font-size: var(--ui-font-size-sm, 0.75rem);
+        line-height: var(--ui-line-height-tight, 1.25);
         white-space: nowrap;
       }
       .autoplay-button:hover {
@@ -649,7 +673,7 @@ export class PhotoGallery extends LitElement {
                             aria-label="Previous image"
                             @click=${() => this._showPrevious()}
                           >
-                            ${iconChevronLeft(24)}
+                            ${iconChevronLeft(18)}
                           </button>
                           <button
                             class="arrow-button next"
@@ -657,7 +681,7 @@ export class PhotoGallery extends LitElement {
                             aria-label="Next image"
                             @click=${() => this._showNext()}
                           >
-                            ${iconChevronRight(24)}
+                            ${iconChevronRight(18)}
                           </button>
                         </div>
                       `

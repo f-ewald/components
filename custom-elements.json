@@ -2858,7 +2858,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Renders a KDE distribution curve for a named metric with one or more value\nmarkers. The SVG viewBox is kept in sync with the element's pixel width via\nResizeObserver so that font sizes and stroke widths are always in real pixels\nregardless of container width.\n\nPass `fontSize` to control all text size (default 11). Pass a single\n`{label:'', value}` for a single-value display or multiple\n`{label:'A'|'B'|...}` entries to compare several values.",
+          "description": "Renders a KDE distribution curve for a named metric with one or more value\nmarkers. The SVG viewBox is kept in sync with the element's pixel width via\nResizeObserver so that font sizes and stroke widths are always in real pixels\nregardless of container width.\n\nPass `fontSize` to control all text size (default 10). Pass a single\n`{label:'', value}` for a single-value display or multiple\n`{label:'A'|'B'|...}` entries to compare several values.",
           "name": "DistributionChart",
           "members": [
             {
@@ -2895,8 +2895,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "11",
-              "description": "Target font size in CSS pixels (default 11). Always renders at this size regardless of container width.",
+              "default": "10",
+              "description": "Target font size in CSS pixels (default 10). Always renders at this size regardless of container width.",
               "attribute": "font-size"
             },
             {
@@ -3011,8 +3011,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "11",
-              "description": "Target font size in CSS pixels (default 11). Always renders at this size regardless of container width.",
+              "default": "10",
+              "description": "Target font size in CSS pixels (default 10). Always renders at this size regardless of container width.",
               "fieldName": "fontSize"
             }
           ],
@@ -4366,7 +4366,7 @@
                 "text": "TemplateResult | null"
               },
               "default": "null",
-              "description": "Pre-rendered icon template, e.g. `iconPencil(16)` from this package's icon set."
+              "description": "Pre-rendered icon template, e.g. `iconPencil(18)` from this package's icon set."
             },
             {
               "kind": "field",
@@ -8388,7 +8388,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size\": \"0.875rem\", \"--ui-font-size-sm\": \"0.75rem\", \"--ui-font-size-xs\": \"0.6875rem\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {

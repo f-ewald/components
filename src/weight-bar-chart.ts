@@ -56,7 +56,7 @@ export class WeightBarChart extends LitElement {
         flex: 1 1 auto;
         height: 0.75rem;
         background: var(--ui-surface-muted, #f8fafc);
-        border-radius: var(--ui-radius-sm, 0.25rem);
+        border-radius: 9999px;
         overflow: hidden;
       }
       .bar {
@@ -67,7 +67,7 @@ export class WeightBarChart extends LitElement {
           color-mix(in srgb, var(--ui-primary, #4f46e5) 70%, #ffffff) 0%,
           color-mix(in srgb, var(--ui-primary, #4f46e5) 70%, #000000) 100%
         );
-        border-radius: 0 var(--ui-radius-sm, 0.25rem) var(--ui-radius-sm, 0.25rem) 0;
+        border-radius: 0 9999px 9999px 0;
         transition: width 150ms ease-out;
       }
       .pct {

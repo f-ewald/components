@@ -38,7 +38,7 @@ const DEFAULT_MARKER_COLORS = ["#4f46e5", "#d97706", "#0d9488", "#e11d48"];
  * ResizeObserver so that font sizes and stroke widths are always in real pixels
  * regardless of container width.
  *
- * Pass `fontSize` to control all text size (default 11). Pass a single
+ * Pass `fontSize` to control all text size (default 10). Pass a single
  * `{label:'', value}` for a single-value display or multiple
  * `{label:'A'|'B'|...}` entries to compare several values.
  *
@@ -123,7 +123,7 @@ export class DistributionChart extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
-        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-size: var(--ui-font-size-xs, 0.6875rem);
         color: var(--ui-text-muted, #64748b);
       }
       .legend-dot {
@@ -147,8 +147,8 @@ export class DistributionChart extends LitElement {
   @property({ attribute: false }) values: DistributionValue[] = [];
   /** Colors assigned to markers in order. Defaults to indigo/amber/teal/rose 600s. */
   @property({ attribute: false }) markerColors: string[] = DEFAULT_MARKER_COLORS;
-  /** Target font size in CSS pixels (default 11). Always renders at this size regardless of container width. */
-  @property({ type: Number, attribute: "font-size" }) fontSize = 11;
+  /** Target font size in CSS pixels (default 10). Always renders at this size regardless of container width. */
+  @property({ type: Number, attribute: "font-size" }) fontSize = 10;
 
   @state() private _data: DistributionData | null = null;
   @state() private _loading = false;

@@ -64,11 +64,16 @@ _None._
 | `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |
-| `--ui-font-size` |
+| `--ui-font-size-lg` |
 | `--ui-font-size-sm` |
 | `--ui-font-size-xs` |
+| `--ui-font-weight-bold` |
+| `--ui-font-weight-medium` |
+| `--ui-font-weight-regular` |
+| `--ui-font-weight-semibold` |
 | `--ui-hover-overlay` |
 | `--ui-info` |
+| `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-success` |

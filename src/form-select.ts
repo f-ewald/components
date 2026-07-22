@@ -71,13 +71,25 @@ export class FormSelect extends LitElement {
         justify-content: space-between;
         gap: 0.25rem;
         width: 100%;
+        height: 2rem;
         box-sizing: border-box;
-        font: inherit;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 0.25rem 0.5rem;
+        padding: 0.5rem 0.75rem;
         cursor: pointer;
       }
       button.trigger:hover:not(:disabled) {
@@ -98,6 +110,7 @@ export class FormSelect extends LitElement {
         justify-content: space-between;
         gap: 0.25rem;
         width: 100%;
+        height: 2rem;
         box-sizing: border-box;
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
@@ -123,17 +136,28 @@ export class FormSelect extends LitElement {
         min-width: 0;
         flex: 1;
         box-sizing: border-box;
-        padding: 0.25rem 0 0.25rem 0.5rem;
+        padding: 0.5rem 0 0.5rem 0.75rem;
         color: inherit;
         background: transparent;
         border: 0;
         outline: 0;
-        font: inherit;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        line-height: var(--ui-line-height-tight, 1.25);
       }
       .chevron {
         display: flex;
         flex: 0 0 auto;
-        margin-right: 0.5rem;
+        margin-right: 0.75rem;
         color: var(--ui-text-muted, #64748b);
         pointer-events: none;
         transform: rotate(90deg);
@@ -174,7 +198,7 @@ export class FormSelect extends LitElement {
         background-clip: padding-box;
       }
       li {
-        padding: 0.5rem;
+        padding: 0.5rem 0.75rem;
         cursor: pointer;
       }
       li.active,
@@ -182,7 +206,7 @@ export class FormSelect extends LitElement {
         background: var(--ui-surface-muted, #f8fafc);
       }
       li[aria-selected="true"] {
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
         color: var(--ui-primary, #4f46e5);
       }
       .option-content {
@@ -217,7 +241,7 @@ export class FormSelect extends LitElement {
         white-space: nowrap;
       }
       li.no-options {
-        padding: 0.5rem;
+        padding: 0.5rem 0.75rem;
         color: var(--ui-text-muted, #64748b);
         cursor: default;
         font-style: italic;
