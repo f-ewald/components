@@ -1,6 +1,6 @@
 # @f-ewald/components
 
-## Unreleased
+## 1.0.3
 
 - Lightened the bottom gradient stop of `stat-meter` fills without changing
   their top highlight, values, custom colors, or public API.
