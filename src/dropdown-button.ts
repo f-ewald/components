@@ -38,6 +38,7 @@ export class DropdownButton extends LitElement {
           "Segoe UI Symbol",
           "Noto Color Emoji"
         );
+        font-size: var(--ui-font-size-sm, 0.75rem);
       }
       button.trigger {
         display: flex;
