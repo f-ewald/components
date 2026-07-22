@@ -1,6 +1,6 @@
 # @f-ewald/components
 
-## Unreleased
+## 1.0.1
 
 - `tile-grid` gained an opt-in `fileIcon` (`file-icon`) property that
   prefixes each tile with a decorative Heroicons `document` glyph, for grids
