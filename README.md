@@ -203,7 +203,6 @@ requests.
 | `npm run mcp` | Run the MCP server (`dist/mcp-server.js`) directly, for manual testing. |
 | `npm run test` | Run the Playwright suite against the playground. |
 | `npm run test:design` | Check catalog ordering, token fallbacks, and source design contracts. |
-| `npm run test:visual` | Compare light/dark component screenshots. |
 | `npm run test:site` | Run the Playwright smoke suite against `pages-dist/`. |
 
 ## Contributing

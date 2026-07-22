@@ -149,14 +149,12 @@ script and run `npm run icons`.
 | `npm run mcp` | Run the MCP server directly (`node dist/mcp-server.js`) — mostly for manual smoke-testing; consumers launch it the same way via `.mcp.json`. |
 | `npm run test` | Playwright suite (auto-starts the dev server). |
 | `npm run test:design` | Static catalog/token/style/accessibility contracts. |
-| `npm run test:visual` | Light/dark component screenshot regression suite. |
-| `npm run test:visual:update` | Update screenshots; use the pinned Linux command in the design contract. |
 | `npm run test:site` | Playwright smoke suite against the built `pages-dist/` artifact. |
 | `npm run prepublishOnly` | `build` + `docs` + `test` — runs automatically before `npm publish`. |
 
 During implementation, run `typecheck` plus all touched component specs in one
-invocation. Run docs after APIs stabilize; run design/visual/full gates once at
-the end. See `docs/design-language.md` for the deterministic validation tiers.
+invocation. Run docs after APIs stabilize; run the design and full gates once
+at the end. See `docs/design-language.md` for the deterministic validation tiers.
 
 ## GitHub Pages
 
@@ -171,7 +169,7 @@ invokes `generate-docs.mjs --site`, which reads the checked-in
 `.github/workflows/pages.yml` deploys on pushes to `main` and manual dispatch.
 It uses only GitHub-authored actions, checks out with
 `persist-credentials: false`, has `contents: read` rather than write, and
-gates on component, design-contract, visual, and site tests before upload. It
+gates on component, design-contract, and site tests before upload. It
 fails if the build changes tracked or staged files. Its only write permission
 is in the deploy job for the GitHub Pages deployment; it cannot commit, push,
 tag, open pull requests, publish releases, or change repository settings.
