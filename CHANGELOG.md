@@ -1,5 +1,10 @@
 # @f-ewald/components
 
+## 1.1.1
+
+- Fixed `dropdown-button`'s open menu falling back to the ambient page
+  font-size instead of the tokenized `--ui-font-size-sm` control size.
+
 ## 1.1.0
 
 - Standardized component measurements across a strict 4px spacing grid,
