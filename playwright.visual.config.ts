@@ -1,8 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Canonical component screenshots. Baselines are generated in the pinned
- * Playwright Linux image documented in docs/design-language.md.
+ * Canonical component screenshots. Baselines are generated on the GitHub
+ * amd64 runner documented in docs/design-language.md.
  */
 export default defineConfig({
   testDir: "./visual-tests",
