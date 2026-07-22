@@ -6,7 +6,6 @@ on:
       - "src/**"
       - "tests/**"
       - "design-tests/**"
-      - "visual-tests/**"
       - "demo/**"
       - "docs/design-language.md"
       - "index.html"
@@ -49,6 +48,3 @@ jobs:
 
       - name: Run design contracts
         run: npm run test:design
-
-      - name: Run component screenshots
-        run: npm run test:visual

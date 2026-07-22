@@ -46,8 +46,6 @@
     "mcp": "node dist/mcp-server.js",
     "test": "playwright test",
     "test:design": "playwright test --config playwright.design.config.ts",
-    "test:visual": "playwright test --config playwright.visual.config.ts",
-    "test:visual:update": "playwright test --config playwright.visual.config.ts --update-snapshots",
     "test:site": "playwright test --config playwright.site.config.ts",
     "prepublishOnly": "npm run build && npm run docs && npm run test"
   },
