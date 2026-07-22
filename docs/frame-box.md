@@ -40,6 +40,8 @@ _None._
 | `--ui-border` |
 | `--ui-font` |
 | `--ui-font-size-xs` |
-| `--ui-radius-sm` |
+| `--ui-font-weight-semibold` |
+| `--ui-radius` |
 | `--ui-surface` |
 | `--ui-text-muted` |
+| `--ui-tracking-wide` |

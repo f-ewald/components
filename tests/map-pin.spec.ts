@@ -6,6 +6,7 @@ test.describe("map-pin", () => {
 
     const rank1 = page.locator("#pin-rank-1");
     await expect(rank1).toContainText("1");
+    await expect(rank1.locator(".content")).toHaveCSS("font-weight", "700");
     await expect(rank1.locator("svg")).toBeVisible();
     await expect(rank1.locator("path")).toHaveAttribute("fill", /^url\(#map-pin-grad-/);
 

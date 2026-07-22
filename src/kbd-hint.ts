@@ -145,7 +145,7 @@ export class KbdHint extends LitElement {
           monospace
         );
         font-size: var(--ui-font-size-xs, 0.6875rem);
-        line-height: 1;
+        line-height: var(--ui-line-height-glyph, 1);
       }
     `,
   ];

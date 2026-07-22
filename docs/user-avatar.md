@@ -39,5 +39,6 @@ _None._
 | Custom property |
 | --- |
 | `--ui-font` |
+| `--ui-font-weight-semibold` |
 | `--ui-on-accent` |
 | `--ui-primary` |

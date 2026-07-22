@@ -43,7 +43,7 @@ export class UserAvatar extends LitElement {
           "Segoe UI Symbol",
           "Noto Color Emoji"
         );
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
         overflow: hidden;
         flex: 0 0 auto;
       }

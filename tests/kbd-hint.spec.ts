@@ -145,4 +145,18 @@ test.describe("kbd-hint", () => {
     expect(styles[1].fontFamily.toLowerCase()).toContain("mono");
     expect(styles[1].fontSize).toBe("11px");
   });
+
+  test("keycap uses the tokenized single-glyph line height", async ({ page }) => {
+    await page.goto("/");
+    const metrics = await page
+      .locator("#kbd-auto kbd")
+      .first()
+      .evaluate((element) => {
+        const style = getComputedStyle(element);
+        return { lineHeight: style.lineHeight, fontSize: style.fontSize };
+      });
+    // line-height: var(--ui-line-height-glyph, 1) collapses the glyph box to font-size.
+    expect(metrics.lineHeight).toBe(metrics.fontSize);
+    expect(metrics.fontSize).toBe("11px");
+  });
 });

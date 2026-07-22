@@ -36,8 +36,10 @@ export class RadioPills extends LitElement {
       .pill {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
-        padding: 0.25rem 0.75rem;
+        gap: 0.5rem;
+        min-height: 2rem;
+        box-sizing: border-box;
+        padding: 0.25rem 0.5rem;
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: 999px;
         cursor: pointer;
@@ -52,6 +54,7 @@ export class RadioPills extends LitElement {
           "Noto Color Emoji"
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
+        line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
       }
       .pill:has(input:checked) {
@@ -59,8 +62,8 @@ export class RadioPills extends LitElement {
         background: var(--ui-surface-muted, #f8fafc);
       }
       .pill input {
-        width: 0.85rem;
-        height: 0.85rem;
+        width: 1rem;
+        height: 1rem;
         accent-color: var(--ui-primary, #4f46e5);
         cursor: pointer;
         margin: 0;

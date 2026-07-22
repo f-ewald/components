@@ -74,4 +74,23 @@ test.describe("slide-panel", () => {
     expect(openAfterReconnect).toBe(false);
     await expect(panel.getByRole("dialog")).not.toBeVisible();
   });
+
+  test("uses the 20rem side-panel width, tokenized title weight, and 32px close control", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.locator("#panel-open").click();
+    const inner = page.locator("#panel-demo .panel");
+    await expect(inner).toHaveCSS("width", "320px");
+    const title = page.locator("#panel-demo .panel-title");
+    await expect(title).toHaveCSS("font-weight", "600");
+    await expect(title).toHaveCSS("font-size", "16px");
+    await expect(title).toHaveCSS("line-height", "20px");
+    await expect(page.locator("#panel-demo .panel-header")).toHaveCSS("padding", "12px");
+
+    const close = page.locator("#panel-demo .close-btn");
+    await expect(close).toHaveCSS("width", "32px");
+    await expect(close).toHaveCSS("height", "32px");
+    await expect(close).toHaveCSS("border-radius", "4px");
+  });
 });

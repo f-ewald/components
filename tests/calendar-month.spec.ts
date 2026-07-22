@@ -524,4 +524,23 @@ test.describe("calendar-month", () => {
       expect(focusState.focusedKeys).toHaveLength(0);
     }
   });
+
+  test("tokenizes label weights while preserving lane leading geometry", async ({ page }) => {
+    await page.goto("/");
+    const calendar = page.locator("#calendar-month-demo");
+    await expect(calendar.locator(".month-name")).toHaveCSS("font-weight", "600");
+    await expect(calendar.locator(".month-name")).toHaveCSS("font-size", "16px");
+    await expect(calendar.locator(".month-name")).toHaveCSS("line-height", "20px");
+    await expect(calendar.locator(".entry-title").first()).toHaveCSS("font-weight", "500");
+
+    const detailLeading = await calendar
+      .locator(".entry-details")
+      .first()
+      .evaluate((node) => getComputedStyle(node).lineHeight);
+    const detailFontSize = await calendar
+      .locator(".entry-details")
+      .first()
+      .evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
+    expect(Number.parseFloat(detailLeading) / detailFontSize).toBeCloseTo(1.15, 2);
+  });
 });

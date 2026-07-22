@@ -47,6 +47,8 @@ _None._
 | `--ui-font-size` |
 | `--ui-hover-overlay` |
 | `--ui-info` |
+| `--ui-line-height-glyph` |
+| `--ui-line-height-normal` |
 | `--ui-on-accent` |
 | `--ui-radius` |
 | `--ui-radius-sm` |

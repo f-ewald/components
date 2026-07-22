@@ -42,7 +42,10 @@ _None._
 | --- |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-weight-medium` |
+| `--ui-font-weight-semibold` |
 | `--ui-success` |
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |
+| `--ui-tracking-wide` |

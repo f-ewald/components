@@ -27,7 +27,7 @@ import "@f-ewald/components/icon-button.js";
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `icon` | _(JS property only)_ | `TemplateResult | null` | `null` | Pre-rendered icon template, e.g. `iconPencil(16)` from this package's icon set. |
+| `icon` | _(JS property only)_ | `TemplateResult | null` | `null` | Pre-rendered icon template, e.g. `iconPencil(18)` from this package's icon set. |
 | `label` | `label` | `string` | `""` | Required accessible label, applied as `aria-label`/`title`. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables the button and dims it. |
 

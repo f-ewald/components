@@ -34,7 +34,9 @@ export class CopyLinkButton extends LitElement {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 0.25rem;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
         color: var(--ui-text-muted, #64748b);
         border-radius: var(--ui-radius-sm, 0.25rem);
         display: inline-flex;
@@ -89,7 +91,7 @@ export class CopyLinkButton extends LitElement {
         ?disabled=${this.disabled}
         @click=${this._onClick}
       >
-        ${iconLink(16)}
+        ${iconLink(18)}
       </button>
     `;
   }

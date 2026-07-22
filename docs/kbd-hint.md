@@ -39,4 +39,5 @@ _None._
 | --- |
 | `--ui-font-mono` |
 | `--ui-font-size-xs` |
+| `--ui-line-height-glyph` |
 | `--ui-radius-sm` |

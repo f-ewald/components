@@ -40,4 +40,17 @@ test.describe("toast-notification", () => {
     await dismiss.focus();
     await expect(dismiss).toBeFocused();
   });
+
+  test("uses tokenized body leading and an 8px surface radius", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("#toast-success").click();
+    const toast = page.locator("toast-notification .toast");
+    await expect(toast).toHaveCSS("line-height", "21px");
+    await expect(toast).toHaveCSS("border-radius", "8px");
+    await expect(toast).toHaveCSS("padding", "12px");
+    const close = toast.locator(".close");
+    await expect(close).toHaveCSS("width", "32px");
+    await expect(close).toHaveCSS("height", "32px");
+    await expect(close.locator("svg")).toHaveAttribute("width", "18");
+  });
 });

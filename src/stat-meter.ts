@@ -33,8 +33,8 @@ export class StatMeter extends LitElement {
 
       .label {
         font-size: var(--ui-font-size-sm, 0.75rem);
-        font-weight: 600;
-        letter-spacing: 0.04em;
+        font-weight: var(--ui-font-weight-semibold, 600);
+        letter-spacing: var(--ui-tracking-wide, 0.04em);
         color: var(--ui-text-muted, #64748b);
       }
 
@@ -62,7 +62,7 @@ export class StatMeter extends LitElement {
       .value {
         min-width: 2rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
-        font-weight: 500;
+        font-weight: var(--ui-font-weight-medium, 500);
         color: var(--ui-text, #0f172a);
         font-variant-numeric: tabular-nums;
         text-align: right;

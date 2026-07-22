@@ -39,6 +39,7 @@ _None._
 | `--ui-danger` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-weight-medium` |
 | `--ui-info` |
 | `--ui-primary` |
 | `--ui-success` |

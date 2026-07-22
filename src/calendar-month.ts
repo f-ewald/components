@@ -74,8 +74,9 @@ export class CalendarMonth extends LitElement {
       .month-name {
         margin: 0 0 0.5rem;
         color: var(--ui-text, #0f172a);
-        font-size: var(--ui-font-size, 0.875rem);
-        font-weight: 600;
+        font-size: var(--ui-font-size-lg, 1rem);
+        font-weight: var(--ui-font-weight-semibold, 600);
+        line-height: var(--ui-line-height-tight, 1.25);
       }
       table {
         width: 100%;
@@ -101,7 +102,7 @@ export class CalendarMonth extends LitElement {
       }
       .day-row.today .day-number {
         color: var(--ui-primary, #4f46e5);
-        font-weight: 700;
+        font-weight: var(--ui-font-weight-bold, 700);
       }
       .day-weekday {
         width: 2.25rem;
@@ -110,10 +111,10 @@ export class CalendarMonth extends LitElement {
       }
       .day-row.today .day-weekday {
         color: var(--ui-primary, #4f46e5);
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
       }
       .day-row.weekend .day-weekday {
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
       }
       .lane-cell {
         padding: 0.25rem 0.5rem;
@@ -176,7 +177,7 @@ export class CalendarMonth extends LitElement {
       }
       .entry-title {
         box-sizing: border-box;
-        font-weight: 500;
+        font-weight: var(--ui-font-weight-medium, 500);
         padding: 0.25rem 0.5rem;
         pointer-events: none;
         white-space: nowrap;
@@ -191,7 +192,7 @@ export class CalendarMonth extends LitElement {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: var(--entry-detail-lines, 1);
         font-size: var(--ui-font-size-xs, 0.6875rem);
-        font-weight: 400;
+        font-weight: var(--ui-font-weight-regular, 400);
         line-height: 1.15;
         overflow-wrap: anywhere;
         text-overflow: ellipsis;
@@ -224,7 +225,7 @@ export class CalendarMonth extends LitElement {
         border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
         padding-top: 0.25rem;
         font-size: var(--ui-font-size-xs, 0.6875rem);
-        font-weight: 500;
+        font-weight: var(--ui-font-weight-medium, 500);
         line-height: 1.15;
         overflow: hidden;
         text-overflow: ellipsis;

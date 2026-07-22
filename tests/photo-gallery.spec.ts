@@ -38,6 +38,14 @@ test.describe("photo-gallery", () => {
     await expect(gallery.locator(".counter")).toHaveText("1 / 3");
     await expect(gallery.locator(".indicator")).toHaveCount(3);
 
+    // Overlay arrows are a 32x32 tap target with an 18px standalone icon.
+    const arrow = gallery.locator(".arrow-button").first();
+    await expect(arrow).toHaveCSS("width", "32px");
+    await expect(arrow).toHaveCSS("height", "32px");
+    await expect(arrow.locator("svg")).toHaveAttribute("width", "18");
+    await expect(gallery.locator(".indicator").first()).toHaveCSS("width", "32px");
+    await expect(gallery.locator(".indicator").first()).toHaveCSS("height", "32px");
+
     const viewportStyles = await gallery.locator(".viewport").evaluate((element) => ({
       aspectRatio: getComputedStyle(element).aspectRatio,
       objectFit: getComputedStyle(element.querySelector("img")!).objectFit,
@@ -185,6 +193,7 @@ test.describe("photo-gallery", () => {
 
     await viewport.hover();
     const autoplayButton = gallery.locator(".autoplay-button");
+    await expect(autoplayButton).toHaveCSS("height", "32px");
     await autoplayButton.click();
     await expect(gallery).toHaveAttribute("paused", "");
     await expect(autoplayButton).toHaveText("Play");

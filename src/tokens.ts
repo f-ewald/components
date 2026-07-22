@@ -43,9 +43,25 @@ export const tokenValues: Record<string, string> = {
     'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
   "--ui-font-mono":
     "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-  "--ui-font-size": "0.875rem",
-  "--ui-font-size-sm": "0.75rem",
+  "--ui-font-size-lg": "1rem", // text-base
+  "--ui-font-size": "0.875rem", // text-sm
+  "--ui-font-size-sm": "0.75rem", // text-xs
   "--ui-font-size-xs": "0.6875rem",
+
+  // Font weights — the only four weights the system uses.
+  "--ui-font-weight-regular": "400",
+  "--ui-font-weight-medium": "500",
+  "--ui-font-weight-semibold": "600",
+  "--ui-font-weight-bold": "700",
+
+  // Line heights — glyph (icon/marker box), tight (headings), normal (body).
+  "--ui-line-height-glyph": "1",
+  "--ui-line-height-tight": "1.25",
+  "--ui-line-height-normal": "1.5",
+
+  // Letter spacing / tracking — default and the single widened step.
+  "--ui-tracking-normal": "0",
+  "--ui-tracking-wide": "0.04em",
 };
 
 /**

@@ -52,6 +52,8 @@ _None._
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-weight-medium` |
+| `--ui-line-height-tight` |
 | `--ui-on-accent` |
 | `--ui-primary` |
 | `--ui-primary-hover` |

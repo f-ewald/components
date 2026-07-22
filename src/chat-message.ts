@@ -46,10 +46,20 @@ export class ChatMessage extends LitElement {
       }
       button.header {
         width: 100%;
+        min-height: 2rem;
         padding: 0;
         border: 0;
         background: none;
-        font-family: inherit;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         text-align: left;
         cursor: pointer;
       }
@@ -66,7 +76,7 @@ export class ChatMessage extends LitElement {
         transform: rotate(90deg);
       }
       .author {
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
         color: var(--ui-text, #0f172a);
       }
       .summary {
@@ -76,9 +86,9 @@ export class ChatMessage extends LitElement {
       }
       .body-card {
         border-radius: var(--ui-radius, 0.5rem);
-        padding: 0.5rem 0.75rem;
+        padding: 0.75rem;
         color: var(--ui-text, #0f172a);
-        line-height: 1.5;
+        line-height: var(--ui-line-height-normal, 1.5);
       }
       .body-card[hidden] {
         display: none;
@@ -151,7 +161,7 @@ export class ChatMessage extends LitElement {
     const headerContent = html`
       ${this.collapsible
         ? html`<span class="chevron ${this.collapsed ? "" : "expanded"}" aria-hidden="true"
-            >${iconChevronRight(12)}</span
+            >${iconChevronRight(14)}</span
           >`
         : nothing}
       ${this.author ? html`<span class="author">${this.author}</span>` : nothing}

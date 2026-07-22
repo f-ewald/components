@@ -470,12 +470,18 @@ test.describe("form-select", () => {
     await expect(backlog.locator(".option-label")).toHaveCSS("color", "rgb(255, 255, 255)");
     await expect(backlogIcon).toHaveCSS("color", "rgb(255, 255, 255)");
 
-    const openAlignment = await open.evaluate((option) => {
-      const optionLeft = option.getBoundingClientRect().left;
-      const labelLeft = option.querySelector(".option-label")!.getBoundingClientRect().left;
-      return labelLeft - optionLeft;
-    });
-    expect(openAlignment).toBeLessThan(12);
+    const [openAlignment, backlogAlignment] = await Promise.all(
+      [open, backlog].map((option) =>
+        option.evaluate((node) => {
+          const optionLeft = node.getBoundingClientRect().left;
+          const labelLeft = node.querySelector(".option-label")!.getBoundingClientRect().left;
+          return labelLeft - optionLeft;
+        }),
+      ),
+    );
+    // An iconless label starts at the row's text gutter; an icon option's label
+    // is pushed right by the icon + gap, so iconless reserves no phantom space.
+    expect(openAlignment).toBeLessThan(backlogAlignment);
   });
 
   test("searchable mode has a fallback accessible name when label is omitted", async ({ page }) => {
@@ -491,5 +497,25 @@ test.describe("form-select", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await expect(page.locator("#select-state .chevron")).toHaveCSS("transition-duration", "0s");
+  });
+
+  test("normalizes trigger, list-row, and searchable metrics coherently", async ({ page }) => {
+    await page.goto("/");
+    const el = page.locator("#select-state");
+    const trigger = el.locator("button.trigger");
+    await expect(trigger).toHaveCSS("padding", "8px 12px");
+    await expect(trigger).toHaveCSS("border-radius", "4px");
+    await expect(trigger).toHaveCSS("height", "32px");
+    await expect(trigger).toHaveCSS("line-height", "15px");
+
+    await trigger.click();
+    await expect(el.locator("li[role='option']").first()).toHaveCSS("padding", "8px 12px");
+    await expect(el.locator("li[aria-selected='true']")).toHaveCSS("font-weight", "600");
+
+    const searchInput = page.locator("#select-searchable input.search-input");
+    await expect(searchInput).toHaveCSS("padding", "8px 0px 8px 12px");
+    await expect(page.locator("#select-searchable .search-trigger")).toHaveCSS("height", "32px");
+    await expect(searchInput).toHaveCSS("line-height", "15px");
+    await expect(page.locator("#select-searchable .chevron")).toHaveCSS("margin-right", "12px");
   });
 });

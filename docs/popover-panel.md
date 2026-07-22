@@ -61,7 +61,9 @@ import "@f-ewald/components/popover-panel.js";
 | `--ui-border` |
 | `--ui-focus-ring` |
 | `--ui-font` |
-| `--ui-font-size` |
+| `--ui-font-size-lg` |
+| `--ui-font-weight-semibold` |
+| `--ui-line-height-tight` |
 | `--ui-overlay` |
 | `--ui-radius` |
 | `--ui-radius-sm` |

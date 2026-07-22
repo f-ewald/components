@@ -75,6 +75,7 @@ _None._
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-shadow` |

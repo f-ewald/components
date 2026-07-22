@@ -59,7 +59,7 @@ export class IconButton extends LitElement {
     `,
   ];
 
-  /** Pre-rendered icon template, e.g. `iconPencil(16)` from this package's icon set. */
+  /** Pre-rendered icon template, e.g. `iconPencil(18)` from this package's icon set. */
   @property({ attribute: false }) icon: TemplateResult | null = null;
   /** Required accessible label, applied as `aria-label`/`title`. */
   @property() label = "";

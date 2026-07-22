@@ -38,10 +38,12 @@ export class UiButton extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
+        height: 2rem;
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 1rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
-        font-weight: 500;
+        font-weight: var(--ui-font-weight-medium, 500);
+        line-height: var(--ui-line-height-tight, 1.25);
         font-family: var(
           --ui-font,
           ui-sans-serif,

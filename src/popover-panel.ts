@@ -75,13 +75,14 @@ export class PopoverPanel extends LitElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.5rem;
+        padding: 0.75rem;
         border-bottom: 1px solid var(--ui-border, #e2e8f0);
         flex: 0 0 auto;
       }
       .panel-title {
-        font-weight: 600;
-        font-size: var(--ui-font-size, 0.875rem);
+        font-weight: var(--ui-font-weight-semibold, 600);
+        font-size: var(--ui-font-size-lg, 1rem);
+        line-height: var(--ui-line-height-tight, 1.25);
         font-family: var(
           --ui-font,
           ui-sans-serif,
@@ -110,7 +111,9 @@ export class PopoverPanel extends LitElement {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 0.25rem 0.5rem;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
         color: var(--ui-text-muted, #64748b);
         border-radius: var(--ui-radius-sm, 0.25rem);
         flex: 0 0 auto;

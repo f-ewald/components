@@ -11,6 +11,7 @@ test.describe("map-circle", () => {
 
     const rank = page.locator("#circle-rank");
     await expect(rank).toContainText("1");
+    await expect(rank.locator(".content")).toHaveCSS("font-weight", "700");
     const pointStyle = page.locator("#circle-point");
     await expect(pointStyle.locator("svg")).toHaveAttribute("width", "14");
     await expect(pointStyle.locator("circle")).toHaveAttribute("stroke-width", "3");

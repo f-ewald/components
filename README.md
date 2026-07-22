@@ -128,6 +128,10 @@ value instead of the inherited one, silently discarding whatever `:root`
 set. Don't reintroduce that pattern.)
 
 The full token set is defined in [`src/tokens.ts`](./src/tokens.ts).
+Typography, spacing, control, icon, radius, panel, chart, and accessibility
+measurements follow the canonical
+[`docs/design-language.md`](./docs/design-language.md) contract and are checked
+by `npm run test:design`.
 
 ## MCP server
 

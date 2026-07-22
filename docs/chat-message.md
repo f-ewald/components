@@ -55,6 +55,8 @@ _None._
 | `--ui-font-mono` |
 | `--ui-font-size` |
 | `--ui-font-size-sm` |
+| `--ui-font-weight-semibold` |
+| `--ui-line-height-normal` |
 | `--ui-primary` |
 | `--ui-radius` |
 | `--ui-radius-sm` |

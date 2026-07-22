@@ -35,7 +35,7 @@ Import: `import "@f-ewald/components/address-autocomplete.js";`
 
 Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `types` (attribute `types`) : string, default "address"; `endpoint` (attribute `endpoint`) : string, default "https://api.mapbox.com/search/geocode/v6/forward"; `accessToken` (attribute `access-token`) : string, default ""; `bbox` (attribute `bbox`) : string, default ""; `proximity` (attribute `proximity`) : string, default ""; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `suggestions` (JS property only) : AddressSuggestion[] | null, default null; `selectedSuggestion` (JS property only) : AddressSuggestion | null, default —
 Events: `address-select`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -85,7 +85,7 @@ Import: `import "@f-ewald/components/autocomplete-input.js";`
 
 Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `endpoint` (attribute `endpoint`) : string, default ""; `queryParam` (attribute `query-param`) : string, default "q"; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `options` (JS property only) : AutocompleteOption[] | null, default null; `selectedOption` (JS property only) : AutocompleteOption | null, default —
 Events: `option-select`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -153,7 +153,7 @@ Import: `import "@f-ewald/components/calendar-month.js";`
 
 Properties: `year` (attribute `year`) : number, default —; `month` (attribute `month`) : number, default 1
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-hover-overlay`, `--ui-info`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-bold`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-hover-overlay`, `--ui-info`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
 
 Example:
 ```html
@@ -213,7 +213,7 @@ Import: `import "@f-ewald/components/chat-message.js";`
 
 Properties: `role` (attribute `role`) : ChatMessageRole, default "agent"; `variant` (attribute `variant`) : ChatMessageVariant, default "normal"; `author` (attribute `author`) : string, default ""; `timestamp` (attribute `timestamp`) : string | null, default null; `summary` (attribute `summary`) : string, default ""; `collapsible` (attribute `collapsible`) : boolean, default false; `collapsed` (attribute `collapsed`) : boolean, default false
 Events: `toggle`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-mono`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-mono`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -238,7 +238,7 @@ Import: `import "@f-ewald/components/confirm-dialog.js";`
 
 Properties: `open` (attribute `open`) : boolean, default false; `confirmLabel` (attribute `confirm-label`) : string, default "Delete"; `cancelLabel` (attribute `cancel-label`) : string, default "Cancel"; `danger` (attribute `danger`) : boolean, default true; `busy` (attribute `busy`) : boolean, default false; `error` (attribute `error`) : string | null, default null
 Events: `confirm`, `cancel`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -281,7 +281,7 @@ Import: `import "@f-ewald/components/data-table.js";`
 
 Properties: `columns` (JS property only) : DataTableColumn[], default []; `rows` (JS property only) : unknown[], default []; `rowKey` (JS property only) : (row: unknown, index: number) => string | number, default —; `renderCell` (JS property only) : (row: unknown, key: string) => unknown, default —; `rowHref` (JS property only) : ((row: unknown) => string | null) | null, default null; `rowLabel` (JS property only) : ((row: unknown) => string) | null, default null
 Events: none
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -326,15 +326,15 @@ markers. The SVG viewBox is kept in sync with the element's pixel width via
 ResizeObserver so that font sizes and stroke widths are always in real pixels
 regardless of container width.
 
-Pass `fontSize` to control all text size (default 11). Pass a single
+Pass `fontSize` to control all text size (default 10). Pass a single
 `{label:'', value}` for a single-value display or multiple
 `{label:'A'|'B'|...}` entries to compare several values.
 
 Import: `import "@f-ewald/components/distribution-chart.js";`
 
-Properties: `metric` (attribute `metric`) : string, default ""; `values` (JS property only) : DistributionValue[], default []; `markerColors` (JS property only) : string[], default ["#4f46e5", "#d97706", "#0d9488", "#e11d48"]; `fontSize` (attribute `font-size`) : number, default 11
+Properties: `metric` (attribute `metric`) : string, default ""; `values` (JS property only) : DistributionValue[], default []; `markerColors` (JS property only) : string[], default ["#4f46e5", "#d97706", "#0d9488", "#e11d48"]; `fontSize` (attribute `font-size`) : number, default 10
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text-muted`
 
 Example:
 ```html
@@ -355,7 +355,7 @@ Import: `import "@f-ewald/components/dropdown-button.js";`
 
 Properties: `label` (attribute `label`) : string, default ""; `options` (JS property only) : DropdownOption[], default []; `disabled` (attribute `disabled`) : boolean, default false
 Events: `select`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
 
 Example:
 ```html
@@ -415,7 +415,7 @@ Import: `import "@f-ewald/components/form-select.js";`
 
 Properties: `options` (JS property only) : SelectOption[], default []; `value` (attribute `value`) : string, default ""; `label` (attribute `label`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `searchable` (attribute `searchable`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -447,7 +447,7 @@ Import: `import "@f-ewald/components/frame-box.js";`
 
 Properties: `label` (attribute `label`) : string, default ""
 Events: none
-CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-xs`, `--ui-radius-sm`, `--ui-surface`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-xs`, `--ui-font-weight-semibold`, `--ui-radius`, `--ui-surface`, `--ui-text-muted`, `--ui-tracking-wide`
 
 Example:
 ```html
@@ -533,7 +533,7 @@ Import: `import "@f-ewald/components/kbd-hint.js";`
 
 Properties: `keys` (attribute `keys`) : string, default ""; `platform` (attribute `platform`) : KbdPlatform, default "auto"
 Events: none
-CSS custom properties: `--ui-font-mono`, `--ui-font-size-xs`, `--ui-radius-sm`
+CSS custom properties: `--ui-font-mono`, `--ui-font-size-xs`, `--ui-line-height-glyph`, `--ui-radius-sm`
 
 Example:
 ```html
@@ -574,7 +574,7 @@ Import: `import "@f-ewald/components/map-circle.js";`
 
 Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 18; `ringWidth` (attribute `ring-width`) : number, default 4; `highlighted` (attribute `highlighted`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-font`
+CSS custom properties: `--ui-font`, `--ui-font-weight-bold`, `--ui-line-height-glyph`
 
 Example:
 ```html
@@ -594,7 +594,7 @@ Import: `import "@f-ewald/components/map-pin.js";`
 
 Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 32; `highlighted` (attribute `highlighted`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-font`
+CSS custom properties: `--ui-font`, `--ui-font-weight-bold`, `--ui-line-height-glyph`
 
 Example:
 ```html
@@ -633,7 +633,7 @@ Import: `import "@f-ewald/components/photo-gallery.js";`
 
 Properties: `currentIndex` (attribute `current-index`) : number, default 0; `delay` (attribute `delay`) : number, default 0; `showControls` (attribute `show-controls`) : boolean, default true; `showCounter` (attribute `show-counter`) : boolean, default false; `showIndicators` (attribute `show-indicators`) : boolean, default false; `showAutoplayControl` (attribute `show-autoplay-control`) : boolean, default true; `paused` (attribute `paused`) : boolean, default false; `aspectRatio` (attribute `aspect-ratio`) : string, default "16 / 9"; `objectFit` (attribute `object-fit`) : PhotoGalleryObjectFit, default "cover"
 Events: `slide-change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -673,7 +673,7 @@ Import: `import "@f-ewald/components/popover-panel.js";`
 
 Properties: `open` (attribute `open`) : boolean, default false; `heading` (attribute `heading`) : string, default ""; `centered` (attribute `centered`) : boolean, default false
 Events: `panel-close`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-overlay`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-overlay`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -726,7 +726,7 @@ Import: `import "@f-ewald/components/radio-cards.js";`
 
 Properties: `options` (JS property only) : RadioCardOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -754,7 +754,7 @@ Import: `import "@f-ewald/components/radio-pills.js";`
 
 Properties: `options` (JS property only) : RadioPillOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-surface-muted`, `--ui-text`
 
 Example:
 ```html
@@ -797,7 +797,7 @@ Import: `import "@f-ewald/components/reveal-button.js";`
 
 Properties: `label` (attribute `label`) : string, default "Reveal hidden content"; `disabled` (attribute `disabled`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`
+CSS custom properties: `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`
 
 Example:
 ```html
@@ -834,7 +834,7 @@ Import: `import "@f-ewald/components/slide-panel.js";`
 
 Properties: `open` (attribute `open`) : boolean, default false; `heading` (attribute `heading`) : string, default ""
 Events: `panel-close`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -854,7 +854,7 @@ Import: `import "@f-ewald/components/stat-meter.js";`
 
 Properties: `label` (attribute `label`) : string, default ""; `percent` (attribute `percent`) : number | null, default null; `color` (attribute `color`) : string, default ""
 Events: none
-CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`
 
 Example:
 ```html
@@ -873,7 +873,7 @@ Import: `import "@f-ewald/components/status-pill.js";`
 
 Properties: `label` (attribute `label`) : string, default ""; `color` (attribute `color`) : StatusPillColor, default "neutral"; `spinner` (attribute `spinner`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-info`, `--ui-primary`, `--ui-success`, `--ui-text-muted`, `--ui-warning`
+CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-info`, `--ui-primary`, `--ui-success`, `--ui-text-muted`, `--ui-warning`
 
 Example:
 ```html
@@ -932,7 +932,7 @@ Import: `import "@f-ewald/components/toast-notification.js";`
 
 Properties: none
 Events: none
-CSS custom properties: `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-hover-overlay`, `--ui-info`, `--ui-on-accent`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-success`, `--ui-text`
+CSS custom properties: `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-hover-overlay`, `--ui-info`, `--ui-line-height-glyph`, `--ui-line-height-normal`, `--ui-on-accent`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-success`, `--ui-text`
 
 Example:
 ```html
@@ -962,7 +962,7 @@ Import: `import "@f-ewald/components/ui-button.js";`
 
 Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -986,7 +986,7 @@ Import: `import "@f-ewald/components/user-avatar.js";`
 
 Properties: `src` (attribute `src`) : string | null, default null; `name` (attribute `name`) : string | null, default null; `size` (attribute `size`) : string | number, default 32
 Events: none
-CSS custom properties: `--ui-font`, `--ui-on-accent`, `--ui-primary`
+CSS custom properties: `--ui-font`, `--ui-font-weight-semibold`, `--ui-on-accent`, `--ui-primary`
 
 Example:
 ```html
@@ -1006,7 +1006,7 @@ Import: `import "@f-ewald/components/weight-bar-chart.js";`
 
 Properties: `items` (JS property only) : WeightBarItem[], default []
 Events: none
-CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html

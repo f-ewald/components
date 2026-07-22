@@ -9,6 +9,8 @@ test.describe("percent-bar-chart", () => {
     await expect(svg.locator("rect")).toHaveCount(4);
     await expect(svg).toContainText("White");
     await expect(svg).toContainText("Asian");
+    // Horizontal bars use fully rounded ends (rx = half the 10px bar height).
+    await expect(svg.locator("rect").first()).toHaveAttribute("rx", "5");
   });
 
   test("exposes row values while preserving data colors and dark label tokens", async ({ page }) => {

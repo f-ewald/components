@@ -17,8 +17,10 @@ defines the details used when creating or reviewing components.
 
 ## Tokens and colors
 
-- Use `var(--ui-*, exact-fallback)` for reusable colors, fonts, radii, shadows,
-  and focus rings.
+- Use `var(--ui-*, exact-fallback)` for reusable colors, fonts, type metrics,
+  radii, shadows, and focus rings. `tokens.ts` (`tokenValues`) is the single
+  source of truth; every `var(--ui-*, …)` usage must repeat that token's exact
+  fallback, and any newly introduced `--ui-*` usage must add/carry one too.
 - Semantic states use `primary`, `info`, `success`, `warning`, and `danger`.
 - Foregrounds on solid semantic fills use `--ui-on-accent`.
 - Elevated dark tooltips use `--ui-tooltip`; modal backdrops use
@@ -34,23 +36,58 @@ defines the details used when creating or reviewing components.
 
 ## Typography
 
-- Body/component text: `--ui-font-size` at regular weight.
-- Compact controls/labels: `--ui-font-size-sm`, usually weight 500.
-- Secondary details/keycaps: `--ui-font-size-xs`.
-- Code/keycaps: `--ui-font-mono`.
-- Section/title emphasis should normally use weight 600; reserve 700 for badges
-  or data emphasis.
+Type is fully tokenized; every axis has an exact-fallback `--ui-*` token and
+literal values are migrated onto them.
+
+- **Family:** `--ui-font` (system sans stack) for UI text; `--ui-font-mono`
+  for code and keycaps. `font-family: inherit` is reserved for components that
+  intentionally adopt the host's type — `editable-text` and the inline
+  formatters — so an inline edit or formatted value matches surrounding copy.
+- **Size:** `--ui-font-size` (`0.875rem`) for body/component text,
+  `--ui-font-size-sm` (`0.75rem`) for compact controls/labels,
+  `--ui-font-size-xs` (`0.6875rem`) for secondary details/keycaps, and
+  `--ui-font-size-lg` (`1rem`) for the largest titles/emphasis.
+- **Weight:** only four weights exist —
+  `--ui-font-weight-regular` (400), `--ui-font-weight-medium` (500),
+  `--ui-font-weight-semibold` (600), and `--ui-font-weight-bold` (700). Body is
+  regular, compact controls/labels are medium, section/title emphasis is
+  semibold, and bold is reserved for badges or data emphasis.
+- **Line height:** `--ui-line-height-glyph` (1) for single-glyph icon/marker
+  boxes, `--ui-line-height-tight` (1.25) for headings and compact multi-line
+  labels, and `--ui-line-height-normal` (1.5) for running body text.
+- **Tracking:** `--ui-tracking-normal` (0) is the default; `--ui-tracking-wide`
+  (0.04em) is the single widened step for uppercase micro-labels.
+- **Exemptions:** SVG presentation attributes (`font-size="…"`,
+  `font-weight="…"`) can't take `var()` and stay literal at the token's
+  fallback value; `line-height: 0` used purely to collapse an inline
+  icon/SVG box is domain geometry, not a type choice.
 
 ## Spacing and geometry
 
-- Layout spacing uses literal multiples of `0.25rem`; spacing is not tokenized.
-- Convert CSS layout pixels to rems.
-- Exceptions: 1px borders, SVG/canvas geometry, percentages, aspect ratios,
-  animation timing, and proportional calculations derived from a public size.
-- Use `--ui-radius-sm` for controls, `--ui-radius` for cards/dialogs, and an
-  intentional full pill/circle radius only for pill/avatar/marker shapes.
+- `padding`, `margin`, and `gap` use literal multiples of `0.25rem`; spacing is
+  not tokenized. Convert CSS layout pixels to rems.
+- Documented spacing exceptions: 1px borders, SVG/canvas geometry, percentages,
+  aspect ratios, animation timing, proportional calculations derived from a
+  public size, `0.125rem` optical alignment nudges, and domain geometry.
+- Use `--ui-radius-sm` (`0.25rem` ≈ 4px) for controls, `--ui-radius`
+  (`0.5rem` ≈ 8px) for cards/dialogs/surfaces, and an intentional full
+  pill/circle radius only for pill/avatar/marker shapes.
 - Compact controls must retain a clear hit target and must not reserve layout
   space for optional content that is absent.
+
+### Control metrics
+
+- Standard interactive controls share a single `2rem` height; padding is
+  applied by role (inline text, icon-only, standalone) rather than ad hoc.
+- Icons are `14px` inline (next to text) and `18px` standalone; icon-only tap
+  targets are `32px`.
+- Control corners use `--ui-radius-sm` (4px); enclosing surfaces use
+  `--ui-radius` (8px).
+- Side panels use a `20rem` compact / `25rem` comfortable width; the shared
+  responsive breakpoint is `48rem`.
+- Radio inputs render at `1rem`.
+- Charts and metadata-only components keep their own domain geometry and are
+  exempt from the control-metric grid.
 
 ## Interaction states
 
@@ -107,6 +144,19 @@ defines the details used when creating or reviewing components.
 - Public API changes update JSDoc, generated docs, `llms.txt`, README when
   relevant, and the changelog.
 
+## Measurement contracts
+
+- `design-tests/design-language.spec.ts` enforces the token, import, catalog,
+  and measurement rules deterministically. The measurement contracts cover
+  tokenized font family/size/weight/leading/tracking, the `0.25rem` spacing
+  grid, 14px/18px icon calls, 2rem interactive targets, surface padding,
+  panel widths, and the shared 48rem breakpoint.
+- Narrow file-scoped allowlists are permitted only for documented domain
+  geometry that cannot use a semantic token. They must equal the live literal
+  inventory exactly, so stale entries and new unapproved literals both fail.
+- Never add an allowlist entry merely to unblock new work, and never weaken the
+  token-fallback, `.js`-import, catalog, or measurement checks.
+
 ## Validation tiers
 
 1. Inner loop: `npm run typecheck` and all touched component specs in one
@@ -120,8 +170,9 @@ defines the details used when creating or reviewing components.
 
 Canonical screenshot baselines are generated by the **Generate visual
 baselines** GitHub Actions workflow on the same amd64 runner image used by CI.
-Run it manually, download the `visual-baselines-linux-amd64` artifact, review
-the images, and replace `visual-tests/__screenshots__/`.
+It runs automatically when component/playground rendering changes and can also
+be dispatched manually. Download the `visual-baselines-linux-amd64` artifact,
+review the images, and replace `visual-tests/__screenshots__/`.
 
 For local iteration, the pinned Playwright image provides a close
 architecture-matched preview:

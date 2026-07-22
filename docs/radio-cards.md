@@ -53,6 +53,8 @@ _None._
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-weight-regular` |
+| `--ui-font-weight-semibold` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-surface-muted` |

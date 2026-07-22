@@ -46,7 +46,7 @@ export class DataTable extends LitElement {
       }
       th {
         text-align: left;
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
         color: var(--ui-text-muted, #64748b);
         padding: 0.5rem 0.75rem;
         border-bottom: 1px solid var(--ui-border, #e2e8f0);

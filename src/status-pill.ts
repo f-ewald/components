@@ -26,7 +26,7 @@ export class StatusPill extends LitElement {
         border-radius: 9999px;
         padding: 0.25rem 0.5rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
-        font-weight: 500;
+        font-weight: var(--ui-font-weight-medium, 500);
         font-family: var(
           --ui-font,
           ui-sans-serif,
@@ -90,7 +90,7 @@ export class StatusPill extends LitElement {
   override render() {
     return html`
       <span class="pill ${this.color}">
-        ${this.spinner ? html`<span class="spin" aria-hidden="true">${iconArrowPath(11)}</span>` : nothing}
+        ${this.spinner ? html`<span class="spin" aria-hidden="true">${iconArrowPath(14)}</span>` : nothing}
         ${this.label}
       </span>
     `;

@@ -125,7 +125,7 @@ export class PercentBarChart extends LitElement {
         <text class="chart-label" x=${PAD.left} y=${cy} font-size="10"
               text-anchor="start" dominant-baseline="middle">${g.label}</text>
         <rect x=${PAD.left + LABEL_W} y=${cy - 5}
-              width=${bw} height="10" rx="2"
+              width=${bw} height="10" rx="5"
               fill=${rowFills[i].fill} />
         <text class="chart-label" x=${PAD.left + LABEL_W + barMaxW + 4} y=${cy} font-size="10"
               text-anchor="start" dominant-baseline="middle">${g.pct.toFixed(1)}%</text>

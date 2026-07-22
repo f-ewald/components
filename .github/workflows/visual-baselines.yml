@@ -7,6 +7,11 @@ on:
       - main
     paths:
       - ".github/workflows/visual-baselines.yml"
+      - "demo/**"
+      - "index.html"
+      - "playwright.visual.config.ts"
+      - "src/**"
+      - "visual-tests/component-design.spec.ts"
 
 permissions:
   contents: read

@@ -60,19 +60,20 @@ export class RadioCards extends LitElement {
         background: var(--ui-surface-muted, #f8fafc);
       }
       .card input {
-        width: auto;
+        width: 1rem;
+        height: 1rem;
         margin-top: 0.25rem;
         accent-color: var(--ui-primary, #4f46e5);
         cursor: pointer;
       }
       .card-label {
-        font-weight: 600;
+        font-weight: var(--ui-font-weight-semibold, 600);
         color: var(--ui-text, #0f172a);
       }
       .card-description {
         display: block;
         color: var(--ui-text-muted, #64748b);
-        font-weight: 400;
+        font-weight: var(--ui-font-weight-regular, 400);
       }
       .card:has(input:focus-visible) {
         outline: none;

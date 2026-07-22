@@ -53,8 +53,8 @@ export class MapCircle extends LitElement {
           "Segoe UI Symbol",
           "Noto Color Emoji"
         );
-        font-weight: 700;
-        line-height: 1;
+        font-weight: var(--ui-font-weight-bold, 700);
+        line-height: var(--ui-line-height-glyph, 1);
         text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
         pointer-events: none;
         white-space: nowrap;

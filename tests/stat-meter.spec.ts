@@ -9,6 +9,9 @@ test.describe("stat-meter", () => {
     await expect(cpu.locator(".label")).toHaveText("CPU");
     await expect(cpu.locator(".value")).toHaveText("42%");
     await expect(cpu.locator(".fill")).toHaveAttribute("style", /width:\s*42%/);
+    // Tokenized type: semibold micro-label, medium value.
+    await expect(cpu.locator(".label")).toHaveCSS("font-weight", "600");
+    await expect(cpu.locator(".value")).toHaveCSS("font-weight", "500");
   });
 
   test("a null percent renders an empty bar and a dash instead of 0%", async ({ page }) => {
