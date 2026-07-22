@@ -1,5 +1,10 @@
 # @f-ewald/components
 
+## 1.0.2
+
+- Generate canonical visual baselines on the GitHub-hosted runner so screenshot
+  gates are stable across local CPU architectures and CI font environments.
+
 ## 1.0.1
 
 - `tile-grid` gained an opt-in `fileIcon` (`file-icon`) property that
