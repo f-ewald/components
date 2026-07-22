@@ -49,17 +49,16 @@ test.describe("stat-meter", () => {
     await expect(meter.locator(".track")).toHaveCSS("background-color", "rgb(30, 41, 59)");
   });
 
-  test("fill fades top-to-bottom using the same success-token gradient recipe as map-circle/weight-bar-chart/user-avatar", async ({
+  test("fill keeps its top highlight while softening the bottom gradient stop", async ({
     page,
   }) => {
     await page.goto("/");
     const fill = page.locator("#meter-cpu .fill");
 
-    // Chromium omits the default to-bottom direction; exact stops plus
-    // luminance distinguish this from a plain solid fill.
+    // The top stays 70/30 white; the lighter bottom uses 80/20 black.
     const gradient = await fill.evaluate((el) => getComputedStyle(el).backgroundImage);
     expect(gradient).toBe(
-      "linear-gradient(color(srgb 0.360392 0.747451 0.503137) 0%, color(srgb 0.0603922 0.447451 0.203137) 100%)",
+      "linear-gradient(color(srgb 0.360392 0.747451 0.503137) 0%, color(srgb 0.0690196 0.511373 0.232157) 100%)",
     );
     expect(gradient).not.toMatch(/^linear-gradient\(\s*\d+deg/);
 
@@ -67,13 +66,15 @@ test.describe("stat-meter", () => {
     expect(topLuminance).toBeGreaterThan(bottomLuminance);
   });
 
-  test("a custom color drives the gradient base while keeping the same 70/30 recipe", async ({ page }) => {
+  test("a custom color drives the gradient base while keeping the unchanged 70/30 top and lightened 80/20 bottom", async ({
+    page,
+  }) => {
     await page.goto("/");
     const fill = page.locator("#meter-color .fill");
 
     const gradient = await fill.evaluate((el) => getComputedStyle(el).backgroundImage);
     expect(gradient).toBe(
-      "linear-gradient(color(srgb 0.903922 0.404314 0.404314) 0%, color(srgb 0.603922 0.104314 0.104314) 100%)",
+      "linear-gradient(color(srgb 0.903922 0.404314 0.404314) 0%, color(srgb 0.690196 0.119216 0.119216) 100%)",
     );
     expect(gradient).not.toMatch(/^linear-gradient\(\s*\d+deg/);
 

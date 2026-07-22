@@ -50,11 +50,11 @@ export class StatMeter extends LitElement {
       .fill {
         display: block;
         height: 100%;
-        /* Match map-circle's 30% white/black vertical depth while preserving token/color overrides. */
+        /* Keep the top highlight while softening the dark edge for compact meters. */
         background: linear-gradient(
           to bottom,
           color-mix(in srgb, var(--fill-color, var(--ui-success, #16a34a)) 70%, #ffffff) 0%,
-          color-mix(in srgb, var(--fill-color, var(--ui-success, #16a34a)) 70%, #000000) 100%
+          color-mix(in srgb, var(--fill-color, var(--ui-success, #16a34a)) 80%, #000000) 100%
         );
         transition: width 200ms ease;
       }

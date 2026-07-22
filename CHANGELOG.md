@@ -1,5 +1,10 @@
 # @f-ewald/components
 
+## Unreleased
+
+- Lightened the bottom gradient stop of `stat-meter` fills without changing
+  their top highlight, values, custom colors, or public API.
+
 ## 1.0.2
 
 - Generate canonical visual baselines on the GitHub-hosted runner so screenshot
