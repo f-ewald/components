@@ -18,21 +18,29 @@ export class FrameBox extends LitElement {
     css`
       :host {
         display: block;
-        position: relative;
-        margin-top: 0.6rem;
+        margin-top: 0.5rem;
       }
       .frame {
+        min-width: 0;
+        margin: 0;
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 1rem 0.75rem 0.75rem;
+        padding: 0.75rem;
       }
       .label {
-        position: absolute;
-        top: -0.55rem;
-        left: 0.6rem;
-        padding: 0 0.4rem;
-        background: var(--ui-surface, #fff);
-        font-size: 0.65rem;
+        padding: 0 0.5rem;
+        background: var(--ui-surface, #ffffff);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
+        font-size: var(--ui-font-size-xs, 0.6875rem);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -46,10 +54,10 @@ export class FrameBox extends LitElement {
 
   override render() {
     return html`
-      <div class="frame">
-        ${this.label ? html`<span class="label">${this.label}</span>` : null}
+      <fieldset class="frame">
+        ${this.label ? html`<legend class="label">${this.label}</legend>` : null}
         <slot></slot>
-      </div>
+      </fieldset>
     `;
   }
 }

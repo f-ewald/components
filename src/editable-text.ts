@@ -24,25 +24,42 @@ export class EditableText extends LitElement {
         line-height: inherit;
       }
       .display {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        border: 0;
+        color: inherit;
+        background: transparent;
+        font: inherit;
+        line-height: inherit;
+        text-align: inherit;
         cursor: text;
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 0.1rem 0.3rem;
-        margin: -0.1rem -0.3rem;
+        padding: 0.25rem;
+        margin: -0.25rem;
       }
       .display.multiline {
+        /* Inactive multiline text is flush; the active textarea keeps its editor inset. */
         white-space: pre-wrap;
+        padding: 0;
+        margin: 0;
       }
-      .display:hover {
+      .display:hover:not(:disabled) {
         background: var(--ui-surface-muted, #f8fafc);
       }
       .display.empty {
         color: var(--ui-text-muted, #64748b);
       }
-      .display.readonly {
+      .display:disabled {
         cursor: inherit;
+        opacity: 0.6;
       }
-      .display.readonly:hover {
+      .display:disabled:hover {
         background: none;
+      }
+      .display:focus-visible {
+        outline: none;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
       input,
       textarea {
@@ -51,21 +68,34 @@ export class EditableText extends LitElement {
         box-sizing: border-box;
         font: inherit;
         color: inherit;
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 0.1rem 0.3rem;
-        margin: -0.1rem -0.3rem;
+        padding: 0.25rem;
+        margin: -0.25rem;
         outline: none;
       }
-      input:focus,
-      textarea:focus {
+      input:focus-visible,
+      textarea:focus-visible {
         border-color: var(--ui-primary, #4f46e5);
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
       textarea {
         resize: none;
         overflow: hidden;
+      }
+      @media (forced-colors: active) {
+        .display:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        .display:disabled {
+          color: GrayText;
+          opacity: 1;
+        }
       }
     `,
   ];
@@ -185,9 +215,12 @@ export class EditableText extends LitElement {
 
     const isEmpty = this.value.trim() === "";
     const classes = `display ${this.multiline ? "multiline" : ""} ${isEmpty ? "empty" : ""} ${this.readonly ? "readonly" : ""}`;
-    return html`<span class=${classes} @click=${this._startEdit}
-      >${isEmpty ? this.placeholder : this.value}</span
-    >`;
+    return html`<button
+      type="button"
+      class=${classes}
+      ?disabled=${this.readonly}
+      @click=${this._startEdit}
+    >${isEmpty ? this.placeholder : this.value}</button>`;
   }
 }
 

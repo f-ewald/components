@@ -45,7 +45,11 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-border` |
 | `--ui-danger` |
+| `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-primary` |
 | `--ui-radius-sm` |
+| `--ui-surface-muted` |
 | `--ui-text-muted` |

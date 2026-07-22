@@ -35,6 +35,7 @@
   ],
   "scripts": {
     "dev": "vite",
+    "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc && node scripts/generate-tokens-css.mjs && chmod +x dist/mcp-server.js",
     "build:demo": "vite build",
     "build:site": "node scripts/generate-docs.mjs --site && vite build --base=./ --outDir=pages-dist/playground",
@@ -44,6 +45,9 @@
     "icons": "node scripts/generate-icons.mjs",
     "mcp": "node dist/mcp-server.js",
     "test": "playwright test",
+    "test:design": "playwright test --config playwright.design.config.ts",
+    "test:visual": "playwright test --config playwright.visual.config.ts",
+    "test:visual:update": "playwright test --config playwright.visual.config.ts --update-snapshots",
     "test:site": "playwright test --config playwright.site.config.ts",
     "prepublishOnly": "npm run build && npm run docs && npm run test"
   },

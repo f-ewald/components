@@ -42,6 +42,7 @@ import "@f-ewald/components/data-table.js";
 | `rowKey` | _(JS property only)_ | `(row: unknown, index: number) => string | number` | `—` | Stable identity for `rows[i]`, used as the repeat-directive key. Defaults to the row's index. |
 | `renderCell` | _(JS property only)_ | `(row: unknown, key: string) => unknown` | `—` | Produces a cell's rendered content for `row`/`column.key`. Default: `row[key]`. |
 | `rowHref` | _(JS property only)_ | `((row: unknown) => string | null) | null` | `null` | When set, clicking a row (outside any nested link/button) navigates to this hash. |
+| `rowLabel` | _(JS property only)_ | `((row: unknown) => string) | null` | `null` | Accessible label for a row's keyboard link; defaults to primitive cell values. |
 
 ## Events
 
@@ -56,6 +57,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-surface-muted` |

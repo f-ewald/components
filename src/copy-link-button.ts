@@ -21,6 +21,8 @@ export class CopyLinkButton extends LitElement {
   @property() value = "";
   /** Accessible label / tooltip text. */
   @property() label = "Copy link";
+  /** Disables clipboard copying. */
+  @property({ type: Boolean }) disabled = false;
 
   static override styles = [
     tokens,
@@ -32,21 +34,41 @@ export class CopyLinkButton extends LitElement {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px;
+        padding: 0.25rem;
         color: var(--ui-text-muted, #64748b);
         border-radius: var(--ui-radius-sm, 0.25rem);
         display: inline-flex;
         align-items: center;
         justify-content: center;
       }
-      button:hover {
+      button:hover:not(:disabled) {
         background: var(--ui-surface-muted, #f8fafc);
         color: var(--ui-text, #0f172a);
+      }
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      button:focus-visible {
+        outline: none;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      @media (forced-colors: active) {
+        button:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        button:disabled {
+          color: GrayText;
+          opacity: 1;
+        }
       }
     `,
   ];
 
   private async _onClick() {
+    if (this.disabled) return;
     const text = this.value || window.location.href;
     try {
       await navigator.clipboard.writeText(text);
@@ -60,7 +82,13 @@ export class CopyLinkButton extends LitElement {
 
   override render() {
     return html`
-      <button type="button" aria-label=${this.label} title=${this.label} @click=${this._onClick}>
+      <button
+        type="button"
+        aria-label=${this.label}
+        title=${this.label}
+        ?disabled=${this.disabled}
+        @click=${this._onClick}
+      >
         ${iconLink(16)}
       </button>
     `;

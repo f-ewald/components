@@ -22,4 +22,22 @@ test.describe("toast-notification", () => {
     await expect(toastHost.locator(".toast")).toBeVisible();
     await expect(toastHost.locator(".toast")).toHaveCount(0, { timeout: 2000 });
   });
+
+  test("uses assertive error semantics and provides a keyboard-focusable dismiss action", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const toastHost = page.locator("toast-notification");
+    await page.evaluate(() => {
+      const el = document.querySelector("toast-notification") as HTMLElement & {
+        show: (message: string, options: { variant: string; duration: number }) => number;
+      };
+      el.show("Connection failed", { variant: "error", duration: 0 });
+    });
+
+    await expect(toastHost.getByRole("alert")).toContainText("Connection failed");
+    const dismiss = toastHost.getByRole("button", { name: "Dismiss notification" });
+    await dismiss.focus();
+    await expect(dismiss).toBeFocused();
+  });
 });

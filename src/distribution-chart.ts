@@ -54,27 +54,51 @@ export class DistributionChart extends LitElement {
         width: 100%;
       }
       .wrap {
-        padding: 4px 0 8px;
+        padding: 0.25rem 0 0.5rem;
       }
       svg {
         display: block;
         overflow: visible;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
       }
       .curve {
         fill: none;
-        stroke: #4f46e5;
+        stroke: var(--ui-primary, #4f46e5);
         stroke-width: 1.5;
         stroke-linejoin: round;
       }
       .fill {
         fill: url(#dist-fill-grad);
       }
+      .fill-start {
+        stop-color: var(--ui-primary, #4f46e5);
+      }
+      .crosshair {
+        stroke: var(--ui-text-muted, #64748b);
+      }
+      .chart-label {
+        fill: var(--ui-text-muted, #64748b);
+      }
       .skeleton {
-        background: linear-gradient(90deg, #f8fafc 25%, #e2e8f0 50%, #f8fafc 75%);
+        background: linear-gradient(
+          90deg,
+          var(--ui-surface-muted, #f8fafc) 25%,
+          var(--ui-border, #e2e8f0) 50%,
+          var(--ui-surface-muted, #f8fafc) 75%
+        );
         background-size: 200% 100%;
         animation: shimmer 1.4s infinite;
         border-radius: var(--ui-radius-sm, 0.25rem);
-        height: 100px;
+        height: 6.25rem;
       }
       @keyframes shimmer {
         0% {
@@ -87,27 +111,32 @@ export class DistributionChart extends LitElement {
       .error {
         font-size: var(--ui-font-size-sm, 0.75rem);
         color: var(--ui-danger, #dc2626);
-        padding: 8px 0;
+        padding: 0.5rem 0;
       }
       .legend {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px 12px;
-        padding: 2px 0 2px 8px;
+        gap: 0.5rem 0.75rem;
+        padding: 0.25rem 0 0.25rem 0.5rem;
       }
       .legend-item {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: 0.25rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         color: var(--ui-text-muted, #64748b);
       }
       .legend-dot {
         display: inline-block;
-        width: 8px;
-        height: 8px;
+        width: 0.5rem;
+        height: 0.5rem;
         border-radius: 50%;
         flex: 0 0 auto;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .skeleton {
+          animation: none;
+        }
       }
     `,
   ];
@@ -229,14 +258,24 @@ export class DistributionChart extends LitElement {
       const anchor = hx < innerW * 0.2 ? "start" : hx > innerW * 0.8 ? "end" : "middle";
       const lx = hx < innerW * 0.2 ? 0 : hx > innerW * 0.8 ? innerW : hx;
       return svg`
-        <line stroke="#94a3b8" stroke-width="1" x1=${hx} y1=${0} x2=${hx} y2=${innerH} />
-        <text font-size=${fs} fill="#64748b" font-weight="500"
+        <line class="crosshair" stroke-width="1" x1=${hx} y1=${0} x2=${hx} y2=${innerH} />
+        <text class="chart-label" font-size=${fs} font-weight="500"
               text-anchor=${anchor} x=${lx} y=${-fs * 0.4}>${hLabel}</text>
       `;
     })() : nothing;
 
+    const markerSummary = this.values.length > 0
+      ? ` Markers: ${this.values
+          .map((value) => `${value.label || "value"} ${value.value.toLocaleString("en-US")} ${data.unit}`)
+          .join(", ")}.`
+      : "";
+    const summary =
+      `${data.label}: ${data.min.toLocaleString("en-US")} to ${data.max.toLocaleString("en-US")} ${data.unit}, ` +
+      `mean ${data.mean.toLocaleString("en-US")} ${data.unit}.${markerSummary}`;
+
     return svg`
       <svg viewBox="0 0 ${this._width} ${SVG_H}" width=${this._width} height=${SVG_H}
+           role="img" aria-label=${summary}
            style="cursor:crosshair"
            @mousemove=${(e: MouseEvent) => {
              const innerX = e.offsetX - PAD.left;
@@ -245,8 +284,8 @@ export class DistributionChart extends LitElement {
            @mouseleave=${() => { this._hoverX = null; }}>
         <defs>
           <linearGradient id="dist-fill-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.28"/>
-            <stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/>
+            <stop class="fill-start" offset="0%" stop-opacity="0.28"/>
+            <stop class="fill-start" offset="100%" stop-opacity="0"/>
           </linearGradient>
         </defs>
         <g transform="translate(${PAD.left},${PAD.top})">
@@ -254,9 +293,9 @@ export class DistributionChart extends LitElement {
           <path class="curve" d=${curvePath} />
           ${markers}
           ${crosshair}
-          <text font-size=${fs} fill="#94a3b8" text-anchor="start" x=${0} y=${innerH + fs * 1.4}>${minLabel}</text>
-          <text font-size=${fs} fill="#94a3b8" text-anchor="end"   x=${innerW} y=${innerH + fs * 1.4}>${maxLabel}</text>
-          <text font-size=${fs} fill="#94a3b8" text-anchor="middle" x=${innerW / 2} y=${innerH + fs * 1.4}>${data.unit}</text>
+          <text class="chart-label" font-size=${fs} text-anchor="start" x=${0} y=${innerH + fs * 1.4}>${minLabel}</text>
+          <text class="chart-label" font-size=${fs} text-anchor="end"   x=${innerW} y=${innerH + fs * 1.4}>${maxLabel}</text>
+          <text class="chart-label" font-size=${fs} text-anchor="middle" x=${innerW / 2} y=${innerH + fs * 1.4}>${data.unit}</text>
         </g>
       </svg>
     `;

@@ -33,7 +33,7 @@ export class RomanNumeral extends LitElement {
   }
 
   private _convertToRoman(num?: number): string {
-    if (!num) {
+    if (num == null || !Number.isInteger(num) || num <= 0) {
       return "NaN";
     }
 

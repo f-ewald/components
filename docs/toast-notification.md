@@ -42,9 +42,12 @@ _None._
 | Custom property |
 | --- |
 | `--ui-danger` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size` |
-| `--ui-primary` |
+| `--ui-hover-overlay` |
+| `--ui-info` |
+| `--ui-on-accent` |
 | `--ui-radius` |
 | `--ui-radius-sm` |
 | `--ui-shadow-lg` |

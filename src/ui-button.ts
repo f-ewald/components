@@ -37,12 +37,21 @@ export class UiButton extends LitElement {
       .btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 0.25rem;
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 0.5rem 0.9rem;
+        padding: 0.5rem 1rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: 500;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         cursor: pointer;
         border: 1px solid transparent;
         text-decoration: none;
@@ -50,7 +59,7 @@ export class UiButton extends LitElement {
       }
       .btn.primary {
         background: var(--ui-primary, #4f46e5);
-        color: #fff;
+        color: var(--ui-on-accent, #ffffff);
       }
       .btn.primary:hover:not(:disabled) {
         background: var(--ui-primary-hover, #4338ca);
@@ -65,7 +74,7 @@ export class UiButton extends LitElement {
       }
       .btn.danger {
         background: var(--ui-danger, #dc2626);
-        color: #fff;
+        color: var(--ui-on-accent, #ffffff);
       }
       .btn.danger:hover:not(:disabled) {
         background: var(--ui-danger-hover, #b91c1c);
@@ -75,6 +84,10 @@ export class UiButton extends LitElement {
         opacity: 0.6;
         cursor: default;
         pointer-events: none;
+      }
+      .btn:focus-visible {
+        outline: none;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
       .spin {
         display: inline-flex;
@@ -86,6 +99,24 @@ export class UiButton extends LitElement {
       @keyframes spin {
         to {
           transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spin {
+          animation: none;
+        }
+      }
+      @media (forced-colors: active) {
+        .btn:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        .btn:disabled,
+        .btn[aria-disabled="true"] {
+          color: GrayText;
+          border-color: GrayText;
+          opacity: 1;
         }
       }
     `,
@@ -108,21 +139,39 @@ export class UiButton extends LitElement {
     else if (this.type === "reset") this.#internals.form?.reset();
   }
 
+  /** Suppresses navigation while a link-styled button is disabled or busy. */
+  private _onLinkClick(e: MouseEvent) {
+    if (!this.disabled && !this.busy) return;
+    e.preventDefault();
+  }
+
   override render() {
     const classes = `btn ${this.variant}`;
     const isDisabled = this.disabled || this.busy;
     if (this.href) {
       return html`
-        <a class=${classes} href=${this.href} aria-disabled=${isDisabled ? "true" : "false"}>
-          <span class="spin" ?hidden=${!this.busy}>${iconArrowPath(14)}</span>
+        <a
+          class=${classes}
+          href=${this.href}
+          aria-disabled=${isDisabled ? "true" : "false"}
+          aria-busy=${this.busy ? "true" : "false"}
+          @click=${this._onLinkClick}
+        >
+          <span class="spin" aria-hidden="true" ?hidden=${!this.busy}>${iconArrowPath(14)}</span>
           <slot name="icon" ?hidden=${this.busy}></slot>
           <slot></slot>
         </a>
       `;
     }
     return html`
-      <button class=${classes} type="button" ?disabled=${isDisabled} @click=${this._onClick}>
-        <span class="spin" ?hidden=${!this.busy}>${iconArrowPath(14)}</span>
+      <button
+        class=${classes}
+        type="button"
+        ?disabled=${isDisabled}
+        aria-busy=${this.busy ? "true" : "false"}
+        @click=${this._onClick}
+      >
+        <span class="spin" aria-hidden="true" ?hidden=${!this.busy}>${iconArrowPath(14)}</span>
         <slot name="icon" ?hidden=${this.busy}></slot>
         <slot></slot>
       </button>

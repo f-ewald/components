@@ -261,4 +261,15 @@ test.describe("photo-gallery", () => {
     await expect(gallery.locator(".entering")).toHaveCSS("animation-name", "none");
     await expect(gallery.locator(".leaving")).toHaveCSS("animation-name", "none");
   });
+
+  test("keeps overlay controls legible with dark surface tokens", async ({ page }) => {
+    await page.goto("/");
+    const gallery = page.locator(gallerySelector);
+    await gallery.evaluate((element) => {
+      element.style.setProperty("--ui-surface", "#0f172a");
+      element.style.setProperty("--ui-on-accent", "#ffffff");
+    });
+
+    await expect(gallery.locator(".arrow-button").first()).toHaveCSS("color", "rgb(255, 255, 255)");
+  });
 });

@@ -250,6 +250,8 @@ const EXAMPLES = {
   btn.icon = iconPencil(16);
   btn.addEventListener("click", () => console.log("edit clicked"));
 </script>`,
+  "kbd-hint": `<kbd-hint keys="Mod+K"></kbd-hint>
+<kbd-hint keys="Mod+Shift+Enter" platform="mac"></kbd-hint>`,
   "frame-box": `<frame-box label="Debug">
   Framed content goes here.
 </frame-box>`,
@@ -302,7 +304,7 @@ const EXAMPLES = {
   ];
   table.rowHref = (row) => \`#/tasks/\${row.id}\`;
 </script>`,
-  "tile-grid": `<tile-grid></tile-grid>
+  "tile-grid": `<tile-grid file-icon></tile-grid>
 <script type="module">
   const grid = document.querySelector("tile-grid");
   grid.items = [

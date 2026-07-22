@@ -1,6 +1,9 @@
 import { LitElement, css, html, nothing, type PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { tokens } from "./tokens.js";
+import { submitWithDefaultButton } from "./utils/form.js";
+
+let instanceCount = 0;
 
 /** A picked address suggestion. */
 export interface AddressSuggestion {
@@ -43,13 +46,33 @@ export class AddressAutocomplete extends LitElement {
         position: relative;
       }
       input {
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size-sm, 0.75rem);
-        padding: 0.35rem 0.5rem;
+        color: var(--ui-text, #0f172a);
+        background: var(--ui-surface, #ffffff);
+        padding: 0.5rem;
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         width: 100%;
         box-sizing: border-box;
+      }
+      input:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      input:focus-visible {
+        outline: none;
+        border-color: var(--ui-primary, #4f46e5);
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
       .suggestions {
         position: absolute;
@@ -59,22 +82,44 @@ export class AddressAutocomplete extends LitElement {
         z-index: 10;
         max-height: 40vh;
         overflow-y: auto;
-        margin: 2px 0 0;
-        padding: 4px 0;
+        margin: 0.25rem 0 0;
+        padding: 0.25rem 0;
         list-style: none;
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }
       .suggestion {
-        padding: 0.4rem 0.6rem;
+        padding: 0.5rem 0.75rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         cursor: pointer;
       }
       .suggestion.active,
       .suggestion:hover {
         background: var(--ui-surface-muted, #f8fafc);
+      }
+      .no-suggestions {
+        padding: 0.5rem 0.75rem;
+        color: var(--ui-text-muted, #64748b);
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-style: italic;
+      }
+      @media (forced-colors: active) {
+        input:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        input:disabled {
+          color: GrayText;
+          opacity: 1;
+        }
+        .suggestion.active,
+        .suggestion:hover {
+          color: HighlightText;
+          background: Highlight;
+        }
       }
     `,
   ];
@@ -85,6 +130,8 @@ export class AddressAutocomplete extends LitElement {
   @property() placeholder = "";
   /** Marks the input as required for native form validation. */
   @property({ type: Boolean }) required = false;
+  /** Disables the input and closes its suggestion popup. */
+  @property({ type: Boolean, reflect: true }) disabled = false;
   /** Mapbox `types` param, e.g. "address" or "address,poi". */
   @property() types = "address";
   /** Geocoding endpoint URL. Defaults to the Mapbox Geocoding v6 forward URL. */
@@ -109,16 +156,36 @@ export class AddressAutocomplete extends LitElement {
   @state() private _suggestions: AddressSuggestion[] = [];
   @state() private _open = false;
   @state() private _activeIndex = -1;
+  @state() private _formDisabled = false;
 
   #internals = this.attachInternals();
   #lastPicked: AddressSuggestion | null = null;
   #debounceTimer: ReturnType<typeof setTimeout> | null = null;
   #abortController: AbortController | null = null;
+  #isComposing = false;
+  #compositionJustEnded = false;
+  #compositionEndTimer: ReturnType<typeof setTimeout> | null = null;
+  readonly #listboxId = `address-autocomplete-listbox-${++instanceCount}`;
+
+  /** Whether the host or an ancestor fieldset currently disables the control. */
+  get #isDisabled(): boolean {
+    return this.disabled || this._formDisabled;
+  }
 
   /** Last-picked suggestion, or null once the input diverges from it. */
   get selectedSuggestion(): AddressSuggestion | null {
     if (this.#lastPicked && this.#lastPicked.address === this.value) return this.#lastPicked;
     return null;
+  }
+
+  protected override willUpdate(changed: PropertyValues) {
+    if (changed.has("disabled") && this.#isDisabled) {
+      if (this.#debounceTimer) clearTimeout(this.#debounceTimer);
+      this.#resetComposition();
+      this.#abortController?.abort();
+      this._open = false;
+      this._activeIndex = -1;
+    }
   }
 
   protected override updated(changed: PropertyValues) {
@@ -128,6 +195,7 @@ export class AddressAutocomplete extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     if (this.#debounceTimer) clearTimeout(this.#debounceTimer);
+    this.#resetComposition();
     this.#abortController?.abort();
   }
 
@@ -139,17 +207,31 @@ export class AddressAutocomplete extends LitElement {
     this.#lastPicked = null;
   }
 
+  /** Mirrors ancestor fieldset disabled state onto the native input. */
+  formDisabledCallback(disabled: boolean) {
+    this._formDisabled = disabled;
+    if (!disabled) return;
+    if (this.#debounceTimer) clearTimeout(this.#debounceTimer);
+    this.#resetComposition();
+    this.#abortController?.abort();
+    this._open = false;
+    this._activeIndex = -1;
+  }
+
   private onInput(e: InputEvent) {
+    if (this.#isDisabled) return;
     this.value = (e.target as HTMLInputElement).value;
     this.#lastPicked = null;
     this.#scheduleFetch(this.value);
   }
 
   #scheduleFetch(query: string) {
+    if (this.#isDisabled) return;
     if (this.#debounceTimer) clearTimeout(this.#debounceTimer);
     if (query.trim().length < this.minLength) {
       this._suggestions = [];
       this._open = false;
+      this._activeIndex = -1;
       return;
     }
     if (this.suggestions) {
@@ -168,7 +250,7 @@ export class AddressAutocomplete extends LitElement {
       .filter((s) => s.address.toLowerCase().includes(needle))
       .slice(0, 5);
     this._activeIndex = -1;
-    this._open = this._suggestions.length > 0;
+    this._open = !this.#isDisabled;
   }
 
   /** Fetches suggestions for `query`, cancelling any request still in flight. */
@@ -180,9 +262,10 @@ export class AddressAutocomplete extends LitElement {
       const res = await fetch(this.#buildUrl(query), { signal: controller.signal });
       if (!res.ok) throw new Error(`geocode request failed: ${res.status}`);
       const body = (await res.json()) as { features?: MapboxGeocodeFeature[] };
+      if (this.#isDisabled) return;
       this._suggestions = parseFeatures(body.features ?? []);
       this._activeIndex = -1;
-      this._open = this._suggestions.length > 0;
+      this._open = true;
     } catch {
       // Aborted (superseded by newer keystroke) or a network failure while
       // typing — fail silently and just close the list.
@@ -207,6 +290,10 @@ export class AddressAutocomplete extends LitElement {
   }
 
   private onKeydown(e: KeyboardEvent) {
+    if (this.#isDisabled) return;
+    if (e.isComposing || e.keyCode === 229 || this.#isComposing || this.#compositionJustEnded) {
+      return;
+    }
     if (e.key === "ArrowDown") this.#moveActive(1, e);
     else if (e.key === "ArrowUp") this.#moveActive(-1, e);
     else if (e.key === "Enter") this.#handleEnter(e);
@@ -221,10 +308,18 @@ export class AddressAutocomplete extends LitElement {
   }
 
   #handleEnter(e: KeyboardEvent) {
-    if (!this._open) return; // closed list: let the form submit normally
-    e.preventDefault();
     const pick = this._suggestions[this._activeIndex] ?? this._suggestions[0];
-    if (pick) this.#selectSuggestion(pick);
+    if (this._open && pick) {
+      e.preventDefault();
+      this.#selectSuggestion(pick);
+      return;
+    }
+    if (this.#internals.form) {
+      const form = this.#internals.form;
+      window.setTimeout(() => {
+        if (!e.defaultPrevented && form.isConnected) submitWithDefaultButton(form);
+      });
+    }
   }
 
   #handleEscape(e: KeyboardEvent) {
@@ -235,6 +330,31 @@ export class AddressAutocomplete extends LitElement {
 
   private onBlur() {
     this._open = false;
+  }
+
+  private onCompositionStart(): void {
+    if (this.#compositionEndTimer) clearTimeout(this.#compositionEndTimer);
+    this.#compositionEndTimer = null;
+    this.#compositionJustEnded = false;
+    this.#isComposing = true;
+  }
+
+  private onCompositionEnd(): void {
+    this.#isComposing = false;
+    this.#compositionJustEnded = true;
+    if (this.#compositionEndTimer) clearTimeout(this.#compositionEndTimer);
+    this.#compositionEndTimer = setTimeout(() => {
+      this.#compositionJustEnded = false;
+      this.#compositionEndTimer = null;
+    });
+  }
+
+  /** Clears composition state when the control can no longer receive keys. */
+  #resetComposition(): void {
+    if (this.#compositionEndTimer) clearTimeout(this.#compositionEndTimer);
+    this.#compositionEndTimer = null;
+    this.#isComposing = false;
+    this.#compositionJustEnded = false;
   }
 
   #selectSuggestion(s: AddressSuggestion) {
@@ -252,12 +372,13 @@ export class AddressAutocomplete extends LitElement {
   }
 
   private renderSuggestions() {
-    if (!this._open || this._suggestions.length === 0) return nothing;
+    if (!this._open || this.#isDisabled) return nothing;
     return html`
-      <ul class="suggestions" role="listbox">
+      <ul id=${this.#listboxId} class="suggestions" role="listbox" aria-label="Address suggestions">
         ${this._suggestions.map(
           (s, i) => html`
             <li
+              id=${`${this.#listboxId}-option-${i}`}
               role="option"
               aria-selected=${i === this._activeIndex}
               class="suggestion ${i === this._activeIndex ? "active" : ""}"
@@ -267,20 +388,38 @@ export class AddressAutocomplete extends LitElement {
             </li>
           `,
         )}
+        ${this._suggestions.length === 0
+          ? html`<li class="no-suggestions" role="presentation">
+              <span role="status">No suggestions found</span>
+            </li>`
+          : nothing}
       </ul>
     `;
   }
 
   override render() {
+    const activeDescendant =
+      this._open && !this.#isDisabled && this._activeIndex >= 0
+        ? `${this.#listboxId}-option-${this._activeIndex}`
+        : nothing;
+    const expanded = this._open && !this.#isDisabled;
     return html`
-      <div role="combobox" aria-expanded=${this._open} aria-haspopup="listbox">
+      <div>
         <input
           type="text"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded=${expanded}
+          aria-controls=${this.#listboxId}
+          aria-activedescendant=${activeDescendant}
           .value=${this.value}
           placeholder=${this.placeholder}
           ?required=${this.required}
+          ?disabled=${this.#isDisabled}
           autocomplete="off"
           @input=${this.onInput}
+          @compositionstart=${this.onCompositionStart}
+          @compositionend=${this.onCompositionEnd}
           @keydown=${this.onKeydown}
           @blur=${this.onBlur}
         />

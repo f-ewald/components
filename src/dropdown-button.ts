@@ -3,6 +3,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { iconChevronRight } from "./icons.js";
 import { tokens } from "./tokens.js";
 
+let instanceCount = 0;
+
 /** A single menu action. */
 export interface DropdownOption {
   value: string;
@@ -26,20 +28,29 @@ export class DropdownButton extends LitElement {
       :host {
         display: inline-block;
         position: relative;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
       }
       button.trigger {
         display: flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 0.25rem;
         font: inherit;
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: 500;
-        color: #fff;
+        color: var(--ui-on-accent, #ffffff);
         background: var(--ui-primary, #4f46e5);
         border: 1px solid transparent;
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 0.5rem 0.9rem;
+        padding: 0.5rem 1rem;
         cursor: pointer;
       }
       button.trigger:hover:not(:disabled) {
@@ -56,7 +67,7 @@ export class DropdownButton extends LitElement {
       .chevron {
         display: flex;
         transform: rotate(90deg);
-        transition: transform 0.1s ease;
+        transition: transform 150ms ease;
       }
       :host([open]) .chevron {
         transform: rotate(-90deg);
@@ -69,23 +80,44 @@ export class DropdownButton extends LitElement {
         min-width: 100%;
         max-height: 40vh;
         overflow-y: auto;
-        margin: 2px 0 0;
-        padding: 4px 0;
+        margin: 0.25rem 0 0;
+        padding: 0.25rem 0;
         list-style: none;
         white-space: nowrap;
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }
       li {
-        padding: 0.35rem 0.6rem;
+        padding: 0.5rem 0.75rem;
         cursor: pointer;
         color: var(--ui-text, #0f172a);
       }
       li.active,
       li:hover {
         background: var(--ui-surface-muted, #f8fafc);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .chevron {
+          transition: none;
+        }
+      }
+      @media (forced-colors: active) {
+        button.trigger:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        button.trigger:disabled {
+          color: GrayText;
+          opacity: 1;
+        }
+        li.active,
+        li:hover {
+          color: HighlightText;
+          background: Highlight;
+        }
       }
     `,
   ];
@@ -99,13 +131,20 @@ export class DropdownButton extends LitElement {
 
   @state() private _open = false;
   @state() private _activeIndex = -1;
+  readonly #menuId = `dropdown-button-menu-${++instanceCount}`;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener("mousedown", this.#onWindowMousedown, true);
+    this._open = false;
+    this._activeIndex = -1;
   }
 
   protected override updated(changed: PropertyValues): void {
+    if (changed.has("disabled") && this.disabled) {
+      this._open = false;
+      this._activeIndex = -1;
+    }
     if (!changed.has("_open")) return;
     this.toggleAttribute("open", this._open);
     if (this._open) {
@@ -126,6 +165,7 @@ export class DropdownButton extends LitElement {
   }
 
   #select(option: DropdownOption): void {
+    if (this.disabled) return;
     this._open = false;
     this.dispatchEvent(new CustomEvent("select", { detail: { value: option.value } }));
   }
@@ -160,13 +200,15 @@ export class DropdownButton extends LitElement {
   private renderMenu() {
     if (!this._open) return nothing;
     return html`
-      <ul class="options" role="menu">
+      <ul id=${this.#menuId} class="options" role="menu" aria-label=${this.label}>
         ${this.options.map(
           (o, i) => html`
             <li
+              id=${`${this.#menuId}-item-${i}`}
               role="menuitem"
               class=${i === this._activeIndex ? "active" : ""}
               @mousedown=${(e: MouseEvent) => {
+                if (e.button !== 0) return;
                 e.preventDefault();
                 this.#select(o);
               }}
@@ -180,18 +222,24 @@ export class DropdownButton extends LitElement {
   }
 
   override render() {
+    const activeDescendant =
+      this._open && this._activeIndex >= 0
+        ? `${this.#menuId}-item-${this._activeIndex}`
+        : nothing;
     return html`
       <button
         type="button"
         class="trigger"
         aria-haspopup="menu"
         aria-expanded=${this._open}
+        aria-controls=${this.#menuId}
+        aria-activedescendant=${activeDescendant}
         ?disabled=${this.disabled}
         @click=${() => this.#toggle()}
         @keydown=${(e: KeyboardEvent) => this.#onTriggerKeydown(e)}
       >
         <span>${this.label}</span>
-        <span class="chevron">${iconChevronRight(14)}</span>
+        <span class="chevron" aria-hidden="true">${iconChevronRight(14)}</span>
       </button>
       ${this.renderMenu()}
     `;

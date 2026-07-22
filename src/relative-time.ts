@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { parseTimestamp, formatRelativeTime } from "./utils/time.js";
 
@@ -15,12 +15,6 @@ const REFRESH_INTERVAL_MS = 60_000;
  */
 @customElement("relative-time")
 export class RelativeTime extends LitElement {
-  static override styles = css`
-    :host {
-      display: inline;
-    }
-  `;
-
   /** Timestamp to render, relative to now. */
   @property() datetime: string | null = null;
 

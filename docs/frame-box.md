@@ -38,6 +38,8 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-font` |
+| `--ui-font-size-xs` |
 | `--ui-radius-sm` |
 | `--ui-surface` |
 | `--ui-text-muted` |

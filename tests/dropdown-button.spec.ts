@@ -11,6 +11,12 @@ test.describe("dropdown-button", () => {
 
     const options = el.locator("li[role='menuitem']");
     await expect(options).toHaveCount(3);
+    const menuId = await el.getByRole("menu").getAttribute("id");
+    await expect(trigger).toHaveAttribute("aria-controls", menuId!);
+    await expect(trigger).toHaveAttribute(
+      "aria-activedescendant",
+      await options.first().getAttribute("id")!,
+    );
     await options.filter({ hasText: "Retry" }).click();
 
     await expect(page.locator("#dropdown-select-log")).toHaveText("dropdown-resolve: retry");
@@ -33,5 +39,14 @@ test.describe("dropdown-button", () => {
     const el = page.locator("#dropdown-disabled");
     await el.locator("button.trigger").click({ force: true });
     await expect(el.locator("ul.options")).toHaveCount(0);
+  });
+
+  test("removes chevron motion when reduced motion is requested", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await expect(page.locator("#dropdown-resolve .chevron")).toHaveCSS(
+      "transition-duration",
+      "0s",
+    );
   });
 });

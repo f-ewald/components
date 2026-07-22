@@ -46,4 +46,15 @@ test.describe("map-circle", () => {
     await expect(page.locator("#circle-small svg")).toHaveAttribute("width", "12");
     await expect(page.locator("#circle-big svg")).toHaveAttribute("width", "36");
   });
+
+  test("preserves map colors and geometry while removing highlight motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const circle = page.locator("#circle-plain");
+
+    await expect(circle.locator("svg")).toHaveAttribute("aria-hidden", "true");
+    await expect(circle.locator("circle")).toHaveAttribute("stroke", "#ffffff");
+    await expect(circle.locator("stop").first()).toHaveAttribute("stop-color", "#979ca6");
+    await expect(circle.locator("svg")).toHaveCSS("transition-duration", "0s");
+  });
 });
