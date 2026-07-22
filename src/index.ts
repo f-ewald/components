@@ -54,6 +54,7 @@ export { TileGrid } from "./tile-grid.js";
 export { PopoverPanel } from "./popover-panel.js";
 export { DropdownButton, type DropdownOption } from "./dropdown-button.js";
 export { IconButton } from "./icon-button.js";
+export { KbdHint, type KbdPlatform } from "./kbd-hint.js";
 export { FrameBox } from "./frame-box.js";
 export { CalendarEntry } from "./calendar-entry.js";
 export { CalendarMonth } from "./calendar-month.js";

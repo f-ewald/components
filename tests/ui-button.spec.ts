@@ -31,4 +31,21 @@ test.describe("ui-button", () => {
     await submitBtn.click();
     await expect(result).toHaveText("Submitted: hello");
   });
+
+  test("disabled links suppress keyboard navigation and reduced motion stops the spinner", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const host = page.locator("#button-link");
+    const link = host.locator("a");
+    await host.evaluate((element) => {
+      (element as HTMLElement & { disabled: boolean }).disabled = true;
+    });
+    await expect(link).toHaveAttribute("aria-disabled", "true");
+    await link.focus();
+    await link.press("Enter");
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator("#button-busy .spin")).toHaveCSS("animation-name", "none");
+  });
 });

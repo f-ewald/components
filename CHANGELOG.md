@@ -1,5 +1,36 @@
 # @f-ewald/components
 
+## Unreleased
+
+- `tile-grid` gained an opt-in `fileIcon` (`file-icon`) property that
+  prefixes each tile with a decorative Heroicons `document` glyph, for grids
+  of file-like items; off by default, so it adds no markup or layout space
+  unless enabled. Existing behavior remains unchanged until the additive
+  property is enabled.
+- Standardized the component design language across tokens, semantic colors,
+  spacing, focus/disabled/forced-colors states, dark mode, and reduced motion;
+  added a canonical design contract plus deterministic catalog/style contracts
+  and light/dark component screenshot baselines.
+- Improved keyboard and screen-reader behavior across comboboxes, dialogs,
+  panels, popovers, clickable tables/tiles, radio groups, charts, and layered
+  overlays. Added additive disabled radio-group semantics and `data-table`
+  `rowLabel` support for custom rendered rows.
+- Added `kbd-hint`: platform-aware boxed keyboard shortcut hints with
+  `+`-separated key tokens, automatic or explicit macOS modifier glyphs,
+  accessible spoken labels, and `currentColor` styling for neutral or accent
+  controls.
+- `weight-bar-chart` bars now use a `--ui-primary`-driven vertical gradient
+  matching `map-circle`, with a lighter top and darker bottom. No public API
+  changes.
+- `user-avatar` initial and icon fallbacks now use the same vertical gradient
+  while keeping image avatars untinted. No public API changes.
+- `percent-bar-chart` and `stat-meter` fills now use the same lighter-top,
+  darker-bottom vertical gradient while preserving data-driven and custom
+  colors. No public API changes.
+- Tightened inactive multiline `editable-text` descriptions by removing
+  template-generated blank lines and the read-state editor inset. Active
+  textarea spacing is unchanged.
+
 ## 1.0.0
 
 - **Breaking:** Removed `<map-point>` and the

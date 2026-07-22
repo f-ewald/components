@@ -105,7 +105,16 @@ export class PhotoGallery extends LitElement {
       :host {
         display: block;
         color: var(--ui-text, #0f172a);
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size, 0.875rem);
       }
       .gallery {
@@ -178,7 +187,7 @@ export class PhotoGallery extends LitElement {
         width: 2.5rem;
         height: 2.5rem;
         padding: 0;
-        color: var(--ui-surface, #fff);
+        color: var(--ui-on-accent, #ffffff);
         background: var(--ui-overlay, rgb(15 23 42 / 0.45));
         border-radius: 9999px;
         pointer-events: auto;
@@ -230,7 +239,7 @@ export class PhotoGallery extends LitElement {
         white-space: nowrap;
       }
       .autoplay-button:hover {
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
       }
       slot {
         display: none;

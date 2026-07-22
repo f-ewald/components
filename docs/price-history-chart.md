@@ -41,4 +41,11 @@ _None._
 
 ## CSS custom properties
 
-_None._
+| Custom property |
+| --- |
+| `--ui-border` |
+| `--ui-font` |
+| `--ui-on-accent` |
+| `--ui-primary` |
+| `--ui-text-muted` |
+| `--ui-tooltip` |

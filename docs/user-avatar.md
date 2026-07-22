@@ -39,4 +39,5 @@ _None._
 | Custom property |
 | --- |
 | `--ui-font` |
+| `--ui-on-accent` |
 | `--ui-primary` |

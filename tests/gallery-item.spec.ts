@@ -31,14 +31,32 @@ test.describe("gallery-item", () => {
 
     await item.evaluate(async (element) => {
       const galleryItem = element as HTMLElement & {
+        src: string;
+        alt: string;
         caption?: string;
         updateComplete: Promise<boolean>;
       };
+      galleryItem.src =
+        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+      galleryItem.alt = "Updated coastline";
       galleryItem.caption = "Updated coast caption";
       await galleryItem.updateComplete;
     });
 
+    await expect(item).toHaveCSS("display", "none");
+    await expect(item).toHaveAttribute("alt", "Updated coastline");
     await expect(item).toHaveAttribute("caption", "Updated coast caption");
+    const currentImage = page
+      .locator("#photo-gallery-demo")
+      .locator('picture:not([aria-hidden="true"]) img');
+    await expect(currentImage).toHaveAttribute(
+      "alt",
+      "Updated coastline",
+    );
+    await expect(currentImage).toHaveAttribute(
+      "src",
+      "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+    );
     await expect(page.locator("#photo-gallery-demo").locator("figcaption")).toHaveText("Updated coast caption");
   });
 });

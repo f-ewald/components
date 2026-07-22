@@ -31,17 +31,26 @@ export class RadioPills extends LitElement {
       .options {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.4rem;
+        gap: 0.5rem;
       }
       .pill {
         display: flex;
         align-items: center;
-        gap: 0.3rem;
-        padding: 0.3rem 0.6rem;
+        gap: 0.25rem;
+        padding: 0.25rem 0.75rem;
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: 999px;
         cursor: pointer;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size-sm, 0.75rem);
         color: var(--ui-text, #0f172a);
       }
@@ -56,6 +65,31 @@ export class RadioPills extends LitElement {
         cursor: pointer;
         margin: 0;
       }
+      .pill:has(input:focus-visible) {
+        outline: none;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      .pill:has(input:disabled) {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      .pill:has(input:disabled) input {
+        cursor: not-allowed;
+      }
+      @media (forced-colors: active) {
+        .pill:has(input:focus-visible) {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        .pill:has(input:checked) {
+          border-color: Highlight;
+        }
+        .pill:has(input:disabled) {
+          color: GrayText;
+          opacity: 1;
+        }
+      }
     `,
   ];
 
@@ -63,10 +97,13 @@ export class RadioPills extends LitElement {
   @property({ attribute: false }) options: RadioPillOption[] = [];
   /** Currently selected value. */
   @property() value = "";
+  /** Disables every native radio in the group. */
+  @property({ type: Boolean }) disabled = false;
 
   readonly #name = `radio-pills-${++instanceCount}`;
 
   private _onChange(value: string) {
+    if (this.disabled) return;
     this.value = value;
     this.dispatchEvent(new CustomEvent("change", { detail: { value }, bubbles: true, composed: true }));
   }
@@ -83,6 +120,7 @@ export class RadioPills extends LitElement {
                 type="radio"
                 name=${this.#name}
                 ?checked=${this.value === opt.value}
+                ?disabled=${this.disabled}
                 @change=${() => this._onChange(opt.value)}
               />
               <span>${opt.label}</span>

@@ -88,6 +88,39 @@ export class PriceHistoryChart extends LitElement {
       svg {
         display: block;
         overflow: visible;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
+      }
+      .axis-label {
+        fill: var(--ui-text-muted, #64748b);
+      }
+      .grid-line {
+        stroke: var(--ui-border, #e2e8f0);
+      }
+      .series-line {
+        stroke: var(--ui-primary, #4f46e5);
+      }
+      .series-gradient {
+        stop-color: var(--ui-primary, #4f46e5);
+      }
+      .series-point {
+        fill: var(--ui-primary, #4f46e5);
+        stroke: var(--ui-on-accent, #ffffff);
+        cursor: pointer;
+      }
+      .tooltip {
+        fill: var(--ui-tooltip, #0f172a);
+      }
+      .tooltip-label {
+        fill: var(--ui-on-accent, #ffffff);
       }
     `,
   ];
@@ -160,11 +193,10 @@ export class PriceHistoryChart extends LitElement {
       const tipX = Math.min(Math.max(hovPt.x - tipW / 2, ML), this._width - MR - tipW);
       return svg`
         <g pointer-events="none">
-          <rect x="${tipX}" y="${tipRectY}" width="${tipW}" height="${tipH}"
-                rx="4" fill="rgba(15,23,42,0.88)" />
-          <text x="${tipX + tipW / 2}" y="${tipRectY + 15.5}"
-                text-anchor="middle" fill="white" font-size="11"
-                font-family="ui-sans-serif,system-ui,sans-serif">${tipText}</text>
+          <rect class="tooltip" x="${tipX}" y="${tipRectY}" width="${tipW}" height="${tipH}"
+                rx="4" />
+          <text class="tooltip-label" x="${tipX + tipW / 2}" y="${tipRectY + 15.5}"
+                text-anchor="middle" font-size="11">${tipText}</text>
         </g>
       `;
     })() : "";
@@ -174,8 +206,7 @@ export class PriceHistoryChart extends LitElement {
       const label = d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
       const anchor = i === 0 ? "start" : i === arr.length - 1 ? "end" : "middle";
       return svg`
-        <text x="${x}" y="${H - 6}" text-anchor="${anchor}" font-size="10" fill="#64748b"
-              font-family="ui-sans-serif,system-ui,sans-serif">${label}</text>
+        <text class="axis-label" x="${x}" y="${H - 6}" text-anchor="${anchor}" font-size="10">${label}</text>
       `;
     });
 
@@ -184,32 +215,38 @@ export class PriceHistoryChart extends LitElement {
       const isFirst = i === 0;
       const isLast = i === arr.length - 1;
       return svg`
-        <line x1="${ML - 4}" y1="${y}" x2="${ML + plotW}" y2="${y}"
-              stroke="#e2e8f0" stroke-width="1" />
+        <line class="grid-line" x1="${ML - 4}" y1="${y}" x2="${ML + plotW}" y2="${y}"
+              stroke-width="1" />
         ${isFirst || isLast ? svg`
-          <text x="${ML - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="#64748b"
-                font-family="ui-sans-serif,system-ui,sans-serif">${fmtMoneyShort(v)}</text>
+          <text class="axis-label" x="${ML - 6}" y="${y + 4}" text-anchor="end" font-size="10">${fmtMoneyShort(v)}</text>
         ` : ""}
       `;
     }) : [];
 
+    const firstPoint = points[0];
+    const lastPoint = points[points.length - 1];
+    const formatDate = (date: string | null) =>
+      new Date(date!).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    const summary =
+      `${points.length} price points from ${formatDate(firstPoint.date)} at ${fmtMoney(firstPoint.price!)} ` +
+      `to ${formatDate(lastPoint.date)} at ${fmtMoney(lastPoint.price!)}.`;
+
     return html`
       <div class="wrap">
-        <svg width="${this._width}" height="${H}">
+        <svg width="${this._width}" height="${H}" role="img" aria-label=${summary}>
           <defs>
             <linearGradient id="phg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.25" />
-              <stop offset="100%" stop-color="#4f46e5" stop-opacity="0" />
+              <stop class="series-gradient" offset="0%" stop-opacity="0.25" />
+              <stop class="series-gradient" offset="100%" stop-opacity="0" />
             </linearGradient>
           </defs>
           ${yTicks}
           <path d="${areaD}" fill="url(#phg)" />
-          <path d="${lineD}" fill="none" stroke="#4f46e5" stroke-width="2.5"
+          <path class="series-line" d="${lineD}" fill="none" stroke-width="2.5"
                 stroke-linejoin="round" stroke-linecap="round" />
           ${plotted.map((p, i) => svg`
-            <circle cx="${p.x}" cy="${p.y}" r="${i === hIdx ? 7 : 5}"
-                    fill="#4f46e5" stroke="#fff" stroke-width="2"
-                    style="cursor:pointer"
+            <circle class="series-point" cx="${p.x}" cy="${p.y}" r="${i === hIdx ? 7 : 5}"
+                    stroke-width="2"
                     @pointerenter=${() => { this._hoveredIdx = i; }}
                     @pointerleave=${() => { this._hoveredIdx = null; }} />
           `)}

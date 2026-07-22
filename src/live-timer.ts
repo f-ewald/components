@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { formatDuration, type DurationFormat } from "./utils/duration.js";
 
@@ -13,12 +13,6 @@ const TICK_INTERVAL_MS = 1000;
  */
 @customElement("live-timer")
 export class LiveTimer extends LitElement {
-  static override styles = css`
-    :host {
-      display: inline;
-    }
-  `;
-
   /** ISO-8601 start instant; elapsed time is measured from here. */
   @property() since: string | null = null;
   /** `"seconds"` -> "1 second", "12 seconds"; `"compact"` -> "12s", "3m 12s", "1h 03m 12s". */

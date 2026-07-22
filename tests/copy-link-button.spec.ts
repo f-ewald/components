@@ -9,4 +9,19 @@ test.describe("copy-link-button", () => {
     const clipboardText = await page.evaluate(() => navigator.clipboard.readText());
     expect(clipboardText).toBe("https://example.com/listing/42");
   });
+
+  test("supports native focus and disabled button behavior", async ({ page }) => {
+    await page.goto("/");
+    const el = page.locator("#copy-demo");
+    const button = el.locator("button");
+
+    await button.focus();
+    expect(await button.evaluate((element) => getComputedStyle(element).boxShadow)).not.toBe(
+      "none",
+    );
+    await el.evaluate((element) => {
+      (element as HTMLElement & { disabled: boolean }).disabled = true;
+    });
+    await expect(button).toBeDisabled();
+  });
 });

@@ -14,6 +14,13 @@ test.describe("form-select", () => {
 
     const options = el.locator("li[role='option']");
     await expect(options).toHaveCount(5);
+    const listboxId = await el.getByRole("listbox").getAttribute("id");
+    await expect(trigger).toHaveAttribute("aria-controls", listboxId!);
+    const activeOption = el.locator("li[role='option'].active");
+    await expect(trigger).toHaveAttribute(
+      "aria-activedescendant",
+      await activeOption.getAttribute("id")!,
+    );
     await options.filter({ hasText: "Done" }).click();
 
     await expect(trigger).toHaveText("Done");
@@ -44,6 +51,19 @@ test.describe("form-select", () => {
     await expect(el.locator("ul.options")).toHaveCount(0);
   });
 
+  test("keeps active selected options legible in forced colors", async ({ page }) => {
+    await page.emulateMedia({ forcedColors: "active" });
+    await page.goto("/");
+    const el = page.locator("#select-state");
+    await el.locator("button.trigger").click();
+    const selected = el.locator("li.active[aria-selected='true']");
+    const colors = await selected.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { color: style.color, background: style.backgroundColor };
+    });
+    expect(colors.color).not.toBe(colors.background);
+  });
+
   test("searchable mode filters labels by case-insensitive infix and clearing restores all options", async ({
     page,
   }) => {
@@ -61,7 +81,10 @@ test.describe("form-select", () => {
     const filtered = el.locator("li[role='option']");
     await expect(filtered).toHaveCount(1);
     await expect(filtered).toHaveText("In progress");
-    await expect(input).toHaveAttribute("aria-activedescendant", "form-select-option-0");
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      /form-select-listbox-\d+-option-0/,
+    );
     expect(await el.evaluate((element) => (element as HTMLElement & { value: string }).value)).toBe(
       "open",
     );
@@ -309,7 +332,10 @@ test.describe("form-select", () => {
 
     const options = el.locator("li[role='option']");
     await expect(options.nth(99)).toHaveClass(/active/);
-    await expect(input).toHaveAttribute("aria-activedescendant", "form-select-option-99");
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      /form-select-listbox-\d+-option-99/,
+    );
     expect(await el.locator("ul.options").evaluate((list) => list.scrollTop)).toBeGreaterThan(0);
   });
 
@@ -459,5 +485,11 @@ test.describe("form-select", () => {
       (element as HTMLElement & { label: string }).label = "";
     });
     await expect(el.locator("input.search-input")).toHaveAccessibleName("Select an option");
+  });
+
+  test("removes chevron motion when reduced motion is requested", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await expect(page.locator("#select-state .chevron")).toHaveCSS("transition-duration", "0s");
   });
 });

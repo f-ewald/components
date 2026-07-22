@@ -58,8 +58,10 @@ _None._
 | `--ui-border` |
 | `--ui-danger` |
 | `--ui-danger-hover` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-on-accent` |
 | `--ui-primary` |
 | `--ui-primary-hover` |
 | `--ui-radius-sm` |

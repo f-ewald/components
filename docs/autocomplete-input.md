@@ -49,6 +49,7 @@ import "@f-ewald/components/autocomplete-input.js";
 | `value` | `value` | `string` | `""` | Current input value; also the form-associated value submitted with the form. |
 | `placeholder` | `placeholder` | `string` | `""` | Placeholder text shown when the input is empty. |
 | `required` | `required` | `boolean` | `false` | Marks the input as required for native form validation. |
+| `disabled` | `disabled` | `boolean` | `false` | Disables the input and closes its suggestion popup. |
 | `endpoint` | `endpoint` | `string` | `""` | API endpoint queried in API mode. Ignored when `options` is set. |
 | `queryParam` | `query-param` | `string` | `"q"` | Query string parameter name the current input text is sent under. |
 | `debounce` | `debounce` | `number` | `300` | Debounce delay (ms) before firing a request/filter after typing. |
@@ -71,9 +72,13 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-shadow` |
 | `--ui-surface` |
 | `--ui-surface-muted` |
+| `--ui-text` |
+| `--ui-text-muted` |

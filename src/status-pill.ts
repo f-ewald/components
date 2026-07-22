@@ -22,21 +22,30 @@ export class StatusPill extends LitElement {
       .pill {
         display: inline-flex;
         align-items: center;
-        gap: 0.3rem;
-        border-radius: 999px;
-        padding: 0.15rem 0.55rem;
-        font-size: 0.75rem;
+        gap: 0.25rem;
+        border-radius: 9999px;
+        padding: 0.25rem 0.5rem;
+        font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: 500;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         white-space: nowrap;
       }
       .pill.neutral {
-        background: color-mix(in srgb, var(--ui-text-muted, #71717a) 15%, transparent);
-        color: var(--ui-text-muted, #71717a);
+        background: color-mix(in srgb, var(--ui-text-muted, #64748b) 15%, transparent);
+        color: var(--ui-text-muted, #64748b);
       }
       .pill.info {
-        background: color-mix(in srgb, #0ea5e9 15%, transparent);
-        color: #0ea5e9;
+        background: color-mix(in srgb, var(--ui-info, #0ea5e9) 15%, transparent);
+        color: var(--ui-info, #0ea5e9);
       }
       .pill.primary {
         background: color-mix(in srgb, var(--ui-primary, #4f46e5) 15%, transparent);
@@ -47,8 +56,8 @@ export class StatusPill extends LitElement {
         color: var(--ui-success, #16a34a);
       }
       .pill.warning {
-        background: color-mix(in srgb, #d97706 15%, transparent);
-        color: #d97706;
+        background: color-mix(in srgb, var(--ui-warning, #d97706) 15%, transparent);
+        color: var(--ui-warning, #d97706);
       }
       .pill.danger {
         background: color-mix(in srgb, var(--ui-danger, #dc2626) 15%, transparent);
@@ -61,6 +70,11 @@ export class StatusPill extends LitElement {
       @keyframes spin {
         to {
           transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spin {
+          animation: none;
         }
       }
     `,
@@ -76,7 +90,7 @@ export class StatusPill extends LitElement {
   override render() {
     return html`
       <span class="pill ${this.color}">
-        ${this.spinner ? html`<span class="spin">${iconArrowPath(11)}</span>` : nothing}
+        ${this.spinner ? html`<span class="spin" aria-hidden="true">${iconArrowPath(11)}</span>` : nothing}
         ${this.label}
       </span>
     `;

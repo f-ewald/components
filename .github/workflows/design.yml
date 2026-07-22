@@ -1,0 +1,54 @@
+name: Component design checks
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "design-tests/**"
+      - "visual-tests/**"
+      - "demo/**"
+      - "docs/design-language.md"
+      - "index.html"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright*.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: component-design-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  design:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run design contracts
+        run: npm run test:design
+
+      - name: Run component screenshots
+        run: npm run test:visual

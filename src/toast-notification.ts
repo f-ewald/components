@@ -50,7 +50,7 @@ export class ToastNotification extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        max-width: 360px;
+        max-width: 22.5rem;
         pointer-events: none;
       }
       .toast {
@@ -59,16 +59,25 @@ export class ToastNotification extends LitElement {
         align-items: flex-start;
         gap: 0.5rem;
         border-radius: var(--ui-radius, 0.5rem);
-        padding: 0.625rem 0.75rem;
+        padding: 0.5rem 0.75rem;
         box-shadow: var(
           --ui-shadow-lg,
           0 20px 25px -5px rgb(0 0 0 / 0.1),
           0 8px 10px -6px rgb(0 0 0 / 0.1)
         );
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size, 0.875rem);
         line-height: 1.4;
-        color: #fff;
+        color: var(--ui-on-accent, #ffffff);
         background: var(--ui-text, #0f172a);
       }
       .toast.error {
@@ -78,7 +87,7 @@ export class ToastNotification extends LitElement {
         background: var(--ui-success, #16a34a);
       }
       .toast.info {
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-info, #0ea5e9);
       }
       .message {
         flex: 1 1 auto;
@@ -88,8 +97,8 @@ export class ToastNotification extends LitElement {
         flex: 0 0 auto;
         background: none;
         border: none;
-        padding: 2px;
-        margin: -2px -2px -2px 0;
+        padding: 0.25rem;
+        margin: -0.25rem -0.25rem -0.25rem 0;
         color: inherit;
         opacity: 0.8;
         cursor: pointer;
@@ -98,9 +107,25 @@ export class ToastNotification extends LitElement {
       }
       .close:hover {
         opacity: 1;
-        background: rgb(255 255 255 / 0.15);
+        background: var(--ui-hover-overlay, rgb(255 255 255 / 0.32));
       }
-      @media (max-width: 768px) {
+      .close:focus-visible {
+        outline: none;
+        opacity: 1;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      @media (forced-colors: active) {
+        .toast {
+          border: 1px solid CanvasText;
+          forced-color-adjust: auto;
+        }
+        .close:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+      }
+      @media (max-width: 48rem) {
         :host {
           top: 0.75rem;
           right: 0.75rem;
@@ -155,10 +180,14 @@ export class ToastNotification extends LitElement {
     return html`
       ${this._toasts.map(
         (t) => html`
-          <div class="toast ${t.variant}" role="status">
+          <div
+            class="toast ${t.variant}"
+            role=${t.variant === "error" ? "alert" : "status"}
+            aria-atomic="true"
+          >
             <span class="message">${t.message}</span>
             <button class="close" aria-label="Dismiss notification" @click=${() => this.dismiss(t.id)}>
-              ${iconX(14)}
+              <span aria-hidden="true">${iconX(14)}</span>
             </button>
           </div>
         `,

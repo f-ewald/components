@@ -28,7 +28,16 @@ export class DataTable extends LitElement {
     css`
       :host {
         display: block;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
       table {
@@ -43,15 +52,38 @@ export class DataTable extends LitElement {
         border-bottom: 1px solid var(--ui-border, #e2e8f0);
       }
       td {
-        padding: 0.6rem 0.75rem;
+        padding: 0.5rem 0.75rem;
         border-bottom: 1px solid var(--ui-border, #e2e8f0);
         color: var(--ui-text, #0f172a);
+      }
+      td:first-child {
+        position: relative;
+      }
+      .row-link {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
       tbody tr.clickable {
         cursor: pointer;
       }
       tbody tr.clickable:hover {
         background: var(--ui-surface-muted, #f8fafc);
+      }
+      tbody tr.clickable:has(.row-link:focus-visible) {
+        outline: none;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)) inset;
+      }
+      @media (forced-colors: active) {
+        tbody tr.clickable:has(.row-link:focus-visible) {
+          outline: 2px solid CanvasText;
+          outline-offset: -2px;
+          box-shadow: none;
+        }
       }
     `,
   ];
@@ -72,12 +104,33 @@ export class DataTable extends LitElement {
   ) => (row as Record<string, unknown>)[key];
   /** When set, clicking a row (outside any nested link/button) navigates to this hash. */
   @property({ attribute: false }) rowHref: ((row: unknown) => string | null) | null = null;
+  /** Accessible label for a row's keyboard link; defaults to primitive cell values. */
+  @property({ attribute: false }) rowLabel: ((row: unknown) => string) | null = null;
 
   #onRowClick(row: unknown, e: MouseEvent): void {
     if (!this.rowHref) return;
-    if ((e.target as HTMLElement).closest("a, button")) return;
+    if (this.#isNestedInteractive(e.composedPath(), e.currentTarget)) return;
     const href = this.rowHref(row);
     if (href) location.hash = href;
+  }
+
+  #isNestedInteractive(path: EventTarget[], row: EventTarget | null): boolean {
+    const selector =
+      "a, button, input, select, textarea, summary, [contenteditable], [role='button'], [role='link'], [tabindex]";
+    for (const target of path) {
+      if (target === row) return false;
+      if (target instanceof HTMLElement && target.matches(selector)) return true;
+    }
+    return false;
+  }
+
+  #rowLinkLabel(row: unknown): string {
+    const explicitLabel = this.rowLabel?.(row).trim();
+    if (explicitLabel) return explicitLabel;
+    const values = this.columns
+      .map((column) => (row as Record<string, unknown>)[column.key])
+      .filter((value) => typeof value === "string" || typeof value === "number");
+    return values.length > 0 ? `Open ${values.join(", ")}` : "Open row";
   }
 
   override render() {
@@ -92,14 +145,32 @@ export class DataTable extends LitElement {
           ${repeat(
             this.rows,
             (row, i) => this.rowKey(row, i),
-            (row) => html`
-              <tr
-                class=${this.rowHref ? "clickable" : ""}
-                @click=${(e: MouseEvent) => this.#onRowClick(row, e)}
-              >
-                ${this.columns.map((c) => html`<td>${this.renderCell(row, c.key) ?? nothing}</td>`)}
-              </tr>
-            `,
+            (row) => {
+              const href = this.rowHref?.(row) ?? null;
+              return html`
+                <tr
+                  class=${href ? "clickable" : ""}
+                  @click=${(e: MouseEvent) => this.#onRowClick(row, e)}
+                >
+                  ${this.columns.map(
+                    (c, columnIndex) => html`
+                      <td>
+                        ${href && columnIndex === 0
+                          ? html`
+                              <a
+                                class="row-link"
+                                href=${href}
+                                aria-label=${this.#rowLinkLabel(row)}
+                              ></a>
+                            `
+                          : nothing}
+                        ${this.renderCell(row, c.key) ?? nothing}
+                      </td>
+                    `,
+                  )}
+                </tr>
+              `;
+            },
           )}
         </tbody>
       </table>

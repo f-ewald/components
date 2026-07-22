@@ -68,6 +68,7 @@ _None._
 | `--ui-font-size-sm` |
 | `--ui-font-size-xs` |
 | `--ui-hover-overlay` |
+| `--ui-info` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-success` |
@@ -75,3 +76,4 @@ _None._
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |
+| `--ui-warning` |

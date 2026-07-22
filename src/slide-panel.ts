@@ -1,15 +1,16 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, css, html, nothing, type PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { iconX } from "./icons.js";
 import { tokens } from "./tokens.js";
+import { activateLayer, claimEscape, deactivateLayer } from "./utils/layer-stack.js";
 
 /**
  * Generic sliding panel shell. Handles positioning, open/close animation,
  * header chrome, and a close button. Body content is provided via the
  * default slot; the consumer controls its own padding and overflow.
  *
- * Desktop: 300 px fixed right-side panel that slides from the right.
- * Mobile (≤768px): bottom-sheet drawer (60vh) — reserved for future use.
+ * Desktop: fixed right-side panel that slides from the right.
+ * Mobile (≤48rem): bottom-sheet drawer (60vh) — reserved for future use.
  *
  * @element slide-panel
  * @fires panel-close - User clicked the close (✕) button.
@@ -32,12 +33,12 @@ export class SlidePanel extends LitElement {
         top: 0;
         right: 0;
         bottom: 0;
-        width: 300px;
-        z-index: 20;
-        background: var(--ui-surface, #fff);
+        width: 18.75rem;
+        z-index: var(--component-layer-z, 20);
+        background: var(--ui-surface, #ffffff);
         box-shadow: var(--ui-shadow-lg, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1));
         transform: translateX(110%);
-        transition: transform 0.25s ease;
+        transition: transform 250ms ease;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -49,14 +50,23 @@ export class SlidePanel extends LitElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.5rem 0.625rem;
+        padding: 0.5rem;
         border-bottom: 1px solid var(--ui-border, #e2e8f0);
         flex: 0 0 auto;
       }
       .panel-title {
         font-weight: 600;
         font-size: var(--ui-font-size, 0.875rem);
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         color: var(--ui-text, #0f172a);
         flex: 1 1 auto;
         overflow: hidden;
@@ -79,10 +89,26 @@ export class SlidePanel extends LitElement {
       .close-btn:hover {
         background: var(--ui-surface-muted, #f8fafc);
       }
+      .close-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
       .handle {
         display: none;
       }
-      @media (max-width: 768px) {
+      @media (prefers-reduced-motion: reduce) {
+        .panel {
+          transition: none;
+        }
+      }
+      @media (forced-colors: active) {
+        .close-btn:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+      }
+      @media (max-width: 48rem) {
         .panel {
           top: auto;
           right: 0;
@@ -90,8 +116,12 @@ export class SlidePanel extends LitElement {
           left: 0;
           width: auto;
           height: 60vh;
-          border-radius: 14px 14px 0 0;
-          box-shadow: 0 -3px 20px rgb(0 0 0 / 0.18);
+          border-radius: var(--ui-radius, 0.5rem) var(--ui-radius, 0.5rem) 0 0;
+          box-shadow: var(
+            --ui-shadow-lg,
+            0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 8px 10px -6px rgb(0 0 0 / 0.1)
+          );
           transform: translateY(110%);
         }
         .panel.open {
@@ -99,33 +129,75 @@ export class SlidePanel extends LitElement {
         }
         .handle {
           display: block;
-          width: 36px;
-          height: 4px;
+          width: 2.25rem;
+          height: 0.25rem;
           background: var(--ui-border, #e2e8f0);
-          border-radius: 2px;
-          margin: 10px auto 0;
+          border-radius: 9999px;
+          margin: 0.5rem auto 0;
           flex: 0 0 auto;
         }
         .panel-header {
-          padding: 4px 10px 8px;
+          padding: 0.25rem 0.5rem 0.5rem;
         }
       }
     `,
   ];
 
+  private _previousFocus: HTMLElement | null = null;
+
   private _close() {
     this.dispatchEvent(new CustomEvent("panel-close", { bubbles: true, composed: true }));
   }
 
+  private _onWindowKeydown = (event: KeyboardEvent): void => {
+    if (!this.open || !claimEscape(this, event)) return;
+    this._close();
+  };
+
+  protected override updated(changed: PropertyValues): void {
+    if (!changed.has("open")) return;
+    if (this.open) {
+      activateLayer(this);
+      this._previousFocus = document.activeElement as HTMLElement | null;
+      window.addEventListener("keydown", this._onWindowKeydown);
+      this.shadowRoot?.querySelector<HTMLElement>(".close-btn")?.focus();
+      return;
+    }
+    deactivateLayer(this);
+    window.removeEventListener("keydown", this._onWindowKeydown);
+    if (this._previousFocus?.isConnected) this._previousFocus.focus();
+    this._previousFocus = null;
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    window.removeEventListener("keydown", this._onWindowKeydown);
+    deactivateLayer(this);
+    if (this._previousFocus?.isConnected) this._previousFocus.focus();
+    this._previousFocus = null;
+    this.open = false;
+  }
+
   override render() {
+    const explicitLabel = this.getAttribute("aria-label");
     return html`
-      <div class="panel ${this.open ? "open" : ""}">
-        <div class="handle"></div>
+      <div
+        class="panel ${this.open ? "open" : ""}"
+        role="dialog"
+        aria-modal="false"
+        aria-label=${explicitLabel ?? nothing}
+        aria-labelledby=${explicitLabel ? nothing : "panel-title"}
+        aria-hidden=${String(!this.open)}
+        ?inert=${!this.open}
+      >
+        <div class="handle" aria-hidden="true"></div>
         <div class="panel-header">
-          <slot name="title">
-            ${this.heading ? html`<span class="panel-title">${this.heading}</span>` : null}
-          </slot>
-          <button class="close-btn" aria-label="Close panel" @click=${this._close}>${iconX(18)}</button>
+          <span id="panel-title" class="panel-title">
+            <slot name="title">${this.heading || "Panel"}</slot>
+          </span>
+          <button class="close-btn" aria-label="Close panel" @click=${this._close}>
+            <span aria-hidden="true">${iconX(18)}</span>
+          </button>
         </div>
         <slot></slot>
       </div>

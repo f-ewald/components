@@ -50,10 +50,14 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-focus-ring` |
 | `--ui-font` |
+| `--ui-font-mono` |
 | `--ui-font-size` |
+| `--ui-font-size-sm` |
 | `--ui-primary` |
 | `--ui-radius` |
+| `--ui-radius-sm` |
 | `--ui-surface` |
 | `--ui-text` |
 | `--ui-text-muted` |

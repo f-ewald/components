@@ -43,6 +43,9 @@ use — non-chart components pull in zero `d3` code.
 
 ## Styling / token rules
 
+- [`docs/design-language.md`](./docs/design-language.md) is the canonical
+  visual, interaction, accessibility, and validation contract. Read it before
+  adding or restyling a component.
 - No utility classes and no Tailwind inside shadow DOM. Components use Lit
   `css` only.
 - Every component's `static styles` starts with the shared `tokens` import
@@ -55,10 +58,14 @@ use — non-chart components pull in zero `d3` code.
   token. The fallback makes the component render correctly with zero
   external CSS; `tokens.ts` is the single source of truth for what those
   fallback values are.
-- Spacing is *not* tokenized — use Tailwind's 4px scale literally
-  (`0.25rem` steps) in component CSS.
+- Spacing is *not* tokenized—use literal `0.25rem` steps. Exceptions are 1px
+  borders, SVG/canvas geometry, percentages, timing, and proportional math.
 - SVG presentation attributes (`fill="..."`, `stroke="..."`) can't take
   `var()` — those stay as plain hex, matching the token's fallback value.
+- Every interactive component needs coherent hover, selected, disabled,
+  focus-visible/forced-colors, keyboard, and reduced-motion behavior.
+- Metadata-only and styleless component exceptions are listed in the design
+  contract; do not add empty styles merely for uniformity.
 
 ## The `.js`-specifier import rule
 
@@ -84,7 +91,7 @@ incomplete, the same as a component without tests.
    event), JSDoc on every public member, `static styles = [tokens, css\`...\`]`,
    and a `declare global { interface HTMLElementTagNameMap { ... } }` block.
 2. Export the class (and any exported types) from `src/index.ts`.
-3. Add the component to the playground:
+3. Add the component to the playground in alphabetical nav/section order:
    - A nav link in `index.html`'s `<nav class="demo-nav">`.
    - A `<section id="<tag-name>">` with a live, rendered example, and a
      `<pre class="usage">` copy-paste snippet.
@@ -97,6 +104,9 @@ incomplete, the same as a component without tests.
    (`scripts/generate-docs.mjs`) would otherwise fall back to a bare
    `<tag-name></tag-name>` snippet, add a real example there too.
 6. Add a row to the component table in `README.md`.
+
+Metadata-only tags listed in `docs/design-language.md` are demonstrated through
+their parent rather than receiving a standalone section.
 
 The same applies when adding a significant new capability to an *existing*
 component (e.g. a new suggestion source, a new mode): update its playground
@@ -114,6 +124,7 @@ script and run `npm run icons`.
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Playground with HMR. |
+| `npm run typecheck` | Fast TypeScript check without writing `dist/`. |
 | `npm run build` | `tsc` → `dist/` + `dist/tokens.css`, `chmod +x dist/mcp-server.js`. |
 | `npm run build:demo` | Static playground build → `demo-dist/`. |
 | `npm run build:site` | Static docs + nested playground build → `pages-dist/`; writes no tracked files. |
@@ -123,8 +134,15 @@ script and run `npm run icons`.
 | `npm run docs` | `analyze` + regenerate `docs/*.md` and `llms.txt`. |
 | `npm run mcp` | Run the MCP server directly (`node dist/mcp-server.js`) — mostly for manual smoke-testing; consumers launch it the same way via `.mcp.json`. |
 | `npm run test` | Playwright suite (auto-starts the dev server). |
+| `npm run test:design` | Static catalog/token/style/accessibility contracts. |
+| `npm run test:visual` | Light/dark component screenshot regression suite. |
+| `npm run test:visual:update` | Update screenshots; use the pinned Linux command in the design contract. |
 | `npm run test:site` | Playwright smoke suite against the built `pages-dist/` artifact. |
 | `npm run prepublishOnly` | `build` + `docs` + `test` — runs automatically before `npm publish`. |
+
+During implementation, run `typecheck` plus all touched component specs in one
+invocation. Run docs after APIs stabilize; run design/visual/full gates once at
+the end. See `docs/design-language.md` for the deterministic validation tiers.
 
 ## GitHub Pages
 
@@ -139,6 +157,7 @@ invokes `generate-docs.mjs --site`, which reads the checked-in
 `.github/workflows/pages.yml` deploys on pushes to `main` and manual dispatch.
 It uses only GitHub-authored actions, checks out with
 `persist-credentials: false`, has `contents: read` rather than write, and
+gates on component, design-contract, visual, and site tests before upload. It
 fails if the build changes tracked or staged files. Its only write permission
 is in the deploy job for the GitHub Pages deployment; it cannot commit, push,
 tag, open pull requests, publish releases, or change repository settings.

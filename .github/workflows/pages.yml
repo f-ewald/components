@@ -39,6 +39,12 @@ jobs:
       - name: Test components
         run: npm test
 
+      - name: Run design contracts
+        run: npm run test:design
+
+      - name: Run component screenshots
+        run: npm run test:visual
+
       - name: Build Pages artifact
         run: npm run build:site
 

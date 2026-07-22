@@ -24,6 +24,7 @@ import "@f-ewald/components/copy-link-button.js";
 | --- | --- | --- | --- | --- |
 | `value` | `value` | `string` | `""` | Text to copy. Defaults to `window.location.href` at click time. |
 | `label` | `label` | `string` | `"Copy link"` | Accessible label / tooltip text. |
+| `disabled` | `disabled` | `boolean` | `false` | Disables clipboard copying. |
 
 ## Events
 
@@ -40,6 +41,7 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-focus-ring` |
 | `--ui-radius-sm` |
 | `--ui-surface-muted` |
 | `--ui-text` |

@@ -34,34 +34,53 @@ export class WeightBarChart extends LitElement {
       .row {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin: 6px 0;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
       }
       .label {
-        flex: 0 0 90px;
+        flex: 0 0 5.5rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         color: var(--ui-text, #0f172a);
       }
       .track {
         flex: 1 1 auto;
-        height: 12px;
+        height: 0.75rem;
         background: var(--ui-surface-muted, #f8fafc);
         border-radius: var(--ui-radius-sm, 0.25rem);
         overflow: hidden;
       }
       .bar {
         height: 100%;
-        background: var(--ui-primary, #4f46e5);
+        /* Match map-circle's 30% white/black vertical depth while preserving token overrides. */
+        background: linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--ui-primary, #4f46e5) 70%, #ffffff) 0%,
+          color-mix(in srgb, var(--ui-primary, #4f46e5) 70%, #000000) 100%
+        );
         border-radius: 0 var(--ui-radius-sm, 0.25rem) var(--ui-radius-sm, 0.25rem) 0;
-        transition: width 0.15s ease-out;
+        transition: width 150ms ease-out;
       }
       .pct {
-        flex: 0 0 40px;
+        flex: 0 0 2.5rem;
         text-align: right;
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-variant-numeric: tabular-nums;
         color: var(--ui-text-muted, #64748b);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .bar {
+          transition: none;
+        }
       }
     `,
   ];

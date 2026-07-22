@@ -12,6 +12,31 @@ function isWeekend(day: number): boolean {
 }
 
 test.describe("calendar-month", () => {
+  test("uses semantic dark tokens and removes entry transitions for reduced motion", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const calendar = page.locator("#calendar-month-demo");
+    await calendar.evaluate((element) => {
+      element.style.setProperty("--ui-info", "#38bdf8");
+      element.style.setProperty("--ui-warning", "#f59e0b");
+      element.style.setProperty("--ui-surface", "#0f172a");
+      element.style.setProperty("--ui-border", "#334155");
+    });
+
+    await expect(calendar.locator(".entry-bar.info")).toHaveCSS("color", "rgb(56, 189, 248)");
+    await expect(calendar.locator(".entry-bar.warning").first()).toHaveCSS(
+      "color",
+      "rgb(245, 158, 11)",
+    );
+    await expect(calendar.locator(".entry-bar").first()).toHaveCSS("transition-duration", "0s");
+    await expect(calendar.locator(".day-row td").first()).toHaveCSS(
+      "border-bottom-color",
+      "rgb(51, 65, 85)",
+    );
+  });
+
   test("renders one row per day with weekends highlighted", async ({ page }) => {
     await page.goto("/");
     const el = page.locator("#calendar-month-demo");

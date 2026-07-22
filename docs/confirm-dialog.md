@@ -51,9 +51,11 @@ import "@f-ewald/components/confirm-dialog.js";
 | `--ui-border` |
 | `--ui-danger` |
 | `--ui-danger-hover` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size` |
 | `--ui-font-size-sm` |
+| `--ui-on-accent` |
 | `--ui-overlay` |
 | `--ui-primary` |
 | `--ui-primary-hover` |

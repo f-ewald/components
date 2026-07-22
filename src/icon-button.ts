@@ -45,6 +45,17 @@ export class IconButton extends LitElement {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
+      @media (forced-colors: active) {
+        button:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        button:disabled {
+          color: GrayText;
+          opacity: 1;
+        }
+      }
     `,
   ];
 

@@ -59,7 +59,16 @@ export class CalendarMonth extends LitElement {
     css`
       :host {
         display: block;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
       .month-name {
@@ -107,7 +116,7 @@ export class CalendarMonth extends LitElement {
         font-weight: 600;
       }
       .lane-cell {
-        padding: 0.1rem 0.4rem;
+        padding: 0.25rem 0.5rem;
       }
       .entry-bar {
         border-radius: 0;
@@ -134,27 +143,27 @@ export class CalendarMonth extends LitElement {
         border-bottom: 0;
       }
       .entry-bar.neutral {
-        background: color-mix(in srgb, var(--ui-text-muted, #64748b) 15%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-text-muted, #64748b) 15%, var(--ui-surface, #ffffff));
         color: var(--ui-text-muted, #64748b);
       }
       .entry-bar.info {
-        background: color-mix(in srgb, #0ea5e9 15%, var(--ui-surface, #fff));
-        color: #0ea5e9;
+        background: color-mix(in srgb, var(--ui-info, #0ea5e9) 15%, var(--ui-surface, #ffffff));
+        color: var(--ui-info, #0ea5e9);
       }
       .entry-bar.primary {
-        background: color-mix(in srgb, var(--ui-primary, #4f46e5) 15%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-primary, #4f46e5) 15%, var(--ui-surface, #ffffff));
         color: var(--ui-primary, #4f46e5);
       }
       .entry-bar.success {
-        background: color-mix(in srgb, var(--ui-success, #16a34a) 15%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-success, #16a34a) 15%, var(--ui-surface, #ffffff));
         color: var(--ui-success, #16a34a);
       }
       .entry-bar.warning {
-        background: color-mix(in srgb, #d97706 15%, var(--ui-surface, #fff));
-        color: #d97706;
+        background: color-mix(in srgb, var(--ui-warning, #d97706) 15%, var(--ui-surface, #ffffff));
+        color: var(--ui-warning, #d97706);
       }
       .entry-bar.danger {
-        background: color-mix(in srgb, var(--ui-danger, #dc2626) 15%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-danger, #dc2626) 15%, var(--ui-surface, #ffffff));
         color: var(--ui-danger, #dc2626);
       }
       .entry-line {
@@ -168,7 +177,7 @@ export class CalendarMonth extends LitElement {
       .entry-title {
         box-sizing: border-box;
         font-weight: 500;
-        padding: 0.15rem 0.4rem;
+        padding: 0.25rem 0.5rem;
         pointer-events: none;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -204,7 +213,7 @@ export class CalendarMonth extends LitElement {
         min-height: 0;
         flex-direction: column;
         overflow: hidden;
-        padding: 0.15rem 0.4rem;
+        padding: 0.25rem 0.5rem;
         color: inherit;
         pointer-events: none;
       }
@@ -213,7 +222,7 @@ export class CalendarMonth extends LitElement {
         min-height: 1.15em;
         margin-top: auto;
         border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-        padding-top: 0.15rem;
+        padding-top: 0.25rem;
         font-size: var(--ui-font-size-xs, 0.6875rem);
         font-weight: 500;
         line-height: 1.15;
@@ -239,6 +248,11 @@ export class CalendarMonth extends LitElement {
         .entry-link:focus-visible {
           outline-color: Highlight;
           box-shadow: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .entry-bar {
+          transition: none;
         }
       }
       slot {

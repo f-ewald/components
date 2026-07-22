@@ -13,4 +13,21 @@ test.describe("radio-pills", () => {
     await expect(pills.locator(".pill").nth(0).locator("input")).not.toBeChecked();
     await expect(page.locator("#radio-pills-selected")).toHaveText("outdoors");
   });
+
+  test("preserves native keyboard focus and disabled behavior", async ({ page }) => {
+    await page.goto("/");
+    const pills = page.locator("#radio-pills-demo");
+    const first = pills.locator("input").first();
+    await first.focus();
+    expect(
+      await pills.locator(".pill").first().evaluate((element) => getComputedStyle(element).boxShadow),
+    ).not.toBe("none");
+    await first.press("ArrowRight");
+    await expect(pills.locator("input").nth(1)).toBeChecked();
+
+    await pills.evaluate((element) => {
+      (element as HTMLElement & { disabled: boolean }).disabled = true;
+    });
+    await expect(pills.locator("input:disabled")).toHaveCount(4);
+  });
 });

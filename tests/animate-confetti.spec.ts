@@ -11,4 +11,20 @@ test.describe("animate-confetti", () => {
     await expect(confetti).toHaveCount(1);
     await expect(confetti.locator("#confetti-canvas")).toBeAttached();
   });
+
+  test("keeps its decorative canvas static for reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.evaluate(() => {
+      window.requestAnimationFrame = () => {
+        document.body.dataset.confettiAnimated = "true";
+        return 1;
+      };
+    });
+    await page.locator("#confetti-trigger").click();
+
+    const canvas = page.locator("animate-confetti #confetti-canvas");
+    await expect(canvas).toHaveAttribute("aria-hidden", "true");
+    await expect(page.locator("body")).not.toHaveAttribute("data-confetti-animated", "true");
+  });
 });

@@ -22,12 +22,27 @@ export class UserAvatar extends LitElement {
       }
       .avatar {
         border-radius: 50%;
-        background: var(--ui-primary, #4f46e5);
-        color: #fff;
+        /* Match map-circle's 30% white/black vertical depth without tinting images. */
+        background: linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--ui-primary, #4f46e5) 70%, #ffffff) 0%,
+          color-mix(in srgb, var(--ui-primary, #4f46e5) 70%, #000000) 100%
+        );
+        color: var(--ui-on-accent, #ffffff);
+        text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-weight: 600;
         overflow: hidden;
         flex: 0 0 auto;

@@ -24,23 +24,43 @@ export class ChatMessage extends LitElement {
     css`
       :host {
         display: block;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size, 0.875rem);
       }
       .header {
         display: flex;
         align-items: center;
-        gap: 0.4rem;
-        font-size: 0.75rem;
+        gap: 0.5rem;
+        font-size: var(--ui-font-size-sm, 0.75rem);
         color: var(--ui-text-muted, #64748b);
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.25rem;
       }
-      .header.clickable {
+      button.header {
+        width: 100%;
+        padding: 0;
+        border: 0;
+        background: none;
+        font-family: inherit;
+        text-align: left;
         cursor: pointer;
+      }
+      button.header:focus-visible {
+        outline: none;
+        border-radius: var(--ui-radius-sm, 0.25rem);
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
       .chevron {
         display: inline-flex;
-        transition: transform 0.15s ease;
+        transition: transform 150ms ease;
       }
       .chevron.expanded {
         transform: rotate(90deg);
@@ -56,7 +76,7 @@ export class ChatMessage extends LitElement {
       }
       .body-card {
         border-radius: var(--ui-radius, 0.5rem);
-        padding: 0.6rem 0.8rem;
+        padding: 0.5rem 0.75rem;
         color: var(--ui-text, #0f172a);
         line-height: 1.5;
       }
@@ -64,24 +84,44 @@ export class ChatMessage extends LitElement {
         display: none;
       }
       :host([role="user"]) .body-card {
-        background: color-mix(in srgb, var(--ui-primary, #4f46e5) 8%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-primary, #4f46e5) 8%, var(--ui-surface, #ffffff));
       }
       :host([role="agent"]) .body-card {
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
       }
       :host([role="system"]) .body-card {
-        padding: 0 0 0 1.1rem;
-        font-size: 0.8rem;
+        padding: 0 0 0 1rem;
+        font-size: var(--ui-font-size-sm, 0.75rem);
         color: var(--ui-text-muted, #64748b);
       }
       :host([variant="tool"]) .body-card,
       :host([variant="thinking"]) .body-card {
         opacity: 0.7;
-        font-size: 0.8rem;
+        font-size: var(--ui-font-size-sm, 0.75rem);
       }
       :host([variant="tool"]) .body-card {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(
+          --ui-font-mono,
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Monaco,
+          Consolas,
+          monospace
+        );
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .chevron {
+          transition: none;
+        }
+      }
+      @media (forced-colors: active) {
+        button.header:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
       }
     `,
   ];
@@ -108,18 +148,32 @@ export class ChatMessage extends LitElement {
   }
 
   override render() {
+    const headerContent = html`
+      ${this.collapsible
+        ? html`<span class="chevron ${this.collapsed ? "" : "expanded"}" aria-hidden="true"
+            >${iconChevronRight(12)}</span
+          >`
+        : nothing}
+      ${this.author ? html`<span class="author">${this.author}</span>` : nothing}
+      ${this.timestamp ? html`<relative-time datetime=${this.timestamp}></relative-time>` : nothing}
+      ${this.summary ? html`<span class="summary">${this.summary}</span>` : nothing}
+    `;
+
     return html`
-      <div class="header ${this.collapsible ? "clickable" : ""}" @click=${this._toggle}>
-        ${this.collapsible
-          ? html`<span class="chevron ${this.collapsed ? "" : "expanded"}"
-              >${iconChevronRight(12)}</span
-            >`
-          : nothing}
-        ${this.author ? html`<span class="author">${this.author}</span>` : nothing}
-        ${this.timestamp ? html`<relative-time datetime=${this.timestamp}></relative-time>` : nothing}
-        ${this.summary ? html`<span class="summary">${this.summary}</span>` : nothing}
-      </div>
-      <div class="body-card" ?hidden=${this.collapsible && this.collapsed}>
+      ${this.collapsible
+        ? html`
+            <button
+              class="header"
+              type="button"
+              aria-expanded=${String(!this.collapsed)}
+              aria-controls="message-body"
+              @click=${this._toggle}
+            >
+              ${headerContent}
+            </button>
+          `
+        : html`<div class="header">${headerContent}</div>`}
+      <div id="message-body" class="body-card" ?hidden=${this.collapsible && this.collapsed}>
         <slot></slot>
       </div>
     `;

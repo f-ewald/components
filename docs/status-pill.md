@@ -38,6 +38,9 @@ _None._
 | --- |
 | `--ui-danger` |
 | `--ui-font` |
+| `--ui-font-size-sm` |
+| `--ui-info` |
 | `--ui-primary` |
 | `--ui-success` |
 | `--ui-text-muted` |
+| `--ui-warning` |

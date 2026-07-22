@@ -16,4 +16,13 @@ test.describe("icon-button", () => {
     const el = page.locator("#icon-button-disabled");
     await expect(el.locator("button")).toBeDisabled();
   });
+
+  test("shows the shared focus ring for keyboard focus", async ({ page }) => {
+    await page.goto("/");
+    const button = page.locator("#icon-button-edit button");
+    await button.focus();
+    expect(await button.evaluate((element) => getComputedStyle(element).boxShadow)).not.toBe(
+      "none",
+    );
+  });
 });

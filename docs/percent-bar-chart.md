@@ -37,4 +37,7 @@ _None._
 
 ## CSS custom properties
 
-_None._
+| Custom property |
+| --- |
+| `--ui-font` |
+| `--ui-text-muted` |

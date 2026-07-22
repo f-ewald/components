@@ -10,6 +10,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { iconChevronRight } from "./icons.js";
 import { tokens } from "./tokens.js";
 
+let instanceCount = 0;
+
 /** A single selectable option. */
 export interface SelectOption {
   value: string;
@@ -51,25 +53,34 @@ export class FormSelect extends LitElement {
       :host {
         display: inline-block;
         position: relative;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
       button.trigger {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.35rem;
+        gap: 0.25rem;
         width: 100%;
         box-sizing: border-box;
         font: inherit;
         color: var(--ui-text, #0f172a);
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 0.3rem 0.5rem;
+        padding: 0.25rem 0.5rem;
         cursor: pointer;
       }
-      button.trigger:hover {
+      button.trigger:hover:not(:disabled) {
         background: var(--ui-surface-muted, #f8fafc);
       }
       button.trigger:disabled {
@@ -85,11 +96,11 @@ export class FormSelect extends LitElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.35rem;
+        gap: 0.25rem;
         width: 100%;
         box-sizing: border-box;
         color: var(--ui-text, #0f172a);
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         cursor: text;
@@ -97,7 +108,7 @@ export class FormSelect extends LitElement {
       .search-trigger:hover:not(.disabled) {
         background: var(--ui-surface-muted, #f8fafc);
       }
-      .search-trigger:focus-within {
+      .search-trigger:not(.disabled):focus-within {
         border-color: var(--ui-primary, #4f46e5);
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
@@ -112,7 +123,7 @@ export class FormSelect extends LitElement {
         min-width: 0;
         flex: 1;
         box-sizing: border-box;
-        padding: 0.3rem 0 0.3rem 0.5rem;
+        padding: 0.25rem 0 0.25rem 0.5rem;
         color: inherit;
         background: transparent;
         border: 0;
@@ -126,7 +137,7 @@ export class FormSelect extends LitElement {
         color: var(--ui-text-muted, #64748b);
         pointer-events: none;
         transform: rotate(90deg);
-        transition: transform 0.1s ease;
+        transition: transform 150ms ease;
       }
       button.trigger .chevron {
         margin-right: 0;
@@ -143,12 +154,12 @@ export class FormSelect extends LitElement {
         max-height: 40vh;
         overflow-y: auto;
         scrollbar-gutter: stable;
-        margin: 2px 0 0;
-        padding: 4px 0;
+        margin: 0.25rem 0 0;
+        padding: 0.25rem 0;
         list-style: none;
         white-space: nowrap;
         color: var(--ui-text, #0f172a);
-        background: var(--ui-surface, #fff);
+        background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
@@ -158,12 +169,12 @@ export class FormSelect extends LitElement {
       }
       ul.options::-webkit-scrollbar-thumb {
         background: var(--ui-border, #e2e8f0);
-        border: 0.2rem solid transparent;
+        border: 0.25rem solid transparent;
         border-radius: 999px;
         background-clip: padding-box;
       }
       li {
-        padding: 0.35rem 0.6rem;
+        padding: 0.5rem;
         cursor: pointer;
       }
       li.active,
@@ -178,7 +189,7 @@ export class FormSelect extends LitElement {
         display: inline-flex;
         min-width: 0;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.5rem;
       }
       li .option-content {
         display: flex;
@@ -206,10 +217,40 @@ export class FormSelect extends LitElement {
         white-space: nowrap;
       }
       li.no-options {
-        padding: 0.35rem 0.6rem;
+        padding: 0.5rem;
         color: var(--ui-text-muted, #64748b);
         cursor: default;
         font-style: italic;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .chevron {
+          transition: none;
+        }
+      }
+      @media (forced-colors: active) {
+        button.trigger:focus-visible,
+        .search-trigger:not(.disabled):focus-within {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        button.trigger:disabled,
+        .search-trigger.disabled {
+          color: GrayText;
+          opacity: 1;
+        }
+        li.active,
+        li:hover {
+          color: HighlightText;
+          background: Highlight;
+        }
+        li[aria-selected="true"] {
+          color: Highlight;
+        }
+        li.active[aria-selected="true"],
+        li[aria-selected="true"]:hover {
+          color: HighlightText;
+        }
       }
     `,
   ];
@@ -240,6 +281,7 @@ export class FormSelect extends LitElement {
   #compositionJustEnded = false;
   #compositionEndTimer: ReturnType<typeof setTimeout> | null = null;
   #blurTimer: ReturnType<typeof setTimeout> | null = null;
+  readonly #listboxId = `form-select-listbox-${++instanceCount}`;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -278,7 +320,7 @@ export class FormSelect extends LitElement {
       this._activeIndex >= 0
     ) {
       this.renderRoot
-        .querySelector<HTMLElement>(`#form-select-option-${this._activeIndex}`)
+        .querySelector<HTMLElement>(`#${this.#listboxId}-option-${this._activeIndex}`)
         ?.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
   }
@@ -528,15 +570,16 @@ export class FormSelect extends LitElement {
     const options = this.#visibleOptions();
     return html`
       <ul
-        id="form-select-listbox"
+        id=${this.#listboxId}
         class="options"
         role="listbox"
+        aria-label=${this.label ? `${this.label} options` : "Options"}
         @mousedown=${(e: MouseEvent) => this.#onListboxMousedown(e)}
       >
         ${options.map(
           (o, i) => html`
             <li
-              id=${`form-select-option-${i}`}
+              id=${`${this.#listboxId}-option-${i}`}
               role="option"
               aria-selected=${o.value === this.value}
               class=${i === this._activeIndex ? "active" : ""}
@@ -558,7 +601,7 @@ export class FormSelect extends LitElement {
     const showSelectedIcon = this._query === null && Boolean(current?.icon);
     const activeDescendant =
       this._open && this._activeIndex >= 0
-        ? `form-select-option-${this._activeIndex}`
+        ? `${this.#listboxId}-option-${this._activeIndex}`
         : nothing;
     return html`
       <div
@@ -576,7 +619,7 @@ export class FormSelect extends LitElement {
           role="combobox"
           aria-autocomplete="list"
           aria-expanded=${this._open}
-          aria-controls="form-select-listbox"
+          aria-controls=${this.#listboxId}
           aria-activedescendant=${activeDescendant}
           aria-label=${this.label || "Select an option"}
           autocomplete="off"
@@ -597,12 +640,18 @@ export class FormSelect extends LitElement {
   }
 
   private renderButtonTrigger(current: SelectOption | undefined) {
+    const activeDescendant =
+      this._open && this._activeIndex >= 0
+        ? `${this.#listboxId}-option-${this._activeIndex}`
+        : nothing;
     return html`
       <button
         type="button"
         class="trigger"
         aria-haspopup="listbox"
         aria-expanded=${this._open}
+        aria-controls=${this.#listboxId}
+        aria-activedescendant=${activeDescendant}
         aria-label=${this.label || nothing}
         ?disabled=${this.disabled}
         @click=${() => this.#toggle()}

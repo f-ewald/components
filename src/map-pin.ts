@@ -42,12 +42,26 @@ export class MapPin extends LitElement {
         left: 50%;
         transform: translate(-50%, -50%);
         color: #fff;
-        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         font-weight: 700;
         line-height: 1;
         text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
         pointer-events: none;
         white-space: nowrap;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        svg {
+          transition: none;
+        }
       }
     `,
   ];
@@ -67,6 +81,7 @@ export class MapPin extends LitElement {
     const height = Math.round(this.size * (34 / 32));
     return html`
       <svg
+        aria-hidden="true"
         width=${this.size}
         height=${height}
         viewBox="0 0 32 34"
