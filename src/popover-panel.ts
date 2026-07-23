@@ -69,7 +69,6 @@ export class PopoverPanel extends LitElement {
         box-shadow: var(--ui-shadow-lg, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1));
         display: flex;
         flex-direction: column;
-        overflow: hidden;
       }
       .panel-header {
         display: flex;
@@ -77,6 +76,7 @@ export class PopoverPanel extends LitElement {
         justify-content: space-between;
         padding: 0.75rem;
         border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-radius: var(--ui-radius, 0.5rem) var(--ui-radius, 0.5rem) 0 0;
         flex: 0 0 auto;
       }
       .panel-title {
