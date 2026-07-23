@@ -7,10 +7,11 @@ a native `<select>` wherever consistent cross-browser styling and a
 picker).
 
 The trigger fills its host's width (`justify-content: space-between`
-pushes the chevron to the far edge), but the host itself stays
-`display: inline-block` — so usages that never size the host (a filter
-bar, a status picker) keep shrink-to-fit auto-width unchanged. To make an
-instance full-width, size the host itself: `form-select { width: 100%; }`.
+pushes the chevron to the far edge), and the host is `display: block`, so a
+`form-select` fills its container's width by default — matching the other
+form fields. To make an instance shrink to its content instead (e.g. in a
+filter bar or a status picker), constrain the host:
+`form-select { display: inline-block; }` (or `width: fit-content`).
 
 Set `searchable` to replace the button trigger with an editable combobox
 that filters the predefined options by case-insensitive label infix. Typed

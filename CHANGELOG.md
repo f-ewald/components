@@ -1,5 +1,33 @@
 # @f-ewald/components
 
+## 1.2.0
+
+- Added `kanban-board` (with the metadata-only `kanban-column` and
+  `kanban-card`), a configurable board where a card's column *is* its state.
+  Drag-and-drop and keyboard both move cards between columns and reorder within
+  one (disable intra-column reordering with `reorderable="false"`, e.g. when the
+  server doesn't persist a rank); a card's detail opens in a centered
+  `popover-panel` with a state selector and metadata, and every move — drag,
+  keyboard, or state selector — emits a single `card-move` event. Set `manual`
+  for a server-authoritative board: moves emit but aren't applied locally until
+  you re-assign `columns` (e.g. from a WebSocket/SSE echo). A moved card briefly
+  flashes the new `--ui-highlight` token so you can see where it landed.
+- Added `multi-select`, a form-associated multi-selection control. A compact
+  trigger opens a multi-selectable listbox popover (`variant="dropdown"`, the
+  default) or renders a persistently visible, bordered list surface
+  (`variant="list"`, sized by `visible-rows`); chosen values submit as repeated
+  `name=value` entries like a native `<select multiple>`, and `show-chips`
+  additionally renders them as a removable-chip list below the trigger. Opt into
+  case-insensitive infix search with `searchable`, where typed text filters
+  options without ever becoming a value.
+- Standardized value-entry form fields (`autocomplete-input`,
+  `address-autocomplete`, `editable-text`, `form-select`, `multi-select`) to be
+  full-width by default: each field's host is now `display: block` with the
+  inner control at `width: 100%`, so a field fills the column it lives in,
+  matching native and reusable-component conventions. Previously `form-select`
+  shrank to fit its content; to restore shrink-to-fit for a specific instance,
+  set the host to `display: inline-block` (or `width: fit-content`).
+
 ## 1.1.1
 
 - Fixed `dropdown-button`'s open menu falling back to the ambient page

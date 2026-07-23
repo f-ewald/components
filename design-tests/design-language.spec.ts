@@ -7,6 +7,8 @@ const metadataOnly = new Set([
   "calendar-entry",
   "gallery-item",
   "gallery-item-variant",
+  "kanban-card",
+  "kanban-column",
 ]);
 const styleless = new Set([
   "distance-value",
@@ -438,5 +440,21 @@ test("panels and surface chrome use the approved measurements", () => {
     for (const match of source.matchAll(/@media\s*\(max-width:\s*([0-9.]+)rem\)/g)) {
       expect(match[1], `${modulePath} responsive breakpoint`).toBe("48");
     }
+  }
+});
+
+test("value-entry form fields fill their container by default", () => {
+  // The host is display:block and the inner control is width:100%, so a field
+  // fills the column it lives in; shrink-to-fit stays an opt-in host override.
+  const fields: Array<{ module: string; control: string }> = [
+    { module: "src/autocomplete-input.ts", control: "input" },
+    { module: "src/address-autocomplete.ts", control: "input" },
+    { module: "src/editable-text.ts", control: "\\.display" },
+    { module: "src/form-select.ts", control: "button\\.trigger" },
+    { module: "src/multi-select.ts", control: "button\\.trigger" },
+  ];
+  for (const { module, control } of fields) {
+    expectRuleDeclaration(module, ":host", "display", "block");
+    expectRuleDeclaration(module, control, "width", "100%");
   }
 });
