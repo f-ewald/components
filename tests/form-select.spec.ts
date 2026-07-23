@@ -1,6 +1,15 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("form-select", () => {
+  test("fills its container by default and shrinks with an inline-block host", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const fullWidth = (await page.locator("#select-state").boundingBox())!;
+    const inline = (await page.locator("#select-inline").boundingBox())!;
+    expect(inline.width).toBeLessThan(fullWidth.width);
+  });
+
   test("click opens the listbox, picking an option commits, fires change, and closes", async ({
     page,
   }) => {
