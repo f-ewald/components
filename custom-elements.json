@@ -4,6 +4,52 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/action-bar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Toolbar that sits directly above a list or table: a left cluster for\nsearch and filters and a right cluster for record actions (create, delete,\nbulk actions). It's a presentational layout container only — drop any\ncontrols (`autocomplete-input`, `multi-select`, `ui-button`, …) into the\n`start` and `end` slots; the bar owns none of their behavior and adds no\nsearch field of its own. The two clusters wrap onto separate rows when the\nbar is too narrow.",
+          "name": "ActionBar",
+          "slots": [
+            {
+              "description": "Left cluster: search and filter controls.",
+              "name": "start"
+            },
+            {
+              "description": "Right cluster: record actions (create, delete, …).",
+              "name": "end"
+            }
+          ],
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "action-bar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ActionBar",
+          "declaration": {
+            "name": "ActionBar",
+            "module": "src/action-bar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "action-bar",
+          "declaration": {
+            "name": "ActionBar",
+            "module": "src/action-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/address-autocomplete.ts",
       "declarations": [
         {
@@ -856,6 +902,415 @@
           "declaration": {
             "name": "AnimateConfetti",
             "module": "src/animate-confetti.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/app-shell.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The dashboard page shell: a slot-based CSS-grid backbone that arranges a\nfull-height sidebar, a top bar, the main content, an optional right-hand\ndetail column, and an optional footer. It owns the responsive behavior so\nconsumers don't re-implement it — above the shared 48rem breakpoint the\nsidebar collapses to an icon rail and the detail region is an inline column;\nat or below it the sidebar becomes an off-canvas drawer and the detail region\nan overlay, both dismissed by a scrim or Escape.\n\nWidths are tunable per instance via `--component-sidebar-width` (16rem),\n`--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`\n(3rem); the detail column reuses the 20rem/25rem panel widths. The main\ncontent area is white by default — override it with\n`--component-main-background`. Give the shell a height (e.g. `height: 100vh`)\nso the sidebar and main can size and scroll.\n\nThe built-in top-bar button toggles the sidebar, and so does pressing `[`\nanywhere on the page (ignored while typing in a text field or with a\nmodifier held). Hovering or keyboard-focusing the toggle reveals a tooltip\nnaming the action and its `[` shortcut — the shortcut is not shown as\npermanent chrome.",
+          "name": "AppShell",
+          "slots": [
+            {
+              "description": "Main content area.",
+              "name": ""
+            },
+            {
+              "description": "Full-height navigation (typically `app-sidebar`).",
+              "name": "sidebar"
+            },
+            {
+              "description": "Top bar content, right of the built-in toggle.",
+              "name": "topbar"
+            },
+            {
+              "description": "Optional right-hand detail; shown when `detail-open` is set.",
+              "name": "detail"
+            },
+            {
+              "description": "Optional footer beneath the main content.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "sidebarCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the sidebar to an icon rail on desktop.",
+              "attribute": "sidebar-collapsed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "detailOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the right-hand detail region (inline column, or overlay on mobile).",
+              "attribute": "detail-open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "detailWidth",
+              "type": {
+                "text": "\"compact\" | \"comfortable\""
+              },
+              "default": "\"compact\"",
+              "description": "Detail width: `compact` (20rem) or `comfortable` (25rem).",
+              "attribute": "detail-width"
+            },
+            {
+              "kind": "field",
+              "name": "_mobile",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the viewport is at/below the 48rem breakpoint."
+            },
+            {
+              "kind": "field",
+              "name": "_mobileNavOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the mobile off-canvas nav drawer is open."
+            },
+            {
+              "kind": "field",
+              "name": "_hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the footer slot has assigned content."
+            },
+            {
+              "kind": "field",
+              "name": "_mediaQuery",
+              "type": {
+                "text": "MediaQueryList | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_previousFocus",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_onMediaChange",
+              "privacy": "private",
+              "description": "Tracks the breakpoint and closes the mobile drawer when returning to desktop."
+            },
+            {
+              "kind": "field",
+              "name": "_onKeydown",
+              "privacy": "private",
+              "description": "Handles the `[` sidebar shortcut and Escape dismissal of mobile overlays."
+            },
+            {
+              "kind": "method",
+              "name": "_isEditableTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Whether the keydown originated in a text field, so the shortcut defers to typing."
+            },
+            {
+              "kind": "method",
+              "name": "_toggleSidebar",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Toggles the rail (desktop) or the off-canvas drawer (mobile) and announces it."
+            },
+            {
+              "kind": "method",
+              "name": "_closeDetail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Closes the detail overlay and notifies the consumer that owns `detail-open`."
+            },
+            {
+              "kind": "method",
+              "name": "_onScrim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Scrim click dismisses whichever overlay is open."
+            },
+            {
+              "kind": "method",
+              "name": "_syncSidebar",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Mirrors the shell's rail state onto the slotted sidebar so it hides labels\nwhen collapsed on desktop, and always shows them in the mobile drawer."
+            },
+            {
+              "kind": "method",
+              "name": "_onFooterSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Collapses the footer row when nothing is slotted into it."
+            }
+          ],
+          "events": [
+            {
+              "name": "sidebar-toggle",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The built-in toggle changed the sidebar state."
+            },
+            {
+              "name": "detail-close",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The scrim or Escape dismissed the mobile detail overlay."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "sidebar-collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the sidebar to an icon rail on desktop.",
+              "fieldName": "sidebarCollapsed"
+            },
+            {
+              "name": "detail-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the right-hand detail region (inline column, or overlay on mobile).",
+              "fieldName": "detailOpen"
+            },
+            {
+              "name": "detail-width",
+              "type": {
+                "text": "\"compact\" | \"comfortable\""
+              },
+              "default": "\"compact\"",
+              "description": "Detail width: `compact` (20rem) or `comfortable` (25rem).",
+              "fieldName": "detailWidth"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "app-shell",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AppShell",
+          "declaration": {
+            "name": "AppShell",
+            "module": "src/app-shell.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "app-shell",
+          "declaration": {
+            "name": "AppShell",
+            "module": "src/app-shell.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/app-sidebar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Collapsible navigation sidebar for the `app-shell` sidebar slot. It is\ndeliberately presentational and router-agnostic: the consumer supplies the\nnav items as plain `<a>`/`<button>` elements (each an icon followed by a\nlabel), optional `<p>` group headings, and marks the active item with\n`aria-current=\"page\"`. The sidebar styles them, tracks hover/active/focus,\nand — in collapsed \"rail\" mode — centers the icons and hides the labels.\n\nRail mode is driven by the `collapsed` attribute (the parent `app-shell`\ntoggles it). Labels are hidden by the inherited `--app-sidebar-label` custom\nproperty, so each label element should read it, e.g.\n`<span style=\"display: var(--app-sidebar-label, inline)\">Reports</span>`;\nkeep an `aria-label` on the item so its accessible name survives collapse.\nThe sidebar fills the width and height of its container — `app-shell` owns\nthe actual rail/expanded width.",
+          "name": "AppSidebar",
+          "slots": [
+            {
+              "description": "Navigation items: `<a>`/`<button>` links and optional `<p>` headings.",
+              "name": ""
+            },
+            {
+              "description": "Optional brand pinned to the top: a small logo plus a name. Wrap the name in a `--app-sidebar-label` element so rail mode shows only the logo, centered in line with the nav icons.",
+              "name": "header"
+            },
+            {
+              "description": "Optional account/settings area pinned to the bottom.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the sidebar to an icon rail (centers icons, hides labels).",
+              "attribute": "collapsed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_hasHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the header slot has assigned content."
+            },
+            {
+              "kind": "field",
+              "name": "_hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the footer slot has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_onHeaderSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Collapses the header row when nothing is slotted into it."
+            },
+            {
+              "kind": "method",
+              "name": "_onFooterSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Collapses the footer row when nothing is slotted into it."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the sidebar to an icon rail (centers icons, hides labels).",
+              "fieldName": "collapsed"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "app-sidebar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AppSidebar",
+          "declaration": {
+            "name": "AppSidebar",
+            "module": "src/app-sidebar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "app-sidebar",
+          "declaration": {
+            "name": "AppSidebar",
+            "module": "src/app-sidebar.ts"
           }
         }
       ]
@@ -3481,6 +3936,56 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/form-actions.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Form footer button bar with a fixed action order for internal apps: the\nprimary (submit) button is always rightmost, the secondary (cancel) button\nsits to its immediate left, and an optional tertiary/destructive action is\npinned to the far left. The order is enforced by the component regardless of\nthe source order the buttons are authored in, so every form in a product\nreads the same way.\n\nPurely presentational: it lays out whatever controls (usually `ui-button`)\nare slotted and never intercepts their clicks, `type=\"submit\"`, or events.",
+          "name": "FormActions",
+          "slots": [
+            {
+              "description": "Optional far-left action (e.g. a destructive \"Delete\").",
+              "name": "start"
+            },
+            {
+              "description": "The secondary/cancel action, placed left of primary.",
+              "name": "secondary"
+            },
+            {
+              "description": "The primary/submit action, always rightmost.",
+              "name": "primary"
+            }
+          ],
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "form-actions",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FormActions",
+          "declaration": {
+            "name": "FormActions",
+            "module": "src/form-actions.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "form-actions",
+          "declaration": {
+            "name": "FormActions",
+            "module": "src/form-actions.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/form-select.ts",
       "declarations": [
         {
@@ -5677,6 +6182,86 @@
           "declaration": {
             "name": "FrameBox",
             "module": "./frame-box.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AppShell",
+          "declaration": {
+            "name": "AppShell",
+            "module": "./app-shell.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SidebarToggleDetail",
+          "declaration": {
+            "name": "SidebarToggleDetail",
+            "module": "./app-shell.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AppSidebar",
+          "declaration": {
+            "name": "AppSidebar",
+            "module": "./app-sidebar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ActionBar",
+          "declaration": {
+            "name": "ActionBar",
+            "module": "./action-bar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PageHeader",
+          "declaration": {
+            "name": "PageHeader",
+            "module": "./page-header.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PaginationNav",
+          "declaration": {
+            "name": "PaginationNav",
+            "module": "./pagination-nav.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PageChangeDetail",
+          "declaration": {
+            "name": "PageChangeDetail",
+            "module": "./pagination-nav.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FormActions",
+          "declaration": {
+            "name": "FormActions",
+            "module": "./form-actions.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TimelineContainer",
+          "declaration": {
+            "name": "TimelineContainer",
+            "module": "./timeline-container.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TimelineEntry",
+          "declaration": {
+            "name": "TimelineEntry",
+            "module": "./timeline-entry.js"
           }
         },
         {
@@ -8230,6 +8815,208 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/page-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Page title block for the top of a dashboard view: an optional breadcrumb\ntrail, the page heading, and a right-aligned cluster of page-level actions.\nIt only lays these out — the breadcrumb links and action buttons are entirely\nthe consumer's, so it stays framework- and router-agnostic.",
+          "name": "PageHeader",
+          "slots": [
+            {
+              "description": "Optional breadcrumb trail rendered above the heading.",
+              "name": "breadcrumb"
+            },
+            {
+              "description": "Optional right-aligned page actions (e.g. a primary button).",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The page heading text.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "_hasBreadcrumb",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the breadcrumb slot currently has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_onBreadcrumbSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the breadcrumb slot has content so its row can collapse when empty."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The page heading text.",
+              "fieldName": "heading"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "page-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PageHeader",
+          "declaration": {
+            "name": "PageHeader",
+            "module": "src/page-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "page-header",
+          "declaration": {
+            "name": "PageHeader",
+            "module": "src/page-header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/pagination-nav.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Minimal, controlled pager for list/table views: a previous/next control pair\naround a \"Page N of M\" status. It owns no data — the consumer sets\n`current-page` / `total-pages` and moves the page in response to the\n`page-change` event (typically alongside its own data fetch), exactly like\n`data-table` leaves the row data to the caller.\n\nPrevious is disabled on the first page and next on the last; neither fires an\nevent when there is nowhere to go.",
+          "name": "PaginationNav",
+          "members": [
+            {
+              "kind": "field",
+              "name": "currentPage",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The 1-based current page.",
+              "attribute": "current-page"
+            },
+            {
+              "kind": "field",
+              "name": "totalPages",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The total number of pages (minimum 1).",
+              "attribute": "total-pages"
+            },
+            {
+              "kind": "method",
+              "name": "_go",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Clamps `page` to the valid range and fires `page-change` when it actually moves."
+            }
+          ],
+          "events": [
+            {
+              "name": "page-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The user picked a new page (`detail: { page }`)."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "current-page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The 1-based current page.",
+              "fieldName": "currentPage"
+            },
+            {
+              "name": "total-pages",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The total number of pages (minimum 1).",
+              "fieldName": "totalPages"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "pagination-nav",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PaginationNav",
+          "declaration": {
+            "name": "PaginationNav",
+            "module": "src/pagination-nav.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "pagination-nav",
+          "declaration": {
+            "name": "PaginationNav",
+            "module": "src/pagination-nav.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/percent-bar-chart.ts",
       "declarations": [
         {
@@ -10255,6 +11042,145 @@
           "declaration": {
             "name": "TileGrid",
             "module": "src/tile-grid.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/timeline-container.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Vertical timeline: a single connecting line runs down the left edge and each\nslotted `timeline-entry` places a dot on it. This is a thin layout and\nsemantics wrapper — the entries draw the line segments and dots themselves,\nso the container adds no gap between them (a gap would break the line).\nExposed to assistive technology as a list of events.",
+          "name": "TimelineContainer",
+          "slots": [
+            {
+              "description": "`timeline-entry` elements, in chronological order.",
+              "name": ""
+            }
+          ],
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "timeline-container",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TimelineContainer",
+          "declaration": {
+            "name": "TimelineContainer",
+            "module": "src/timeline-container.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "timeline-container",
+          "declaration": {
+            "name": "TimelineContainer",
+            "module": "src/timeline-container.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/timeline-entry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.",
+          "name": "TimelineEntry",
+          "slots": [
+            {
+              "description": "Optional headline/title for the event.",
+              "name": "headline"
+            },
+            {
+              "description": "The event content; nest any elements here.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "datetime",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO 8601 or SQLite datetime string, rendered as a relative time.",
+              "attribute": "datetime"
+            },
+            {
+              "kind": "field",
+              "name": "_hasHeadline",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the headline slot currently has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_onHeadlineSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Collapses the headline when nothing is slotted so the time sits alone."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "datetime",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO 8601 or SQLite datetime string, rendered as a relative time.",
+              "fieldName": "datetime"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "timeline-entry",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TimelineEntry",
+          "declaration": {
+            "name": "TimelineEntry",
+            "module": "src/timeline-entry.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "timeline-entry",
+          "declaration": {
+            "name": "TimelineEntry",
+            "module": "src/timeline-entry.ts"
           }
         }
       ]

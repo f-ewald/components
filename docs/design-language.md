@@ -134,12 +134,85 @@ literal values are migrated onto them.
 
 - Metadata-only tags may omit standalone playground sections when their full
   behavior is demonstrated through a parent:
-  `calendar-entry`, `gallery-item`, and `gallery-item-variant`.
+  `calendar-entry`, `gallery-item`, `gallery-item-variant`, `kanban-card`,
+  `kanban-column`, and `timeline-entry` (shown through `timeline-container`).
 - Styleless inline formatters may omit empty `static styles`/token imports:
   `distance-value`, `live-timer`, `relative-time`, and `roman-numeral`.
 - Domain visuals may deliberately diverge in geometry and data color, but their
   surrounding typography, focus, motion, and accessibility still follow this
   contract.
+
+## Layout and page templates
+
+The layout components compose into dashboard pages: `app-shell` is the grid
+backbone, and `app-sidebar`, `action-bar`, `page-header`, `pagination-nav`, and
+`form-actions` fill its slots and content.
+
+### Shell grid and metrics
+
+- `app-shell` owns a CSS grid with `sidebar`, `topbar`, `main` (default slot),
+  `detail`, and `footer` areas plus the responsive behavior. It is the only
+  component that coordinates the sidebar rail and the detail overlay.
+- Layout dimensions are documented literal rems, not `--ui-*` tokens (widths and
+  spacing are constants in this system). A few are exposed as overridable
+  `--component-*` custom properties for per-instance tuning, mirroring
+  `--component-layer-z`:
+  - sidebar expanded `--component-sidebar-width` = `16rem`;
+  - sidebar rail `--component-sidebar-rail-width` = `3.5rem`;
+  - top bar `--component-topbar-height` = `3rem`;
+  - detail column reuses the `20rem` / `25rem` panel widths (the `detail-width`
+    `compact` / `comfortable` attribute);
+  - main content is white (`--component-main-background`, default `--ui-surface`)
+    and fluid; constrain reading or form pages with a `max-width` on your own
+    wrapper (roughly `40rem`–`48rem`).
+- The shared `48rem` breakpoint remains the only responsive breakpoint. At or
+  below it the sidebar becomes an off-canvas drawer and the detail an overlay,
+  both raised with `--component-layer-z` and dismissed by a scrim or Escape.
+
+### Sidebar
+
+- Collapsing is a two-mode design: on desktop the sidebar condenses to an icon
+  rail (labels hide, icons stay) via `app-shell`'s `sidebar-collapsed`, which
+  propagates `collapsed` to the slotted `app-sidebar`; below `48rem` it is a
+  drawer with labels shown.
+- The built-in top-bar toggle and the `[` keyboard shortcut (ignored while a
+  text field is focused or a modifier is held) both drive `sidebar-collapsed`.
+  The shortcut is surfaced in the toggle's hover/focus tooltip, not as permanent
+  chrome — reveal shortcuts on interaction rather than displaying them inline.
+- Nav items are the consumer's `<a>`/`<button>` elements with an icon and a
+  label; mark the active one with `aria-current="page"`. Each label reads the
+  inherited `--app-sidebar-label` custom property so rail mode can hide it while
+  its `aria-label` keeps the accessible name.
+- The `header` slot holds the brand: a small logo plus a name. Wrap the name in
+  a `--app-sidebar-label` element so rail mode shows only the logo, centered in
+  line with the nav icons.
+
+### Forms and actions
+
+- The action row above a list uses `action-bar` (`start` = search/filters,
+  `end` = record actions). Pagination below a list uses `pagination-nav`, which
+  is controlled: the consumer owns the data and moves the page on `page-change`.
+- Form button order is fixed: the primary/submit button is rightmost, the
+  secondary/cancel button is immediately to its left, and any tertiary or
+  destructive action is pinned to the far left. Use `form-actions`, which
+  enforces this regardless of source order — never hand-place form buttons in a
+  different order.
+- Page and record actions live in the `page-header` actions slot, not a footer
+  bar: the primary action is the prominent, rightmost button, and destructive or
+  rare actions are de-emphasized (a secondary button or an overflow menu, gated
+  by a `confirm-dialog`). Never duplicate the primary action in both a header and
+  a footer.
+- Reserve `form-actions` for the bottom of an actual editable form. Read (detail)
+  and edit (form) are distinct modes: a read view acts through its header and has
+  no Save/Cancel footer; entering edit shows the form with a `form-actions` bar.
+- Fence clearly distinct sections of a detail or form page with `frame-box`.
+
+### Templates
+
+The recipes under `docs/layouts/` compose these into four pages — list-only,
+list + detail, detail-only, and form — and the MCP `list_layouts` /
+`get_layout` tools serve them. Add a page by adding a `docs/layouts/<name>.md`
+recipe and, ideally, a matching full-page demo under `demo/layouts/`.
 
 ## Playground and documentation
 

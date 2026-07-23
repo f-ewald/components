@@ -36,3 +36,24 @@ A thin stdio MCP server exposing two tools — `list_components` and
 `get_component_docs(tag)` — backed by the same `custom-elements.json` this
 package already generates and ships. No new data source was needed; the
 server is just a different transport over data that already existed.
+
+## Update (layout system): added `list_layouts` / `get_layout`
+
+The dashboard layout system introduced cross-component knowledge — which
+components compose into which page templates, the slot recipes, and the
+button-placement rule — that no single component's generated doc captures. Two
+thin tools, `list_layouts` and `get_layout(name)`, expose it.
+
+This stays true to the server's founding principle: **no new data source.** The
+tools read the authored `docs/layouts/*.md` recipes (which also ship in the npm
+package and render on the docs site), not a bespoke structure invented for MCP.
+The individual layout components still flow through `list_components` /
+`get_component_docs` automatically.
+
+**Is MCP the right fit here?** It's a reasonable, not slam-dunk, fit. The
+justification is discoverability and targeted retrieval — an agent can list the
+templates and pull just the one it needs, rather than loading everything. If the
+guidance stayed tiny, `llms.txt` alone could carry it; the tools earn their keep
+by making the "preferred layout" explicitly enumerable and by matching the
+per-component tools consumers already call. The cost to watch is keeping the
+recipes, the `demo/layouts/` demos, and the tool output in sync.
