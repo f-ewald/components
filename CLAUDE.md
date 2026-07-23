@@ -186,11 +186,21 @@ before the first run.
 `src/mcp-server.ts` is a thin stdio MCP server exposing the component catalog
 to AI coding assistants, per the upgrade path in `docs/mcp-evaluation.md`. It
 adds no new data source — it's read-only over the same `custom-elements.json`
-and `docs/*.md` that `npm run docs` already generates and ships.
+and `docs/*.md` that `npm run docs` already generates and ships, plus the
+authored `docs/layouts/*.md` layout recipes.
 
-Two tools:
+Four tools:
 - `list_components` — every tag + one-line description.
 - `get_component_docs(tag)` — the full generated Markdown doc for one tag.
+- `list_layouts` — every dashboard page template (layout recipe) + a one-line
+  summary.
+- `get_layout(name)` — the full recipe for one page template (which components
+  fill which `app-shell` slots, markup, and notes).
+
+The layout tools read `docs/layouts/*.md` directly (the `name` is the filename
+without `.md`); add a page template by adding a recipe there (and, ideally, a
+matching full-page demo under `demo/layouts/` wired into `vite.config.ts`). See
+the "Layout and page templates" section of `docs/design-language.md`.
 
 Consuming projects (currently `real-estate-map`, `slowmo`) wire it up via a
 `.mcp.json` at their repo root pointing `node` at this repo's built

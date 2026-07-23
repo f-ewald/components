@@ -3,15 +3,18 @@
  * Stdio MCP server exposing the `@f-ewald/components` catalog to AI coding
  * assistants (Claude Code, etc.) working in a consuming project.
  *
- * Two tools, backed by the same `custom-elements.json` and `docs/*.md` this
- * package already generates and ships via `npm run docs`:
+ * Tools, backed by the same `custom-elements.json` and `docs/*.md` this
+ * package already generates and ships via `npm run docs`, plus the authored
+ * `docs/layouts/*.md` recipes:
  * - `list_components`: every tag name + one-line description.
  * - `get_component_docs`: the full generated Markdown doc for one tag.
+ * - `list_layouts`: every dashboard page template + one-line summary.
+ * - `get_layout`: the full recipe for one page template.
  *
- * No new data source — this is just a different transport over data that
- * already exists. See `docs/mcp-evaluation.md` for the design rationale.
+ * No new data source — this is just a different transport over docs that
+ * already exist. See `docs/mcp-evaluation.md` for the design rationale.
  */
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -24,10 +27,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // checkout or from an installed node_modules/@f-ewald/components.
 const packageRoot = path.join(__dirname, "..");
 const docsDir = path.join(packageRoot, "docs");
+const layoutsDir = path.join(docsDir, "layouts");
 
 /** One row of the `list_components` result. */
 interface ComponentSummary {
   tag: string;
+  summary: string;
+}
+
+/** One row of the `list_layouts` result. */
+interface LayoutSummary {
+  name: string;
+  title: string;
   summary: string;
 }
 
@@ -53,6 +64,42 @@ async function listComponents(): Promise<ComponentSummary[]> {
   }
   components.sort((a, b) => a.tag.localeCompare(b.tag));
   return components;
+}
+
+/**
+ * Extracts {name, title, one-line summary} for every `docs/layouts/*.md`
+ * recipe, sorted by name. `name` is the filename without `.md`; `summary` is
+ * the recipe's first prose paragraph.
+ */
+async function listLayouts(): Promise<LayoutSummary[]> {
+  let files: string[];
+  try {
+    files = await readdir(layoutsDir);
+  } catch {
+    return [];
+  }
+  const layouts: LayoutSummary[] = [];
+  for (const file of files) {
+    if (!file.endsWith(".md")) continue;
+    const name = file.slice(0, -3);
+    const lines = (await readFile(path.join(layoutsDir, file), "utf8")).split("\n");
+    const title = lines.find((line) => line.startsWith("# "))?.slice(2).trim() ?? name;
+    let seenTitle = false;
+    let summary = "";
+    for (const line of lines) {
+      const text = line.trim();
+      if (!seenTitle) {
+        if (text.startsWith("# ")) seenTitle = true;
+        continue;
+      }
+      if (text === "" || text.startsWith("#")) continue;
+      summary = text;
+      break;
+    }
+    layouts.push({ name, title, summary });
+  }
+  layouts.sort((a, b) => a.name.localeCompare(b.name));
+  return layouts;
 }
 
 const server = new McpServer({
@@ -97,6 +144,51 @@ server.registerTool(
         isError: true,
       };
     }
+  },
+);
+
+server.registerTool(
+  "list_layouts",
+  {
+    title: "List layouts",
+    description:
+      "Lists the dashboard page templates (layout recipes) in " +
+      "@f-ewald/components — list-only, list+detail, detail-only, and form — " +
+      "with a one-line summary each. Call get_layout(name) for the full recipe " +
+      "(which components fill which app-shell slots, example markup, and notes). " +
+      "Use this to learn the preferred internal-dashboard layout before " +
+      "composing app-shell, app-sidebar, action-bar, pagination-nav, " +
+      "form-actions, and page-header.",
+  },
+  async () => ({
+    content: [{ type: "text", text: JSON.stringify(await listLayouts(), null, 2) }],
+  }),
+);
+
+server.registerTool(
+  "get_layout",
+  {
+    title: "Get layout recipe",
+    description:
+      "Returns the full Markdown recipe for one dashboard page template: which " +
+      "components go in which app-shell slots, copy-paste markup, and layout " +
+      "notes. Use list_layouts first to find valid names.",
+    inputSchema: { name: z.string().describe('Layout name, e.g. "list-detail".') },
+  },
+  async ({ name }) => {
+    if (/^[a-z0-9-]+$/.test(name)) {
+      try {
+        const text = await readFile(path.join(layoutsDir, `${name}.md`), "utf8");
+        return { content: [{ type: "text", text }] };
+      } catch {
+        // Fall through to the not-found response with valid names.
+      }
+    }
+    const validNames = (await listLayouts()).map((layout) => layout.name).join(", ");
+    return {
+      content: [{ type: "text", text: `No layout named "${name}". Valid layouts: ${validNames}` }],
+      isError: true,
+    };
   },
 );
 
