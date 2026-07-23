@@ -4835,6 +4835,16 @@
               "default": "16"
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "iconAcademicCap",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
         }
       ],
       "exports": [
@@ -5147,6 +5157,14 @@
           "name": "iconArrowTopRightOnSquare",
           "declaration": {
             "name": "iconArrowTopRightOnSquare",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconAcademicCap",
+          "declaration": {
+            "name": "iconAcademicCap",
             "module": "src/icons.ts"
           }
         }
