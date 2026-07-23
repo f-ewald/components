@@ -1,5 +1,14 @@
 # @f-ewald/components
 
+## 1.2.1
+
+- Fixed `popover-panel`'s `.panel { overflow: hidden }` clipping a menu or
+  dropdown that opens near the popover's bottom edge; corner-rounding is
+  handled by `.panel-header`'s own `border-radius` instead, so this needed no
+  other visual change.
+- Added the `iconAcademicCap` heroicon, used by consumers' Skills-style nav
+  items.
+
 ## 1.2.0
 
 - Added `kanban-board` (with the metadata-only `kanban-column` and
