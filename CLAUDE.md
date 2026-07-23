@@ -74,6 +74,11 @@ use — non-chart components pull in zero `d3` code.
   field/button/pill padding roles. Inline icons are 14px, standalone action
   icons are 18px, side/floating panels are 20rem, centered/dialog panels are
   25rem, and the shared responsive breakpoint is 48rem.
+- Value-entry form fields (`autocomplete-input`, `address-autocomplete`,
+  `editable-text`, `form-select`, `multi-select`) are full-width by default:
+  `:host { display: block; }` with the inner control at `width: 100%`. Shrink an
+  instance to its content per usage via the host
+  (`<tag> { display: inline-block; }` or `width: fit-content`).
 - SVG presentation attributes (`fill="..."`, `stroke="..."`) can't take
   `var()` — those stay as plain hex, matching the token's fallback value.
 - Every interactive component needs coherent hover, selected, disabled,
@@ -254,6 +259,11 @@ One-time npmjs setup for `@f-ewald/components`:
 4. Set **Allowed actions** to **npm publish** (not stage-only).
 5. After verifying the first release, prefer **Require two-factor
    authentication and disallow tokens** under Publishing access.
+
+**Never bump the package version (`npm version`, editing `package.json`, or
+tagging) unless the user explicitly asks for a release.** Ordinary fixes and
+features land without a version bump; bumping is a separate, deliberate step
+the user requests when they're ready to release.
 
 **Every version bump must have a matching annotated `vX.Y.Z` tag on the same
 commit, starting with `v1.0.0`.** Never edit package versions directly or

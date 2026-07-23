@@ -86,6 +86,14 @@ literal values are migrated onto them.
 - Side panels use a `20rem` compact / `25rem` comfortable width; the shared
   responsive breakpoint is `48rem`.
 - Radio inputs render at `1rem`.
+- Value-entry fields fill their container by default: the host is
+  `display: block` and the inner control is `width: 100%`. Shrink-to-fit is
+  opt-in per instance via the host (`<tag> { display: inline-block; }` or
+  `width: fit-content`). This covers `autocomplete-input`,
+  `address-autocomplete`, `editable-text`, `form-select`, and `multi-select`,
+  and matches the native/reusable-component convention that a field fills the
+  stacked column it lives in while staying overridable from outside the shadow
+  DOM.
 - Charts and metadata-only components keep their own domain geometry and are
   exempt from the control-metric grid.
 

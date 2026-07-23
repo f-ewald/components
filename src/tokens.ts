@@ -25,6 +25,7 @@ export const tokenValues: Record<string, string> = {
   "--ui-border": "#e2e8f0", // slate-200
   "--ui-surface": "#ffffff", // white
   "--ui-surface-muted": "#f8fafc", // slate-50
+  "--ui-highlight": "#fde68a", // amber-200 — transient "just changed" flash
   "--ui-tooltip": "#0f172a", // slate-900
   "--ui-hover-overlay": "rgb(255 255 255 / 0.32)",
   "--ui-overlay": "rgb(15 23 42 / 0.45)", // slate-900 / 45%
@@ -88,6 +89,7 @@ export const darkTokenValues: Record<string, string> = {
   "--ui-border": "#334155", // slate-700
   "--ui-surface": "#0f172a", // slate-900
   "--ui-surface-muted": "#1e293b", // slate-800
+  "--ui-highlight": "#854d0e", // amber-800 — transient "just changed" flash on dark
   "--ui-tooltip": "#020617", // slate-950
   "--ui-hover-overlay": "rgb(255 255 255 / 0.12)",
   "--ui-overlay": "rgb(2 6 23 / 0.6)", // slate-950 / 60%

@@ -3485,7 +3485,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A styled dropdown select: a trigger button showing the current option's\nlabel, opening a listbox popover on click. Drop-in generic replacement for\na native `<select>` wherever consistent cross-browser styling and a\n`change` event carrying `{ value }` are wanted (e.g. a task's status\npicker).\n\nThe trigger fills its host's width (`justify-content: space-between`\npushes the chevron to the far edge), but the host itself stays\n`display: inline-block` — so usages that never size the host (a filter\nbar, a status picker) keep shrink-to-fit auto-width unchanged. To make an\ninstance full-width, size the host itself: `form-select { width: 100%; }`.\n\nSet `searchable` to replace the button trigger with an editable combobox\nthat filters the predefined options by case-insensitive label infix. Typed\ntext is only a query: `value` changes exclusively when an actual option is\nselected, and an uncommitted query is discarded when the list closes.\nEach option may also provide a pre-rendered `icon` and square `iconSize`;\niconless options reserve no leading space.",
+          "description": "A styled dropdown select: a trigger button showing the current option's\nlabel, opening a listbox popover on click. Drop-in generic replacement for\na native `<select>` wherever consistent cross-browser styling and a\n`change` event carrying `{ value }` are wanted (e.g. a task's status\npicker).\n\nThe trigger fills its host's width (`justify-content: space-between`\npushes the chevron to the far edge), and the host is `display: block`, so a\n`form-select` fills its container's width by default — matching the other\nform fields. To make an instance shrink to its content instead (e.g. in a\nfilter bar or a status picker), constrain the host:\n`form-select { display: inline-block; }` (or `width: fit-content`).\n\nSet `searchable` to replace the button trigger with an editable combobox\nthat filters the predefined options by case-insensitive label infix. Typed\ntext is only a query: `value` changes exclusively when an actual option is\nselected, and an uncommitted query is discarded when the list closes.\nEach option may also provide a pre-rendered `icon` and square `iconSize`;\niconless options reserve no leading space.",
           "name": "FormSelect",
           "members": [
             {
@@ -5559,6 +5559,30 @@
         },
         {
           "kind": "js",
+          "name": "MultiSelect",
+          "declaration": {
+            "name": "MultiSelect",
+            "module": "./multi-select.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MultiSelectOption",
+          "declaration": {
+            "name": "MultiSelectOption",
+            "module": "./multi-select.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MultiSelectVariant",
+          "declaration": {
+            "name": "MultiSelectVariant",
+            "module": "./multi-select.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "DataTable",
           "declaration": {
             "name": "DataTable",
@@ -5663,6 +5687,62 @@
         },
         {
           "kind": "js",
+          "name": "KanbanBoard",
+          "declaration": {
+            "name": "KanbanBoard",
+            "module": "./kanban-board.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KanbanCardData",
+          "declaration": {
+            "name": "KanbanCardData",
+            "module": "./kanban-board.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KanbanColumnData",
+          "declaration": {
+            "name": "KanbanColumnData",
+            "module": "./kanban-board.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KanbanCardMoveDetail",
+          "declaration": {
+            "name": "KanbanCardMoveDetail",
+            "module": "./kanban-board.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KanbanCardOpenDetail",
+          "declaration": {
+            "name": "KanbanCardOpenDetail",
+            "module": "./kanban-board.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KanbanColumn",
+          "declaration": {
+            "name": "KanbanColumn",
+            "module": "./kanban-column.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KanbanCard",
+          "declaration": {
+            "name": "KanbanCard",
+            "module": "./kanban-card.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "formatDuration",
           "declaration": {
             "name": "formatDuration",
@@ -5707,6 +5787,870 @@
           "declaration": {
             "name": "*",
             "module": "src/icons.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kanban-board.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A configurable kanban board: a horizontally scrolling row of columns, each\nholding cards. **A card's column is its state** — moving a card to another\ncolumn (by drag-and-drop, keyboard, or the detail popover's state selector)\nchanges its state, and the board emits a single `card-move` for all three.\n\nData-driven: set the `columns` property to `KanbanColumnData[]`. The board\nkeeps its own working copy and mutates it optimistically on every move, so it\nworks standalone; re-assign `columns` at any time to stay controlled from a\nstore. Cards show only their ticket number and title in the overview; the\nfull detail (description, state, created/updated timestamps) opens in a\nscreen-centered `popover-panel`.\n\nPointer drag-and-drop supports both cross-column moves and within-column\nreordering with a live drop indicator (set `reorderable` false to keep only\ncross-column moves when intra-column order isn't persisted). Keyboard parity:\nfocus a card and press Space to pick it up, arrow keys to move it (left/right\nacross columns, up/down within a column), Space to drop, or Escape to cancel;\nEnter opens the detail. Moves are announced in a polite live region, and the\nmoved card briefly flashes a warm highlight so you can see where it landed.\n\nSet `manual` for a server-authoritative board (API + WebSocket/SSE): every\nmove still emits `card-move`, but the board does NOT apply it locally, so it\nreflects only what you assign to `columns` — e.g. the change echoed back over\nthe socket. The default is optimistic local updates.",
+          "name": "KanbanBoard",
+          "members": [
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "KanbanColumnData[]"
+              },
+              "default": "[]",
+              "description": "Columns (with their cards) to render, in display order."
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Board\"",
+              "description": "Accessible label for the board's group role.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "manual",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Server-authoritative mode. When true, moves emit `card-move` but are not\napplied to the board locally; it reflects only what you assign to\n`columns` (e.g. echoed back over WebSocket/SSE), keeping the server as the\nsingle source of truth. Defaults to optimistic local updates.",
+              "attribute": "manual",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "reorderable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether cards can be reordered within a column. Defaults to true. Set false\nwhen intra-column order isn't persisted (no server `rank`): drag and\nkeyboard still move cards *between* columns (appended to the target), but\nreordering inside a column is disabled, so the UI only offers what sticks.",
+              "attribute": "reorderable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_cols",
+              "type": {
+                "text": "KanbanColumnData[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_openCardId",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_drag",
+              "type": {
+                "text": "DragState | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pointer",
+              "type": {
+                "text": "Indicator | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_grab",
+              "type": {
+                "text": "GrabState | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_liveMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_highlighted",
+              "privacy": "private",
+              "default": "new Set<string>()"
+            },
+            {
+              "kind": "field",
+              "name": "#refocus",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pendingHighlight",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#highlightTimers",
+              "privacy": "private",
+              "default": "new Map<string, ReturnType<typeof setTimeout>>()"
+            },
+            {
+              "kind": "method",
+              "name": "#findCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ card: KanbanCardData; column: KanbanColumnData; index: number } | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Returns the card, its column, and index for a card id, or null if unknown."
+            },
+            {
+              "kind": "method",
+              "name": "#columnCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "columnId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Number of cards currently in a column (0 if unknown)."
+            },
+            {
+              "kind": "method",
+              "name": "#highlight",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Flashes the warm \"just moved\" highlight on a card, clearing it after HIGHLIGHT_MS."
+            },
+            {
+              "kind": "method",
+              "name": "#move",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "fromColumnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toColumnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Applies a move to the working copy and emits `card-move`. `toIndex` is the destination index after removal."
+            },
+            {
+              "kind": "method",
+              "name": "#toDestIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "fromColumnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "originIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "toColumnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "domIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Converts a DOM insertion index (which counts the moving card) into a destination index after removal."
+            },
+            {
+              "kind": "method",
+              "name": "#pointerIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "columnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Computes the DOM insertion index within a column from the pointer's vertical position."
+            },
+            {
+              "kind": "method",
+              "name": "#onDragStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "columnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onDragOver",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "columnId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onDrop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "columnId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onDragEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onCardKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "columnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#startGrab",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "columnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#grabMove",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "columnDelta",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "indexDelta",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#commitGrab",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#cancelGrab",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#announce",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#openDetail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#closeDetail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onStateChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cardId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "fromColumnId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toColumnId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderColumn",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "KanbanColumnData"
+                  }
+                },
+                {
+                  "name": "indicator",
+                  "type": {
+                    "text": "Indicator | null"
+                  }
+                },
+                {
+                  "name": "dragCardId",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderDetail",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "card-move",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A card changed column/position; detail: { cardId, fromColumnId, toColumnId, toIndex }."
+            },
+            {
+              "name": "card-open",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A card's detail view was opened; detail: { cardId }."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Board\"",
+              "description": "Accessible label for the board's group role.",
+              "fieldName": "label"
+            },
+            {
+              "name": "manual",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Server-authoritative mode. When true, moves emit `card-move` but are not\napplied to the board locally; it reflects only what you assign to\n`columns` (e.g. echoed back over WebSocket/SSE), keeping the server as the\nsingle source of truth. Defaults to optimistic local updates.",
+              "fieldName": "manual"
+            },
+            {
+              "name": "reorderable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether cards can be reordered within a column. Defaults to true. Set false\nwhen intra-column order isn't persisted (no server `rank`): drag and\nkeyboard still move cards *between* columns (appended to the target), but\nreordering inside a column is disabled, so the UI only offers what sticks.",
+              "fieldName": "reorderable"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "kanban-board",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KanbanBoard",
+          "declaration": {
+            "name": "KanbanBoard",
+            "module": "src/kanban-board.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "kanban-board",
+          "declaration": {
+            "name": "KanbanBoard",
+            "module": "src/kanban-board.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kanban-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single kanban card's compact overview: its ticket number and title only.\nPurely presentational and metadata-only — it is created and driven by\n`kanban-board`, which owns drag-and-drop, selection, and the richer detail\nview (description, state, and timestamps live in the board's popover, not\nhere). The board sets `draggable`, toggles the `dragging`/`grabbed`\nattributes for pointer and keyboard moves, and binds the open/keyboard\nhandlers; focus is delegated to the inner control so the board can move\nkeyboard focus to a card after a move.",
+          "name": "KanbanCard",
+          "members": [
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "ticket",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Ticket identifier shown before the title, e.g. `\"PROJ-142\"`.",
+              "attribute": "ticket"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Card title shown in the overview.",
+              "attribute": "heading"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "ticket",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Ticket identifier shown before the title, e.g. `\"PROJ-142\"`.",
+              "fieldName": "ticket"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Card title shown in the overview.",
+              "fieldName": "heading"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "kanban-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KanbanCard",
+          "declaration": {
+            "name": "KanbanCard",
+            "module": "src/kanban-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "kanban-card",
+          "declaration": {
+            "name": "KanbanCard",
+            "module": "src/kanban-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kanban-column.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single kanban column: a titled, vertically scrollable region that holds\nits `kanban-card` children (its default `<slot>`), with a header showing the\ncolumn title and card count. Purely presentational and metadata-only —\n`kanban-board` creates it, positions the cards inside it, and drives the\ndrop-target highlight via the reflected `dragover` attribute and the empty\nhint via `empty`.",
+          "name": "KanbanColumn",
+          "slots": [
+            {
+              "description": "The column's `kanban-card` elements, in display order.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Column title shown in the header.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Number of cards in the column, shown as a count badge.",
+              "attribute": "count"
+            },
+            {
+              "kind": "field",
+              "name": "dragover",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by the board while a card is dragged over this column, for highlight.",
+              "attribute": "dragover",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "empty",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the column currently has no cards, so it renders an empty hint.",
+              "attribute": "empty",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Column title shown in the header.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "count",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Number of cards in the column, shown as a count badge.",
+              "fieldName": "count"
+            },
+            {
+              "name": "dragover",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by the board while a card is dragged over this column, for highlight.",
+              "fieldName": "dragover"
+            },
+            {
+              "name": "empty",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the column currently has no cards, so it renders an empty hint.",
+              "fieldName": "empty"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "kanban-column",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KanbanColumn",
+          "declaration": {
+            "name": "KanbanColumn",
+            "module": "src/kanban-column.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "kanban-column",
+          "declaration": {
+            "name": "KanbanColumn",
+            "module": "src/kanban-column.ts"
           }
         }
       ]
@@ -6181,6 +7125,1090 @@
       "path": "src/mcp-server.ts",
       "declarations": [],
       "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/multi-select.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A form-associated multi-select: a trigger showing a compact summary of the\ncurrent selection, opening a multi-selectable listbox popover, with an\noptional removable-chip list of the chosen values. A drop-in generic\nreplacement for a native `<select multiple>` — set `name` on the element\nitself and each\nselected value is submitted as a repeated `name=value` entry, matching native\nmultiple-select semantics; `new FormData(form).getAll(name)` and\n`form.reset()` work unchanged.\n\nThe trigger visually follows `form-select`: a `2rem` field showing the\n`placeholder` when empty, the single selected label when one value is chosen,\nand `N selected` when several are. Set `show-chips` to additionally render\nthe selected values as compact chips below the trigger, each with an\naccessible `32px` remove control; chips are off by default and the region\nreserves no space while nothing is selected. Like `form-select`, the host is\n`display: block` and fills its container by default; constrain the host\n(`multi-select { display: inline-block; }`) to shrink it to its content\ninstead.\n\nSet `searchable` to replace the button trigger with an editable combobox that\ninfix-filters the predefined options by case-insensitive label. Typed text is\nonly a query: `values` changes exclusively when options are toggled, and an\nuncommitted query is discarded when the list closes.\n\nThe `variant` chooses between two presentations, and `searchable` applies to\nboth:\n\n- `\"dropdown\"` (default) is the popover form described above: a compact\n  trigger (button, or search combobox when `searchable`) that opens a\n  multi-selectable listbox on demand, closes on outside click / Escape, and\n  shows a chevron.\n- `\"list\"` renders the options as a persistently visible, bordered surface\n  with no popover, no chevron, and no `open` host state; it never registers\n  outside-click listeners. Its scroll viewport is sized to roughly\n  `visibleRows` `2rem` rows (see `visible-rows`). When not `searchable` the\n  `listbox` itself is focusable and drives Arrow/Home/End/Enter/Space keyboard\n  navigation via `aria-activedescendant`; when `searchable` a `2rem` search\n  field sits above the list and owns navigation, and Escape only clears the\n  query instead of hiding the list.",
+          "name": "MultiSelect",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "MultiSelectOption[]"
+              },
+              "default": "[]",
+              "description": "The full list of selectable options."
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "description": "The currently selected values. Programmatic assignments are deduplicated\nwhile preserving order and never fire `change`."
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form control name; each selected value submits under it.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible label applied to the trigger.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Select options\"",
+              "description": "Text shown on the trigger when nothing is selected.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the whole control, preventing the popover from opening.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as required for native form validation.",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "searchable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables editable, case-insensitive infix filtering by option label.\nTyped text never becomes a selected value.",
+              "attribute": "searchable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Maximum number of selectable values; `0` (default) means unlimited.",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "MultiSelectVariant"
+              },
+              "default": "\"dropdown\"",
+              "description": "Presentation variant. `\"dropdown\"` (default) opens a popover listbox;\n`\"list\"` renders a persistently visible, bordered list surface. Reflected\nso consumers can style by `[variant=\"list\"]`.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "visibleRows",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "Number of `2rem` rows the `list` variant's scroll viewport shows before it\nscrolls, mirroring a native `<select size>`. Normalized to an integer of at\nleast `1` (default `5`); ignored by the `dropdown` variant.",
+              "attribute": "visible-rows"
+            },
+            {
+              "kind": "field",
+              "name": "showChips",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, the selected values are also rendered as removable chips below\nthe trigger, each with an accessible `32px` remove control. Off by default:\nthe trigger already summarizes the selection, and values can be toggled off\nin the listbox. Applies to both variants.",
+              "attribute": "show-chips"
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "_query",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#defaultValues",
+              "privacy": "private",
+              "type": {
+                "text": "string[] | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listboxPointerDown",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#suppressNextBlur",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#restoringSearchFocus",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#searchSelection",
+              "privacy": "private",
+              "type": {
+                "text": "[number | null, number | null] | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#isComposing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionJustEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compositionEndTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#blurTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listboxId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`multi-select-listbox-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#rows",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "`visibleRows` normalized to a whole number of rows, at least `1`.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Restores the selection captured at first render, per the form contract."
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mirrors an ancestor fieldset's disabled state and closes the popover."
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ],
+              "description": "Restores the selection from the saved form state on navigation/autofill."
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValidity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#anchorElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#dedupe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "values",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#optionByValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "MultiSelectOption | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "First option matching `value`, so duplicate values resolve deterministically."
+            },
+            {
+              "kind": "method",
+              "name": "#labelFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#summaryText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#liveText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#visibleOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "MultiSelectOption[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#atCap",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Whether `value` is currently at the selection cap and cannot be added."
+            },
+            {
+              "kind": "method",
+              "name": "#isOptionDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "MultiSelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#toggleOption",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "MultiSelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#removeValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#commit",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onWindowMousedown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onFocusOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#open",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#close",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#initialActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#moveActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#toggleActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onTriggerKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchFocus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchMousedown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onListFocus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Seeds the active option when the persistent (non-searchable) list focuses."
+            },
+            {
+              "kind": "method",
+              "name": "#onListKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Keyboard navigation for the focusable, non-searchable persistent list."
+            },
+            {
+              "kind": "method",
+              "name": "#onListSearchInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "InputEvent"
+                  }
+                }
+              ],
+              "description": "Infix-filters the persistent list as the searchable-list query changes."
+            },
+            {
+              "kind": "method",
+              "name": "#onListSearchKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Keyboard navigation for the search field above a searchable persistent list."
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "InputEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onSearchBlur",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#focusSearchInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onCompositionStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onCompositionEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onListboxMousedown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onOptionMousedown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                },
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "MultiSelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#optionIconSize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "MultiSelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderOptionIcon",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "MultiSelectOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderOptionItems",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "MultiSelectOption[]"
+                  }
+                }
+              ],
+              "description": "The shared `<li role=\"option\">` items for both variants' listboxes."
+            },
+            {
+              "kind": "method",
+              "name": "renderListbox",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderChips",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderSearchTrigger",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderButtonTrigger",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderListSearch",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderPersistentList",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderListVariant",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired with `{ values: string[] }` (a copied array) when a value is added or removed through the UI. Programmatic `values` assignments do not fire it."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form control name; each selected value submits under it.",
+              "fieldName": "name"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible label applied to the trigger.",
+              "fieldName": "label"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Select options\"",
+              "description": "Text shown on the trigger when nothing is selected.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the whole control, preventing the popover from opening.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as required for native form validation.",
+              "fieldName": "required"
+            },
+            {
+              "name": "searchable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables editable, case-insensitive infix filtering by option label.\nTyped text never becomes a selected value.",
+              "fieldName": "searchable"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Maximum number of selectable values; `0` (default) means unlimited.",
+              "fieldName": "max"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "MultiSelectVariant"
+              },
+              "default": "\"dropdown\"",
+              "description": "Presentation variant. `\"dropdown\"` (default) opens a popover listbox;\n`\"list\"` renders a persistently visible, bordered list surface. Reflected\nso consumers can style by `[variant=\"list\"]`.",
+              "fieldName": "variant"
+            },
+            {
+              "name": "visible-rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "Number of `2rem` rows the `list` variant's scroll viewport shows before it\nscrolls, mirroring a native `<select size>`. Normalized to an integer of at\nleast `1` (default `5`); ignored by the `dropdown` variant.",
+              "fieldName": "visibleRows"
+            },
+            {
+              "name": "show-chips",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, the selected values are also rendered as removable chips below\nthe trigger, each with an accessible `32px` remove control. Off by default:\nthe trigger already summarizes the selection, and values can be toggled off\nin the listbox. Applies to both variants.",
+              "fieldName": "showChips"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "multi-select",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MultiSelect",
+          "declaration": {
+            "name": "MultiSelect",
+            "module": "src/multi-select.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "multi-select",
+          "declaration": {
+            "name": "MultiSelect",
+            "module": "src/multi-select.ts"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",
@@ -8388,7 +10416,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {
@@ -8397,7 +10425,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ \"--ui-primary\": \"#6366f1\", // indigo-500 \"--ui-primary-hover\": \"#818cf8\", // indigo-400 \"--ui-info\": \"#38bdf8\", // sky-400 \"--ui-info-hover\": \"#7dd3fc\", // sky-300 \"--ui-danger\": \"#ef4444\", // red-500 \"--ui-danger-hover\": \"#f87171\", // red-400 \"--ui-success\": \"#22c55e\", // green-500 \"--ui-warning\": \"#f59e0b\", // amber-500 \"--ui-warning-hover\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#f1f5f9\", // slate-100 \"--ui-text-muted\": \"#94a3b8\", // slate-400 \"--ui-border\": \"#334155\", // slate-700 \"--ui-surface\": \"#0f172a\", // slate-900 \"--ui-surface-muted\": \"#1e293b\", // slate-800 \"--ui-tooltip\": \"#020617\", // slate-950 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.12)\", \"--ui-overlay\": \"rgb(2 6 23 / 0.6)\", // slate-950 / 60% \"--ui-focus-ring\": \"0 0 0 3px rgb(99 102 241 / 0.45)\", }",
+          "default": "{ \"--ui-primary\": \"#6366f1\", // indigo-500 \"--ui-primary-hover\": \"#818cf8\", // indigo-400 \"--ui-info\": \"#38bdf8\", // sky-400 \"--ui-info-hover\": \"#7dd3fc\", // sky-300 \"--ui-danger\": \"#ef4444\", // red-500 \"--ui-danger-hover\": \"#f87171\", // red-400 \"--ui-success\": \"#22c55e\", // green-500 \"--ui-warning\": \"#f59e0b\", // amber-500 \"--ui-warning-hover\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#f1f5f9\", // slate-100 \"--ui-text-muted\": \"#94a3b8\", // slate-400 \"--ui-border\": \"#334155\", // slate-700 \"--ui-surface\": \"#0f172a\", // slate-900 \"--ui-surface-muted\": \"#1e293b\", // slate-800 \"--ui-highlight\": \"#854d0e\", // amber-800 — transient \"just changed\" flash on dark \"--ui-tooltip\": \"#020617\", // slate-950 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.12)\", \"--ui-overlay\": \"rgb(2 6 23 / 0.6)\", // slate-950 / 60% \"--ui-focus-ring\": \"0 0 0 3px rgb(99 102 241 / 0.45)\", }",
           "description": "Dark-mode overrides for the same `--ui-*` custom properties, applied by\n`tokens.css` via `@media (prefers-color-scheme: dark)` and `[data-theme]`\n(see generate-tokens-css.mjs). Same Tailwind slate scale as the light\npalette, inverted, with primary/danger/success lightened one step (500\ninstead of 600) for sufficient contrast against dark surfaces. Shape/type\ntokens are theme-independent and not repeated here."
         },
         {

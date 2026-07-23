@@ -30,10 +30,12 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#frame-box">frame-box</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kanban-board">kanban-board</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kbd-hint">kbd-hint</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#multi-select">multi-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#percent-bar-chart">percent-bar-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#photo-gallery">photo-gallery</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
@@ -557,6 +559,17 @@ dropdown.addEventListener("select", (e) => console.log(e.detail.value));</code><
                class="mt-1 text-xs text-slate-500"
              ></p>
             </div>
+            <div>
+              <p class="mb-1 text-xs text-slate-500">
+                Shrink-to-fit override — host set to <code>display: inline-block</code>
+              </p>
+              <form-select
+                id="select-inline"
+                data-testid="select-inline"
+                label="Inline width"
+                style="display: inline-block"
+              ></form-select>
+            </div>
             <form-select id="select-disabled" data-testid="select-disabled" label="Disabled" disabled></form-select>
             <p id="select-change-log" data-testid="select-change-log" class="text-xs text-slate-500"></p>
           </div>
@@ -622,6 +635,59 @@ const btn = document.querySelector("icon-button");
 btn.icon = iconPencil(16);
 btn.label = "Edit";
 btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
+        </section>
+
+        <section id="kanban-board" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-kanban-board">
+          <h3 class="text-xl font-semibold text-slate-900">kanban-board</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A configurable board of columns and cards where a card's column <em>is</em> its state.
+            Drag a card between columns or reorder within one; or open a card (click / Enter) to see
+            its details and change its state. Keyboard: focus a card, <code>Space</code> to pick up,
+            arrows to move, <code>Space</code> to drop, <code>Esc</code> to cancel. After a move, the
+            card briefly flashes a warm highlight so you can see where it landed.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <label class="mb-2 flex items-center gap-2 text-sm text-slate-600">
+              <input type="checkbox" id="kanban-manual" data-testid="kanban-manual" />
+              Server-authoritative (<code>manual</code>) mode — moves wait for a simulated API + socket echo
+            </label>
+            <label class="mb-4 flex items-center gap-2 text-sm text-slate-600">
+              <input type="checkbox" id="kanban-reorderable" data-testid="kanban-reorderable" checked />
+              Allow reordering within a column (<code>reorderable</code>)
+            </label>
+            <kanban-board id="kanban-demo" data-testid="kanban-demo" label="Project tasks"></kanban-board>
+            <p id="kanban-log" data-testid="kanban-log" class="mt-4 text-xs text-slate-500">
+              Drag a card, or open one to change its state.
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/kanban-board.js";
+
+const board = document.querySelector("kanban-board");
+board.columns = [
+  {
+    id: "todo",
+    title: "To Do",
+    cards: [
+      {
+        id: "c1",
+        ticket: "PROJ-142",
+        title: "Wire up auth callback",
+        description: "Handle the OAuth redirect and persist the session.",
+        createdAt: "2026-07-18T09:12:00Z",
+        updatedAt: "2026-07-21T14:03:00Z",
+      },
+    ],
+  },
+  { id: "doing", title: "In Progress", cards: [] },
+  { id: "done", title: "Done", cards: [] },
+];
+
+// A card's column is its state; drag-drop, keyboard, and the detail
+// popover all emit the same event.
+board.addEventListener("card-move", (e) => {
+  const { cardId, fromColumnId, toColumnId, toIndex } = e.detail;
+});
+board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code></pre>
         </section>
 
         <section id="kbd-hint" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-kbd-hint">
@@ -777,6 +843,141 @@ btn.addEventListener("click", () => console.log("edit clicked"));</code></pre>
 
 &lt;map-pin color="#1a73e8" size="30"&gt;3&lt;/map-pin&gt;
 &lt;map-pin color="#22c55e" size="26" highlighted&gt;🏠&lt;/map-pin&gt;</code></pre>
+        </section>
+
+        <section id="multi-select" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-multi-select">
+          <h3 class="text-xl font-semibold text-slate-900">multi-select</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Form-associated multi-selection: a compact trigger opening a
+            multi-selectable listbox popover, or a persistently visible
+            <code>variant="list"</code> surface with no popover. Chosen values submit
+            as repeated <code>name=value</code> entries, matching a native
+            <code>&lt;select multiple&gt;</code>
+            (<code>new FormData(form).getAll(name)</code>); add
+            <code>show-chips</code> to also render them as removable chips below the
+            trigger. Enable <code>searchable</code> for case-insensitive infix
+            filtering that never becomes a value.
+          </p>
+          <div class="mt-6 grid gap-6 rounded-lg border border-slate-200 p-6 sm:grid-cols-2">
+            <div>
+              <p class="mb-1 text-xs text-slate-500">
+                Dropdown, icons, <code>max="3"</code>, two preselected values,
+                <code>show-chips</code>
+              </p>
+              <multi-select
+                id="ms-dropdown"
+                data-testid="ms-dropdown"
+                label="Pick colors"
+                placeholder="Pick colors"
+                max="3"
+                show-chips
+              ></multi-select>
+            </div>
+            <div>
+              <p class="mb-1 text-xs text-slate-500">
+                Searchable dropdown (try <code>re</code> or <code>EE</code>)
+              </p>
+              <multi-select
+                id="ms-searchable"
+                data-testid="ms-searchable"
+                label="Search colors"
+                placeholder="Search colors"
+                searchable
+              ></multi-select>
+            </div>
+            <div>
+              <p class="mb-1 text-xs text-slate-500">
+                Persistent list — <code>variant="list" visible-rows="4"</code>
+              </p>
+              <multi-select
+                id="ms-list"
+                data-testid="ms-list"
+                label="Colors"
+                variant="list"
+                visible-rows="4"
+              ></multi-select>
+            </div>
+            <div>
+              <p class="mb-1 text-xs text-slate-500">
+                Searchable list — a <code>Gray</code> option is disabled
+              </p>
+              <multi-select
+                id="ms-list-search"
+                data-testid="ms-list-search"
+                label="Search colors"
+                variant="list"
+                visible-rows="4"
+                searchable
+              ></multi-select>
+            </div>
+            <div>
+              <p class="mb-1 text-xs text-slate-500">
+                Shrink-to-fit override — host set to <code>display: inline-block</code>
+              </p>
+              <multi-select
+                id="ms-inline"
+                data-testid="ms-inline"
+                label="Inline colors"
+                placeholder="Pick colors"
+                style="display: inline-block"
+              ></multi-select>
+            </div>
+          </div>
+          <p id="ms-change-log" data-testid="ms-change-log" class="mt-3 text-xs text-slate-500"></p>
+
+          <form id="ms-form" data-testid="ms-form" class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6">
+            <p class="text-xs text-slate-500">
+              Required inside a form — submit to see each value repeated under
+              <code>colors</code>, or reset to restore the defaults.
+            </p>
+            <multi-select
+              id="ms-required"
+              data-testid="ms-required"
+              name="colors"
+              label="Colors (required)"
+              placeholder="Pick at least one"
+              required
+            ></multi-select>
+            <multi-select
+              id="ms-form-disabled"
+              data-testid="ms-form-disabled"
+              label="Disabled control"
+              placeholder="Disabled"
+              disabled
+            ></multi-select>
+            <div class="flex gap-3">
+              <button
+                type="submit"
+                class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              >
+                Submit
+              </button>
+              <button
+                type="reset"
+                class="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+              >
+                Reset
+              </button>
+            </div>
+            <p id="ms-form-log" data-testid="ms-form-log" class="text-xs text-slate-500"></p>
+          </form>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/multi-select.js";
+
+&lt;form&gt;
+  &lt;multi-select name="colors" label="Colors" required&gt;&lt;/multi-select&gt;
+&lt;/form&gt;
+&lt;script type="module"&gt;
+  const ms = document.querySelector("multi-select");
+  ms.options = [
+    { value: "red", label: "Red" },
+    { value: "green", label: "Green" },
+    { value: "blue", label: "Blue" },
+  ];
+  ms.values = ["red"];
+  ms.searchable = true; // opt-in infix filtering
+  // ms.variant = "list"; ms.visibleRows = 4; // persistent list instead
+  ms.addEventListener("change", (e) =&gt; console.log(e.detail.values));
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="percent-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-percent-bar-chart">

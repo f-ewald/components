@@ -399,10 +399,11 @@ a native `<select>` wherever consistent cross-browser styling and a
 picker).
 
 The trigger fills its host's width (`justify-content: space-between`
-pushes the chevron to the far edge), but the host itself stays
-`display: inline-block` — so usages that never size the host (a filter
-bar, a status picker) keep shrink-to-fit auto-width unchanged. To make an
-instance full-width, size the host itself: `form-select { width: 100%; }`.
+pushes the chevron to the far edge), and the host is `display: block`, so a
+`form-select` fills its container's width by default — matching the other
+form fields. To make an instance shrink to its content instead (e.g. in a
+filter bar or a status picker), constrain the host:
+`form-select { display: inline-block; }` (or `width: fit-content`).
 
 Set `searchable` to replace the button trigger with an editable combobox
 that filters the predefined options by case-insensitive label infix. Typed
@@ -522,6 +523,111 @@ Example:
 </script>
 ```
 
+## <kanban-board>
+
+A configurable kanban board: a horizontally scrolling row of columns, each
+holding cards. **A card's column is its state** — moving a card to another
+column (by drag-and-drop, keyboard, or the detail popover's state selector)
+changes its state, and the board emits a single `card-move` for all three.
+
+Data-driven: set the `columns` property to `KanbanColumnData[]`. The board
+keeps its own working copy and mutates it optimistically on every move, so it
+works standalone; re-assign `columns` at any time to stay controlled from a
+store. Cards show only their ticket number and title in the overview; the
+full detail (description, state, created/updated timestamps) opens in a
+screen-centered `popover-panel`.
+
+Pointer drag-and-drop supports both cross-column moves and within-column
+reordering with a live drop indicator (set `reorderable` false to keep only
+cross-column moves when intra-column order isn't persisted). Keyboard parity:
+focus a card and press Space to pick it up, arrow keys to move it (left/right
+across columns, up/down within a column), Space to drop, or Escape to cancel;
+Enter opens the detail. Moves are announced in a polite live region, and the
+moved card briefly flashes a warm highlight so you can see where it landed.
+
+Set `manual` for a server-authoritative board (API + WebSocket/SSE): every
+move still emits `card-move`, but the board does NOT apply it locally, so it
+reflects only what you assign to `columns` — e.g. the change echoed back over
+the socket. The default is optimistic local updates.
+
+Import: `import "@f-ewald/components/kanban-board.js";`
+
+Properties: `columns` (JS property only) : KanbanColumnData[], default []; `label` (attribute `label`) : string, default "Board"; `manual` (attribute `manual`) : boolean, default false; `reorderable` (attribute `reorderable`) : boolean, default true
+Events: `card-move`, `card-open`
+CSS custom properties: `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-normal`, `--ui-primary`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<kanban-board label="Project tasks"></kanban-board>
+<script type="module">
+  const board = document.querySelector("kanban-board");
+  board.columns = [
+    {
+      id: "todo",
+      title: "To Do",
+      cards: [
+        {
+          id: "c1",
+          ticket: "PROJ-142",
+          title: "Wire up auth callback",
+          description: "Handle the OAuth redirect and persist the session token.",
+          createdAt: "2026-07-18T09:12:00Z",
+          updatedAt: "2026-07-21T14:03:00Z",
+        },
+      ],
+    },
+    { id: "doing", title: "In Progress", cards: [] },
+    { id: "done", title: "Done", cards: [] },
+  ];
+  // A card's column is its state; drag-and-drop, keyboard, and the detail
+  // popover state selector all emit the same card-move event.
+  board.addEventListener("card-move", (e) => console.log(e.detail));
+  board.addEventListener("card-open", (e) => console.log(e.detail.cardId));
+</script>
+```
+
+## <kanban-card>
+
+A single kanban card's compact overview: its ticket number and title only.
+Purely presentational and metadata-only — it is created and driven by
+`kanban-board`, which owns drag-and-drop, selection, and the richer detail
+view (description, state, and timestamps live in the board's popover, not
+here). The board sets `draggable`, toggles the `dragging`/`grabbed`
+attributes for pointer and keyboard moves, and binds the open/keyboard
+handlers; focus is delegated to the inner control so the board can move
+keyboard focus to a card after a move.
+
+Import: `import "@f-ewald/components/kanban-card.js";`
+
+Properties: `ticket` (attribute `ticket`) : string, default ""; `heading` (attribute `heading`) : string, default ""
+Events: none
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-highlight`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-shadow`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<kanban-card></kanban-card>
+```
+
+## <kanban-column>
+
+A single kanban column: a titled, vertically scrollable region that holds
+its `kanban-card` children (its default `<slot>`), with a header showing the
+column title and card count. Purely presentational and metadata-only —
+`kanban-board` creates it, positions the cards inside it, and drives the
+drop-target highlight via the reflected `dragover` attribute and the empty
+hint via `empty`.
+
+Import: `import "@f-ewald/components/kanban-column.js";`
+
+Properties: `heading` (attribute `heading`) : string, default ""; `count` (attribute `count`) : number, default 0; `dragover` (attribute `dragover`) : boolean, default false; `empty` (attribute `empty`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-glyph`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<kanban-column></kanban-column>
+```
+
 ## <kbd-hint>
 
 Renders a keyboard shortcut as one boxed keycap per `+`-separated token.
@@ -600,6 +706,78 @@ Example:
 ```html
 <map-pin color="#1a73e8" size="30">3</map-pin>
 <map-pin color="#22c55e" size="26" highlighted>🏠</map-pin>
+```
+
+## <multi-select>
+
+A form-associated multi-select: a trigger showing a compact summary of the
+current selection, opening a multi-selectable listbox popover, with an
+optional removable-chip list of the chosen values. A drop-in generic
+replacement for a native `<select multiple>` — set `name` on the element
+itself and each
+selected value is submitted as a repeated `name=value` entry, matching native
+multiple-select semantics; `new FormData(form).getAll(name)` and
+`form.reset()` work unchanged.
+
+The trigger visually follows `form-select`: a `2rem` field showing the
+`placeholder` when empty, the single selected label when one value is chosen,
+and `N selected` when several are. Set `show-chips` to additionally render
+the selected values as compact chips below the trigger, each with an
+accessible `32px` remove control; chips are off by default and the region
+reserves no space while nothing is selected. Like `form-select`, the host is
+`display: block` and fills its container by default; constrain the host
+(`multi-select { display: inline-block; }`) to shrink it to its content
+instead.
+
+Set `searchable` to replace the button trigger with an editable combobox that
+infix-filters the predefined options by case-insensitive label. Typed text is
+only a query: `values` changes exclusively when options are toggled, and an
+uncommitted query is discarded when the list closes.
+
+The `variant` chooses between two presentations, and `searchable` applies to
+both:
+
+- `"dropdown"` (default) is the popover form described above: a compact
+  trigger (button, or search combobox when `searchable`) that opens a
+  multi-selectable listbox on demand, closes on outside click / Escape, and
+  shows a chevron.
+- `"list"` renders the options as a persistently visible, bordered surface
+  with no popover, no chevron, and no `open` host state; it never registers
+  outside-click listeners. Its scroll viewport is sized to roughly
+  `visibleRows` `2rem` rows (see `visible-rows`). When not `searchable` the
+  `listbox` itself is focusable and drives Arrow/Home/End/Enter/Space keyboard
+  navigation via `aria-activedescendant`; when `searchable` a `2rem` search
+  field sits above the list and owns navigation, and Escape only clears the
+  query instead of hiding the list.
+
+Import: `import "@f-ewald/components/multi-select.js";`
+
+Properties: `options` (JS property only) : MultiSelectOption[], default []; `values` (JS property only) : string[], default []; `name` (attribute `name`) : string, default ""; `label` (attribute `label`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default "Select options"; `disabled` (attribute `disabled`) : boolean, default false; `required` (attribute `required`) : boolean, default false; `searchable` (attribute `searchable`) : boolean, default false; `max` (attribute `max`) : number, default 0; `variant` (attribute `variant`) : MultiSelectVariant, default "dropdown"; `visibleRows` (attribute `visible-rows`) : number, default 5; `showChips` (attribute `show-chips`) : boolean, default false
+Events: `change`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<multi-select name="colors" label="Colors" searchable></multi-select>
+<multi-select id="colors-list" variant="list" visible-rows="4"></multi-select>
+<script type="module">
+  const options = [
+    { value: "red", label: "Red" },
+    { value: "green", label: "Green" },
+    { value: "blue", label: "Blue" },
+    { value: "amber", label: "Amber" },
+    { value: "violet", label: "Violet" },
+  ];
+  const dropdown = document.querySelector("multi-select[name='colors']");
+  dropdown.options = options;
+  dropdown.values = ["red", "blue"];
+  dropdown.searchable = true;
+  dropdown.addEventListener("change", (e) => console.log(e.detail.values));
+
+  const list = document.getElementById("colors-list");
+  list.options = options;
+  list.values = ["green"];
+</script>
 ```
 
 ## <percent-bar-chart>

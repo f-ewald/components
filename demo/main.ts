@@ -21,11 +21,15 @@ import {
   type LiveTimer,
   type ChatMessage,
   type FormSelect,
+  type MultiSelect,
+  type MultiSelectOption,
   type DataTable,
   type TileGrid,
   type PopoverPanel,
   type DropdownButton,
   type IconButton,
+  type KanbanBoard,
+  type KanbanColumnData,
   iconArrowPath,
   iconCheckCircle,
   iconEye,
@@ -394,6 +398,11 @@ if (selectSearchable) {
   selectSearchable.options = selectOptions;
   selectSearchable.value = "open";
 }
+const selectInline = document.getElementById("select-inline") as FormSelect;
+if (selectInline) {
+  selectInline.options = selectOptions;
+  selectInline.value = "open";
+}
 const selectDisabled = document.getElementById("select-disabled") as FormSelect;
 if (selectDisabled) {
   selectDisabled.options = [{ value: "locked", label: "Locked" }];
@@ -406,6 +415,50 @@ selectState?.addEventListener("change", (e) => {
 const selectSearchableLog = document.getElementById("select-searchable-log")!;
 selectSearchable?.addEventListener("change", (e) => {
   selectSearchableLog.textContent = `select-searchable: ${(e as CustomEvent).detail.value}`;
+});
+
+// multi-select (seed shared options, log change/submit, wire form reset)
+const colorOptions: MultiSelectOption[] = [
+  { value: "red", label: "Red", icon: iconCheckCircle(16), iconSize: 16 },
+  { value: "green", label: "Green", icon: iconListBullet(16), iconSize: 16 },
+  { value: "blue", label: "Blue", icon: iconEye(16), iconSize: 16 },
+  { value: "amber", label: "Amber", icon: iconArrowPath(16), iconSize: 16 },
+  { value: "violet", label: "Violet", icon: iconPencil(16), iconSize: 16 },
+  { value: "gray", label: "Gray (disabled)", disabled: true },
+];
+const msChangeLog = document.getElementById("ms-change-log");
+const seedMultiSelect = (id: string, values: string[]): MultiSelect | null => {
+  const el = document.getElementById(id) as MultiSelect | null;
+  if (!el) return null;
+  el.options = colorOptions;
+  el.values = values;
+  el.addEventListener("change", (e) => {
+    if (msChangeLog) {
+      const picked = (e as CustomEvent<{ values: string[] }>).detail.values;
+      msChangeLog.textContent = `${id}: [${picked.join(", ")}]`;
+    }
+  });
+  return el;
+};
+seedMultiSelect("ms-dropdown", ["red", "blue"]);
+seedMultiSelect("ms-searchable", ["green"]);
+seedMultiSelect("ms-list", ["blue"]);
+seedMultiSelect("ms-list-search", []);
+seedMultiSelect("ms-inline", ["red"]);
+seedMultiSelect("ms-required", ["red"]);
+seedMultiSelect("ms-form-disabled", ["amber"]);
+const msFormLog = document.getElementById("ms-form-log");
+document.getElementById("ms-form")?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const values = new FormData(e.target as HTMLFormElement).getAll("colors");
+  if (msFormLog) {
+    msFormLog.textContent = values.length
+      ? `Submitted colors (${values.length}): ${values.join(", ")}`
+      : "Submitted with no colors selected.";
+  }
+});
+document.getElementById("ms-form")?.addEventListener("reset", () => {
+  if (msFormLog) msFormLog.textContent = "Form reset to defaults.";
 });
 
 // popover-panel
@@ -455,6 +508,127 @@ if (iconButtonEdit) {
 const iconButtonDisabled = document.getElementById("icon-button-disabled") as IconButton;
 if (iconButtonDisabled) {
   iconButtonDisabled.icon = iconPencil(16);
+}
+
+// kanban-board (seed columns/cards, log moves and opens)
+const kanbanDemo = document.getElementById("kanban-demo") as KanbanBoard;
+const kanbanLog = document.getElementById("kanban-log");
+if (kanbanDemo) {
+  let kanbanColumns: KanbanColumnData[] = [
+    {
+      id: "todo",
+      title: "To Do",
+      cards: [
+        {
+          id: "c1",
+          ticket: "PROJ-142",
+          title: "Wire up auth callback",
+          description: "Handle the OAuth redirect and persist the session token.",
+          createdAt: "2026-07-18T09:12:00Z",
+          updatedAt: "2026-07-21T14:03:00Z",
+        },
+        {
+          id: "c2",
+          ticket: "PROJ-148",
+          title: "Empty-state illustration",
+          description: "Design the illustration shown when a board has no cards.",
+          createdAt: "2026-07-19T11:40:00Z",
+          updatedAt: "2026-07-20T08:15:00Z",
+        },
+      ],
+    },
+    {
+      id: "doing",
+      title: "In Progress",
+      cards: [
+        {
+          id: "c3",
+          ticket: "PROJ-131",
+          title: "Drag-and-drop reorder",
+          description: "Support reordering cards within a column, not just across.",
+          createdAt: "2026-07-15T16:22:00Z",
+          updatedAt: "2026-07-22T10:05:00Z",
+        },
+      ],
+    },
+    {
+      id: "done",
+      title: "Done",
+      cards: [
+        {
+          id: "c4",
+          ticket: "PROJ-120",
+          title: "Token audit",
+          description: "Migrate every literal color onto a design token.",
+          createdAt: "2026-07-10T13:00:00Z",
+          updatedAt: "2026-07-17T09:30:00Z",
+        },
+      ],
+    },
+  ];
+  kanbanDemo.columns = kanbanColumns;
+
+  // Reference reducer: how a consumer applies a `card-move` to its own state.
+  const applyKanbanMove = (
+    columns: KanbanColumnData[],
+    detail: { cardId: string; fromColumnId: string; toColumnId: string; toIndex: number },
+  ): KanbanColumnData[] => {
+    const next = columns.map((column) => ({ ...column, cards: [...column.cards] }));
+    const from = next.find((column) => column.id === detail.fromColumnId);
+    const to = next.find((column) => column.id === detail.toColumnId);
+    if (!from || !to) return columns;
+    const index = from.cards.findIndex((card) => card.id === detail.cardId);
+    if (index < 0) return columns;
+    const [card] = from.cards.splice(index, 1);
+    to.cards.splice(Math.max(0, Math.min(detail.toIndex, to.cards.length)), 0, card);
+    return next;
+  };
+
+  const kanbanManual = document.getElementById("kanban-manual") as HTMLInputElement | null;
+  kanbanManual?.addEventListener("change", () => {
+    kanbanDemo.manual = kanbanManual.checked;
+    if (kanbanLog) {
+      kanbanLog.textContent = kanbanManual.checked
+        ? "Manual mode: the board waits for the simulated server to echo each move back."
+        : "Optimistic mode: the board applies moves locally and emits card-move.";
+    }
+  });
+
+  const kanbanReorderable = document.getElementById("kanban-reorderable") as HTMLInputElement | null;
+  kanbanReorderable?.addEventListener("change", () => {
+    kanbanDemo.reorderable = kanbanReorderable.checked;
+    if (kanbanLog) {
+      kanbanLog.textContent = kanbanReorderable.checked
+        ? "Reordering within a column is on."
+        : "Reordering within a column is off — cards can only move between columns.";
+    }
+  });
+
+  kanbanDemo.addEventListener("card-move", (event) => {
+    const detail = (event as CustomEvent).detail as {
+      cardId: string;
+      fromColumnId: string;
+      toColumnId: string;
+      toIndex: number;
+    };
+    // Keep our own copy in sync — this is the state a real app persists.
+    kanbanColumns = applyKanbanMove(kanbanColumns, detail);
+    if (kanbanLog) {
+      kanbanLog.textContent = `card-move ${detail.cardId}: ${detail.fromColumnId} → ${detail.toColumnId} (index ${detail.toIndex})`;
+    }
+    // In manual mode the board didn't move the card; simulate an API write plus
+    // a socket echo that assigns the authoritative state back to the board.
+    if (kanbanDemo.manual) {
+      window.setTimeout(() => {
+        kanbanDemo.columns = kanbanColumns;
+      }, 150);
+    }
+  });
+
+  kanbanDemo.addEventListener("card-open", (event) => {
+    const { cardId } = (event as CustomEvent).detail;
+    if (kanbanLog) kanbanLog.textContent = `Opened ${cardId}`;
+  });
 }
 
 // data-table (seed columns/rows, wire a row-click destination)

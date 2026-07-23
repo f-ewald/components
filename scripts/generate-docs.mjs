@@ -71,6 +71,8 @@ const PLAYGROUND_ANCHORS = {
   "calendar-entry": "calendar-month",
   "gallery-item": "photo-gallery",
   "gallery-item-variant": "photo-gallery",
+  "kanban-card": "kanban-board",
+  "kanban-column": "kanban-board",
 };
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
@@ -201,6 +203,26 @@ const EXAMPLES = {
   "map-circle": `<map-circle color="#6b7280"></map-circle>
 <map-circle color="#0099D8" size="14" ring-width="3"></map-circle>
 <map-circle color="#1a73e8" size="24" ring-width="5" highlighted>1</map-circle>`,
+  "multi-select": `<multi-select name="colors" label="Colors" searchable></multi-select>
+<multi-select id="colors-list" variant="list" visible-rows="4"></multi-select>
+<script type="module">
+  const options = [
+    { value: "red", label: "Red" },
+    { value: "green", label: "Green" },
+    { value: "blue", label: "Blue" },
+    { value: "amber", label: "Amber" },
+    { value: "violet", label: "Violet" },
+  ];
+  const dropdown = document.querySelector("multi-select[name='colors']");
+  dropdown.options = options;
+  dropdown.values = ["red", "blue"];
+  dropdown.searchable = true;
+  dropdown.addEventListener("change", (e) => console.log(e.detail.values));
+
+  const list = document.getElementById("colors-list");
+  list.options = options;
+  list.values = ["green"];
+</script>`,
   "stat-meter": `<stat-meter label="CPU" percent="42"></stat-meter>
 <stat-meter label="MEM" percent="76"></stat-meter>
 <stat-meter label="I/O"></stat-meter> <!-- percent unset -> null -> renders "—" -->
@@ -312,6 +334,32 @@ const EXAMPLES = {
     { name: "photo.jpg" },
   ];
   grid.renderTile = (item) => item.name;
+</script>`,
+  "kanban-board": `<kanban-board label="Project tasks"></kanban-board>
+<script type="module">
+  const board = document.querySelector("kanban-board");
+  board.columns = [
+    {
+      id: "todo",
+      title: "To Do",
+      cards: [
+        {
+          id: "c1",
+          ticket: "PROJ-142",
+          title: "Wire up auth callback",
+          description: "Handle the OAuth redirect and persist the session token.",
+          createdAt: "2026-07-18T09:12:00Z",
+          updatedAt: "2026-07-21T14:03:00Z",
+        },
+      ],
+    },
+    { id: "doing", title: "In Progress", cards: [] },
+    { id: "done", title: "Done", cards: [] },
+  ];
+  // A card's column is its state; drag-and-drop, keyboard, and the detail
+  // popover state selector all emit the same card-move event.
+  board.addEventListener("card-move", (e) => console.log(e.detail));
+  board.addEventListener("card-open", (e) => console.log(e.detail.cardId));
 </script>`,
   "popover-panel": `<div style="position: relative; display: inline-block;">
   <button id="new-task-btn">New task</button>
