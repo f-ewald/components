@@ -14,8 +14,11 @@
           <p class="mt-1 text-xs text-slate-500">Playground</p>
         </div>
         <nav class="demo-nav flex flex-col gap-0.5 px-3 pb-6 text-sm" data-testid="nav">
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#action-bar">action-bar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#address-autocomplete">address-autocomplete</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#animate-confetti">animate-confetti</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#app-shell">app-shell</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#app-sidebar">app-sidebar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-month">calendar-month</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-year">calendar-year</a>
@@ -27,6 +30,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-actions">form-actions</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#frame-box">frame-box</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
@@ -36,6 +40,8 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#multi-select">multi-select</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#page-header">page-header</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#pagination-nav">pagination-nav</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#percent-bar-chart">percent-bar-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#photo-gallery">photo-gallery</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
@@ -49,10 +55,17 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#status-pill">status-pill</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tile-grid">tile-grid</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#timeline-container">timeline-container</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#toast-notification">toast-notification</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-button">ui-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#user-avatar">user-avatar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#weight-bar-chart">weight-bar-chart</a>
+          <p class="mt-4 px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Templates</p>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="demo/layouts/list-only.html">list-only</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="demo/layouts/list-detail.html">list + detail</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="demo/layouts/detail-only.html">detail-only</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="demo/layouts/record-detail.html">record + metadata</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="demo/layouts/form-page.html">form page</a>
         </nav>
       </aside>
 
@@ -63,6 +76,29 @@
             Live, hand-testable examples of every component in <code>@f-ewald/components</code>.
           </p>
         </header>
+
+        <section id="action-bar" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-action-bar">
+          <h3 class="text-xl font-semibold text-slate-900">action-bar</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Toolbar above a list or table: search and filters on the left, record actions on the
+            right. Presentational only — drop your own controls into the <code>start</code> and
+            <code>end</code> slots.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <action-bar id="action-bar-demo" data-testid="action-bar-demo">
+              <autocomplete-input slot="start" data-testid="action-bar-search" placeholder="Search members…"></autocomplete-input>
+              <ui-button slot="end" variant="secondary" data-testid="action-bar-delete">Delete</ui-button>
+              <ui-button slot="end" variant="primary" data-testid="action-bar-create">Create</ui-button>
+            </action-bar>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/action-bar.js";
+
+&lt;action-bar&gt;
+  &lt;autocomplete-input slot="start" placeholder="Search…"&gt;&lt;/autocomplete-input&gt;
+  &lt;ui-button slot="end" variant="secondary"&gt;Delete&lt;/ui-button&gt;
+  &lt;ui-button slot="end" variant="primary"&gt;Create&lt;/ui-button&gt;
+&lt;/action-bar&gt;</code></pre>
+        </section>
 
         <section id="address-autocomplete" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-address-autocomplete">
           <h3 class="text-xl font-semibold text-slate-900">address-autocomplete</h3>
@@ -108,6 +144,92 @@
           <pre class="usage mt-4"><code>import "@f-ewald/components/animate-confetti.js";
 
 &lt;animate-confetti duration="6000"&gt;&lt;/animate-confetti&gt;</code></pre>
+        </section>
+
+        <section id="app-shell" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-app-shell">
+          <h3 class="text-xl font-semibold text-slate-900">app-shell</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            The dashboard page shell: a collapsible sidebar, a top bar with a built-in toggle, the
+            main content, an optional right-hand detail column, and a footer. The built-in ☰ toggle
+            (or pressing <kbd>[</kbd> outside a text field) collapses the sidebar to an icon rail;
+            resize below 48rem to see it become a drawer and the detail an overlay. Give it a height
+            so it can fill and scroll.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <button id="app-shell-toggle-detail" data-testid="app-shell-toggle-detail" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Toggle detail</button>
+          </div>
+          <div class="mt-4 overflow-hidden rounded-lg border border-slate-200" style="height: 32rem">
+            <app-shell id="app-shell-demo" data-testid="app-shell-demo" style="height: 100%" detail-width="comfortable">
+              <app-sidebar slot="sidebar" id="app-shell-sidebar" data-testid="app-shell-sidebar">
+                <div slot="header" style="display: flex; align-items: center; gap: 0.5rem;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto;"><rect width="24" height="24" rx="6" fill="#4f46e5"></rect><path d="M7 16.5 12 7l5 9.5M9.2 13h5.6" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  <span class="text-sm font-semibold text-slate-900" style="display: var(--app-sidebar-label, inline)">Acme Admin</span>
+                </div>
+                <p>Workspace</p>
+                <a href="#app-shell" aria-current="page" aria-label="Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg><span style="display: var(--app-sidebar-label, inline)">Dashboard</span></a>
+                <a href="#app-shell" aria-label="Members"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg><span style="display: var(--app-sidebar-label, inline)">Members</span></a>
+                <a href="#app-shell" aria-label="Schedule"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg><span style="display: var(--app-sidebar-label, inline)">Schedule</span></a>
+                <div slot="footer" class="text-xs text-slate-500">Signed in as Fred</div>
+              </app-sidebar>
+              <page-header slot="topbar" heading="Members"></page-header>
+              <div>
+                <action-bar>
+                  <autocomplete-input slot="start" placeholder="Search members…"></autocomplete-input>
+                  <ui-button slot="end" variant="primary">Create</ui-button>
+                </action-bar>
+                <data-table id="app-shell-table" data-testid="app-shell-table" class="mt-4 block rounded-lg border border-slate-200"></data-table>
+              </div>
+              <div slot="detail" class="p-4" data-testid="app-shell-detail">
+                <h4 class="text-sm font-semibold text-slate-900">Selected member</h4>
+                <p class="mt-2 text-sm text-slate-600">Pick a row to see its details here. On narrow screens this becomes an overlay.</p>
+              </div>
+              <pagination-nav slot="footer" id="app-shell-pager" data-testid="app-shell-pager" current-page="1" total-pages="5"></pagination-nav>
+            </app-shell>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/app-shell.js";
+import "@f-ewald/components/app-sidebar.js";
+
+&lt;app-shell detail-open style="height: 100vh"&gt;
+  &lt;app-sidebar slot="sidebar"&gt;…nav items…&lt;/app-sidebar&gt;
+  &lt;page-header slot="topbar" heading="Members"&gt;&lt;/page-header&gt;
+  &lt;action-bar&gt;…&lt;/action-bar&gt;
+  &lt;data-table&gt;&lt;/data-table&gt;
+  &lt;div slot="detail"&gt;…&lt;/div&gt;
+  &lt;pagination-nav slot="footer" total-pages="5"&gt;&lt;/pagination-nav&gt;
+&lt;/app-shell&gt;</code></pre>
+        </section>
+
+        <section id="app-sidebar" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-app-sidebar">
+          <h3 class="text-xl font-semibold text-slate-900">app-sidebar</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Slot-based navigation for the shell's sidebar slot. Toggle "Collapse" for rail mode:
+            icons stay, labels hide, and the active item keeps its highlight. Each label reads the
+            <code>--app-sidebar-label</code> custom property so the sidebar can hide it.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <button id="app-sidebar-toggle" data-testid="app-sidebar-toggle" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Collapse</button>
+          </div>
+          <div id="app-sidebar-frame" data-testid="app-sidebar-frame" class="mt-4 overflow-hidden rounded-lg border border-slate-200" style="height: 20rem; width: 16rem">
+            <app-sidebar id="app-sidebar-demo" data-testid="app-sidebar-demo">
+              <div slot="header" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" data-testid="app-sidebar-logo" style="flex: 0 0 auto;"><rect width="24" height="24" rx="6" fill="#4f46e5"></rect><path d="M7 16.5 12 7l5 9.5M9.2 13h5.6" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span class="text-sm font-semibold text-slate-900" data-testid="app-sidebar-brand-name" style="display: var(--app-sidebar-label, inline)">Acme Admin</span>
+              </div>
+              <p>Workspace</p>
+              <a href="#app-sidebar" aria-current="page" aria-label="Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg><span style="display: var(--app-sidebar-label, inline)">Dashboard</span></a>
+              <a href="#app-sidebar" aria-label="Members"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg><span style="display: var(--app-sidebar-label, inline)">Members</span></a>
+              <a href="#app-sidebar" aria-label="Schedule"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg><span style="display: var(--app-sidebar-label, inline)">Schedule</span></a>
+              <div slot="footer" class="text-xs text-slate-500">Signed in as Fred</div>
+            </app-sidebar>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/app-sidebar.js";
+
+&lt;app-sidebar collapsed&gt;
+  &lt;a href="/dashboard" aria-current="page" aria-label="Dashboard"&gt;
+    &lt;!-- icon --&gt;
+    &lt;span style="display: var(--app-sidebar-label, inline)"&gt;Dashboard&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/app-sidebar&gt;</code></pre>
         </section>
 
         <section id="autocomplete-input" class="scroll-mt-8 py-10" data-testid="section-autocomplete-input">
@@ -531,6 +653,32 @@ dropdown.addEventListener("select", (e) => console.log(e.detail.value));</code><
 
 &lt;editable-text value="Write the quarterly report" label="Title"&gt;&lt;/editable-text&gt;
 &lt;editable-text multiline placeholder="Add a description…" label="Description"&gt;&lt;/editable-text&gt;</code></pre>
+        </section>
+
+        <section id="form-actions" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-form-actions">
+          <h3 class="text-xl font-semibold text-slate-900">form-actions</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Form footer button bar with a fixed order: primary (submit) is always rightmost,
+            secondary (cancel) to its left, and an optional destructive action pinned far left —
+            regardless of the order the buttons are authored in.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <form id="form-actions-form" data-testid="form-actions-form">
+              <form-actions id="form-actions-demo" data-testid="form-actions-demo">
+                <ui-button slot="primary" type="submit" variant="primary" id="form-actions-save" data-testid="form-actions-save">Save</ui-button>
+                <ui-button slot="secondary" variant="secondary" id="form-actions-cancel" data-testid="form-actions-cancel">Cancel</ui-button>
+                <ui-button slot="start" variant="danger" id="form-actions-delete" data-testid="form-actions-delete">Delete</ui-button>
+              </form-actions>
+            </form>
+            <p id="form-actions-status" data-testid="form-actions-status" class="mt-3 text-sm text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/form-actions.js";
+
+&lt;form-actions&gt;
+  &lt;ui-button slot="start" variant="danger"&gt;Delete&lt;/ui-button&gt;
+  &lt;ui-button slot="secondary" variant="secondary"&gt;Cancel&lt;/ui-button&gt;
+  &lt;ui-button slot="primary" type="submit" variant="primary"&gt;Save&lt;/ui-button&gt;
+&lt;/form-actions&gt;</code></pre>
         </section>
 
         <section id="form-select" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-form-select">
@@ -980,6 +1128,47 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
 &lt;/script&gt;</code></pre>
         </section>
 
+        <section id="page-header" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-page-header">
+          <h3 class="text-xl font-semibold text-slate-900">page-header</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Page title block: an optional breadcrumb trail, the heading, and a right-aligned cluster
+            of page actions. The breadcrumb row reserves no space when it's empty.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <page-header id="page-header-demo" data-testid="page-header-demo" heading="Team members">
+              <nav slot="breadcrumb" aria-label="Breadcrumb">Home / Settings / Members</nav>
+              <ui-button slot="actions" variant="primary" data-testid="page-header-action">Invite</ui-button>
+            </page-header>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/page-header.js";
+
+&lt;page-header heading="Team members"&gt;
+  &lt;nav slot="breadcrumb" aria-label="Breadcrumb"&gt;Home / Settings / Members&lt;/nav&gt;
+  &lt;ui-button slot="actions" variant="primary"&gt;Invite&lt;/ui-button&gt;
+&lt;/page-header&gt;</code></pre>
+        </section>
+
+        <section id="pagination-nav" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-pagination-nav">
+          <h3 class="text-xl font-semibold text-slate-900">pagination-nav</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Minimal, controlled pager: previous/next around "Page N of M". It emits
+            <code>page-change</code> and owns no data — you move the page in response, like
+            <code>data-table</code> leaves the rows to you.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <pagination-nav id="pagination-demo" data-testid="pagination-demo" current-page="1" total-pages="5"></pagination-nav>
+            <p id="pagination-status" data-testid="pagination-status" class="mt-3 text-sm text-slate-500">On page 1 of 5</p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/pagination-nav.js";
+
+&lt;pagination-nav current-page="1" total-pages="5"&gt;&lt;/pagination-nav&gt;
+&lt;script type="module"&gt;
+  document.querySelector("pagination-nav").addEventListener("page-change", (e) =&gt; {
+    e.target.setAttribute("current-page", e.detail.page);
+  });
+&lt;/script&gt;</code></pre>
+        </section>
+
         <section id="percent-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-percent-bar-chart">
           <h3 class="text-xl font-semibold text-slate-900">percent-bar-chart</h3>
           <p class="mt-1 text-sm text-slate-500">Horizontal bar chart of labeled percentage rows.</p>
@@ -1358,6 +1547,49 @@ grid.items = [
 ];
 grid.renderTile = (item) => item.name;
 grid.fileIcon = true; // or the `file-icon` attribute</code></pre>
+        </section>
+
+        <section id="timeline-container" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-timeline-container">
+          <h3 class="text-xl font-semibold text-slate-900">timeline-container</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A vertical timeline. Each <code>timeline-entry</code> is a dot on the line with an
+            optional headline, a relative time, and freely nested content (avatars, pills, code).
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <timeline-container id="timeline-demo" data-testid="timeline-demo">
+              <timeline-entry data-testid="timeline-e1" data-ago="30">
+                <span slot="headline">Deployment started</span>
+                Release <code>v1.4.0</code> is rolling out to production.
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-e2" data-ago="900">
+                <span slot="headline">Review approved</span>
+                <span style="display: inline-flex; align-items: center; gap: 0.375rem;">
+                  <user-avatar name="Ada Lovelace" size="20"></user-avatar> Ada Lovelace approved the changes.
+                </span>
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-e3" data-ago="7200">
+                <span slot="headline">Status changed</span>
+                <status-pill label="In Review" color="info"></status-pill>
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-e4" data-ago="86400">
+                <span slot="headline">Issue opened</span>
+                Reported by Alan Turing.
+              </timeline-entry>
+            </timeline-container>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/timeline-container.js";
+import "@f-ewald/components/timeline-entry.js";
+
+&lt;timeline-container&gt;
+  &lt;timeline-entry datetime="2026-07-23T09:00:00Z"&gt;
+    &lt;span slot="headline"&gt;Deployment started&lt;/span&gt;
+    Release v1.4.0 is rolling out.
+  &lt;/timeline-entry&gt;
+  &lt;timeline-entry datetime="2026-07-23T08:45:00Z"&gt;
+    &lt;span slot="headline"&gt;Review approved&lt;/span&gt;
+    &lt;status-pill label="In Review" color="info"&gt;&lt;/status-pill&gt;
+  &lt;/timeline-entry&gt;
+&lt;/timeline-container&gt;</code></pre>
         </section>
 
         <section id="toast-notification" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-toast-notification">

@@ -24,6 +24,9 @@ import {
   type MultiSelect,
   type MultiSelectOption,
   type DataTable,
+  type AppShell,
+  type AppSidebar,
+  type PaginationNav,
   type TileGrid,
   type PopoverPanel,
   type DropdownButton,
@@ -679,3 +682,79 @@ const observer = new IntersectionObserver(
   { rootMargin: "-10% 0px -70% 0px" },
 );
 for (const section of sections) observer.observe(section);
+
+// ---------------------------------------------------------------------------
+// Layout components: action-bar, app-shell, app-sidebar, form-actions,
+// page-header, pagination-nav.
+// ---------------------------------------------------------------------------
+
+// app-shell — assembled dashboard: seed the table, toggle the detail column,
+// and reflect the footer pager's page changes.
+const appShellDemo = document.getElementById("app-shell-demo") as AppShell | null;
+const appShellTable = document.getElementById("app-shell-table") as DataTable | null;
+if (appShellTable) {
+  appShellTable.columns = [
+    { key: "name", label: "Name" },
+    { key: "role", label: "Role" },
+    { key: "status", label: "Status" },
+  ];
+  appShellTable.rows = [
+    { id: "m1", name: "Ada Lovelace", role: "Owner", status: "Active" },
+    { id: "m2", name: "Alan Turing", role: "Admin", status: "Active" },
+    { id: "m3", name: "Grace Hopper", role: "Editor", status: "Invited" },
+  ];
+}
+document.getElementById("app-shell-toggle-detail")?.addEventListener("click", () => {
+  if (appShellDemo) appShellDemo.detailOpen = !appShellDemo.detailOpen;
+});
+const appShellPager = document.getElementById("app-shell-pager") as PaginationNav | null;
+appShellPager?.addEventListener("page-change", (event) => {
+  const { page } = (event as CustomEvent<{ page: number }>).detail;
+  if (appShellPager) appShellPager.currentPage = page;
+});
+
+// app-sidebar — standalone: toggle rail mode and shrink the frame to the rail width.
+const appSidebarDemo = document.getElementById("app-sidebar-demo") as AppSidebar | null;
+const appSidebarFrame = document.getElementById("app-sidebar-frame");
+const appSidebarToggle = document.getElementById("app-sidebar-toggle");
+appSidebarToggle?.addEventListener("click", () => {
+  if (!appSidebarDemo || !appSidebarFrame) return;
+  appSidebarDemo.collapsed = !appSidebarDemo.collapsed;
+  appSidebarFrame.style.width = appSidebarDemo.collapsed ? "3.5rem" : "16rem";
+  appSidebarToggle.textContent = appSidebarDemo.collapsed ? "Expand" : "Collapse";
+});
+
+// form-actions — report which action fired without navigating away.
+const formActionsForm = document.getElementById("form-actions-form") as HTMLFormElement | null;
+const formActionsStatus = document.getElementById("form-actions-status");
+formActionsForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (formActionsStatus) formActionsStatus.textContent = "Saved (submit fired).";
+});
+document.getElementById("form-actions-cancel")?.addEventListener("click", () => {
+  if (formActionsStatus) formActionsStatus.textContent = "Cancelled.";
+});
+document.getElementById("form-actions-delete")?.addEventListener("click", () => {
+  if (formActionsStatus) formActionsStatus.textContent = "Delete requested.";
+});
+
+// pagination-nav — controlled: reflect the chosen page back onto the element.
+const paginationDemo = document.getElementById("pagination-demo") as PaginationNav | null;
+const paginationStatus = document.getElementById("pagination-status");
+paginationDemo?.addEventListener("page-change", (event) => {
+  const { page } = (event as CustomEvent<{ page: number }>).detail;
+  if (!paginationDemo) return;
+  paginationDemo.currentPage = page;
+  if (paginationStatus) {
+    paginationStatus.textContent = `On page ${page} of ${paginationDemo.totalPages}`;
+  }
+});
+
+// timeline-container — set each entry's datetime relative to now so the
+// relative-time labels ("30 seconds ago", "2 hours ago") stay sensible.
+for (const entry of document.querySelectorAll<HTMLElement>("#timeline-demo timeline-entry[data-ago]")) {
+  const agoSeconds = Number(entry.dataset.ago);
+  (entry as HTMLElement & { datetime: string }).datetime = new Date(
+    Date.now() - agoSeconds * 1000,
+  ).toISOString();
+}

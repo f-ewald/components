@@ -16,6 +16,31 @@ render correctly with zero external CSS. Override any `--ui-*` property on
 `:root` (or an ancestor) to retheme, or import the optional
 `@f-ewald/components/tokens.css` stylesheet as a starting point.
 
+## <action-bar>
+
+Toolbar that sits directly above a list or table: a left cluster for
+search and filters and a right cluster for record actions (create, delete,
+bulk actions). It's a presentational layout container only — drop any
+controls (`autocomplete-input`, `multi-select`, `ui-button`, …) into the
+`start` and `end` slots; the bar owns none of their behavior and adds no
+search field of its own. The two clusters wrap onto separate rows when the
+bar is too narrow.
+
+Import: `import "@f-ewald/components/action-bar.js";`
+
+Properties: none
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<action-bar>
+  <autocomplete-input slot="start" placeholder="Search…"></autocomplete-input>
+  <ui-button slot="end" variant="secondary">Delete</ui-button>
+  <ui-button slot="end" variant="primary">Create</ui-button>
+</action-bar>
+```
+
 ## <address-autocomplete>
 
 Form-associated text input with a suggestion dropdown. Works as a
@@ -59,6 +84,89 @@ CSS custom properties: none
 Example:
 ```html
 <animate-confetti duration="6000"></animate-confetti>
+```
+
+## <app-shell>
+
+The dashboard page shell: a slot-based CSS-grid backbone that arranges a
+full-height sidebar, a top bar, the main content, an optional right-hand
+detail column, and an optional footer. It owns the responsive behavior so
+consumers don't re-implement it — above the shared 48rem breakpoint the
+sidebar collapses to an icon rail and the detail region is an inline column;
+at or below it the sidebar becomes an off-canvas drawer and the detail region
+an overlay, both dismissed by a scrim or Escape.
+
+Widths are tunable per instance via `--component-sidebar-width` (16rem),
+`--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`
+(3rem); the detail column reuses the 20rem/25rem panel widths. The main
+content area is white by default — override it with
+`--component-main-background`. Give the shell a height (e.g. `height: 100vh`)
+so the sidebar and main can size and scroll.
+
+The built-in top-bar button toggles the sidebar, and so does pressing `[`
+anywhere on the page (ignored while typing in a text field or with a
+modifier held). Hovering or keyboard-focusing the toggle reveals a tooltip
+naming the action and its `[` shortcut — the shortcut is not shown as
+permanent chrome.
+
+Import: `import "@f-ewald/components/app-shell.js";`
+
+Properties: `sidebarCollapsed` (attribute `sidebar-collapsed`) : boolean, default false; `detailOpen` (attribute `detail-open`) : boolean, default false; `detailWidth` (attribute `detail-width`) : "compact" | "comfortable", default "compact"
+Events: `sidebar-toggle`, `detail-close`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-radius-sm`, `--ui-shadow`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`, `--ui-tooltip`
+
+Example:
+```html
+<app-shell detail-open style="height: 100vh">
+  <app-sidebar slot="sidebar">
+    <a href="/dashboard" aria-current="page" aria-label="Dashboard">
+      <!-- icon --><span style="display: var(--app-sidebar-label, inline)">Dashboard</span>
+    </a>
+  </app-sidebar>
+  <page-header slot="topbar" heading="Members"></page-header>
+  <action-bar>
+    <autocomplete-input slot="start" placeholder="Search…"></autocomplete-input>
+    <ui-button slot="end" variant="primary">Create</ui-button>
+  </action-bar>
+  <data-table></data-table>
+  <div slot="detail">Selected record…</div>
+  <pagination-nav slot="footer" total-pages="5"></pagination-nav>
+</app-shell>
+```
+
+## <app-sidebar>
+
+Collapsible navigation sidebar for the `app-shell` sidebar slot. It is
+deliberately presentational and router-agnostic: the consumer supplies the
+nav items as plain `<a>`/`<button>` elements (each an icon followed by a
+label), optional `<p>` group headings, and marks the active item with
+`aria-current="page"`. The sidebar styles them, tracks hover/active/focus,
+and — in collapsed "rail" mode — centers the icons and hides the labels.
+
+Rail mode is driven by the `collapsed` attribute (the parent `app-shell`
+toggles it). Labels are hidden by the inherited `--app-sidebar-label` custom
+property, so each label element should read it, e.g.
+`<span style="display: var(--app-sidebar-label, inline)">Reports</span>`;
+keep an `aria-label` on the item so its accessible name survives collapse.
+The sidebar fills the width and height of its container — `app-shell` owns
+the actual rail/expanded width.
+
+Import: `import "@f-ewald/components/app-sidebar.js";`
+
+Properties: `collapsed` (attribute `collapsed`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`
+
+Example:
+```html
+<app-sidebar>
+  <a href="/dashboard" aria-current="page" aria-label="Dashboard">
+    <!-- icon --><span style="display: var(--app-sidebar-label, inline)">Dashboard</span>
+  </a>
+  <a href="/members" aria-label="Members">
+    <!-- icon --><span style="display: var(--app-sidebar-label, inline)">Members</span>
+  </a>
+</app-sidebar>
 ```
 
 ## <autocomplete-input>
@@ -388,6 +496,33 @@ Example:
 ```html
 <editable-text value="Write the quarterly report" label="Title"></editable-text>
 <editable-text multiline placeholder="Add a description…" label="Description"></editable-text>
+```
+
+## <form-actions>
+
+Form footer button bar with a fixed action order for internal apps: the
+primary (submit) button is always rightmost, the secondary (cancel) button
+sits to its immediate left, and an optional tertiary/destructive action is
+pinned to the far left. The order is enforced by the component regardless of
+the source order the buttons are authored in, so every form in a product
+reads the same way.
+
+Purely presentational: it lays out whatever controls (usually `ui-button`)
+are slotted and never intercepts their clicks, `type="submit"`, or events.
+
+Import: `import "@f-ewald/components/form-actions.js";`
+
+Properties: none
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<form-actions>
+  <ui-button slot="start" variant="danger">Delete</ui-button>
+  <ui-button slot="secondary" variant="secondary">Cancel</ui-button>
+  <ui-button slot="primary" type="submit" variant="primary">Save</ui-button>
+</form-actions>
 ```
 
 ## <form-select>
@@ -780,6 +915,49 @@ Example:
 </script>
 ```
 
+## <page-header>
+
+Page title block for the top of a dashboard view: an optional breadcrumb
+trail, the page heading, and a right-aligned cluster of page-level actions.
+It only lays these out — the breadcrumb links and action buttons are entirely
+the consumer's, so it stays framework- and router-agnostic.
+
+Import: `import "@f-ewald/components/page-header.js";`
+
+Properties: `heading` (attribute `heading`) : string, default ""
+Events: none
+CSS custom properties: `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<page-header heading="Team members">
+  <nav slot="breadcrumb" aria-label="Breadcrumb">Home / Settings / Members</nav>
+  <ui-button slot="actions" variant="primary">Invite</ui-button>
+</page-header>
+```
+
+## <pagination-nav>
+
+Minimal, controlled pager for list/table views: a previous/next control pair
+around a "Page N of M" status. It owns no data — the consumer sets
+`current-page` / `total-pages` and moves the page in response to the
+`page-change` event (typically alongside its own data fetch), exactly like
+`data-table` leaves the row data to the caller.
+
+Previous is disabled on the first page and next on the last; neither fires an
+event when there is nowhere to go.
+
+Import: `import "@f-ewald/components/pagination-nav.js";`
+
+Properties: `currentPage` (attribute `current-page`) : number, default 1; `totalPages` (attribute `total-pages`) : number, default 1
+Events: `page-change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<pagination-nav current-page="1" total-pages="5"></pagination-nav>
+```
+
 ## <percent-bar-chart>
 
 Horizontal bar chart for labeled percentage rows, using D3's linear scale.
@@ -1093,6 +1271,57 @@ Example:
   ];
   grid.renderTile = (item) => item.name;
 </script>
+```
+
+## <timeline-container>
+
+Vertical timeline: a single connecting line runs down the left edge and each
+slotted `timeline-entry` places a dot on it. This is a thin layout and
+semantics wrapper — the entries draw the line segments and dots themselves,
+so the container adds no gap between them (a gap would break the line).
+Exposed to assistive technology as a list of events.
+
+Import: `import "@f-ewald/components/timeline-container.js";`
+
+Properties: none
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<timeline-container>
+  <timeline-entry datetime="2026-07-23T09:00:00Z">
+    <span slot="headline">Deployment started</span>
+    Release v1.4.0 is rolling out.
+  </timeline-entry>
+  <timeline-entry datetime="2026-07-23T08:45:00Z">
+    <span slot="headline">Review approved</span>
+    <status-pill label="In Review" color="info"></status-pill>
+  </timeline-entry>
+</timeline-container>
+```
+
+## <timeline-entry>
+
+One event on a `timeline-container`: a dot on the vertical line, an optional
+headline, a relative timestamp ("3 hours ago"), and freely nested content.
+The connecting line is drawn here — its segment above the dot is hidden on
+the first entry and the segment below is hidden on the last, so the line caps
+exactly at the first and last dots. Only meaningful inside a
+`timeline-container`; demonstrated through it.
+
+Import: `import "@f-ewald/components/timeline-entry.js";`
+
+Properties: `datetime` (attribute `datetime`) : string | null, default null
+Events: none
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<timeline-entry datetime="2026-07-23T09:00:00Z">
+  <span slot="headline">Deployment started</span>
+  Release v1.4.0 is rolling out to production.
+</timeline-entry>
 ```
 
 ## <toast-notification>

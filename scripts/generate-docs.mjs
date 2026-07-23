@@ -73,10 +73,63 @@ const PLAYGROUND_ANCHORS = {
   "gallery-item-variant": "photo-gallery",
   "kanban-card": "kanban-board",
   "kanban-column": "kanban-board",
+  "timeline-entry": "timeline-container",
 };
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
 const EXAMPLES = {
+  "timeline-container": `<timeline-container>
+  <timeline-entry datetime="2026-07-23T09:00:00Z">
+    <span slot="headline">Deployment started</span>
+    Release v1.4.0 is rolling out.
+  </timeline-entry>
+  <timeline-entry datetime="2026-07-23T08:45:00Z">
+    <span slot="headline">Review approved</span>
+    <status-pill label="In Review" color="info"></status-pill>
+  </timeline-entry>
+</timeline-container>`,
+  "timeline-entry": `<timeline-entry datetime="2026-07-23T09:00:00Z">
+  <span slot="headline">Deployment started</span>
+  Release v1.4.0 is rolling out to production.
+</timeline-entry>`,
+  "action-bar": `<action-bar>
+  <autocomplete-input slot="start" placeholder="Search…"></autocomplete-input>
+  <ui-button slot="end" variant="secondary">Delete</ui-button>
+  <ui-button slot="end" variant="primary">Create</ui-button>
+</action-bar>`,
+  "app-shell": `<app-shell detail-open style="height: 100vh">
+  <app-sidebar slot="sidebar">
+    <a href="/dashboard" aria-current="page" aria-label="Dashboard">
+      <!-- icon --><span style="display: var(--app-sidebar-label, inline)">Dashboard</span>
+    </a>
+  </app-sidebar>
+  <page-header slot="topbar" heading="Members"></page-header>
+  <action-bar>
+    <autocomplete-input slot="start" placeholder="Search…"></autocomplete-input>
+    <ui-button slot="end" variant="primary">Create</ui-button>
+  </action-bar>
+  <data-table></data-table>
+  <div slot="detail">Selected record…</div>
+  <pagination-nav slot="footer" total-pages="5"></pagination-nav>
+</app-shell>`,
+  "app-sidebar": `<app-sidebar>
+  <a href="/dashboard" aria-current="page" aria-label="Dashboard">
+    <!-- icon --><span style="display: var(--app-sidebar-label, inline)">Dashboard</span>
+  </a>
+  <a href="/members" aria-label="Members">
+    <!-- icon --><span style="display: var(--app-sidebar-label, inline)">Members</span>
+  </a>
+</app-sidebar>`,
+  "form-actions": `<form-actions>
+  <ui-button slot="start" variant="danger">Delete</ui-button>
+  <ui-button slot="secondary" variant="secondary">Cancel</ui-button>
+  <ui-button slot="primary" type="submit" variant="primary">Save</ui-button>
+</form-actions>`,
+  "page-header": `<page-header heading="Team members">
+  <nav slot="breadcrumb" aria-label="Breadcrumb">Home / Settings / Members</nav>
+  <ui-button slot="actions" variant="primary">Invite</ui-button>
+</page-header>`,
+  "pagination-nav": `<pagination-nav current-page="1" total-pages="5"></pagination-nav>`,
   "animate-confetti": `<animate-confetti duration="6000"></animate-confetti>`,
   "reveal-button": `<reveal-button label="Show the secret">
   Surprise! This content was hidden.

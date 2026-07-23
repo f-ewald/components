@@ -9,6 +9,7 @@ const metadataOnly = new Set([
   "gallery-item-variant",
   "kanban-card",
   "kanban-column",
+  "timeline-entry",
 ]);
 const styleless = new Set([
   "distance-value",
@@ -457,4 +458,15 @@ test("value-entry form fields fill their container by default", () => {
     expectRuleDeclaration(module, ":host", "display", "block");
     expectRuleDeclaration(module, control, "width", "100%");
   }
+});
+
+test("layout components use the documented shell and pager metrics", () => {
+  const shell = componentSource("src/app-shell.ts");
+  expect(shell).toContain("var(--component-sidebar-width, 16rem)");
+  expect(shell).toContain("var(--component-sidebar-rail-width, 3.5rem)");
+  expect(shell).toContain("var(--component-topbar-height, 3rem)");
+  expect(shell).toContain("@media (max-width: 48rem)");
+
+  expectRuleDeclaration("src/pagination-nav.ts", "button", "width", "2rem");
+  expectRuleDeclaration("src/pagination-nav.ts", "button", "height", "2rem");
 });

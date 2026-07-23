@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>record + metadata rail template — @f-ewald/components</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+      }
+      [slot="breadcrumb"] a {
+        color: inherit;
+      }
+      /* Main body on the left, a persistent metadata rail on the right; stacks
+         below the shared 48rem breakpoint so the metadata is never hidden. */
+      .ticket {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        gap: 1.5rem;
+        align-items: start;
+        max-width: 64rem;
+      }
+      @media (max-width: 48rem) {
+        .ticket {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      .ticket-h {
+        margin: 0 0 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #0f172a;
+      }
+      .ticket-desc {
+        margin: 0;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: #334155;
+      }
+      .ticket-activity {
+        margin-top: 1.5rem;
+      }
+      .meta {
+        margin: 0;
+        display: grid;
+        gap: 0.5rem;
+      }
+      .meta-row {
+        display: grid;
+        grid-template-columns: 5.5rem 1fr;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.8125rem;
+      }
+      .meta-row dt {
+        margin: 0;
+        color: #64748b;
+      }
+      .meta-row dd {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <app-shell data-testid="tpl-shell" style="height: 100vh">
+      <app-sidebar slot="sidebar" data-testid="tpl-sidebar">
+        <div slot="header" style="display: flex; align-items: center; gap: 0.5rem;">
+          <a href="../../index.html" aria-label="Back to catalog" style="display: inline-flex; flex: 0 0 auto;"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#4f46e5"></rect><path d="M7 16.5 12 7l5 9.5M9.2 13h5.6" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+          <span style="display: var(--app-sidebar-label, inline); font-weight: 600;">Acme Admin</span>
+        </div>
+        <p>Project</p>
+        <a href="#board" aria-label="Board"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg><span style="display: var(--app-sidebar-label, inline)">Board</span></a>
+        <a href="#issues" aria-current="page" aria-label="Issues"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg><span style="display: var(--app-sidebar-label, inline)">Issues</span></a>
+        <a href="#backlog" aria-label="Backlog"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg><span style="display: var(--app-sidebar-label, inline)">Backlog</span></a>
+      </app-sidebar>
+
+      <page-header slot="topbar" heading="Fix flaky login redirect" data-testid="tpl-page-header">
+        <nav slot="breadcrumb" aria-label="Breadcrumb"><a href="./list-only.html">Board</a> / PROJ-142</nav>
+        <ui-button slot="actions" variant="secondary">Share</ui-button>
+        <ui-button slot="actions" variant="primary">Edit</ui-button>
+      </page-header>
+
+      <div class="ticket">
+        <div class="ticket-body">
+          <h3 class="ticket-h">Description</h3>
+          <p class="ticket-desc">
+            When a session expires mid-request, the login redirect occasionally drops the original
+            destination and sends users to the dashboard instead of the page they requested. It
+            reproduces about 1 in 20 attempts under concurrent load.
+          </p>
+          <div class="ticket-activity">
+            <frame-box label="Activity">
+              <chat-message role="user" author="Alan Turing" timestamp="2026-07-23T09:00:00Z">
+                I can reproduce this on staging with concurrent logins.
+              </chat-message>
+              <chat-message role="user" author="Ada Lovelace" timestamp="2026-07-23T10:30:00Z">
+                The redirect target isn't persisted across the token refresh. Patch incoming.
+              </chat-message>
+            </frame-box>
+          </div>
+        </div>
+
+        <aside class="ticket-meta" data-testid="tpl-meta" aria-label="Issue details">
+          <frame-box label="Details">
+            <dl class="meta">
+              <div class="meta-row"><dt>Status</dt><dd><status-pill label="In Progress" color="info"></status-pill></dd></div>
+              <div class="meta-row"><dt>Assignee</dt><dd><user-avatar name="Ada Lovelace" size="24"></user-avatar> Ada Lovelace</dd></div>
+              <div class="meta-row"><dt>Reporter</dt><dd><user-avatar name="Alan Turing" size="24"></user-avatar> Alan Turing</dd></div>
+              <div class="meta-row"><dt>Priority</dt><dd><status-pill label="High" color="warning"></status-pill></dd></div>
+              <div class="meta-row"><dt>Labels</dt><dd><status-pill label="auth" color="neutral"></status-pill><status-pill label="regression" color="neutral"></status-pill></dd></div>
+            </dl>
+            <div style="margin-top: 0.75rem;">
+              <stat-meter label="Progress" percent="60"></stat-meter>
+            </div>
+          </frame-box>
+        </aside>
+      </div>
+    </app-shell>
+
+    <script type="module" src="./layouts.ts"></script>
+  </body>
+</html>
