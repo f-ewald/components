@@ -48,6 +48,5 @@ _None._
 | `--ui-line-height-normal` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |
-| `--ui-surface` |
 | `--ui-text` |
 | `--ui-text-muted` |
