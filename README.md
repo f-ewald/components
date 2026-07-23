@@ -44,8 +44,11 @@ import "@f-ewald/components/roman-numeral.js";
 
 | Component | Docs |
 | --- | --- |
+| `<action-bar>` | [API reference](https://f-ewald.github.io/components/docs/action-bar.html) |
 | `<address-autocomplete>` | [API reference](https://f-ewald.github.io/components/docs/address-autocomplete.html) |
 | `<animate-confetti>` | [API reference](https://f-ewald.github.io/components/docs/animate-confetti.html) |
+| `<app-shell>` | [API reference](https://f-ewald.github.io/components/docs/app-shell.html) |
+| `<app-sidebar>` | [API reference](https://f-ewald.github.io/components/docs/app-sidebar.html) |
 | `<autocomplete-input>` | [API reference](https://f-ewald.github.io/components/docs/autocomplete-input.html) |
 | `<calendar-entry>` | [API reference](https://f-ewald.github.io/components/docs/calendar-entry.html) |
 | `<calendar-month>` | [API reference](https://f-ewald.github.io/components/docs/calendar-month.html) |
@@ -58,6 +61,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<distribution-chart>` | [API reference](https://f-ewald.github.io/components/docs/distribution-chart.html) |
 | `<dropdown-button>` | [API reference](https://f-ewald.github.io/components/docs/dropdown-button.html) |
 | `<editable-text>` | [API reference](https://f-ewald.github.io/components/docs/editable-text.html) |
+| `<form-actions>` | [API reference](https://f-ewald.github.io/components/docs/form-actions.html) |
 | `<form-select>` | [API reference](https://f-ewald.github.io/components/docs/form-select.html) |
 | `<frame-box>` | [API reference](https://f-ewald.github.io/components/docs/frame-box.html) |
 | `<gallery-item>` | [API reference](https://f-ewald.github.io/components/docs/gallery-item.html) |
@@ -71,6 +75,8 @@ import "@f-ewald/components/roman-numeral.js";
 | `<map-circle>` | [API reference](https://f-ewald.github.io/components/docs/map-circle.html) |
 | `<map-pin>` | [API reference](https://f-ewald.github.io/components/docs/map-pin.html) |
 | `<multi-select>` | [API reference](https://f-ewald.github.io/components/docs/multi-select.html) |
+| `<page-header>` | [API reference](https://f-ewald.github.io/components/docs/page-header.html) |
+| `<pagination-nav>` | [API reference](https://f-ewald.github.io/components/docs/pagination-nav.html) |
 | `<percent-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/percent-bar-chart.html) |
 | `<photo-gallery>` | [API reference](https://f-ewald.github.io/components/docs/photo-gallery.html) |
 | `<popover-panel>` | [API reference](https://f-ewald.github.io/components/docs/popover-panel.html) |
@@ -84,6 +90,8 @@ import "@f-ewald/components/roman-numeral.js";
 | `<stat-meter>` | [API reference](https://f-ewald.github.io/components/docs/stat-meter.html) |
 | `<status-pill>` | [API reference](https://f-ewald.github.io/components/docs/status-pill.html) |
 | `<tile-grid>` | [API reference](https://f-ewald.github.io/components/docs/tile-grid.html) |
+| `<timeline-container>` | [API reference](https://f-ewald.github.io/components/docs/timeline-container.html) |
+| `<timeline-entry>` | [API reference](https://f-ewald.github.io/components/docs/timeline-entry.html) |
 | `<toast-notification>` | [API reference](https://f-ewald.github.io/components/docs/toast-notification.html) |
 | `<ui-button>` | [API reference](https://f-ewald.github.io/components/docs/ui-button.html) |
 | `<user-avatar>` | [API reference](https://f-ewald.github.io/components/docs/user-avatar.html) |
@@ -141,15 +149,20 @@ by `npm run test:design`.
 
 `npm run mcp` (or `node dist/mcp-server.js` after `npm run build`) starts a
 stdio [MCP](https://modelcontextprotocol.io) server exposing the component
-catalog to AI coding assistants, with two tools:
+catalog to AI coding assistants, with four tools:
 
 - `list_components` — every tag + one-line description.
 - `get_component_docs(tag)` — the full generated Markdown doc for one tag
   (install snippet, usage example, attributes/properties, events, slots,
   CSS custom properties).
+- `list_layouts` — every dashboard page template (layout recipe) + a one-line
+  summary.
+- `get_layout(name)` — the full recipe for one page template (which components
+  fill which `app-shell` slots, markup, and notes).
 
 It's read-only over the same `custom-elements.json`/`docs/*.md` this package
-already generates via `npm run docs` — no separate data source to maintain.
+already generates via `npm run docs`, plus the authored `docs/layouts/*.md`
+recipes — no separate data source to maintain.
 A consuming project wires it up with a `.mcp.json` at its repo root:
 
 ```json

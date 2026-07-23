@@ -147,4 +147,21 @@ test.describe("GitHub Pages artifact", () => {
     await page.waitForLoadState("networkidle");
     expect([...failures]).toEqual([]);
   });
+
+  test("publishes the full-page layout template demos", async ({page}) => {
+    const failures = watchSiteRequests(page);
+    const templates = ["list-only", "list-detail", "detail-only", "record-detail", "form-page"];
+    for (const name of templates) {
+      const response = await page.request.get(`/playground/demo/layouts/${name}.html`);
+      expect(response.ok(), `${name} template published`).toBe(true);
+    }
+
+    await page.goto("/playground/demo/layouts/list-detail.html");
+    await expect(page.locator("app-shell")).toBeVisible();
+    await page.locator('[data-testid="tpl-table"]').getByText("Ada Lovelace").click();
+    await expect(page.locator("app-shell")).toHaveAttribute("detail-open", "");
+
+    await page.waitForLoadState("networkidle");
+    expect([...failures]).toEqual([]);
+  });
 });
