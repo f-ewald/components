@@ -55,6 +55,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<calendar-year>` | [API reference](https://f-ewald.github.io/components/docs/calendar-year.html) |
 | `<chat-message>` | [API reference](https://f-ewald.github.io/components/docs/chat-message.html) |
 | `<confirm-dialog>` | [API reference](https://f-ewald.github.io/components/docs/confirm-dialog.html) |
+| `<content-divider>` | [API reference](https://f-ewald.github.io/components/docs/content-divider.html) |
 | `<copy-link-button>` | [API reference](https://f-ewald.github.io/components/docs/copy-link-button.html) |
 | `<data-table>` | [API reference](https://f-ewald.github.io/components/docs/data-table.html) |
 | `<distance-value>` | [API reference](https://f-ewald.github.io/components/docs/distance-value.html) |

@@ -78,6 +78,9 @@ const PLAYGROUND_ANCHORS = {
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
 const EXAMPLES = {
+  "content-divider": `<content-divider></content-divider>
+
+<content-divider label="OR"></content-divider>`,
   "timeline-container": `<timeline-container>
   <timeline-entry datetime="2026-07-23T09:00:00Z">
     <span slot="headline">Deployment started</span>

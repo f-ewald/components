@@ -10,6 +10,7 @@ export {
 export { RevealButton } from "./reveal-button.js";
 export { RomanNumeral } from "./roman-numeral.js";
 export { ConfirmDialog } from "./confirm-dialog.js";
+export { ContentDivider } from "./content-divider.js";
 export {
   ToastNotification,
   notifySuccess,
