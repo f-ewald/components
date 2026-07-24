@@ -86,7 +86,7 @@ const EXAMPLES = {
     <span slot="headline">Deployment started</span>
     Release v1.4.0 is rolling out.
   </timeline-entry>
-  <timeline-entry datetime="2026-07-23T08:45:00Z">
+  <timeline-entry datetime="2026-07-23T08:45:00Z" color="success">
     <span slot="headline">Review approved</span>
     <status-pill label="In Review" color="info"></status-pill>
   </timeline-entry>
@@ -95,9 +95,9 @@ const EXAMPLES = {
     <chat-message role="user" author="Freddy">Ship it.</chat-message>
   </timeline-entry>
 </timeline-container>`,
-  "timeline-entry": `<timeline-entry datetime="2026-07-23T09:00:00Z">
-  <span slot="headline">Deployment started</span>
-  Release v1.4.0 is rolling out to production.
+  "timeline-entry": `<timeline-entry datetime="2026-07-23T09:00:00Z" color="danger">
+  <span slot="headline">Build failed</span>
+  The release pipeline halted on the test stage.
 </timeline-entry>`,
   "action-bar": `<action-bar>
   <autocomplete-input slot="start" placeholder="Search…"></autocomplete-input>

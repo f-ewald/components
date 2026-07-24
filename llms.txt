@@ -1341,7 +1341,7 @@ Example:
     <span slot="headline">Deployment started</span>
     Release v1.4.0 is rolling out.
   </timeline-entry>
-  <timeline-entry datetime="2026-07-23T08:45:00Z">
+  <timeline-entry datetime="2026-07-23T08:45:00Z" color="success">
     <span slot="headline">Review approved</span>
     <status-pill label="In Review" color="info"></status-pill>
   </timeline-entry>
@@ -1365,17 +1365,21 @@ exactly at the first and last dots. Only meaningful inside a
 timestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —
 setting both renders the same time twice.
 
+The dot's `color` types the entry using the shared status-pill palette —
+`primary` by default, plus `neutral`, `info`, `success`, `warning`, and
+`danger`.
+
 Import: `import "@f-ewald/components/timeline-entry.js";`
 
-Properties: `datetime` (attribute `datetime`) : string | null, default null
+Properties: `datetime` (attribute `datetime`) : string | null, default null; `color` (attribute `color`) : StatusPillColor, default "primary"
 Events: none
-CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-success`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
 
 Example:
 ```html
-<timeline-entry datetime="2026-07-23T09:00:00Z">
-  <span slot="headline">Deployment started</span>
-  Release v1.4.0 is rolling out to production.
+<timeline-entry datetime="2026-07-23T09:00:00Z" color="danger">
+  <span slot="headline">Build failed</span>
+  The release pipeline halted on the test stage.
 </timeline-entry>
 ```
 

@@ -1615,19 +1615,27 @@ grid.fileIcon = true; // or the `file-icon` attribute</code></pre>
                 <span slot="headline">Deployment started</span>
                 Release <code>v1.4.0</code> is rolling out to production.
               </timeline-entry>
-              <timeline-entry data-testid="timeline-e2" data-ago="900">
+              <timeline-entry data-testid="timeline-e2" data-ago="900" color="success">
                 <span slot="headline">Review approved</span>
                 <span style="display: inline-flex; align-items: center; gap: 0.375rem;">
                   <user-avatar name="Ada Lovelace" size="20"></user-avatar> Ada Lovelace approved the changes.
                 </span>
               </timeline-entry>
-              <timeline-entry data-testid="timeline-e3" data-ago="7200">
+              <timeline-entry data-testid="timeline-e3" data-ago="7200" color="info">
                 <span slot="headline">Status changed</span>
                 <status-pill label="In Review" color="info"></status-pill>
               </timeline-entry>
-              <timeline-entry data-testid="timeline-e4" data-ago="86400">
+              <timeline-entry data-testid="timeline-e4" data-ago="86400" color="warning">
                 <span slot="headline">Issue opened</span>
                 Reported by Alan Turing.
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-e5" data-ago="172800" color="danger">
+                <span slot="headline">Build failed</span>
+                CI halted on the release branch.
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-e6" data-ago="259200" color="neutral">
+                <span slot="headline">Ticket filed</span>
+                Tracking issue <code>#412</code> opened.
               </timeline-entry>
             </timeline-container>
           </div>
@@ -1639,7 +1647,7 @@ import "@f-ewald/components/timeline-entry.js";
     &lt;span slot="headline"&gt;Deployment started&lt;/span&gt;
     Release v1.4.0 is rolling out.
   &lt;/timeline-entry&gt;
-  &lt;timeline-entry datetime="2026-07-23T08:45:00Z"&gt;
+  &lt;timeline-entry datetime="2026-07-23T08:45:00Z" color="success"&gt;
     &lt;span slot="headline"&gt;Review approved&lt;/span&gt;
     &lt;status-pill label="In Review" color="info"&gt;&lt;/status-pill&gt;
   &lt;/timeline-entry&gt;

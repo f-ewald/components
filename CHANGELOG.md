@@ -1,5 +1,18 @@
 # @f-ewald/components
 
+## 1.7.0
+
+- `timeline-entry` now takes a `color` (from the shared `status-pill` palette —
+  `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
+  `danger`) that tints the entry's dot, so a timeline can distinguish normal,
+  success, informational, warning, and error events at a glance.
+
+## 1.6.0
+
+- Added `text-area`, a tokenized wrapper around a native `<textarea>` with
+  readonly/disabled states and `input`/`change` events.
+- Added the `queue-list` and `exclamation-triangle` icons.
+
 ## 1.5.0
 
 - `content-divider` now applies its vertical spacing as block padding inside the

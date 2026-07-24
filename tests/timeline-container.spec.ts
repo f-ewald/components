@@ -5,7 +5,7 @@ test.describe("timeline-container", () => {
     await page.goto("/");
     const timeline = page.locator("#timeline-demo");
     await expect(timeline).toHaveAttribute("role", "list");
-    await expect(timeline.locator("timeline-entry")).toHaveCount(4);
+    await expect(timeline.locator("timeline-entry")).toHaveCount(6);
 
     // Relative time renders from the datetime the demo sets on each entry.
     await expect(timeline.locator("relative-time").first()).toContainText(/ago|now/i);

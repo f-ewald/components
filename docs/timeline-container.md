@@ -20,7 +20,7 @@ import "@f-ewald/components/timeline-container.js";
     <span slot="headline">Deployment started</span>
     Release v1.4.0 is rolling out.
   </timeline-entry>
-  <timeline-entry datetime="2026-07-23T08:45:00Z">
+  <timeline-entry datetime="2026-07-23T08:45:00Z" color="success">
     <span slot="headline">Review approved</span>
     <status-pill label="In Review" color="info"></status-pill>
   </timeline-entry>

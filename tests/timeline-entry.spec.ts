@@ -30,4 +30,21 @@ test.describe("timeline-entry", () => {
     });
     expect(display).toBe("none");
   });
+
+  test("colors the dot from the shared status-pill palette", async ({ page }) => {
+    await page.goto("/");
+    const expected: Record<string, string> = {
+      "timeline-e1": "primary", // default (no color attribute)
+      "timeline-e2": "success",
+      "timeline-e3": "info",
+      "timeline-e4": "warning",
+      "timeline-e5": "danger",
+      "timeline-e6": "neutral",
+    };
+    for (const [testid, color] of Object.entries(expected)) {
+      await expect(
+        page.locator(`[data-testid="${testid}"]`).locator(`.dot.${color}`),
+      ).toHaveCount(1);
+    }
+  });
 });

@@ -11,6 +11,10 @@ exactly at the first and last dots. Only meaningful inside a
 timestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —
 setting both renders the same time twice.
 
+The dot's `color` types the entry using the shared status-pill palette —
+`primary` by default, plus `neutral`, `info`, `success`, `warning`, and
+`danger`.
+
 ## Install
 
 ```js
@@ -20,9 +24,9 @@ import "@f-ewald/components/timeline-entry.js";
 ## Usage
 
 ```html
-<timeline-entry datetime="2026-07-23T09:00:00Z">
-  <span slot="headline">Deployment started</span>
-  Release v1.4.0 is rolling out to production.
+<timeline-entry datetime="2026-07-23T09:00:00Z" color="danger">
+  <span slot="headline">Build failed</span>
+  The release pipeline halted on the test stage.
 </timeline-entry>
 ```
 
@@ -31,6 +35,7 @@ import "@f-ewald/components/timeline-entry.js";
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `datetime` | `datetime` | `string | null` | `null` | ISO 8601 or SQLite datetime string, rendered as a relative time. |
+| `color` | `color` | `StatusPillColor` | `"primary"` | Visual type of the entry's dot, from the shared status-pill palette: `primary` (default), `neutral`, `info`, `success`, `warning`, or `danger`. |
 
 ## Events
 
@@ -45,12 +50,16 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-danger` |
 | `--ui-font` |
 | `--ui-font-size` |
 | `--ui-font-size-sm` |
 | `--ui-font-weight-semibold` |
+| `--ui-info` |
 | `--ui-line-height-normal` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |
+| `--ui-success` |
 | `--ui-text` |
 | `--ui-text-muted` |
+| `--ui-warning` |
