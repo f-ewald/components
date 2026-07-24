@@ -1,5 +1,16 @@
 # @f-ewald/components
 
+## 1.5.0
+
+- `content-divider` now applies its vertical spacing as block padding inside the
+  shadow DOM — tunable via the new `--component-divider-spacing` custom property
+  (default `1rem`) — instead of a `:host` margin. A `:host` margin is silently
+  reset to `0` by common global resets (e.g. Tailwind's preflight
+  `* { margin: 0 }`), so the previous default spacing could vanish in real apps;
+  shadow-internal padding can't be reset from the outside. The plain and labeled
+  forms now also reserve the same height, so adding or removing a label never
+  shifts surrounding layout.
+
 ## 1.4.0
 
 - Added `content-divider`, a horizontal rule that separates two pieces of

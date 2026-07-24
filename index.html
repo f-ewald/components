@@ -515,7 +515,9 @@ content: |
           <h3 class="text-xl font-semibold text-slate-900">content-divider</h3>
           <p class="mt-1 text-sm text-slate-500">
             A horizontal rule that separates two pieces of content not otherwise contained in a box
-            or frame. An optional centered label renders the "───&nbsp;OR&nbsp;───" pattern.
+            or frame. An optional centered label renders the "───&nbsp;OR&nbsp;───" pattern; both
+            forms reserve the same height, and the vertical spacing is tunable via
+            <code>--component-divider-spacing</code>.
           </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
             <p class="m-0 text-sm text-slate-600">First block of content.</p>
@@ -528,7 +530,9 @@ content: |
 
 &lt;content-divider&gt;&lt;/content-divider&gt;
 
-&lt;content-divider label="OR"&gt;&lt;/content-divider&gt;</code></pre>
+&lt;content-divider label="OR"&gt;&lt;/content-divider&gt;
+
+&lt;content-divider style="--component-divider-spacing: 1.5rem"&gt;&lt;/content-divider&gt;</code></pre>
         </section>
 
         <section id="copy-link-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-copy-link-button">
