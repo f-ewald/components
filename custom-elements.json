@@ -2960,6 +2960,64 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/content-divider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A horizontal divider: a thin rule that visually separates two pieces of\ncontent that are not otherwise contained in a box or frame and would bleed\ninto each other. With a `label` it renders the common \"───  OR  ───\"\npattern — text centered between two line segments; without one it is a\nsingle full-width rule. Exposed to assistive technology as a horizontal\nseparator, so it renders correctly with zero external CSS.",
+          "name": "ContentDivider",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional centered label; empty renders a plain full-width rule.",
+              "attribute": "label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional centered label; empty renders a plain full-width rule.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "content-divider",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ContentDivider",
+          "declaration": {
+            "name": "ContentDivider",
+            "module": "src/content-divider.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "content-divider",
+          "declaration": {
+            "name": "ContentDivider",
+            "module": "src/content-divider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/copy-link-button.ts",
       "declarations": [
         {
@@ -5758,6 +5816,14 @@
           "declaration": {
             "name": "ConfirmDialog",
             "module": "./confirm-dialog.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ContentDivider",
+          "declaration": {
+            "name": "ContentDivider",
+            "module": "./content-divider.js"
           }
         },
         {

@@ -355,6 +355,28 @@ Example:
 </confirm-dialog>
 ```
 
+## <content-divider>
+
+A horizontal divider: a thin rule that visually separates two pieces of
+content that are not otherwise contained in a box or frame and would bleed
+into each other. With a `label` it renders the common "───  OR  ───"
+pattern — text centered between two line segments; without one it is a
+single full-width rule. Exposed to assistive technology as a horizontal
+separator, so it renders correctly with zero external CSS.
+
+Import: `import "@f-ewald/components/content-divider.js";`
+
+Properties: `label` (attribute `label`) : string, default ""
+Events: none
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-text-muted`
+
+Example:
+```html
+<content-divider></content-divider>
+
+<content-divider label="OR"></content-divider>
+```
+
 ## <copy-link-button>
 
 Small icon button that copies `value` to the clipboard and shows a toast

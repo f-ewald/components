@@ -1,5 +1,27 @@
 # @f-ewald/components
 
+## 1.4.0
+
+- Added `content-divider`, a horizontal rule that separates two pieces of
+  content not otherwise contained in a box or frame (which would otherwise
+  visually bleed together). It exposes a `role="separator"`; without a `label`
+  it renders a single full-width line, and with one it centers the text between
+  two line segments (the "─── OR ───" pattern). Fully tokenized, so it renders
+  correctly with zero external CSS.
+
+## 1.3.0
+
+- Added a slot-based, token-styled dashboard layout system that composes into
+  full pages: `app-shell` (the grid backbone owning the responsive sidebar
+  rail/drawer and detail overlay, with a `[` collapse shortcut), `app-sidebar`,
+  `action-bar`, `page-header`, `pagination-nav`, and `form-actions`.
+- Added `timeline-container` (with the metadata-only `timeline-entry`): a
+  vertical, gradient-dotted timeline with a headline slot, relative time, and
+  freely nested content.
+- Added the `list_layouts` and `get_layout` MCP tools over authored
+  `docs/layouts` page-template recipes, alongside the existing per-component
+  tools.
+
 ## 1.2.1
 
 - Fixed `popover-panel`'s `.panel { overflow: hidden }` clipping a menu or

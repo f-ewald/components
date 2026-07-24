@@ -24,6 +24,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-year">calendar-year</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chat-message">chat-message</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#confirm-dialog">confirm-dialog</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#content-divider">content-divider</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#copy-link-button">copy-link-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distance-value">distance-value</a>
@@ -508,6 +509,26 @@ content: |
 &lt;confirm-dialog open confirm-label="Delete" cancel-label="Cancel"&gt;
   Are you sure you want to delete this item?
 &lt;/confirm-dialog&gt;</code></pre>
+        </section>
+
+        <section id="content-divider" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-content-divider">
+          <h3 class="text-xl font-semibold text-slate-900">content-divider</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A horizontal rule that separates two pieces of content not otherwise contained in a box
+            or frame. An optional centered label renders the "───&nbsp;OR&nbsp;───" pattern.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <p class="m-0 text-sm text-slate-600">First block of content.</p>
+            <content-divider id="content-divider-demo" data-testid="content-divider-demo"></content-divider>
+            <p class="m-0 text-sm text-slate-600">Second block of content.</p>
+            <content-divider id="content-divider-labeled" data-testid="content-divider-labeled" label="OR"></content-divider>
+            <p class="m-0 text-sm text-slate-600">Third block, after a labeled divider.</p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/content-divider.js";
+
+&lt;content-divider&gt;&lt;/content-divider&gt;
+
+&lt;content-divider label="OR"&gt;&lt;/content-divider&gt;</code></pre>
         </section>
 
         <section id="copy-link-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-copy-link-button">
