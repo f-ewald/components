@@ -90,6 +90,10 @@ const EXAMPLES = {
     <span slot="headline">Review approved</span>
     <status-pill label="In Review" color="info"></status-pill>
   </timeline-entry>
+  <timeline-entry datetime="2026-07-23T08:30:00Z">
+    <!-- chat-message's own timestamp is left unset: timeline-entry already shows one -->
+    <chat-message role="user" author="Freddy">Ship it.</chat-message>
+  </timeline-entry>
 </timeline-container>`,
   "timeline-entry": `<timeline-entry datetime="2026-07-23T09:00:00Z">
   <span slot="headline">Deployment started</span>
@@ -382,6 +386,8 @@ const EXAMPLES = {
   ];
   table.rowHref = (row) => \`#/tasks/\${row.id}\`;
 </script>`,
+  "text-area": `<text-area placeholder="Describe the issue…" rows="4"></text-area>
+<text-area readonly value="Error code: 429 - No deployments available for selected model."></text-area>`,
   "tile-grid": `<tile-grid file-icon></tile-grid>
 <script type="module">
   const grid = document.querySelector("tile-grid");

@@ -142,7 +142,12 @@ export class ChatMessage extends LitElement {
   @property({ reflect: true }) variant: ChatMessageVariant = "normal";
   /** Header label, e.g. "Freddy" or "Architect". */
   @property() author = "";
-  /** ISO-8601 timestamp, rendered via `relative-time` in the header. */
+  /**
+   * ISO-8601 timestamp, rendered via `relative-time` in the header. Leave
+   * unset when this message is nested inside a `timeline-entry` — that
+   * component already renders its own timestamp from its `datetime`
+   * attribute, and setting both shows the time twice.
+   */
   @property() timestamp: string | null = null;
   /** Always-visible one-liner for `tool`/`thinking` variants (e.g. a truncated args preview). */
   @property() summary = "";

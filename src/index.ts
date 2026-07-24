@@ -82,6 +82,7 @@ export {
 } from "./kanban-board.js";
 export { KanbanColumn } from "./kanban-column.js";
 export { KanbanCard } from "./kanban-card.js";
+export { TextArea } from "./text-area.js";
 export { formatDuration, type DurationFormat } from "./utils/duration.js";
 export { tokens, tokenValues, darkTokenValues } from "./tokens.js";
 export * from "./icons.js";
