@@ -7,6 +7,11 @@ pattern — text centered between two line segments; without one it is a
 single full-width rule. Exposed to assistive technology as a horizontal
 separator, so it renders correctly with zero external CSS.
 
+The vertical spacing above and below is tunable per instance via
+`--component-divider-spacing` (default `1rem`), and both the plain and
+labeled forms reserve the same height, so toggling the label never shifts
+surrounding layout.
+
 ## Install
 
 ```js

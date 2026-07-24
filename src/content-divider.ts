@@ -10,6 +10,11 @@ import { tokens } from "./tokens.js";
  * single full-width rule. Exposed to assistive technology as a horizontal
  * separator, so it renders correctly with zero external CSS.
  *
+ * The vertical spacing above and below is tunable per instance via
+ * `--component-divider-spacing` (default `1rem`), and both the plain and
+ * labeled forms reserve the same height, so toggling the label never shifts
+ * surrounding layout.
+ *
  * @element content-divider
  */
 @customElement("content-divider")
@@ -19,12 +24,13 @@ export class ContentDivider extends LitElement {
     css`
       :host {
         display: block;
-        margin: 1rem 0;
       }
       .rule {
         display: flex;
         align-items: center;
         gap: 0.75rem;
+        min-height: calc(var(--ui-font-size-sm, 0.75rem) * var(--ui-line-height-tight, 1.25));
+        padding-block: var(--component-divider-spacing, 1rem);
       }
       .line {
         flex: 1 1 auto;

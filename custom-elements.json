@@ -2964,7 +2964,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A horizontal divider: a thin rule that visually separates two pieces of\ncontent that are not otherwise contained in a box or frame and would bleed\ninto each other. With a `label` it renders the common \"───  OR  ───\"\npattern — text centered between two line segments; without one it is a\nsingle full-width rule. Exposed to assistive technology as a horizontal\nseparator, so it renders correctly with zero external CSS.",
+          "description": "A horizontal divider: a thin rule that visually separates two pieces of\ncontent that are not otherwise contained in a box or frame and would bleed\ninto each other. With a `label` it renders the common \"───  OR  ───\"\npattern — text centered between two line segments; without one it is a\nsingle full-width rule. Exposed to assistive technology as a horizontal\nseparator, so it renders correctly with zero external CSS.\n\nThe vertical spacing above and below is tunable per instance via\n`--component-divider-spacing` (default `1rem`), and both the plain and\nlabeled forms reserve the same height, so toggling the label never shifts\nsurrounding layout.",
           "name": "ContentDivider",
           "members": [
             {
