@@ -50,6 +50,8 @@ const ICONS = {
   ChatBubbleLeftRight: { slug: "chat-bubble-left-right", size: 18 },
   ArrowTopRightOnSquare: { slug: "arrow-top-right-on-square", size: 16 },
   AcademicCap: { slug: "academic-cap", size: 18 },
+  QueueList: { slug: "queue-list", size: 16 },
+  ExclamationTriangle: { slug: "exclamation-triangle", size: 16 },
 };
 
 /**

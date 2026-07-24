@@ -24,6 +24,10 @@ import "@f-ewald/components/timeline-container.js";
     <span slot="headline">Review approved</span>
     <status-pill label="In Review" color="info"></status-pill>
   </timeline-entry>
+  <timeline-entry datetime="2026-07-23T08:30:00Z">
+    <!-- chat-message's own timestamp is left unset: timeline-entry already shows one -->
+    <chat-message role="user" author="Freddy">Ship it.</chat-message>
+  </timeline-entry>
 </timeline-container>
 ```
 

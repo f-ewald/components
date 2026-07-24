@@ -1264,6 +1264,26 @@ Example:
 <status-pill label="Blocked" color="danger"></status-pill>
 ```
 
+## <text-area>
+
+Plain multi-line text field — a thin, tokenized wrapper around a native
+`<textarea>`, styled to match the other value-entry form fields
+(autocomplete-input, form-select, ...). Not a rich editor; use `readonly`
+to display pre-formatted text (e.g. an error message) that the user can
+still select and copy, typically paired with `<copy-link-button>`.
+
+Import: `import "@f-ewald/components/text-area.js";`
+
+Properties: `value` (attribute `value`) : string, default ""; `rows` (attribute `rows`) : number, default 4; `placeholder` (attribute `placeholder`) : string, default ""; `readonly` (attribute `readonly`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false
+Events: `input`, `change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
+
+Example:
+```html
+<text-area placeholder="Describe the issue…" rows="4"></text-area>
+<text-area readonly value="Error code: 429 - No deployments available for selected model."></text-area>
+```
+
 ## <tile-grid>
 
 A generic, presentational grid shell: renders one bordered card per entry
@@ -1325,6 +1345,10 @@ Example:
     <span slot="headline">Review approved</span>
     <status-pill label="In Review" color="info"></status-pill>
   </timeline-entry>
+  <timeline-entry datetime="2026-07-23T08:30:00Z">
+    <!-- chat-message's own timestamp is left unset: timeline-entry already shows one -->
+    <chat-message role="user" author="Freddy">Ship it.</chat-message>
+  </timeline-entry>
 </timeline-container>
 ```
 
@@ -1336,6 +1360,10 @@ The connecting line is drawn here — its segment above the dot is hidden on
 the first entry and the segment below is hidden on the last, so the line caps
 exactly at the first and last dots. Only meaningful inside a
 `timeline-container`; demonstrated through it.
+
+`datetime` is the entry's one timestamp. A nested element that has its own
+timestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —
+setting both renders the same time twice.
 
 Import: `import "@f-ewald/components/timeline-entry.js";`
 

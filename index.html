@@ -55,6 +55,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#slide-panel">slide-panel</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#status-pill">status-pill</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#text-area">text-area</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tile-grid">tile-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#timeline-container">timeline-container</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#toast-notification">toast-notification</a>
@@ -1551,6 +1552,34 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
 
 &lt;status-pill label="Running" color="primary" spinner&gt;&lt;/status-pill&gt;
 &lt;status-pill label="Blocked" color="danger"&gt;&lt;/status-pill&gt;</code></pre>
+        </section>
+
+        <section id="text-area" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-text-area">
+          <h3 class="text-xl font-semibold text-slate-900">text-area</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Plain multi-line text field — a thin, tokenized wrapper around a native
+            <code>&lt;textarea&gt;</code>. Not a rich editor; use <code>readonly</code> to display
+            pre-formatted text the user can still select and copy.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
+            <text-area
+              id="text-area-demo"
+              data-testid="text-area-demo"
+              placeholder="Describe the issue…"
+              rows="4"
+            ></text-area>
+            <text-area
+              id="text-area-readonly-demo"
+              data-testid="text-area-readonly-demo"
+              readonly
+              rows="3"
+              value="Error code: 429 - No deployments available for selected model."
+            ></text-area>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/text-area.js";
+
+&lt;text-area placeholder="Describe the issue…" rows="4"&gt;&lt;/text-area&gt;
+&lt;text-area readonly value="Error code: 429 - No deployments available for selected model."&gt;&lt;/text-area&gt;</code></pre>
         </section>
 
         <section id="tile-grid" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-tile-grid">

@@ -90,6 +90,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<slide-panel>` | [API reference](https://f-ewald.github.io/components/docs/slide-panel.html) |
 | `<stat-meter>` | [API reference](https://f-ewald.github.io/components/docs/stat-meter.html) |
 | `<status-pill>` | [API reference](https://f-ewald.github.io/components/docs/status-pill.html) |
+| `<text-area>` | [API reference](https://f-ewald.github.io/components/docs/text-area.html) |
 | `<tile-grid>` | [API reference](https://f-ewald.github.io/components/docs/tile-grid.html) |
 | `<timeline-container>` | [API reference](https://f-ewald.github.io/components/docs/timeline-container.html) |
 | `<timeline-entry>` | [API reference](https://f-ewald.github.io/components/docs/timeline-entry.html) |

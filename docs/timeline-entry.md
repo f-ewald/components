@@ -7,6 +7,10 @@ the first entry and the segment below is hidden on the last, so the line caps
 exactly at the first and last dots. Only meaningful inside a
 `timeline-container`; demonstrated through it.
 
+`datetime` is the entry's one timestamp. A nested element that has its own
+timestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —
+setting both renders the same time twice.
+
 ## Install
 
 ```js

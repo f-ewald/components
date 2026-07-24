@@ -2599,7 +2599,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "ISO-8601 timestamp, rendered via `relative-time` in the header.",
+              "description": "ISO-8601 timestamp, rendered via `relative-time` in the header. Leave\nunset when this message is nested inside a `timeline-entry` — that\ncomponent already renders its own timestamp from its `datetime`\nattribute, and setting both shows the time twice.",
               "attribute": "timestamp"
             },
             {
@@ -2682,7 +2682,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "ISO-8601 timestamp, rendered via `relative-time` in the header.",
+              "description": "ISO-8601 timestamp, rendered via `relative-time` in the header. Leave\nunset when this message is nested inside a `timeline-entry` — that\ncomponent already renders its own timestamp from its `datetime`\nattribute, and setting both shows the time twice.",
               "fieldName": "timestamp"
             },
             {
@@ -5408,6 +5408,26 @@
               "default": "18"
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "iconQueueList",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconExclamationTriangle",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
         }
       ],
       "exports": [
@@ -5728,6 +5748,22 @@
           "name": "iconAcademicCap",
           "declaration": {
             "name": "iconAcademicCap",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconQueueList",
+          "declaration": {
+            "name": "iconQueueList",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconExclamationTriangle",
+          "declaration": {
+            "name": "iconExclamationTriangle",
             "module": "src/icons.ts"
           }
         }
@@ -6408,6 +6444,14 @@
           "declaration": {
             "name": "KanbanCard",
             "module": "./kanban-card.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TextArea",
+          "declaration": {
+            "name": "TextArea",
+            "module": "./text-area.js"
           }
         },
         {
@@ -10950,6 +10994,192 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/text-area.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Plain multi-line text field — a thin, tokenized wrapper around a native\n`<textarea>`, styled to match the other value-entry form fields\n(autocomplete-input, form-select, ...). Not a rich editor; use `readonly`\nto display pre-formatted text (e.g. an error message) that the user can\nstill select and copy, typically paired with `<copy-link-button>`.",
+          "name": "TextArea",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current text content.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Visible row count (native `<textarea rows>`).",
+              "attribute": "rows"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, the value can be selected/copied but not edited.",
+              "attribute": "readonly"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the field entirely (no interaction, dimmed).",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "method",
+              "name": "_onInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fires on every keystroke; detail: { value: string }."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Native change semantics (on blur, if the value changed); detail: { value: string }."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current text content.",
+              "fieldName": "value"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Visible row count (native `<textarea rows>`).",
+              "fieldName": "rows"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, the value can be selected/copied but not edited.",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the field entirely (no interaction, dimmed).",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "text-area",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TextArea",
+          "declaration": {
+            "name": "TextArea",
+            "module": "src/text-area.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "text-area",
+          "declaration": {
+            "name": "TextArea",
+            "module": "src/text-area.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/tile-grid.ts",
       "declarations": [
         {
@@ -11160,7 +11390,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.",
+          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.\n\n`datetime` is the entry's one timestamp. A nested element that has its own\ntimestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —\nsetting both renders the same time twice.",
           "name": "TimelineEntry",
           "slots": [
             {

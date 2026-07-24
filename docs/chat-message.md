@@ -30,7 +30,7 @@ import "@f-ewald/components/chat-message.js";
 | `role` | `role` | `ChatMessageRole` | `"agent"` | Whose message this is; drives the card background/border. |
 | `variant` | `variant` | `ChatMessageVariant` | `"normal"` | `tool`/`thinking` render dimmed and smaller, with `tool` using monospace for its body. |
 | `author` | `author` | `string` | `""` | Header label, e.g. "Freddy" or "Architect". |
-| `timestamp` | `timestamp` | `string | null` | `null` | ISO-8601 timestamp, rendered via `relative-time` in the header. |
+| `timestamp` | `timestamp` | `string | null` | `null` | ISO-8601 timestamp, rendered via `relative-time` in the header. Leave unset when this message is nested inside a `timeline-entry` — that component already renders its own timestamp from its `datetime` attribute, and setting both shows the time twice. |
 | `summary` | `summary` | `string` | `""` | Always-visible one-liner for `tool`/`thinking` variants (e.g. a truncated args preview). |
 | `collapsible` | `collapsible` | `boolean` | `false` | Whether clicking the header/summary toggles the body slot. |
 | `collapsed` | `collapsed` | `boolean` | `false` | Current collapse state (reflected as an attribute). |
