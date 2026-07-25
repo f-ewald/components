@@ -43,7 +43,7 @@ export class StatMeter extends LitElement {
         width: 4rem;
         height: 0.375rem;
         border-radius: 9999px;
-        background: var(--ui-surface-muted, #f8fafc);
+        background: var(--track-color, var(--ui-surface-muted, #f8fafc));
         overflow: hidden;
       }
 
@@ -84,13 +84,17 @@ export class StatMeter extends LitElement {
   /** Fill color override; falls back to the `--ui-success` token. */
   @property() color = "";
 
+  /** Track (inactive portion) background override; falls back to the `--ui-surface-muted` token. */
+  @property({ attribute: "track-color" }) trackColor = "";
+
   override render() {
     const pct = this.percent;
     const clamped = pct === null ? 0 : Math.min(100, Math.max(0, pct));
     const fillStyle = this.color ? `width: ${clamped}%; --fill-color: ${this.color}` : `width: ${clamped}%`;
+    const trackStyle = this.trackColor ? `--track-color: ${this.trackColor}` : "";
     return html`
       <span class="label">${this.label}</span>
-      <span class="track" role="img" aria-label="${this.label} ${pct === null ? "no reading" : `${pct}%`}">
+      <span class="track" role="img" style=${trackStyle} aria-label="${this.label} ${pct === null ? "no reading" : `${pct}%`}">
         <span class="fill" style=${fillStyle}></span>
       </span>
       <span class="value">${pct === null ? "—" : `${pct}%`}</span>

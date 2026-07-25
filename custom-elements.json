@@ -2547,6 +2547,48 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/card-grid.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A responsive auto-filling grid shell for `link-card` (or any card-shaped\ncontent) — each slotted child becomes a grid item, wrapping to a new row\nonce the container is too narrow for another `15rem` column.",
+          "name": "CardGrid",
+          "slots": [
+            {
+              "description": "`link-card` elements (or other card-shaped content).",
+              "name": ""
+            }
+          ],
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "card-grid",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CardGrid",
+          "declaration": {
+            "name": "CardGrid",
+            "module": "src/card-grid.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "card-grid",
+          "declaration": {
+            "name": "CardGrid",
+            "module": "src/card-grid.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/chat-message.ts",
       "declarations": [
         {
@@ -6492,6 +6534,30 @@
         },
         {
           "kind": "js",
+          "name": "LinkCard",
+          "declaration": {
+            "name": "LinkCard",
+            "module": "./link-card.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LinkCardStatus",
+          "declaration": {
+            "name": "LinkCardStatus",
+            "module": "./link-card.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CardGrid",
+          "declaration": {
+            "name": "CardGrid",
+            "module": "./card-grid.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "formatDuration",
           "declaration": {
             "name": "formatDuration",
@@ -7497,6 +7563,149 @@
           "declaration": {
             "name": "KbdHint",
             "module": "src/kbd-hint.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/link-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single linked-resource tile — logo (or an initial-letter fallback),\nheading, optional description, and an optional reachability status dot.\nRenders as a real `<a>` (opening in a new tab) when `href` is set, or a\nnon-interactive `<div>` otherwise. Meant to be laid out inside\n`card-grid`, mirroring how `gallery-item` pairs with `photo-gallery`.",
+          "name": "LinkCard",
+          "members": [
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Card title.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional supporting text shown below the heading.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Destination URL. When set, the card renders as a link (opened in a new tab); when unset, a non-interactive tile.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "logo",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Logo image URL. Falls back to the first letter of `heading` if unset or it fails to load.",
+              "attribute": "logo"
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "LinkCardStatus"
+              },
+              "default": "\"\"",
+              "description": "Reachability state for the corner status dot. `\"\"` (default) renders no dot.",
+              "attribute": "status"
+            },
+            {
+              "kind": "field",
+              "name": "_imgError",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Card title.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional supporting text shown below the heading.",
+              "fieldName": "description"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Destination URL. When set, the card renders as a link (opened in a new tab); when unset, a non-interactive tile.",
+              "fieldName": "href"
+            },
+            {
+              "name": "logo",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Logo image URL. Falls back to the first letter of `heading` if unset or it fails to load.",
+              "fieldName": "logo"
+            },
+            {
+              "name": "status",
+              "type": {
+                "text": "LinkCardStatus"
+              },
+              "default": "\"\"",
+              "description": "Reachability state for the corner status dot. `\"\"` (default) renders no dot.",
+              "fieldName": "status"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "link-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LinkCard",
+          "declaration": {
+            "name": "LinkCard",
+            "module": "src/link-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "link-card",
+          "declaration": {
+            "name": "LinkCard",
+            "module": "src/link-card.ts"
           }
         }
       ]
@@ -10874,6 +11083,16 @@
               "default": "\"\"",
               "description": "Fill color override; falls back to the `--ui-success` token.",
               "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "trackColor",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Track (inactive portion) background override; falls back to the `--ui-surface-muted` token.",
+              "attribute": "track-color"
             }
           ],
           "attributes": [
@@ -10903,6 +11122,15 @@
               "default": "\"\"",
               "description": "Fill color override; falls back to the `--ui-success` token.",
               "fieldName": "color"
+            },
+            {
+              "name": "track-color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Track (inactive portion) background override; falls back to the `--ui-surface-muted` token.",
+              "fieldName": "trackColor"
             }
           ],
           "superclass": {

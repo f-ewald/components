@@ -20,6 +20,9 @@ const siteOnly = args[0] === "--site";
 /** Slots aren't auto-detected by the analyzer without JSDoc @slot tags, so
  * they're curated here — the set is small and stable. */
 const SLOTS = {
+  "card-grid": [
+    { name: "(default)", description: "`link-card` elements (or other card-shaped content)." },
+  ],
   "reveal-button": [{ name: "(default)", description: "Content to reveal when clicked." }],
   "photo-gallery": [
     { name: "(default)", description: "Declarative `gallery-item` elements rendered as slides." },
@@ -434,6 +437,24 @@ const EXAMPLES = {
   document.querySelector("#new-task-btn").addEventListener("click", () => (popover.open = true));
   popover.addEventListener("panel-close", () => (popover.open = false));
 </script>`,
+  "card-grid": `<card-grid>
+  <link-card
+    heading="Grafana"
+    description="Metrics dashboards."
+    href="https://grafana.example.com"
+    logo="/logos/grafana.svg"
+    status="up"
+  ></link-card>
+  <link-card heading="Plex" description="Media server." href="https://plex.example.com" status="up"></link-card>
+</card-grid>`,
+  "link-card": `<link-card
+  heading="Grafana"
+  description="Metrics dashboards."
+  href="https://grafana.example.com"
+  logo="/logos/grafana.svg"
+  status="up"
+></link-card>
+<link-card heading="Backup Server" description="Nightly restic snapshots." status="checking"></link-card>`,
 };
 
 const manifest = JSON.parse(await readFile(path.join(rootDir, "custom-elements.json"), "utf8"));

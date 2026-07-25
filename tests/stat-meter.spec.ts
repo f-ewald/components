@@ -37,6 +37,17 @@ test.describe("stat-meter", () => {
     await expect(page.locator("#meter-color .fill")).toHaveAttribute("style", /--fill-color:\s*#dc2626/);
   });
 
+  test("a custom track-color overrides the default track background", async ({ page }) => {
+    await page.goto("/");
+
+    await expect(page.locator("#meter-track-color")).toHaveAttribute("track-color", "#cbd5e1");
+    await expect(page.locator("#meter-track-color .track")).toHaveAttribute("style", /--track-color:\s*#cbd5e1/);
+    await expect(page.locator("#meter-track-color .track")).toHaveCSS("background-color", "rgb(203, 213, 225)");
+
+    // Unaffected sibling still falls back to the shared --ui-surface-muted token.
+    await expect(page.locator("#meter-track-default .track")).toHaveCSS("background-color", "rgb(248, 250, 252)");
+  });
+
   test("exposes the reading and disables fill transitions for reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");

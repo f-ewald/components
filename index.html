@@ -22,6 +22,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-month">calendar-month</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-year">calendar-year</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#card-grid">card-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chat-message">chat-message</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#confirm-dialog">confirm-dialog</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#content-divider">content-divider</a>
@@ -37,6 +38,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kanban-board">kanban-board</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kbd-hint">kbd-hint</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#link-card">link-card</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
@@ -431,6 +433,63 @@ import "@f-ewald/components/app-sidebar.js";
   &lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"&gt;&lt;/calendar-entry&gt;
 &lt;/calendar-year&gt;</code></pre>
+        </section>
+
+        <section id="card-grid" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-card-grid">
+          <h3 class="text-xl font-semibold text-slate-900">card-grid</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Responsive auto-filling grid shell for <code>link-card</code> (or any card-shaped content) — wraps to a
+            new row once the container is too narrow for another <code>15rem</code> column.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <card-grid id="grid-services" data-testid="grid-services">
+              <link-card
+                id="card-grafana"
+                data-testid="card-grafana"
+                heading="Grafana"
+                description="Metrics dashboards for the homelab."
+                href="https://grafana.example.com"
+                logo="https://i.pravatar.cc/80?img=1"
+                status="up"
+              ></link-card>
+              <link-card
+                id="card-plex"
+                data-testid="card-plex"
+                heading="Plex"
+                description="Media server."
+                href="https://plex.example.com"
+                status="up"
+              ></link-card>
+              <link-card
+                id="card-pihole"
+                data-testid="card-pihole"
+                heading="Pi-hole"
+                description="Network-wide ad blocking."
+                href="https://pihole.example.com"
+                status="down"
+              ></link-card>
+              <link-card
+                id="card-backup"
+                data-testid="card-backup"
+                heading="Backup Server"
+                description="Nightly restic snapshots."
+                status="checking"
+              ></link-card>
+            </card-grid>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/card-grid.js";
+import "@f-ewald/components/link-card.js";
+
+&lt;card-grid&gt;
+  &lt;link-card
+    heading="Grafana"
+    description="Metrics dashboards."
+    href="https://grafana.example.com"
+    logo="/logos/grafana.svg"
+    status="up"
+  &gt;&lt;/link-card&gt;
+  &lt;link-card heading="Plex" description="Media server." href="https://plex.example.com" status="up"&gt;&lt;/link-card&gt;
+&lt;/card-grid&gt;</code></pre>
         </section>
 
         <section id="chat-message" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-chat-message">
@@ -921,6 +980,72 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
 
 &lt;kbd-hint keys="Mod+K"&gt;&lt;/kbd-hint&gt;
 &lt;kbd-hint keys="Mod+Shift+Enter" platform="mac"&gt;&lt;/kbd-hint&gt;</code></pre>
+        </section>
+
+        <section id="link-card" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-link-card">
+          <h3 class="text-xl font-semibold text-slate-900">link-card</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A single linked-resource tile — logo (or an initial-letter fallback), heading, optional description, and
+            an optional reachability status dot. Renders as a link when <code>href</code> is set, a plain tile
+            otherwise. Normally laid out inside <code>card-grid</code>.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-4 rounded-lg border border-slate-200 p-6">
+            <link-card
+              id="link-logo"
+              data-testid="link-logo"
+              style="width: 15rem"
+              heading="Grafana"
+              description="Metrics dashboards."
+              href="https://grafana.example.com"
+              logo="https://i.pravatar.cc/80?img=1"
+              status="up"
+            ></link-card>
+            <link-card
+              id="link-initial"
+              data-testid="link-initial"
+              style="width: 15rem"
+              heading="Portainer"
+              description="Container management UI."
+              href="https://portainer.example.com"
+              status="down"
+            ></link-card>
+            <link-card
+              id="link-checking"
+              data-testid="link-checking"
+              style="width: 15rem"
+              heading="Backup Server"
+              description="Nightly restic snapshots."
+              status="checking"
+            ></link-card>
+            <link-card
+              id="link-no-href"
+              data-testid="link-no-href"
+              style="width: 15rem"
+              heading="Internal Notes"
+              description="No link — informational tile only."
+            ></link-card>
+            <link-card
+              id="link-broken-logo"
+              data-testid="link-broken-logo"
+              style="width: 15rem"
+              heading="Uptime Kuma"
+              description="Logo URL fails to load."
+              logo="https://example.invalid/broken.png"
+            ></link-card>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/link-card.js";
+
+&lt;link-card
+  heading="Grafana"
+  description="Metrics dashboards."
+  href="https://grafana.example.com"
+  logo="/logos/grafana.svg"
+  status="up"
+&gt;&lt;/link-card&gt;
+&lt;link-card heading="Portainer" description="Container management UI." href="https://portainer.example.com" status="down"&gt;&lt;/link-card&gt;
+&lt;link-card heading="Backup Server" description="Nightly restic snapshots." status="checking"&gt;&lt;/link-card&gt;
+&lt;link-card heading="Internal Notes" description="No link — informational tile only."&gt;&lt;/link-card&gt;
+&lt;link-card heading="Uptime Kuma" description="Logo URL fails to load." logo="https://broken.example/logo.png"&gt;&lt;/link-card&gt;</code></pre>
         </section>
 
         <section id="live-timer" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-live-timer">
@@ -1529,12 +1654,29 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
           <div class="mt-2 flex flex-wrap items-center gap-6 rounded-lg border border-slate-200 p-6">
             <stat-meter id="meter-color" data-testid="meter-color" label="GPU" percent="88" color="#dc2626"></stat-meter>
           </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Custom track color</p>
+          <p class="mt-1 text-sm text-slate-500">
+            The default track uses <code>--ui-surface-muted</code>, which reads as barely-there against
+            a gray section background. <code>track-color</code> (or the <code>--track-color</code> custom
+            property) overrides it per instance.
+          </p>
+          <div class="mt-2 flex flex-wrap items-center gap-6 rounded-lg border border-slate-200 bg-slate-100 p-6">
+            <stat-meter id="meter-track-default" data-testid="meter-track-default" label="DEFAULT" percent="60"></stat-meter>
+            <stat-meter
+              id="meter-track-color"
+              data-testid="meter-track-color"
+              label="DISK"
+              percent="60"
+              track-color="#cbd5e1"
+            ></stat-meter>
+          </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/stat-meter.js";
 
 &lt;stat-meter label="CPU" percent="42"&gt;&lt;/stat-meter&gt;
 &lt;stat-meter label="MEM" percent="76"&gt;&lt;/stat-meter&gt;
 &lt;stat-meter label="I/O"&gt;&lt;/stat-meter&gt; &lt;!-- percent unset -&gt; null -&gt; renders "—" --&gt;
-&lt;stat-meter label="GPU" percent="88" color="#dc2626"&gt;&lt;/stat-meter&gt;</code></pre>
+&lt;stat-meter label="GPU" percent="88" color="#dc2626"&gt;&lt;/stat-meter&gt;
+&lt;stat-meter label="DISK" percent="60" track-color="#cbd5e1"&gt;&lt;/stat-meter&gt;</code></pre>
         </section>
 
         <section id="status-pill" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-status-pill">

@@ -27,6 +27,7 @@ import "@f-ewald/components/stat-meter.js";
 | `label` | `label` | `string` | `""` | Short label shown before the bar, e.g. "CPU" or "MEM". |
 | `percent` | `percent` | `number | null` | `null` | Percentage 0-100. `null` renders an empty bar and a "—" value instead of "0%". |
 | `color` | `color` | `string` | `""` | Fill color override; falls back to the `--ui-success` token. |
+| `trackColor` | `track-color` | `string` | `""` | Track (inactive portion) background override; falls back to the `--ui-surface-muted` token. |
 
 ## Events
 

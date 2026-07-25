@@ -310,6 +310,32 @@ Example:
 </calendar-year>
 ```
 
+## <card-grid>
+
+A responsive auto-filling grid shell for `link-card` (or any card-shaped
+content) — each slotted child becomes a grid item, wrapping to a new row
+once the container is too narrow for another `15rem` column.
+
+Import: `import "@f-ewald/components/card-grid.js";`
+
+Properties: none
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<card-grid>
+  <link-card
+    heading="Grafana"
+    description="Metrics dashboards."
+    href="https://grafana.example.com"
+    logo="/logos/grafana.svg"
+    status="up"
+  ></link-card>
+  <link-card heading="Plex" description="Media server." href="https://plex.example.com" status="up"></link-card>
+</card-grid>
+```
+
 ## <chat-message>
 
 One conversation entry in a chat-style activity feed. Tool calls and
@@ -809,6 +835,32 @@ Example:
 <kbd-hint keys="Mod+Shift+Enter" platform="mac"></kbd-hint>
 ```
 
+## <link-card>
+
+A single linked-resource tile — logo (or an initial-letter fallback),
+heading, optional description, and an optional reachability status dot.
+Renders as a real `<a>` (opening in a new tab) when `href` is set, or a
+non-interactive `<div>` otherwise. Meant to be laid out inside
+`card-grid`, mirroring how `gallery-item` pairs with `photo-gallery`.
+
+Import: `import "@f-ewald/components/link-card.js";`
+
+Properties: `heading` (attribute `heading`) : string, default ""; `description` (attribute `description`) : string, default ""; `href` (attribute `href`) : string, default ""; `logo` (attribute `logo`) : string, default ""; `status` (attribute `status`) : LinkCardStatus, default ""
+Events: none
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-radius`, `--ui-shadow`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<link-card
+  heading="Grafana"
+  description="Metrics dashboards."
+  href="https://grafana.example.com"
+  logo="/logos/grafana.svg"
+  status="up"
+></link-card>
+<link-card heading="Backup Server" description="Nightly restic snapshots." status="checking"></link-card>
+```
+
 ## <live-timer>
 
 Per-second ticking count-up timer, e.g. a live "running for 12s" or
@@ -1235,7 +1287,7 @@ bar then renders empty and the value shows an em dash instead of "0%".
 
 Import: `import "@f-ewald/components/stat-meter.js";`
 
-Properties: `label` (attribute `label`) : string, default ""; `percent` (attribute `percent`) : number | null, default null; `color` (attribute `color`) : string, default ""
+Properties: `label` (attribute `label`) : string, default ""; `percent` (attribute `percent`) : number | null, default null; `color` (attribute `color`) : string, default ""; `trackColor` (attribute `track-color`) : string, default ""
 Events: none
 CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`
 

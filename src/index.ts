@@ -83,6 +83,8 @@ export {
 export { KanbanColumn } from "./kanban-column.js";
 export { KanbanCard } from "./kanban-card.js";
 export { TextArea } from "./text-area.js";
+export { LinkCard, type LinkCardStatus } from "./link-card.js";
+export { CardGrid } from "./card-grid.js";
 export { formatDuration, type DurationFormat } from "./utils/duration.js";
 export { tokens, tokenValues, darkTokenValues } from "./tokens.js";
 export * from "./icons.js";
