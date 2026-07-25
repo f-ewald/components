@@ -47,4 +47,15 @@ test.describe("timeline-entry", () => {
       ).toHaveCount(1);
     }
   });
+
+  test("compact entry tightens spacing and mutes the content", async ({ page }) => {
+    await page.goto("/");
+    const entry = page.locator('[data-testid="timeline-e7"]');
+    await expect(entry).toHaveAttribute("compact", "");
+    const paddingBottom = await entry.evaluate(
+      (el) => getComputedStyle(el.shadowRoot!.querySelector(".body")!).paddingBottom,
+    );
+    // 0.5rem compact vs the default 1.5rem (24px) — assert it's tightened.
+    expect(parseFloat(paddingBottom)).toBeLessThan(24);
+  });
 });

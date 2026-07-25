@@ -15,6 +15,10 @@ The dot's `color` types the entry using the shared status-pill palette —
 `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
 `danger`.
 
+Set `compact` for dense, one-line system-status entries (running spinners,
+state changes): it tightens the vertical spacing and renders the content
+smaller and muted.
+
 ## Install
 
 ```js
@@ -36,6 +40,7 @@ import "@f-ewald/components/timeline-entry.js";
 | --- | --- | --- | --- | --- |
 | `datetime` | `datetime` | `string | null` | `null` | ISO 8601 or SQLite datetime string, rendered as a relative time. |
 | `color` | `color` | `StatusPillColor` | `"primary"` | Visual type of the entry's dot, from the shared status-pill palette: `primary` (default), `neutral`, `info`, `success`, `warning`, or `danger`. |
+| `compact` | `compact` | `boolean` | `false` | Dense, one-line presentation for system-status entries: tighter vertical spacing and smaller, muted content. |
 
 ## Events
 

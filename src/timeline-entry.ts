@@ -20,6 +20,10 @@ import type { StatusPillColor } from "./status-pill.js";
  * `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
  * `danger`.
  *
+ * Set `compact` for dense, one-line system-status entries (running spinners,
+ * state changes): it tightens the vertical spacing and renders the content
+ * smaller and muted.
+ *
  * @element timeline-entry
  * @slot headline - Optional headline/title for the event.
  * @slot - The event content; nest any elements here.
@@ -34,6 +38,12 @@ export class TimelineEntry extends LitElement {
    * `primary` (default), `neutral`, `info`, `success`, `warning`, or `danger`.
    */
   @property() color: StatusPillColor = "primary";
+
+  /**
+   * Dense, one-line presentation for system-status entries: tighter vertical
+   * spacing and smaller, muted content.
+   */
+  @property({ type: Boolean, reflect: true }) compact = false;
 
   /** Whether the headline slot currently has assigned content. */
   @state() private _hasHeadline = false;
@@ -152,6 +162,17 @@ export class TimelineEntry extends LitElement {
         font-size: var(--ui-font-size, 0.875rem);
         line-height: var(--ui-line-height-normal, 1.5);
         color: var(--ui-text, #0f172a);
+      }
+      :host([compact]) .body {
+        padding-bottom: 0.5rem;
+      }
+      :host([compact]:last-child) .body {
+        padding-bottom: 0;
+      }
+      :host([compact]) .content {
+        margin-top: 0.125rem;
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        color: var(--ui-text-muted, #64748b);
       }
     `,
   ];

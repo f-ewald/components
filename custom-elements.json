@@ -5251,6 +5251,26 @@
         },
         {
           "kind": "function",
+          "name": "iconArrowDownTray",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowsRightLeft",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
           "name": "iconLink",
           "parameters": [
             {
@@ -5620,6 +5640,22 @@
           "name": "iconArrowRight",
           "declaration": {
             "name": "iconArrowRight",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowDownTray",
+          "declaration": {
+            "name": "iconArrowDownTray",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowsRightLeft",
+          "declaration": {
+            "name": "iconArrowsRightLeft",
             "module": "src/icons.ts"
           }
         },
@@ -11390,7 +11426,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.\n\n`datetime` is the entry's one timestamp. A nested element that has its own\ntimestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —\nsetting both renders the same time twice.\n\nThe dot's `color` types the entry using the shared status-pill palette —\n`primary` by default, plus `neutral`, `info`, `success`, `warning`, and\n`danger`.",
+          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.\n\n`datetime` is the entry's one timestamp. A nested element that has its own\ntimestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —\nsetting both renders the same time twice.\n\nThe dot's `color` types the entry using the shared status-pill palette —\n`primary` by default, plus `neutral`, `info`, `success`, `warning`, and\n`danger`.\n\nSet `compact` for dense, one-line system-status entries (running spinners,\nstate changes): it tightens the vertical spacing and renders the content\nsmaller and muted.",
           "name": "TimelineEntry",
           "slots": [
             {
@@ -11422,6 +11458,17 @@
               "default": "\"primary\"",
               "description": "Visual type of the entry's dot, from the shared status-pill palette:\n`primary` (default), `neutral`, `info`, `success`, `warning`, or `danger`.",
               "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "compact",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Dense, one-line presentation for system-status entries: tighter vertical\nspacing and smaller, muted content.",
+              "attribute": "compact",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -11471,6 +11518,15 @@
               "default": "\"primary\"",
               "description": "Visual type of the entry's dot, from the shared status-pill palette:\n`primary` (default), `neutral`, `info`, `success`, `warning`, or `danger`.",
               "fieldName": "color"
+            },
+            {
+              "name": "compact",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Dense, one-line presentation for system-status entries: tighter vertical\nspacing and smaller, muted content.",
+              "fieldName": "compact"
             }
           ],
           "superclass": {

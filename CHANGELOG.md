@@ -1,5 +1,16 @@
 # @f-ewald/components
 
+## 1.8.0
+
+- `timeline-entry` gains a `compact` boolean for dense, one-line system-status
+  entries (running spinners, state changes): it tightens the vertical spacing
+  and renders the content smaller and muted.
+- Fixed `text-area` firing `input`/`change` twice: the native textarea's events
+  are composed and bubbled out alongside the component's own
+  `detail.value`-carrying `CustomEvent`, so consumers saw a duplicate event with
+  `detail` of `0`. The native events are now stopped at the shadow boundary.
+- Added the `iconArrowDownTray` and `iconArrowsRightLeft` icons.
+
 ## 1.7.0
 
 - `timeline-entry` now takes a `color` (from the shared `status-pill` palette —
