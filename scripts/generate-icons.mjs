@@ -34,6 +34,8 @@ const ICONS = {
   ShieldExclamation: { slug: "shield-exclamation", size: 16 },
   ArrowPath: { slug: "arrow-path", size: 12 },
   ArrowRight: { slug: "arrow-right", size: 12 },
+  ArrowDownTray: { slug: "arrow-down-tray", size: 16 },
+  ArrowsRightLeft: { slug: "arrows-right-left", size: 16 },
   Link: { slug: "link", size: 16 },
   Heart: { slug: "heart", size: 16 },
   HeartSolid: { slug: "heart", variant: "solid", size: 16 },

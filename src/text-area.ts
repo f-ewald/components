@@ -82,6 +82,12 @@ export class TextArea extends LitElement {
   ];
 
   private _onInput(e: Event): void {
+    // The native textarea's own "input" event is composed (crosses the shadow
+    // boundary) — stop it so only our re-dispatched CustomEvent (carrying
+    // `detail.value`) reaches consumers. Otherwise the native event bubbles
+    // out afterwards too, re-invoking the same "input" listener with a plain
+    // UIEvent whose `detail` defaults to 0, clobbering consumer state.
+    e.stopPropagation();
     this.value = (e.target as HTMLTextAreaElement).value;
     this.dispatchEvent(
       new CustomEvent("input", { detail: { value: this.value }, bubbles: true, composed: true }),
@@ -89,6 +95,7 @@ export class TextArea extends LitElement {
   }
 
   private _onChange(e: Event): void {
+    e.stopPropagation();
     this.value = (e.target as HTMLTextAreaElement).value;
     this.dispatchEvent(
       new CustomEvent("change", { detail: { value: this.value }, bubbles: true, composed: true }),
