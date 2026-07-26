@@ -8,6 +8,18 @@ component is individually importable via a subpath export
 (`@f-ewald/components/<tag-name>.js`), so consumers only pay for what they
 use — non-chart components pull in zero `d3` code.
 
+`markdown-view` (v1.11.0) added `marked`/`dompurify` as the package's first
+runtime dependencies whose job is parsing/sanitizing arbitrary text rather
+than rendering charts (`d3-array`/`d3-scale`/`d3-shape` were already runtime
+deps). It always parses with `marked` and sanitizes with `DOMPurify` before
+injecting — the `markdown` property is treated as untrusted input.
+
+`ui-button` has a `size: "sm" | "md"` property (`sm` shrinks
+height/padding/font-size one step; `md` is pixel-identical to the pre-`size`
+default). `button-group` has an `icon-only` reflected boolean (labels hidden
+via `sr-only` clip, kept as the accessible name via `aria-label`/`title` on
+each segment's radio input).
+
 ## Layout
 
 - `src/` — component sources, one file per component (e.g. `src/confirm-dialog.ts`).
