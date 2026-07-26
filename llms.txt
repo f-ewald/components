@@ -212,6 +212,36 @@ Example:
 </script>
 ```
 
+## <button-group>
+
+Single-select segmented control — a strip of buttons joined into one
+shared-border shape, for a small, persistent set of mutually exclusive
+choices (a view switcher, a theme picker) where the *currently selected*
+option should read as visually "pressed," not just checked. For many
+short, individually pill-shaped choices, use `radio-pills` instead. Wraps
+native radio inputs for keyboard/a11y and fires `change` rather than
+relying on form submission.
+
+Import: `import "@f-ewald/components/button-group.js";`
+
+Properties: `options` (JS property only) : ButtonGroupOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
+Events: `change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`
+
+Example:
+```html
+<button-group></button-group>
+<script type="module">
+  const el = document.querySelector("button-group");
+  el.options = [
+    { value: "list", label: "List" },
+    { value: "kanban", label: "Kanban" },
+  ];
+  el.value = "list";
+  el.addEventListener("change", (e) => console.log(e.detail.value));
+</script>
+```
+
 ## <calendar-entry>
 
 Declarative metadata for one calendar event, consumed by a parent

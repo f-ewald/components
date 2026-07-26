@@ -255,6 +255,16 @@ const EXAMPLES = {
   el.value = "light";
   el.addEventListener("change", (e) => console.log(e.detail.value));
 </script>`,
+  "button-group": `<button-group></button-group>
+<script type="module">
+  const el = document.querySelector("button-group");
+  el.options = [
+    { value: "list", label: "List" },
+    { value: "kanban", label: "Kanban" },
+  ];
+  el.value = "list";
+  el.addEventListener("change", (e) => console.log(e.detail.value));
+</script>`,
   "ui-button": `<ui-button variant="primary">
   <span slot="icon">...</span>
   New property

@@ -50,6 +50,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<app-shell>` | [API reference](https://f-ewald.github.io/components/docs/app-shell.html) |
 | `<app-sidebar>` | [API reference](https://f-ewald.github.io/components/docs/app-sidebar.html) |
 | `<autocomplete-input>` | [API reference](https://f-ewald.github.io/components/docs/autocomplete-input.html) |
+| `<button-group>` | [API reference](https://f-ewald.github.io/components/docs/button-group.html) |
 | `<calendar-entry>` | [API reference](https://f-ewald.github.io/components/docs/calendar-entry.html) |
 | `<calendar-month>` | [API reference](https://f-ewald.github.io/components/docs/calendar-month.html) |
 | `<calendar-year>` | [API reference](https://f-ewald.github.io/components/docs/calendar-year.html) |

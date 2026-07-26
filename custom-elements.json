@@ -1879,6 +1879,121 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/button-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Single-select segmented control — a strip of buttons joined into one\nshared-border shape, for a small, persistent set of mutually exclusive\nchoices (a view switcher, a theme picker) where the *currently selected*\noption should read as visually \"pressed,\" not just checked. For many\nshort, individually pill-shaped choices, use `radio-pills` instead. Wraps\nnative radio inputs for keyboard/a11y and fires `change` rather than\nrelying on form submission.",
+          "name": "ButtonGroup",
+          "members": [
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "ButtonGroupOption[]"
+              },
+              "default": "[]",
+              "description": "Options to render, one segment each."
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every native radio in the group.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "#name",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`button-group-${++instanceCount}`"
+            },
+            {
+              "kind": "method",
+              "name": "_onChange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A segment was selected; detail: { value }."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Currently selected value.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables every native radio in the group.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "button-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ButtonGroup",
+          "declaration": {
+            "name": "ButtonGroup",
+            "module": "src/button-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "button-group",
+          "declaration": {
+            "name": "ButtonGroup",
+            "module": "src/button-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/calendar-entry.ts",
       "declarations": [
         {
@@ -6162,6 +6277,22 @@
           "declaration": {
             "name": "RadioPillOption",
             "module": "./radio-pills.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ButtonGroup",
+          "declaration": {
+            "name": "ButtonGroup",
+            "module": "./button-group.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ButtonGroupOption",
+          "declaration": {
+            "name": "ButtonGroupOption",
+            "module": "./button-group.js"
           }
         },
         {

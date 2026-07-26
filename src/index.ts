@@ -39,6 +39,7 @@ export { MapPin } from "./map-pin.js";
 export { MapCircle } from "./map-circle.js";
 export { RadioCards, type RadioCardOption } from "./radio-cards.js";
 export { RadioPills, type RadioPillOption } from "./radio-pills.js";
+export { ButtonGroup, type ButtonGroupOption } from "./button-group.js";
 export { UiButton, type ButtonVariant } from "./ui-button.js";
 export { StatMeter } from "./stat-meter.js";
 export { StatusPill, type StatusPillColor } from "./status-pill.js";

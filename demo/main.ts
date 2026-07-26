@@ -14,6 +14,7 @@ import {
   type DistanceValue,
   type RadioCards,
   type RadioPills,
+  type ButtonGroup,
   type MapPin,
   type MapCircle,
   type StatMeter,
@@ -327,6 +328,22 @@ if (radioPillsDemo) {
 }
 radioPillsDemo?.addEventListener("change", (e) => {
   radioPillsSelected.textContent = (e as CustomEvent).detail.value;
+});
+
+// button-group
+const buttonGroupDemo = document.getElementById("button-group-demo") as ButtonGroup;
+const buttonGroupSelected = document.getElementById("button-group-selected")!;
+if (buttonGroupDemo) {
+  buttonGroupDemo.options = [
+    { value: "list", label: "List" },
+    { value: "kanban", label: "Kanban" },
+    { value: "calendar", label: "Calendar" },
+  ];
+  buttonGroupDemo.value = "list";
+  buttonGroupSelected.textContent = "list";
+}
+buttonGroupDemo?.addEventListener("change", (e) => {
+  buttonGroupSelected.textContent = (e as CustomEvent).detail.value;
 });
 
 // ui-button (form-associated submit)
