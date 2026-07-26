@@ -35,6 +35,7 @@ import "@f-ewald/components/ui-button.js";
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `variant` | `variant` | `ButtonVariant` | `"primary"` | Visual weight. |
+| `size` | `size` | `"sm" | "md"` | `"md"` | Size — `sm` reduces height/padding/font-size one step below the default. |
 | `href` | `href` | `string | null` | `null` | Renders an `<a href="...">` instead of a `<button>` when set. |
 | `type` | `type` | `"button" | "submit" | "reset"` | `"button"` | Native button `type`. Ignored when `href` is set. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables the control and dims it. |
@@ -61,6 +62,7 @@ _None._
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
 | `--ui-line-height-tight` |
 | `--ui-on-accent` |

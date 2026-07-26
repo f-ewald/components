@@ -54,6 +54,10 @@ const ICONS = {
   AcademicCap: { slug: "academic-cap", size: 18 },
   QueueList: { slug: "queue-list", size: 16 },
   ExclamationTriangle: { slug: "exclamation-triangle", size: 16 },
+  Moon: { slug: "moon", size: 16 },
+  ComputerDesktop: { slug: "computer-desktop", size: 16 },
+  CodeBracketSquare: { slug: "code-bracket-square", size: 16 },
+  PuzzlePiece: { slug: "puzzle-piece", size: 18 },
 };
 
 /**

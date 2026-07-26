@@ -59,4 +59,15 @@ test.describe("ui-button", () => {
     await expect(btn).toHaveCSS("height", "32px");
     await expect(btn).toHaveCSS("line-height", "15px");
   });
+
+  test("size=\"sm\" shrinks the control without affecting the default size", async ({ page }) => {
+    await page.goto("/");
+    const smBtn = page.locator("#button-sm button.btn");
+    await expect(smBtn).toHaveClass(/\bsm\b/);
+    await expect(smBtn).toHaveCSS("height", "24px");
+    await expect(smBtn).toHaveCSS("padding", "4px 8px");
+
+    const mdBtn = page.locator("#button-primary button.btn");
+    await expect(mdBtn).toHaveCSS("height", "32px");
+  });
 });

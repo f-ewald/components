@@ -224,7 +224,7 @@ relying on form submission.
 
 Import: `import "@f-ewald/components/button-group.js";`
 
-Properties: `options` (JS property only) : ButtonGroupOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
+Properties: `options` (JS property only) : ButtonGroupOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `iconOnly` (attribute `icon-only`) : boolean, default false
 Events: `change`
 CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`
 
@@ -952,6 +952,45 @@ Example:
 <map-pin color="#22c55e" size="26" highlighted>🏠</map-pin>
 ```
 
+## <markdown-view>
+
+Renders a markdown string as sanitized, styled HTML — headings, lists,
+code, tables, blockquotes, and links all get token-driven styling, with
+wide content (code blocks, tables) scrolling in its own container instead
+of widening the page.
+
+The markdown source is treated as untrusted: it is always parsed with
+`marked` and sanitized with `DOMPurify` before being injected, never
+rendered as-is.
+
+Import: `import "@f-ewald/components/markdown-view.js";`
+
+Properties: `markdown` (attribute `markdown`) : string, default ""
+Events: none
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-mono`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<markdown-view></markdown-view>
+<script type="module">
+  const el = document.querySelector("markdown-view");
+  el.markdown = `## Release notes
+
+- Added **markdown-view**
+- Fixed a table alignment bug
+
+\`\`\`ts
+const x = 1;
+\`\`\`
+
+| Component | Status |
+| --- | --- |
+| markdown-view | New |
+
+See the [changelog](#markdown-view) for details.`;
+</script>
+```
+
 ## <multi-select>
 
 A form-associated multi-select: a trigger showing a compact summary of the
@@ -1512,9 +1551,9 @@ is instead wired through `ElementInternals.form` — the same mechanism
 
 Import: `import "@f-ewald/components/ui-button.js";`
 
-Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
+Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html

@@ -17,6 +17,7 @@ import {
   type ButtonGroup,
   type MapPin,
   type MapCircle,
+  type MarkdownView,
   type StatMeter,
   type EditableText,
   type LiveTimer,
@@ -38,6 +39,7 @@ import {
   iconCheckCircle,
   iconEye,
   iconListBullet,
+  iconSquares2x2,
   iconPencil,
   type PhotoGallery,
   type PhotoGalleryObjectFit,
@@ -346,6 +348,20 @@ buttonGroupDemo?.addEventListener("change", (e) => {
   buttonGroupSelected.textContent = (e as CustomEvent).detail.value;
 });
 
+const buttonGroupIconOnly = document.getElementById("button-group-icon-only") as ButtonGroup;
+const buttonGroupIconOnlySelected = document.getElementById("button-group-icon-only-selected")!;
+if (buttonGroupIconOnly) {
+  buttonGroupIconOnly.options = [
+    { value: "list", label: "List", icon: iconListBullet() },
+    { value: "kanban", label: "Kanban", icon: iconSquares2x2() },
+  ];
+  buttonGroupIconOnly.value = "list";
+  buttonGroupIconOnlySelected.textContent = "list";
+}
+buttonGroupIconOnly?.addEventListener("change", (e) => {
+  buttonGroupIconOnlySelected.textContent = (e as CustomEvent).detail.value;
+});
+
 // ui-button (form-associated submit)
 document.getElementById("button-form")?.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -364,6 +380,30 @@ const circleHighlightDemo = document.getElementById("circle-highlight-demo") as 
 document.getElementById("circle-highlight-toggle")?.addEventListener("click", () => {
   if (circleHighlightDemo) circleHighlightDemo.highlighted = !circleHighlightDemo.highlighted;
 });
+
+// markdown-view
+const markdownViewDemo = document.getElementById("markdown-view-demo") as MarkdownView;
+if (markdownViewDemo) {
+  markdownViewDemo.markdown = [
+    "## Release notes",
+    "",
+    "- Added **markdown-view**, a sanitized markdown renderer",
+    "- Fixed a table alignment bug",
+    "- Untrusted input is always sanitized: `<script>alert(1)</script>` is stripped",
+    "",
+    "```ts",
+    "const el = document.querySelector(\"markdown-view\");",
+    "el.markdown = \"# Hello\";",
+    "```",
+    "",
+    "| Component | Status |",
+    "| --- | --- |",
+    "| markdown-view | New |",
+    "| button-group | Updated |",
+    "",
+    "> See the [changelog](#markdown-view) for details.",
+  ].join("\n");
+}
 
 // stat-meter (randomize CPU/MEM readings; I/O stays unset to show the null state)
 const meterCpu = document.getElementById("meter-cpu") as StatMeter;

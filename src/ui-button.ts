@@ -91,6 +91,11 @@ export class UiButton extends LitElement {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
+      .btn.sm {
+        height: 1.5rem;
+        padding: 0.25rem 0.5rem;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
+      }
       .spin {
         display: inline-flex;
         animation: spin 0.8s linear infinite;
@@ -126,6 +131,8 @@ export class UiButton extends LitElement {
 
   /** Visual weight. */
   @property() variant: ButtonVariant = "primary";
+  /** Size — `sm` reduces height/padding/font-size one step below the default. */
+  @property() size: "sm" | "md" = "md";
   /** Renders an `<a href="...">` instead of a `<button>` when set. */
   @property() href: string | null = null;
   /** Native button `type`. Ignored when `href` is set. */
@@ -148,7 +155,7 @@ export class UiButton extends LitElement {
   }
 
   override render() {
-    const classes = `btn ${this.variant}`;
+    const classes = `btn ${this.variant} ${this.size}`;
     const isDisabled = this.disabled || this.busy;
     if (this.href) {
       return html`

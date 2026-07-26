@@ -78,6 +78,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<live-timer>` | [API reference](https://f-ewald.github.io/components/docs/live-timer.html) |
 | `<map-circle>` | [API reference](https://f-ewald.github.io/components/docs/map-circle.html) |
 | `<map-pin>` | [API reference](https://f-ewald.github.io/components/docs/map-pin.html) |
+| `<markdown-view>` | [API reference](https://f-ewald.github.io/components/docs/markdown-view.html) |
 | `<multi-select>` | [API reference](https://f-ewald.github.io/components/docs/multi-select.html) |
 | `<page-header>` | [API reference](https://f-ewald.github.io/components/docs/page-header.html) |
 | `<pagination-nav>` | [API reference](https://f-ewald.github.io/components/docs/pagination-nav.html) |

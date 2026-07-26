@@ -55,4 +55,27 @@ test.describe("button-group", () => {
       await last.evaluate((el) => getComputedStyle(el).borderTopRightRadius),
     ).not.toBe("0px");
   });
+
+  test("icon-only mode hides labels visually but keeps them as the accessible name", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const group = page.locator("#button-group-icon-only");
+
+    await expect(group.locator(".segment")).toHaveCount(2);
+    // Label text is present in the DOM (sr-only) but not visually rendered.
+    const label = group.locator(".segment").nth(0).locator("span");
+    await expect(label).toHaveText("List");
+    // sr-only clip technique: present in the a11y tree but visually a 1px box.
+    const box = await label.boundingBox();
+    expect(box?.width).toBeLessThanOrEqual(1);
+    expect(box?.height).toBeLessThanOrEqual(1);
+
+    // Accessible name still resolves to the label via aria-label.
+    await expect(group.getByRole("radio", { name: "List" })).toHaveCount(1);
+    await expect(group.getByRole("radio", { name: "Kanban" })).toHaveCount(1);
+
+    await group.getByRole("radio", { name: "Kanban" }).click();
+    await expect(page.locator("#button-group-icon-only-selected")).toHaveText("kanban");
+  });
 });

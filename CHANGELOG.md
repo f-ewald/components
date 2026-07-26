@@ -1,5 +1,25 @@
 # @f-ewald/components
 
+## 1.11.0
+
+- Added `markdown-view`, a component that renders a markdown string as
+  sanitized, styled HTML (headings, lists, code, tables, blockquotes, links —
+  wide content scrolls in its own container). Always parses with `marked` and
+  sanitizes with `DOMPurify` before injecting, since the source is treated as
+  untrusted. This adds `marked` and `dompurify` as new runtime `dependencies`
+  (`d3-array`/`d3-scale`/`d3-shape` were already runtime deps, so these are
+  not literally the package's first non-`lit` dependency, but they are its
+  first dependencies whose job is parsing/sanitizing arbitrary text rather
+  than rendering charts).
+- `ui-button` gains a `size: "sm" | "md"` property — `sm` reduces
+  height/padding/font-size one step below the default (`md`, unchanged,
+  pixel-identical to before).
+- `button-group` gains an `icon-only` reflected boolean: labels are hidden
+  visually (sr-only clip) but stay the accessible name via `aria-label`/
+  `title` on the underlying radio input.
+- Added the `iconMoon`, `iconComputerDesktop`, `iconCodeBracketSquare`, and
+  `iconPuzzlePiece` icons.
+
 ## 1.8.0
 
 - `timeline-entry` gains a `compact` boolean for dense, one-line system-status

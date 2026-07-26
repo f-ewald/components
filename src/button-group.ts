@@ -105,6 +105,20 @@ export class ButtonGroup extends LitElement {
         cursor: not-allowed;
         opacity: 0.6;
       }
+      :host([icon-only]) .segment {
+        padding: 0.5rem;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
       @media (forced-colors: active) {
         .segment:has(input:focus-visible) {
           outline: 2px solid CanvasText;
@@ -129,6 +143,8 @@ export class ButtonGroup extends LitElement {
   @property() value = "";
   /** Disables every native radio in the group. */
   @property({ type: Boolean }) disabled = false;
+  /** Hides labels visually (icons only) while keeping them as the accessible name. */
+  @property({ type: Boolean, reflect: true, attribute: "icon-only" }) iconOnly = false;
 
   readonly #name = `button-group-${++instanceCount}`;
 
@@ -153,10 +169,12 @@ export class ButtonGroup extends LitElement {
                 name=${this.#name}
                 ?checked=${this.value === opt.value}
                 ?disabled=${this.disabled}
+                aria-label=${this.iconOnly ? opt.label : nothing}
+                title=${this.iconOnly ? opt.label : nothing}
                 @change=${() => this._onChange(opt.value)}
               />
               ${opt.icon ?? nothing}
-              <span>${opt.label}</span>
+              <span class=${this.iconOnly ? "sr-only" : ""}>${opt.label}</span>
             </label>
           `,
         )}

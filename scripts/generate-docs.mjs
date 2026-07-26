@@ -276,6 +276,24 @@ const EXAMPLES = {
   "map-circle": `<map-circle color="#6b7280"></map-circle>
 <map-circle color="#0099D8" size="14" ring-width="3"></map-circle>
 <map-circle color="#1a73e8" size="24" ring-width="5" highlighted>1</map-circle>`,
+  "markdown-view": `<markdown-view></markdown-view>
+<script type="module">
+  const el = document.querySelector("markdown-view");
+  el.markdown = \`## Release notes
+
+- Added **markdown-view**
+- Fixed a table alignment bug
+
+\\\`\\\`\\\`ts
+const x = 1;
+\\\`\\\`\\\`
+
+| Component | Status |
+| --- | --- |
+| markdown-view | New |
+
+See the [changelog](#markdown-view) for details.\`;
+</script>`,
   "multi-select": `<multi-select name="colors" label="Colors" searchable></multi-select>
 <multi-select id="colors-list" variant="list" visible-rows="4"></multi-select>
 <script type="module">

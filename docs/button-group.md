@@ -36,6 +36,7 @@ import "@f-ewald/components/button-group.js";
 | `options` | _(JS property only)_ | `ButtonGroupOption[]` | `[]` | Options to render, one segment each. |
 | `value` | `value` | `string` | `""` | Currently selected value. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables every native radio in the group. |
+| `iconOnly` | `icon-only` | `boolean` | `false` | Hides labels visually (icons only) while keeping them as the accessible name. |
 
 ## Events
 

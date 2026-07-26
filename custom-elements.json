@@ -1917,6 +1917,17 @@
             },
             {
               "kind": "field",
+              "name": "iconOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides labels visually (icons only) while keeping them as the accessible name.",
+              "attribute": "icon-only",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "#name",
               "privacy": "private",
               "readonly": true,
@@ -1963,6 +1974,15 @@
               "default": "false",
               "description": "Disables every native radio in the group.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "icon-only",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides labels visually (icons only) while keeping them as the accessible name.",
+              "fieldName": "iconOnly"
             }
           ],
           "superclass": {
@@ -5605,6 +5625,46 @@
               "default": "16"
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "iconMoon",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconComputerDesktop",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconCodeBracketSquare",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconPuzzlePiece",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
         }
       ],
       "exports": [
@@ -5957,6 +6017,38 @@
           "name": "iconExclamationTriangle",
           "declaration": {
             "name": "iconExclamationTriangle",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconMoon",
+          "declaration": {
+            "name": "iconMoon",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconComputerDesktop",
+          "declaration": {
+            "name": "iconComputerDesktop",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconCodeBracketSquare",
+          "declaration": {
+            "name": "iconCodeBracketSquare",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconPuzzlePiece",
+          "declaration": {
+            "name": "iconPuzzlePiece",
             "module": "src/icons.ts"
           }
         }
@@ -6685,6 +6777,14 @@
           "declaration": {
             "name": "CardGrid",
             "module": "./card-grid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MarkdownView",
+          "declaration": {
+            "name": "MarkdownView",
+            "module": "./markdown-view.js"
           }
         },
         {
@@ -8205,6 +8305,74 @@
           "declaration": {
             "name": "MapPin",
             "module": "src/map-pin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/markdown-view.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Renders a markdown string as sanitized, styled HTML — headings, lists,\ncode, tables, blockquotes, and links all get token-driven styling, with\nwide content (code blocks, tables) scrolling in its own container instead\nof widening the page.\n\nThe markdown source is treated as untrusted: it is always parsed with\n`marked` and sanitized with `DOMPurify` before being injected, never\nrendered as-is.",
+          "name": "MarkdownView",
+          "members": [
+            {
+              "kind": "field",
+              "name": "markdown",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Raw markdown source to render.",
+              "attribute": "markdown"
+            },
+            {
+              "kind": "method",
+              "name": "_renderedHtml",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "markdown",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Raw markdown source to render.",
+              "fieldName": "markdown"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "markdown-view",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MarkdownView",
+          "declaration": {
+            "name": "MarkdownView",
+            "module": "src/markdown-view.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "markdown-view",
+          "declaration": {
+            "name": "MarkdownView",
+            "module": "src/markdown-view.ts"
           }
         }
       ]
@@ -12181,6 +12349,16 @@
             },
             {
               "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces height/padding/font-size one step below the default.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string | null"
@@ -12249,6 +12427,15 @@
               "default": "\"primary\"",
               "description": "Visual weight.",
               "fieldName": "variant"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces height/padding/font-size one step below the default.",
+              "fieldName": "size"
             },
             {
               "name": "href",
