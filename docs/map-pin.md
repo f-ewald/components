@@ -24,7 +24,7 @@ import "@f-ewald/components/map-pin.js";
 | --- | --- | --- | --- | --- |
 | `color` | `color` | `string` | `"#4f46e5"` | Fill color; the gradient's light (highlight) and dark (edge) stops are derived from this. |
 | `size` | `size` | `number` | `32` | Diameter of the circular head, in CSS pixels. |
-| `ringOpacity` | `ring-opacity` | `number` | `0.6` | Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). |
+| `ringOpacity` | `ring-opacity` | `number` | `1` | Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring). |
 | `highlighted` | `highlighted` | `boolean` | `false` | Scales and glows the pin — a generic emphasis state (e.g. hover, selection). |
 
 ## Events

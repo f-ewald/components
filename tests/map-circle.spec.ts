@@ -6,7 +6,9 @@ test.describe("map-circle", () => {
 
     const plain = page.locator("#circle-plain");
     await expect(plain.locator("svg")).toBeVisible();
-    await expect(plain.locator("circle")).toHaveAttribute("fill", /^url\(#map-circle-grad-/);
+    await expect(plain.locator("circle")).toHaveCount(2); // separate fill + ring circles
+    await expect(plain.locator("circle.fill")).toHaveAttribute("fill", /^url\(#map-circle-grad-/);
+    await expect(plain.locator("circle.ring")).toHaveAttribute("fill", "none");
     await expect(plain.locator("path")).toHaveCount(0); // no pin-shaped path
 
     const rank = page.locator("#circle-rank");
@@ -14,7 +16,7 @@ test.describe("map-circle", () => {
     await expect(rank.locator(".content")).toHaveCSS("font-weight", "700");
     const pointStyle = page.locator("#circle-point");
     await expect(pointStyle.locator("svg")).toHaveAttribute("width", "14");
-    await expect(pointStyle.locator("circle")).toHaveAttribute("stroke-width", "3");
+    await expect(pointStyle.locator("circle.ring")).toHaveAttribute("stroke-width", "3");
     await expect(pointStyle.locator(".content")).toHaveText("");
 
     const plainStops = plain.locator("stop");
@@ -40,9 +42,9 @@ test.describe("map-circle", () => {
   test("`ring-width` and `size` are configurable and drive the rendered SVG", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.locator("#circle-thin-ring circle")).toHaveAttribute("stroke-width", "1.5");
-    await expect(page.locator("#circle-default-ring circle")).toHaveAttribute("stroke-width", "4");
-    await expect(page.locator("#circle-thick-ring circle")).toHaveAttribute("stroke-width", "6");
+    await expect(page.locator("#circle-thin-ring circle.ring")).toHaveAttribute("stroke-width", "1.5");
+    await expect(page.locator("#circle-default-ring circle.ring")).toHaveAttribute("stroke-width", "2");
+    await expect(page.locator("#circle-thick-ring circle.ring")).toHaveAttribute("stroke-width", "6");
 
     await expect(page.locator("#circle-small svg")).toHaveAttribute("width", "12");
     await expect(page.locator("#circle-big svg")).toHaveAttribute("width", "36");
@@ -51,9 +53,9 @@ test.describe("map-circle", () => {
   test("`ring-opacity` is configurable and drives the rendered ring's translucency", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.locator("#circle-ring-opaque circle")).toHaveAttribute("stroke", "rgb(255 255 255 / 1)");
-    await expect(page.locator("#circle-ring-default-opacity circle")).toHaveAttribute("stroke", "rgb(255 255 255 / 0.6)");
-    await expect(page.locator("#circle-ring-faint circle")).toHaveAttribute("stroke", "rgb(255 255 255 / 0.25)");
+    await expect(page.locator("#circle-ring-opaque circle.ring")).toHaveAttribute("stroke", "rgb(255 255 255 / 1)");
+    await expect(page.locator("#circle-ring-default-opacity circle.ring")).toHaveAttribute("stroke", "rgb(255 255 255 / 1)");
+    await expect(page.locator("#circle-ring-faint circle.ring")).toHaveAttribute("stroke", "rgb(255 255 255 / 0.25)");
   });
 
   test("preserves map colors and geometry while removing highlight motion", async ({ page }) => {
@@ -62,7 +64,7 @@ test.describe("map-circle", () => {
     const circle = page.locator("#circle-plain");
 
     await expect(circle.locator("svg")).toHaveAttribute("aria-hidden", "true");
-    await expect(circle.locator("circle")).toHaveAttribute("stroke", "rgb(255 255 255 / 0.6)");
+    await expect(circle.locator("circle.ring")).toHaveAttribute("stroke", "rgb(255 255 255 / 1)");
     await expect(circle.locator("stop").first()).toHaveAttribute("stop-color", "#979ca6");
     await expect(circle.locator("svg")).toHaveCSS("transition-duration", "0s");
   });

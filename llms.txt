@@ -995,7 +995,7 @@ Example:
 ## <map-circle>
 
 A plain circular map marker: a radial-gradient fill with a soft highlight
-and a translucent white outer ring, no point/tail (unlike `<map-pin>`) —
+and a solid white outer ring, no point/tail (unlike `<map-pin>`) —
 for markers that don't need to visually "point" at their exact
 coordinate. Purely a visual primitive — it has no `mapbox-gl` (or any
 mapping library) dependency; the consumer positions it, e.g. via
@@ -1006,7 +1006,7 @@ the slot empty, and rasterize one marker per color for use as a map
 
 Import: `import "@f-ewald/components/map-circle.js";`
 
-Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 18; `ringWidth` (attribute `ring-width`) : number, default 4; `ringOpacity` (attribute `ring-opacity`) : number, default 0.6; `highlighted` (attribute `highlighted`) : boolean, default false
+Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 18; `ringWidth` (attribute `ring-width`) : number, default 2; `ringOpacity` (attribute `ring-opacity`) : number, default 1; `highlighted` (attribute `highlighted`) : boolean, default false
 Events: none
 CSS custom properties: `--ui-font`, `--ui-font-weight-bold`, `--ui-line-height-glyph`
 
@@ -1026,7 +1026,7 @@ positions it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
 
 Import: `import "@f-ewald/components/map-pin.js";`
 
-Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 32; `ringOpacity` (attribute `ring-opacity`) : number, default 0.6; `highlighted` (attribute `highlighted`) : boolean, default false
+Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 32; `ringOpacity` (attribute `ring-opacity`) : number, default 1; `highlighted` (attribute `highlighted`) : boolean, default false
 Events: none
 CSS custom properties: `--ui-font`, `--ui-font-weight-bold`, `--ui-line-height-glyph`
 

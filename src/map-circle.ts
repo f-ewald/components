@@ -7,7 +7,7 @@ let gradientIdCounter = 0;
 
 /**
  * A plain circular map marker: a radial-gradient fill with a soft highlight
- * and a translucent white outer ring, no point/tail (unlike `<map-pin>`) —
+ * and a solid white outer ring, no point/tail (unlike `<map-pin>`) —
  * for markers that don't need to visually "point" at their exact
  * coordinate. Purely a visual primitive — it has no `mapbox-gl` (or any
  * mapping library) dependency; the consumer positions it, e.g. via
@@ -74,9 +74,9 @@ export class MapCircle extends LitElement {
   /** Diameter, in CSS pixels. */
   @property({ type: Number }) size = 18;
   /** White outer ring thickness, in the same viewBox units as `size` (scales with it). */
-  @property({ type: Number, attribute: "ring-width" }) ringWidth = 4;
-  /** Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). */
-  @property({ type: Number, attribute: "ring-opacity" }) ringOpacity = 0.6;
+  @property({ type: Number, attribute: "ring-width" }) ringWidth = 2;
+  /** Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring). */
+  @property({ type: Number, attribute: "ring-opacity" }) ringOpacity = 1;
   /** Scales and glows the circle — a generic emphasis state (e.g. hover, selection). */
   @property({ type: Boolean, reflect: true }) highlighted = false;
 
@@ -85,6 +85,13 @@ export class MapCircle extends LitElement {
   override render() {
     const light = mixHex(this.color, "#ffffff", 30);
     const dark = mixHex(this.color, "#000000", 30);
+    // A fixed outer radius keeps the marker footprint constant as `ring-width`
+    // varies; the ring sits entirely outside the fill (the fill meets the
+    // ring's inner edge) so the stroke never straddles the fill edge — which
+    // is what used to read as two rings.
+    const outerR = 15;
+    const fillR = outerR - this.ringWidth;
+    const ringR = outerR - this.ringWidth / 2;
     return html`
       <svg
         aria-hidden="true"
@@ -101,10 +108,18 @@ export class MapCircle extends LitElement {
           </radialGradient>
         </defs>
         <circle
+          class="fill"
           cx="16"
           cy="16"
-          r="13"
+          r=${fillR}
           fill="url(#${this._gradId})"
+        />
+        <circle
+          class="ring"
+          cx="16"
+          cy="16"
+          r=${ringR}
+          fill="none"
           stroke="rgb(255 255 255 / ${this.ringOpacity})"
           stroke-width=${this.ringWidth}
         />

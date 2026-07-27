@@ -71,8 +71,8 @@ export class MapPin extends LitElement {
   @property() color = "#4f46e5";
   /** Diameter of the circular head, in CSS pixels. */
   @property({ type: Number }) size = 32;
-  /** Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). */
-  @property({ type: Number, attribute: "ring-opacity" }) ringOpacity = 0.6;
+  /** Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring). */
+  @property({ type: Number, attribute: "ring-opacity" }) ringOpacity = 1;
   /** Scales and glows the pin — a generic emphasis state (e.g. hover, selection). */
   @property({ type: Boolean, reflect: true }) highlighted = false;
 
@@ -82,6 +82,13 @@ export class MapPin extends LitElement {
     const light = mixHex(this.color, "#ffffff", 30);
     const dark = mixHex(this.color, "#000000", 30);
     const height = Math.round(this.size * (34 / 32));
+    const shape = "M16 30 C10 24 4 19.5 4 13 A12 12 0 1 1 28 13 C28 19.5 22 24 16 30 Z";
+    const ringWidth = 2;
+    // Inset the fill so its head edge meets the ring's inner edge instead of the
+    // ring straddling the fill (which reads as two rings): the head arc has
+    // radius 12, so scale the fill to (12 - ringWidth / 2) / 12 about the head
+    // center (16, 13). The ring is the same outline drawn behind, stroke only.
+    const fillScale = (12 - ringWidth / 2) / 12;
     return html`
       <svg
         aria-hidden="true"
@@ -98,10 +105,17 @@ export class MapPin extends LitElement {
           </radialGradient>
         </defs>
         <path
-          d="M16 30 C10 24 4 19.5 4 13 A12 12 0 1 1 28 13 C28 19.5 22 24 16 30 Z"
-          fill="url(#${this._gradId})"
+          class="ring"
+          d=${shape}
+          fill="none"
           stroke="rgb(255 255 255 / ${this.ringOpacity})"
-          stroke-width="1.5"
+          stroke-width=${ringWidth}
+        />
+        <path
+          class="fill"
+          d=${shape}
+          fill="url(#${this._gradId})"
+          transform="translate(16 13) scale(${fillScale}) translate(-16 -13)"
         />
       </svg>
       <div class="content" style="font-size:${Math.round(this.size * 0.4)}px">

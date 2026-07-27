@@ -8581,7 +8581,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A plain circular map marker: a radial-gradient fill with a soft highlight\nand a translucent white outer ring, no point/tail (unlike `<map-pin>`) —\nfor markers that don't need to visually \"point\" at their exact\ncoordinate. Purely a visual primitive — it has no `mapbox-gl` (or any\nmapping library) dependency; the consumer positions it, e.g. via\n`new mapboxgl.Marker({ element: el })`. It can also replace the former\n`<map-point>` dense-layer primitive: use `size=\"14\" ring-width=\"3\"`, leave\nthe slot empty, and rasterize one marker per color for use as a map\n`icon-image`.",
+          "description": "A plain circular map marker: a radial-gradient fill with a soft highlight\nand a solid white outer ring, no point/tail (unlike `<map-pin>`) —\nfor markers that don't need to visually \"point\" at their exact\ncoordinate. Purely a visual primitive — it has no `mapbox-gl` (or any\nmapping library) dependency; the consumer positions it, e.g. via\n`new mapboxgl.Marker({ element: el })`. It can also replace the former\n`<map-point>` dense-layer primitive: use `size=\"14\" ring-width=\"3\"`, leave\nthe slot empty, and rasterize one marker per color for use as a map\n`icon-image`.",
           "name": "MapCircle",
           "slots": [
             {
@@ -8616,7 +8616,7 @@
               "type": {
                 "text": "number"
               },
-              "default": "4",
+              "default": "2",
               "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
               "attribute": "ring-width"
             },
@@ -8626,8 +8626,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "0.6",
-              "description": "Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white).",
+              "default": "1",
+              "description": "Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring).",
               "attribute": "ring-opacity"
             },
             {
@@ -8673,7 +8673,7 @@
               "type": {
                 "text": "number"
               },
-              "default": "4",
+              "default": "2",
               "description": "White outer ring thickness, in the same viewBox units as `size` (scales with it).",
               "fieldName": "ringWidth"
             },
@@ -8682,8 +8682,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "0.6",
-              "description": "Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white).",
+              "default": "1",
+              "description": "Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring).",
               "fieldName": "ringOpacity"
             },
             {
@@ -8764,8 +8764,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "0.6",
-              "description": "Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white).",
+              "default": "1",
+              "description": "Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring).",
               "attribute": "ring-opacity"
             },
             {
@@ -8811,8 +8811,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "0.6",
-              "description": "Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white).",
+              "default": "1",
+              "description": "Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring).",
               "fieldName": "ringOpacity"
             },
             {

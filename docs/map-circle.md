@@ -1,7 +1,7 @@
 # `<map-circle>`
 
 A plain circular map marker: a radial-gradient fill with a soft highlight
-and a translucent white outer ring, no point/tail (unlike `<map-pin>`) —
+and a solid white outer ring, no point/tail (unlike `<map-pin>`) —
 for markers that don't need to visually "point" at their exact
 coordinate. Purely a visual primitive — it has no `mapbox-gl` (or any
 mapping library) dependency; the consumer positions it, e.g. via
@@ -30,8 +30,8 @@ import "@f-ewald/components/map-circle.js";
 | --- | --- | --- | --- | --- |
 | `color` | `color` | `string` | `"#4f46e5"` | Fill color; the gradient's light (highlight) and dark (edge) stops are derived from this. |
 | `size` | `size` | `number` | `18` | Diameter, in CSS pixels. |
-| `ringWidth` | `ring-width` | `number` | `4` | White outer ring thickness, in the same viewBox units as `size` (scales with it). |
-| `ringOpacity` | `ring-opacity` | `number` | `0.6` | Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). |
+| `ringWidth` | `ring-width` | `number` | `2` | White outer ring thickness, in the same viewBox units as `size` (scales with it). |
+| `ringOpacity` | `ring-opacity` | `number` | `1` | Outer ring opacity, 0-1 (default 1 = a solid Apple Maps-style white ring; lower for a translucent ring). |
 | `highlighted` | `highlighted` | `boolean` | `false` | Scales and glows the circle — a generic emphasis state (e.g. hover, selection). |
 
 ## Events
