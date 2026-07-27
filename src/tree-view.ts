@@ -141,6 +141,21 @@ export class TreeView extends LitElement {
     this.#activate(node);
   }
 
+  #onRowClick(node: TreeNode, e: MouseEvent): void {
+    if (this.#isNestedInteractive(e.composedPath(), e.currentTarget)) return;
+    this.#activate(node);
+  }
+
+  #isNestedInteractive(path: EventTarget[], row: EventTarget | null): boolean {
+    const selector =
+      "a, button, input, select, textarea, summary, [contenteditable], [role='button'], [role='link'], [tabindex]";
+    for (const target of path) {
+      if (target === row) return false;
+      if (target instanceof HTMLElement && target.matches(selector)) return true;
+    }
+    return false;
+  }
+
   #renderNode(node: TreeNode, depth: number): TemplateResult {
     const isFolder = !!node.children;
     const isOpen = isFolder && this.expanded.has(node.id);
@@ -151,7 +166,7 @@ export class TreeView extends LitElement {
         aria-expanded=${isFolder ? String(isOpen) : nothing}
         tabindex="0"
         style="padding-left: ${depth * 1.25}rem"
-        @click=${() => this.#activate(node)}
+        @click=${(e: MouseEvent) => this.#onRowClick(node, e)}
         @keydown=${(e: KeyboardEvent) => this.#onKeydown(node, e)}
       >
         <span class="toggle" aria-hidden="true">

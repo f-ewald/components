@@ -82,6 +82,29 @@ test.describe("tree-view", () => {
     await expect(el.locator(".row").nth(1)).toHaveText("notes.txt");
   });
 
+  test("nested controls do not activate their row", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(async () => {
+      const tree = document.getElementById("tree-files") as HTMLElement & {
+        renderNode: (node: unknown) => unknown;
+        updateComplete: Promise<boolean>;
+      };
+      tree.renderNode = (node) => {
+        const button = document.createElement("button");
+        button.textContent = (node as { label: string }).label;
+        return button;
+      };
+      await tree.updateComplete;
+    });
+
+    await page
+      .locator("#tree-files .row")
+      .filter({ hasText: "readme.md" })
+      .getByRole("button")
+      .click();
+    await expect(page).not.toHaveURL(/#fil_2$/);
+  });
+
   test("nested rows indent deeper than their parent", async ({ page }) => {
     await page.goto("/");
     const el = page.locator("#tree-files");

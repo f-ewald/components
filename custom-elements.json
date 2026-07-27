@@ -12433,6 +12433,54 @@
             },
             {
               "kind": "method",
+              "name": "#onRowClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "TreeNode"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isNestedInteractive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": {
+                    "text": "EventTarget[]"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "EventTarget | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#renderNode",
               "privacy": "private",
               "return": {
