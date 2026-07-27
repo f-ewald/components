@@ -1248,6 +1248,12 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
             <map-circle id="circle-small" data-testid="circle-small" color="#3b82f6" size="12" ring-width="3"></map-circle>
             <map-circle id="circle-big" data-testid="circle-big" color="#3b82f6" size="36" ring-width="5"></map-circle>
           </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Configurable ring-opacity</p>
+          <div class="mt-2 flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 p-6">
+            <map-circle id="circle-ring-opaque" data-testid="circle-ring-opaque" color="#3b82f6" ring-opacity="1"></map-circle>
+            <map-circle id="circle-ring-default-opacity" data-testid="circle-ring-default-opacity" color="#3b82f6"></map-circle>
+            <map-circle id="circle-ring-faint" data-testid="circle-ring-faint" color="#3b82f6" ring-opacity="0.25"></map-circle>
+          </div>
           <div class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
             <map-circle id="circle-highlight-demo" data-testid="circle-highlight-demo" color="#1a73e8"></map-circle>
             <button
@@ -1263,7 +1269,8 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
 
 &lt;map-circle color="#6b7280"&gt;&lt;/map-circle&gt;
 &lt;map-circle color="#0099D8" size="14" ring-width="3"&gt;&lt;/map-circle&gt;
-&lt;map-circle color="#1a73e8" size="24" ring-width="5" highlighted&gt;1&lt;/map-circle&gt;</code></pre>
+&lt;map-circle color="#1a73e8" size="24" ring-width="5" highlighted&gt;1&lt;/map-circle&gt;
+&lt;map-circle color="#3b82f6" ring-opacity="0.35"&gt;&lt;/map-circle&gt;</code></pre>
         </section>
 
         <section id="map-pin" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-map-pin">
@@ -1279,6 +1286,12 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
             <map-pin id="pin-school" data-testid="pin-school" color="#f59e0b" size="26">🎓</map-pin>
             <map-pin id="pin-large" data-testid="pin-large" color="#4f46e5" size="48">★</map-pin>
           </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Configurable ring-opacity</p>
+          <div class="mt-2 flex flex-wrap items-end gap-4 rounded-lg border border-slate-200 p-6">
+            <map-pin id="pin-ring-opaque" data-testid="pin-ring-opaque" color="#1a73e8" size="30" ring-opacity="1"></map-pin>
+            <map-pin id="pin-ring-default-opacity" data-testid="pin-ring-default-opacity" color="#1a73e8" size="30"></map-pin>
+            <map-pin id="pin-ring-faint" data-testid="pin-ring-faint" color="#1a73e8" size="30" ring-opacity="0.25"></map-pin>
+          </div>
           <div class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
             <map-pin id="pin-highlight-demo" data-testid="pin-highlight-demo" color="#1a73e8" size="32">3</map-pin>
             <button
@@ -1293,7 +1306,8 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
           <pre class="usage mt-4"><code>import "@f-ewald/components/map-pin.js";
 
 &lt;map-pin color="#1a73e8" size="30"&gt;3&lt;/map-pin&gt;
-&lt;map-pin color="#22c55e" size="26" highlighted&gt;🏠&lt;/map-pin&gt;</code></pre>
+&lt;map-pin color="#22c55e" size="26" highlighted&gt;🏠&lt;/map-pin&gt;
+&lt;map-pin color="#1a73e8" size="30" ring-opacity="0.35"&gt;4&lt;/map-pin&gt;</code></pre>
         </section>
 
         <section id="markdown-view" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-markdown-view">

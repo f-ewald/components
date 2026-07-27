@@ -6,14 +6,15 @@ import { mixHex } from "./utils/color.js";
 let gradientIdCounter = 0;
 
 /**
- * A plain circular map marker: a light-to-dark gradient fill with a white
- * outer ring, no point/tail (unlike `<map-pin>`) — for markers that don't
- * need to visually "point" at their exact coordinate. Purely a visual
- * primitive — it has no `mapbox-gl` (or any mapping library) dependency;
- * the consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.
- * It can also replace the former `<map-point>` dense-layer primitive: use
- * `size="14" ring-width="3"`, leave the slot empty, and rasterize one marker
- * per color for use as a map `icon-image`.
+ * A plain circular map marker: a radial-gradient fill with a soft highlight
+ * and a translucent white outer ring, no point/tail (unlike `<map-pin>`) —
+ * for markers that don't need to visually "point" at their exact
+ * coordinate. Purely a visual primitive — it has no `mapbox-gl` (or any
+ * mapping library) dependency; the consumer positions it, e.g. via
+ * `new mapboxgl.Marker({ element: el })`. It can also replace the former
+ * `<map-point>` dense-layer primitive: use `size="14" ring-width="3"`, leave
+ * the slot empty, and rasterize one marker per color for use as a map
+ * `icon-image`.
  *
  * @element map-circle
  * @slot - Optional badge content shown centered on the circle — a rank
@@ -31,6 +32,7 @@ export class MapCircle extends LitElement {
       }
       svg {
         display: block;
+        filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.25));
         transition: transform 120ms ease, filter 120ms ease;
       }
       :host([highlighted]) svg {
@@ -67,12 +69,14 @@ export class MapCircle extends LitElement {
     `,
   ];
 
-  /** Fill color; the gradient's light (top) and dark (bottom) stops are derived from this. */
+  /** Fill color; the gradient's light (highlight) and dark (edge) stops are derived from this. */
   @property() color = "#4f46e5";
   /** Diameter, in CSS pixels. */
   @property({ type: Number }) size = 18;
   /** White outer ring thickness, in the same viewBox units as `size` (scales with it). */
   @property({ type: Number, attribute: "ring-width" }) ringWidth = 4;
+  /** Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). */
+  @property({ type: Number, attribute: "ring-opacity" }) ringOpacity = 0.6;
   /** Scales and glows the circle — a generic emphasis state (e.g. hover, selection). */
   @property({ type: Boolean, reflect: true }) highlighted = false;
 
@@ -91,12 +95,19 @@ export class MapCircle extends LitElement {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id=${this._gradId} x1="0" y1="0" x2="0" y2="1">
+          <radialGradient id=${this._gradId} cx="35%" cy="30%" r="75%">
             <stop offset="0%" stop-color=${light} />
             <stop offset="100%" stop-color=${dark} />
-          </linearGradient>
+          </radialGradient>
         </defs>
-        <circle cx="16" cy="16" r="13" fill="url(#${this._gradId})" stroke="#ffffff" stroke-width=${this.ringWidth} />
+        <circle
+          cx="16"
+          cy="16"
+          r="13"
+          fill="url(#${this._gradId})"
+          stroke="rgb(255 255 255 / ${this.ringOpacity})"
+          stroke-width=${this.ringWidth}
+        />
       </svg>
       <div class="content" style="font-size:${Math.round(this.size * 0.4)}px">
         <slot></slot>

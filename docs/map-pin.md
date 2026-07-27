@@ -1,9 +1,9 @@
 # `<map-pin>`
 
-A circular "Apple Maps"-style map pin: a light-to-dark gradient fill with
-a slight point at the bottom. Purely a visual primitive — it has no
-`mapbox-gl` (or any mapping library) dependency; the consumer positions
-it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
+A circular "Apple Maps"-style map pin: a radial-gradient fill with a soft
+highlight and a slight point at the bottom. Purely a visual primitive —
+it has no `mapbox-gl` (or any mapping library) dependency; the consumer
+positions it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
 
 ## Install
 
@@ -22,8 +22,9 @@ import "@f-ewald/components/map-pin.js";
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `color` | `color` | `string` | `"#4f46e5"` | Fill color; the gradient's light (top) and dark (bottom) stops are derived from this. |
+| `color` | `color` | `string` | `"#4f46e5"` | Fill color; the gradient's light (highlight) and dark (edge) stops are derived from this. |
 | `size` | `size` | `number` | `32` | Diameter of the circular head, in CSS pixels. |
+| `ringOpacity` | `ring-opacity` | `number` | `0.6` | Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). |
 | `highlighted` | `highlighted` | `boolean` | `false` | Scales and glows the pin — a generic emphasis state (e.g. hover, selection). |
 
 ## Events

@@ -994,18 +994,19 @@ Example:
 
 ## <map-circle>
 
-A plain circular map marker: a light-to-dark gradient fill with a white
-outer ring, no point/tail (unlike `<map-pin>`) — for markers that don't
-need to visually "point" at their exact coordinate. Purely a visual
-primitive — it has no `mapbox-gl` (or any mapping library) dependency;
-the consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.
-It can also replace the former `<map-point>` dense-layer primitive: use
-`size="14" ring-width="3"`, leave the slot empty, and rasterize one marker
-per color for use as a map `icon-image`.
+A plain circular map marker: a radial-gradient fill with a soft highlight
+and a translucent white outer ring, no point/tail (unlike `<map-pin>`) —
+for markers that don't need to visually "point" at their exact
+coordinate. Purely a visual primitive — it has no `mapbox-gl` (or any
+mapping library) dependency; the consumer positions it, e.g. via
+`new mapboxgl.Marker({ element: el })`. It can also replace the former
+`<map-point>` dense-layer primitive: use `size="14" ring-width="3"`, leave
+the slot empty, and rasterize one marker per color for use as a map
+`icon-image`.
 
 Import: `import "@f-ewald/components/map-circle.js";`
 
-Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 18; `ringWidth` (attribute `ring-width`) : number, default 4; `highlighted` (attribute `highlighted`) : boolean, default false
+Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 18; `ringWidth` (attribute `ring-width`) : number, default 4; `ringOpacity` (attribute `ring-opacity`) : number, default 0.6; `highlighted` (attribute `highlighted`) : boolean, default false
 Events: none
 CSS custom properties: `--ui-font`, `--ui-font-weight-bold`, `--ui-line-height-glyph`
 
@@ -1018,14 +1019,14 @@ Example:
 
 ## <map-pin>
 
-A circular "Apple Maps"-style map pin: a light-to-dark gradient fill with
-a slight point at the bottom. Purely a visual primitive — it has no
-`mapbox-gl` (or any mapping library) dependency; the consumer positions
-it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
+A circular "Apple Maps"-style map pin: a radial-gradient fill with a soft
+highlight and a slight point at the bottom. Purely a visual primitive —
+it has no `mapbox-gl` (or any mapping library) dependency; the consumer
+positions it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
 
 Import: `import "@f-ewald/components/map-pin.js";`
 
-Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 32; `highlighted` (attribute `highlighted`) : boolean, default false
+Properties: `color` (attribute `color`) : string, default "#4f46e5"; `size` (attribute `size`) : number, default 32; `ringOpacity` (attribute `ring-opacity`) : number, default 0.6; `highlighted` (attribute `highlighted`) : boolean, default false
 Events: none
 CSS custom properties: `--ui-font`, `--ui-font-weight-bold`, `--ui-line-height-glyph`
 

@@ -6,10 +6,10 @@ import { mixHex } from "./utils/color.js";
 let gradientIdCounter = 0;
 
 /**
- * A circular "Apple Maps"-style map pin: a light-to-dark gradient fill with
- * a slight point at the bottom. Purely a visual primitive — it has no
- * `mapbox-gl` (or any mapping library) dependency; the consumer positions
- * it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
+ * A circular "Apple Maps"-style map pin: a radial-gradient fill with a soft
+ * highlight and a slight point at the bottom. Purely a visual primitive —
+ * it has no `mapbox-gl` (or any mapping library) dependency; the consumer
+ * positions it, e.g. via `new mapboxgl.Marker({ element: pinEl })`.
  *
  * @element map-pin
  * @slot - Badge content shown centered on the pin's circular head — a rank
@@ -27,6 +27,7 @@ export class MapPin extends LitElement {
       }
       svg {
         display: block;
+        filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.25));
         transition: transform 120ms ease, filter 120ms ease;
       }
       :host([highlighted]) svg {
@@ -66,10 +67,12 @@ export class MapPin extends LitElement {
     `,
   ];
 
-  /** Fill color; the gradient's light (top) and dark (bottom) stops are derived from this. */
+  /** Fill color; the gradient's light (highlight) and dark (edge) stops are derived from this. */
   @property() color = "#4f46e5";
   /** Diameter of the circular head, in CSS pixels. */
   @property({ type: Number }) size = 32;
+  /** Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). */
+  @property({ type: Number, attribute: "ring-opacity" }) ringOpacity = 0.6;
   /** Scales and glows the pin — a generic emphasis state (e.g. hover, selection). */
   @property({ type: Boolean, reflect: true }) highlighted = false;
 
@@ -89,15 +92,15 @@ export class MapPin extends LitElement {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id=${this._gradId} x1="0" y1="0" x2="0" y2="1">
+          <radialGradient id=${this._gradId} gradientUnits="userSpaceOnUse" cx="12" cy="9" r="18">
             <stop offset="0%" stop-color=${light} />
             <stop offset="100%" stop-color=${dark} />
-          </linearGradient>
+          </radialGradient>
         </defs>
         <path
           d="M16 30 C10 24 4 19.5 4 13 A12 12 0 1 1 28 13 C28 19.5 22 24 16 30 Z"
           fill="url(#${this._gradId})"
-          stroke="#ffffff"
+          stroke="rgb(255 255 255 / ${this.ringOpacity})"
           stroke-width="1.5"
         />
       </svg>

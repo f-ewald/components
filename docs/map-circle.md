@@ -1,13 +1,14 @@
 # `<map-circle>`
 
-A plain circular map marker: a light-to-dark gradient fill with a white
-outer ring, no point/tail (unlike `<map-pin>`) — for markers that don't
-need to visually "point" at their exact coordinate. Purely a visual
-primitive — it has no `mapbox-gl` (or any mapping library) dependency;
-the consumer positions it, e.g. via `new mapboxgl.Marker({ element: el })`.
-It can also replace the former `<map-point>` dense-layer primitive: use
-`size="14" ring-width="3"`, leave the slot empty, and rasterize one marker
-per color for use as a map `icon-image`.
+A plain circular map marker: a radial-gradient fill with a soft highlight
+and a translucent white outer ring, no point/tail (unlike `<map-pin>`) —
+for markers that don't need to visually "point" at their exact
+coordinate. Purely a visual primitive — it has no `mapbox-gl` (or any
+mapping library) dependency; the consumer positions it, e.g. via
+`new mapboxgl.Marker({ element: el })`. It can also replace the former
+`<map-point>` dense-layer primitive: use `size="14" ring-width="3"`, leave
+the slot empty, and rasterize one marker per color for use as a map
+`icon-image`.
 
 ## Install
 
@@ -27,9 +28,10 @@ import "@f-ewald/components/map-circle.js";
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `color` | `color` | `string` | `"#4f46e5"` | Fill color; the gradient's light (top) and dark (bottom) stops are derived from this. |
+| `color` | `color` | `string` | `"#4f46e5"` | Fill color; the gradient's light (highlight) and dark (edge) stops are derived from this. |
 | `size` | `size` | `number` | `18` | Diameter, in CSS pixels. |
 | `ringWidth` | `ring-width` | `number` | `4` | White outer ring thickness, in the same viewBox units as `size` (scales with it). |
+| `ringOpacity` | `ring-opacity` | `number` | `0.6` | Outer ring opacity, 0-1 (Apple Maps-style rings are translucent, not solid white). |
 | `highlighted` | `highlighted` | `boolean` | `false` | Scales and glows the circle — a generic emphasis state (e.g. hover, selection). |
 
 ## Events
