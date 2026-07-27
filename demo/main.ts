@@ -30,6 +30,8 @@ import {
   type AppSidebar,
   type PaginationNav,
   type TileGrid,
+  type TreeNode,
+  type TreeView,
   type PopoverPanel,
   type DropdownButton,
   type IconButton,
@@ -714,6 +716,24 @@ if (gridFiles) {
   ];
   gridFiles.renderTile = (item) => (item as { name: string }).name;
   gridFiles.itemHref = (item) => `#${(item as { id: string }).id}`;
+}
+
+// tree-view
+const treeFiles = document.getElementById("tree-files") as TreeView;
+if (treeFiles) {
+  treeFiles.nodes = [
+    {
+      id: "docs",
+      label: "docs",
+      children: [{ id: "fil_1", label: "notes.txt", data: { id: "fil_1" } }],
+    },
+    { id: "fil_2", label: "readme.md", data: { id: "fil_2" } },
+  ] satisfies TreeNode[];
+  treeFiles.renderNode = (node) => (node as TreeNode).label;
+  treeFiles.addEventListener("node-click", (e) => {
+    const detail = (e as CustomEvent<{ id: string; data: unknown }>).detail;
+    location.hash = `#${(detail.data as { id: string }).id}`;
+  });
 }
 
 // calendar-year

@@ -99,6 +99,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<timeline-container>` | [API reference](https://f-ewald.github.io/components/docs/timeline-container.html) |
 | `<timeline-entry>` | [API reference](https://f-ewald.github.io/components/docs/timeline-entry.html) |
 | `<toast-notification>` | [API reference](https://f-ewald.github.io/components/docs/toast-notification.html) |
+| `<tree-view>` | [API reference](https://f-ewald.github.io/components/docs/tree-view.html) |
 | `<ui-button>` | [API reference](https://f-ewald.github.io/components/docs/ui-button.html) |
 | `<user-avatar>` | [API reference](https://f-ewald.github.io/components/docs/user-avatar.html) |
 | `<weight-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/weight-bar-chart.html) |

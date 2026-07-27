@@ -6533,6 +6533,22 @@
         },
         {
           "kind": "js",
+          "name": "TreeView",
+          "declaration": {
+            "name": "TreeView",
+            "module": "./tree-view.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TreeNode",
+          "declaration": {
+            "name": "TreeNode",
+            "module": "./tree-view.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "PopoverPanel",
           "declaration": {
             "name": "PopoverPanel",
@@ -12300,6 +12316,189 @@
           "declaration": {
             "name": "tokens",
             "module": "src/tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tree-view.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A generic, presentational tree shell: renders `nodes` recursively, one row\nper node, with each row's content produced by `renderNode` (default: plain\nlabel). Modeled on `data-table`'s headless pattern — knows nothing about\nwhat a node's `data` means beyond what `renderNode` does with it.\n\nA node with a `children` array (even empty) is a folder: clicking or\nactivating its row toggles expand/collapse instead of firing `node-click`.\nA node with no `children` is a leaf: clicking or activating its row fires\n`node-click`. Folders start collapsed; set `default-expanded` to start\nevery folder expanded instead. Expansion state is otherwise managed\ninternally and untouched by later `nodes` updates, so a user's manual\ntoggles survive a data refresh.",
+          "name": "TreeView",
+          "members": [
+            {
+              "kind": "field",
+              "name": "nodes",
+              "type": {
+                "text": "TreeNode[]"
+              },
+              "default": "[]",
+              "description": "Tree data; opaque to this component beyond what `renderNode` does with it."
+            },
+            {
+              "kind": "field",
+              "name": "renderNode",
+              "type": {
+                "text": "(node: TreeNode) => unknown"
+              },
+              "description": "Produces a row's rendered content for `node`. Default: plain label text."
+            },
+            {
+              "kind": "field",
+              "name": "defaultExpanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Start every folder expanded instead of the default all-collapsed.",
+              "attribute": "default-expanded"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "privacy": "private",
+              "default": "new Set<string>()"
+            },
+            {
+              "kind": "field",
+              "name": "#initializedExpansion",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#activate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "TreeNode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "TreeNode"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderNode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "TreeNode"
+                  }
+                },
+                {
+                  "name": "depth",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "node-click",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A leaf row was activated; detail is `{ id, data }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "default-expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Start every folder expanded instead of the default all-collapsed.",
+              "fieldName": "defaultExpanded"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tree-view",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TreeView",
+          "declaration": {
+            "name": "TreeView",
+            "module": "src/tree-view.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tree-view",
+          "declaration": {
+            "name": "TreeView",
+            "module": "src/tree-view.ts"
           }
         }
       ]

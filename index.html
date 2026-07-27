@@ -63,6 +63,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tile-grid">tile-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#timeline-container">timeline-container</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#toast-notification">toast-notification</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tree-view">tree-view</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-button">ui-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#user-avatar">user-avatar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#weight-bar-chart">weight-bar-chart</a>
@@ -1892,6 +1893,32 @@ import { notifySuccess } from "@f-ewald/components/toast-notification.js";
 
 &lt;toast-notification&gt;&lt;/toast-notification&gt;
 &lt;script&gt;notifySuccess("Saved!");&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="tree-view" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-tree-view">
+          <h3 class="text-xl font-semibold text-slate-900">tree-view</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Generic recursive tree shell: one row per <code>nodes</code> entry, content from
+            <code>renderNode</code>. A node with a <code>children</code> array is a folder
+            (click toggles expand/collapse); otherwise it's a leaf (click fires
+            <code>node-click</code>).
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <tree-view id="tree-files" data-testid="tree-files"></tree-view>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/tree-view.js";
+
+const tree = document.querySelector("tree-view");
+tree.nodes = [
+  {
+    id: "docs",
+    label: "docs",
+    children: [{ id: "fil_1", label: "notes.txt", data: { id: "fil_1" } }],
+  },
+  { id: "fil_2", label: "readme.md", data: { id: "fil_2" } },
+];
+tree.renderNode = (node) => node.label;
+tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
         </section>
 
         <section id="ui-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-button">

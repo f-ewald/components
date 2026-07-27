@@ -428,6 +428,20 @@ See the [changelog](#markdown-view) for details.\`;
   ];
   grid.renderTile = (item) => item.name;
 </script>`,
+  "tree-view": `<tree-view></tree-view>
+<script type="module">
+  const tree = document.querySelector("tree-view");
+  tree.nodes = [
+    {
+      id: "docs",
+      label: "docs",
+      children: [{ id: "fil_1", label: "notes.txt", data: { id: "fil_1" } }],
+    },
+    { id: "fil_2", label: "readme.md", data: { id: "fil_2" } },
+  ];
+  tree.renderNode = (node) => node.label;
+  tree.addEventListener("node-click", (e) => console.log(e.detail));
+</script>`,
   "kanban-board": `<kanban-board label="Project tasks"></kanban-board>
 <script type="module">
   const board = document.querySelector("kanban-board");
