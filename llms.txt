@@ -992,6 +992,52 @@ Example:
 <load-more></load-more>
 ```
 
+## <loading-dots>
+
+Three dots that bounce one after another as a lightweight, indeterminate
+"working" / "typing" indicator. Purely presentational and property-driven —
+show it while a short operation is pending and remove it when done.
+
+Exposes an accessible `role="status"` with `label` as its name, so assistive
+technology announces the loading state; the dots themselves are decorative.
+Under `prefers-reduced-motion` the bounce is removed and the dots rest.
+
+Import: `import "@f-ewald/components/loading-dots.js";`
+
+Properties: `size` (attribute `size`) : "sm" | "md" | "lg", default "md"; `label` (attribute `label`) : string, default "Loading"
+Events: none
+CSS custom properties: `--ui-line-height-glyph`, `--ui-primary`
+
+Example:
+```html
+<loading-dots></loading-dots>
+<loading-dots size="sm"></loading-dots>
+<loading-dots size="lg" label="Sending message"></loading-dots>
+```
+
+## <loading-spinner>
+
+Indeterminate circular loading spinner: a rotating arc over a faint track,
+in the style of a browser page-load indicator. Purely presentational and
+property-driven — show it while work is in flight and remove it when done.
+
+Exposes an accessible `role="status"` with `label` as its name, so assistive
+technology announces the loading state; the arc itself is decorative. Under
+`prefers-reduced-motion` it stops rotating and stays a static ring.
+
+Import: `import "@f-ewald/components/loading-spinner.js";`
+
+Properties: `size` (attribute `size`) : "sm" | "md" | "lg", default "md"; `label` (attribute `label`) : string, default "Loading"
+Events: none
+CSS custom properties: `--ui-border`, `--ui-line-height-glyph`, `--ui-primary`
+
+Example:
+```html
+<loading-spinner></loading-spinner>
+<loading-spinner size="sm"></loading-spinner>
+<loading-spinner size="lg" label="Loading results"></loading-spinner>
+```
+
 ## <map-circle>
 
 A plain circular map marker: a radial-gradient fill with a soft highlight

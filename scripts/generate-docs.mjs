@@ -110,6 +110,12 @@ const EXAMPLES = {
   "scroll-to-top": `<scroll-to-top></scroll-to-top>`,
   "load-more": `<load-more direction="top" label="Load older"></load-more>
 <load-more></load-more>`,
+  "loading-dots": `<loading-dots></loading-dots>
+<loading-dots size="sm"></loading-dots>
+<loading-dots size="lg" label="Sending message"></loading-dots>`,
+  "loading-spinner": `<loading-spinner></loading-spinner>
+<loading-spinner size="sm"></loading-spinner>
+<loading-spinner size="lg" label="Loading results"></loading-spinner>`,
   "content-divider": `<content-divider></content-divider>
 
 <content-divider label="OR"></content-divider>`,

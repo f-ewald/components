@@ -53,6 +53,8 @@ import {
   type GalleryItem,
   type GalleryItemVariant,
   type CalendarYear,
+  type AutocompleteInput,
+  type AutocompleteOption,
 } from "../src/index.js";
 
 /**
@@ -919,6 +921,24 @@ const observer = new IntersectionObserver(
   { rootMargin: "-10% 0px -70% 0px" },
 );
 for (const section of sections) observer.observe(section);
+
+// Sidebar component filter: an autocomplete-input whose local options are the
+// in-page component anchors. Picking one jumps to that section by hash — a
+// fast "find a component" affordance rather than an in-place list filter.
+const navFilter = document.getElementById("nav-filter") as AutocompleteInput | null;
+if (navFilter) {
+  const componentAnchors = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('.demo-nav a[href^="#"]'),
+  );
+  navFilter.options = componentAnchors.map((a) => {
+    const id = a.getAttribute("href")!.slice(1);
+    return { key: id, value: a.textContent?.trim() ?? id };
+  });
+  navFilter.addEventListener("option-select", (e) => {
+    const { key } = (e as CustomEvent<AutocompleteOption>).detail;
+    location.hash = `#${key}`;
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Layout components: action-bar, app-shell, app-sidebar, form-actions,

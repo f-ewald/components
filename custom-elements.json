@@ -6757,6 +6757,22 @@
         },
         {
           "kind": "js",
+          "name": "LoadingSpinner",
+          "declaration": {
+            "name": "LoadingSpinner",
+            "module": "./loading-spinner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LoadingDots",
+          "declaration": {
+            "name": "LoadingDots",
+            "module": "./loading-dots.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "ChatMessage",
           "declaration": {
             "name": "ChatMessage",
@@ -8571,6 +8587,160 @@
           "declaration": {
             "name": "LoadMore",
             "module": "src/load-more.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/loading-dots.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Three dots that bounce one after another as a lightweight, indeterminate\n\"working\" / \"typing\" indicator. Purely presentational and property-driven —\nshow it while a short operation is pending and remove it when done.\n\nExposes an accessible `role=\"status\"` with `label` as its name, so assistive\ntechnology announces the loading state; the dots themselves are decorative.\nUnder `prefers-reduced-motion` the bounce is removed and the dots rest.",
+          "name": "LoadingDots",
+          "members": [
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\" | \"lg\""
+              },
+              "default": "\"md\"",
+              "description": "Dot-size step — `sm`, `md` (default), or `lg`.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Loading\"",
+              "description": "Accessible name announced by the `role=\"status\"` live region.",
+              "attribute": "label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\" | \"lg\""
+              },
+              "default": "\"md\"",
+              "description": "Dot-size step — `sm`, `md` (default), or `lg`.",
+              "fieldName": "size"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Loading\"",
+              "description": "Accessible name announced by the `role=\"status\"` live region.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "loading-dots",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LoadingDots",
+          "declaration": {
+            "name": "LoadingDots",
+            "module": "src/loading-dots.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "loading-dots",
+          "declaration": {
+            "name": "LoadingDots",
+            "module": "src/loading-dots.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/loading-spinner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Indeterminate circular loading spinner: a rotating arc over a faint track,\nin the style of a browser page-load indicator. Purely presentational and\nproperty-driven — show it while work is in flight and remove it when done.\n\nExposes an accessible `role=\"status\"` with `label` as its name, so assistive\ntechnology announces the loading state; the arc itself is decorative. Under\n`prefers-reduced-motion` it stops rotating and stays a static ring.",
+          "name": "LoadingSpinner",
+          "members": [
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\" | \"lg\""
+              },
+              "default": "\"md\"",
+              "description": "Diameter step — `sm` ≈ 1rem, `md` ≈ 1.5rem (default), `lg` ≈ 2rem.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Loading\"",
+              "description": "Accessible name announced by the `role=\"status\"` live region.",
+              "attribute": "label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\" | \"lg\""
+              },
+              "default": "\"md\"",
+              "description": "Diameter step — `sm` ≈ 1rem, `md` ≈ 1.5rem (default), `lg` ≈ 2rem.",
+              "fieldName": "size"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Loading\"",
+              "description": "Accessible name announced by the `role=\"status\"` live region.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "loading-spinner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LoadingSpinner",
+          "declaration": {
+            "name": "LoadingSpinner",
+            "module": "src/loading-spinner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "loading-spinner",
+          "declaration": {
+            "name": "LoadingSpinner",
+            "module": "src/loading-spinner.ts"
           }
         }
       ]

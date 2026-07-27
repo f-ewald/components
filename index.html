@@ -13,6 +13,15 @@
           <h1 class="text-lg font-semibold text-slate-900">@f-ewald/components</h1>
           <p class="mt-1 text-xs text-slate-500">Playground</p>
         </div>
+        <div class="px-3 pb-3">
+          <autocomplete-input
+            id="nav-filter"
+            data-testid="nav-filter"
+            placeholder="Filter components…"
+            min-length="1"
+            debounce="0"
+          ></autocomplete-input>
+        </div>
         <nav class="demo-nav flex flex-col gap-0.5 px-3 pb-6 text-sm" data-testid="nav">
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#action-bar">action-bar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#address-autocomplete">address-autocomplete</a>
@@ -44,6 +53,8 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#link-card">link-card</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#load-more">load-more</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#loading-dots">loading-dots</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#loading-spinner">loading-spinner</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#markdown-view">markdown-view</a>
@@ -1225,6 +1236,48 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
 
 &lt;load-more direction="top" label="Load older"&gt;&lt;/load-more&gt;
 &lt;load-more&gt;&lt;/load-more&gt;</code></pre>
+        </section>
+
+        <section id="loading-dots" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-loading-dots">
+          <h3 class="text-xl font-semibold text-slate-900">loading-dots</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Three dots that bounce one after another — a lightweight, indeterminate
+            "working" or "typing" indicator. Presentational and property-driven; the
+            <code>size</code> is <code>sm</code>, <code>md</code>, or <code>lg</code>, and it rests
+            (no bounce) under <code>prefers-reduced-motion</code>.
+          </p>
+          <div class="mt-6 flex flex-wrap items-center gap-6 rounded-lg border border-slate-200 p-6">
+            <loading-dots id="loading-dots-sm" data-testid="loading-dots-sm" size="sm"></loading-dots>
+            <loading-dots id="loading-dots-md" data-testid="loading-dots-md"></loading-dots>
+            <loading-dots id="loading-dots-lg" data-testid="loading-dots-lg" size="lg"></loading-dots>
+            <loading-dots id="loading-dots-label" data-testid="loading-dots-label" label="Sending message"></loading-dots>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/loading-dots.js";
+
+&lt;loading-dots&gt;&lt;/loading-dots&gt;
+&lt;loading-dots size="sm"&gt;&lt;/loading-dots&gt;
+&lt;loading-dots size="lg" label="Sending message"&gt;&lt;/loading-dots&gt;</code></pre>
+        </section>
+
+        <section id="loading-spinner" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-loading-spinner">
+          <h3 class="text-xl font-semibold text-slate-900">loading-spinner</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Indeterminate circular spinner — a rotating arc over a faint track, in the
+            style of a browser page-load indicator. Presentational and property-driven; the
+            <code>size</code> is <code>sm</code>, <code>md</code>, or <code>lg</code>, and it
+            becomes a static ring under <code>prefers-reduced-motion</code>.
+          </p>
+          <div class="mt-6 flex flex-wrap items-center gap-6 rounded-lg border border-slate-200 p-6">
+            <loading-spinner id="loading-spinner-sm" data-testid="loading-spinner-sm" size="sm"></loading-spinner>
+            <loading-spinner id="loading-spinner-md" data-testid="loading-spinner-md"></loading-spinner>
+            <loading-spinner id="loading-spinner-lg" data-testid="loading-spinner-lg" size="lg"></loading-spinner>
+            <loading-spinner id="loading-spinner-label" data-testid="loading-spinner-label" label="Loading results"></loading-spinner>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/loading-spinner.js";
+
+&lt;loading-spinner&gt;&lt;/loading-spinner&gt;
+&lt;loading-spinner size="sm"&gt;&lt;/loading-spinner&gt;
+&lt;loading-spinner size="lg" label="Loading results"&gt;&lt;/loading-spinner&gt;</code></pre>
         </section>
 
         <section id="map-circle" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-map-circle">

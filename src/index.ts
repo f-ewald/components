@@ -48,6 +48,8 @@ export { StatusPill, type StatusPillColor } from "./status-pill.js";
 export { EditableText } from "./editable-text.js";
 export { LiveTimer } from "./live-timer.js";
 export { LoadMore } from "./load-more.js";
+export { LoadingSpinner } from "./loading-spinner.js";
+export { LoadingDots } from "./loading-dots.js";
 export {
   ChatMessage,
   type ChatMessageRole,

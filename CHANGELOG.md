@@ -1,5 +1,20 @@
 # @f-ewald/components
 
+## 1.15.0
+
+- Added `loading-spinner`, an indeterminate circular spinner — a rotating arc
+  over a faint track, in the style of a browser page-load indicator. Purely
+  presentational with a `size` (`sm` | `md` | `lg`) and an accessible `label`
+  (`role="status"`); it becomes a static ring under
+  `prefers-reduced-motion`.
+- Added `loading-dots`, three dots that bounce one after another as a
+  lightweight indeterminate "working"/"typing" indicator. Same `size` and
+  `label` API as `loading-spinner`; the dots rest (no bounce) under
+  `prefers-reduced-motion`.
+- The playground sidebar gains a component filter at the top: an
+  `autocomplete-input` that suggests matching component names and jumps to the
+  selected component's section.
+
 ## 1.11.0
 
 - Added `markdown-view`, a component that renders a markdown string as
