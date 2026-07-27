@@ -169,6 +169,37 @@ Example:
 </app-sidebar>
 ```
 
+## <auto-scroll>
+
+Wraps arbitrary slotted content (e.g. `timeline-container`) and keeps it
+scrolled to the bottom as new children are appended — but only while the
+user is already scrolled near the bottom ("stick to bottom", a chat/log-
+viewer convention). If the user has scrolled up to read earlier content,
+new content does not yank the scroll position back down.
+
+New content is detected via a `MutationObserver`, so no cooperation from
+whatever is slotted in is required. The host itself is the scrollable
+region (`overflow-y: auto`) and needs a consumer-supplied bounded height to
+have anything to scroll, e.g. `auto-scroll { height: 24rem; }`.
+
+Import: `import "@f-ewald/components/auto-scroll.js";`
+
+Properties: `threshold` (attribute `threshold`) : number, default 24; `pinned` (JS property only) : boolean, default —
+Events: `pinned-change`
+CSS custom properties: none
+
+Example:
+```html
+<auto-scroll style="height: 24rem">
+  <timeline-container>
+    <timeline-entry datetime="2026-07-23T09:00:00Z">
+      <span slot="headline">Deployment started</span>
+      Release v1.4.0 is rolling out.
+    </timeline-entry>
+  </timeline-container>
+</auto-scroll>
+```
+
 ## <autocomplete-input>
 
 Generic form-associated text input with a suggestion dropdown, for any
@@ -608,6 +639,39 @@ Example:
 </form-actions>
 ```
 
+## <form-field>
+
+Per-field wrapper for a form control: label, slotted control, and an
+optional hint or error message, in one consistent unit repeated across a
+form. Purely presentational — composes whatever control is slotted
+(`form-select`, `multi-select`, `autocomplete-input`, `ui-checkbox`, etc.)
+without intercepting its events or value.
+
+The label wraps the default slot for a best-effort visual/click
+association only: every existing value-entry control encapsulates its
+real `<input>` inside its own shadow DOM, so there is no light-DOM `id` a
+`for` attribute could target from outside, and this component cannot set
+`aria-describedby`/`aria-invalid` on an arbitrary slotted control's
+shadow-encapsulated input for the same reason. The error message uses
+`role="alert"` as the practical accessibility mitigation instead of true
+`aria-describedby` association.
+
+Import: `import "@f-ewald/components/form-field.js";`
+
+Properties: `label` (attribute `label`) : string, default ""; `hint` (attribute `hint`) : string, default ""; `error` (attribute `error`) : string, default ""; `required` (attribute `required`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<form-field label="Task state" hint="Only affects your own view">
+  <form-select></form-select>
+</form-field>
+<form-field label="Terms" required error="You must accept to continue">
+  <ui-checkbox label="I agree to the terms"></ui-checkbox>
+</form-field>
+```
+
 ## <form-select>
 
 A styled dropdown select: a trigger button showing the current option's
@@ -909,6 +973,25 @@ Example:
 <live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "></live-timer>
 ```
 
+## <load-more>
+
+Click-to-load button for either end of a list. Fully property-driven: the
+consumer sets `loading` while a fetch is in flight and `exhausted` once
+there's nothing left to load; this component never fetches or manages
+state itself.
+
+Import: `import "@f-ewald/components/load-more.js";`
+
+Properties: `direction` (attribute `direction`) : "top" | "bottom", default "bottom"; `loading` (attribute `loading`) : boolean, default false; `exhausted` (attribute `exhausted`) : boolean, default false; `label` (attribute `label`) : string, default "Load more"; `exhaustedLabel` (attribute `exhausted-label`) : string, default "No more results"
+Events: `load-more`
+CSS custom properties: none
+
+Example:
+```html
+<load-more direction="top" label="Load older"></load-more>
+<load-more></load-more>
+```
+
 ## <map-circle>
 
 A plain circular map marker: a light-to-dark gradient fill with a white
@@ -1108,12 +1191,16 @@ Example:
 
 ## <percent-bar-chart>
 
-Horizontal bar chart for labeled percentage rows, using D3's linear scale.
-Each group gets its own labeled row; bars are proportional to percentage of 100.
+Bar chart for labeled rows, using D3's linear scale. Horizontal (default)
+renders stacked rows with bars growing rightward; `orientation="vertical"`
+renders side-by-side columns growing upward instead. `mode="percent"`
+(default) scales `value` against a fixed 0-100 domain and labels it with a
+`%` suffix; `mode="value"` scales it against `max` (or the largest `value`
+present) and formats it with `valueFormat`.
 
 Import: `import "@f-ewald/components/percent-bar-chart.js";`
 
-Properties: `groups` (JS property only) : PercentBarGroup[], default []
+Properties: `groups` (JS property only) : PercentBarGroup[], default []; `mode` (attribute `mode`) : PercentBarMode, default "percent"; `orientation` (attribute `orientation`) : PercentBarOrientation, default "horizontal"; `max` (attribute `max`) : number | undefined, default —; `valueFormat` (JS property only) : (value: number) => string, default —
 Events: none
 CSS custom properties: `--ui-font`, `--ui-text-muted`
 
@@ -1121,10 +1208,16 @@ Example:
 ```html
 <percent-bar-chart></percent-bar-chart>
 <script type="module">
-  document.querySelector("percent-bar-chart").groups = [
-    { key: "a", label: "White", pct: 45.2, color: "#4f46e5" },
-    { key: "b", label: "Asian", pct: 28.1, color: "#0d9488" },
+  const chart = document.querySelector("percent-bar-chart");
+  chart.groups = [
+    { key: "a", label: "White", value: 45.2, color: "#4f46e5" },
+    { key: "b", label: "Asian", value: 28.1, color: "#0d9488" },
   ];
+
+  // Absolute values instead of percentages, as vertical columns:
+  chart.mode = "value";
+  chart.orientation = "vertical";
+  chart.valueFormat = (value) => `$${value.toLocaleString()}`;
 </script>
 ```
 
@@ -1323,6 +1416,67 @@ CSS custom properties: none
 Example:
 ```html
 <roman-numeral value="2004"></roman-numeral>
+```
+
+## <scroll-to-bottom>
+
+Overlay button that appears once the page (or a given `target` container)
+has scrolled more than `threshold` pixels away from the bottom edge, and
+scrolls back to the bottom on click.
+
+With no `target` (default), the button is `position: fixed` to the
+viewport. When `target` is set, the button switches to `position:
+absolute` and expects to be placed as a descendant of a `position:
+relative` (or otherwise positioned) ancestor that establishes the visual
+bounds to float within — typically `target` itself, given `overflow-y:
+auto; position: relative`, so the button stays pinned to that container's
+own visible corner as its content scrolls, rather than floating over the
+whole page.
+
+Import: `import "@f-ewald/components/scroll-to-bottom.js";`
+
+Properties: `target` (JS property only) : HTMLElement | null, default null; `threshold` (attribute `threshold`) : number, default 200; `label` (attribute `label`) : string, default "Scroll to bottom"
+Events: `scroll-to-bottom-triggered`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
+
+Example:
+```html
+<scroll-to-bottom></scroll-to-bottom>
+
+<!-- Floats inside its own scrollport instead of the whole page: -->
+<div id="log" style="position: relative; overflow-y: auto; height: 10rem">
+  ...
+  <scroll-to-bottom threshold="20"></scroll-to-bottom>
+</div>
+<script type="module">
+  document.querySelector('scroll-to-bottom').target = document.querySelector('#log');
+</script>
+```
+
+## <scroll-to-top>
+
+Overlay button that appears once the page (or a given `target` container)
+has scrolled more than `threshold` pixels away from the top edge, and
+scrolls back to the top on click.
+
+With no `target` (default), the button is `position: fixed` to the
+viewport. When `target` is set, the button switches to `position:
+absolute` and expects to be placed as a descendant of a `position:
+relative` (or otherwise positioned) ancestor that establishes the visual
+bounds to float within — typically `target` itself, given `overflow-y:
+auto; position: relative`, so the button stays pinned to that container's
+own visible corner as its content scrolls, rather than floating over the
+whole page.
+
+Import: `import "@f-ewald/components/scroll-to-top.js";`
+
+Properties: `target` (JS property only) : HTMLElement | null, default null; `threshold` (attribute `threshold`) : number, default 200; `label` (attribute `label`) : string, default "Scroll to top"
+Events: `scroll-to-top-triggered`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
+
+Example:
+```html
+<scroll-to-top></scroll-to-top>
 ```
 
 ## <slide-panel>
@@ -1602,6 +1756,30 @@ Example:
 </ui-button>
 <ui-button variant="danger">Delete</ui-button>
 <ui-button variant="secondary" href="/properties?edit=42">Edit</ui-button>
+```
+
+## <ui-checkbox>
+
+A form-associated boolean checkbox, usable standalone or inside a native
+`<form>`. Submits `name=on` when checked (matching native
+`<input type="checkbox">` semantics) and participates fully in form
+`reset()`, ancestor `<fieldset disabled>`, and `required` validity.
+
+Renders a native `<input type="checkbox">` wrapped in a `<label>`, styled
+via `:has()` on the wrapping label (matching `radio-pills`/`radio-cards`)
+rather than styling the native input directly; the checkbox itself renders
+at `1rem`, matching the existing radio-input convention.
+
+Import: `import "@f-ewald/components/ui-checkbox.js";`
+
+Properties: `checked` (attribute `checked`) : boolean, default false; `indeterminate` (attribute `indeterminate`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `required` (attribute `required`) : boolean, default false; `name` (attribute `name`) : string, default ""; `label` (attribute `label`) : string, default ""
+Events: `change`
+CSS custom properties: `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-text`
+
+Example:
+```html
+<ui-checkbox label="Subscribe to updates"></ui-checkbox>
+<ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>
 ```
 
 ## <user-avatar>

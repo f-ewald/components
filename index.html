@@ -19,6 +19,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#animate-confetti">animate-confetti</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#app-shell">app-shell</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#app-sidebar">app-sidebar</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#auto-scroll">auto-scroll</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#button-group">button-group</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-month">calendar-month</a>
@@ -34,6 +35,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-actions">form-actions</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-field">form-field</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#frame-box">frame-box</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
@@ -41,6 +43,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kbd-hint">kbd-hint</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#link-card">link-card</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#load-more">load-more</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#markdown-view">markdown-view</a>
@@ -56,6 +59,8 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#relative-time">relative-time</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#reveal-button">reveal-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#roman-numeral">roman-numeral</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-bottom">scroll-to-bottom</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-top">scroll-to-top</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#slide-panel">slide-panel</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#status-pill">status-pill</a>
@@ -65,6 +70,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#toast-notification">toast-notification</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tree-view">tree-view</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-button">ui-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-checkbox">ui-checkbox</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#user-avatar">user-avatar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#weight-bar-chart">weight-bar-chart</a>
           <p class="mt-4 px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Templates</p>
@@ -237,6 +243,60 @@ import "@f-ewald/components/app-sidebar.js";
     &lt;span style="display: var(--app-sidebar-label, inline)"&gt;Dashboard&lt;/span&gt;
   &lt;/a&gt;
 &lt;/app-sidebar&gt;</code></pre>
+        </section>
+
+        <section id="auto-scroll" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-auto-scroll">
+          <h3 class="text-xl font-semibold text-slate-900">auto-scroll</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Wraps content (here, <code>timeline-container</code>) and keeps it scrolled to the
+            bottom as children are added — but only while already scrolled near the bottom. Scroll
+            up first, then click "Add message", to see it stay put; a "Jump to latest" affordance
+            appears while unpinned. Needs a bounded height on the host (here <code>12rem</code>).
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <auto-scroll id="auto-scroll-demo" data-testid="auto-scroll-demo" style="height: 12rem">
+              <timeline-container id="auto-scroll-timeline" data-testid="auto-scroll-timeline">
+                <timeline-entry data-testid="auto-scroll-e1">
+                  <span slot="headline">Started</span>
+                  Job queued.
+                </timeline-entry>
+                <timeline-entry data-testid="auto-scroll-e2">
+                  <span slot="headline">Progress</span>
+                  Step 1 complete.
+                </timeline-entry>
+                <timeline-entry data-testid="auto-scroll-e3">
+                  <span slot="headline">Progress</span>
+                  Step 2 complete.
+                </timeline-entry>
+              </timeline-container>
+            </auto-scroll>
+            <div class="mt-3 flex items-center gap-3">
+              <button
+                id="auto-scroll-add"
+                data-testid="auto-scroll-add"
+                type="button"
+                class="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white"
+              >
+                Add message
+              </button>
+              <button
+                id="auto-scroll-jump"
+                data-testid="auto-scroll-jump"
+                type="button"
+                hidden
+                class="rounded-md border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Jump to latest
+              </button>
+            </div>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/auto-scroll.js";
+
+&lt;auto-scroll style="height: 24rem"&gt;
+  &lt;timeline-container&gt;
+    &lt;timeline-entry&gt;...&lt;/timeline-entry&gt;
+  &lt;/timeline-container&gt;
+&lt;/auto-scroll&gt;</code></pre>
         </section>
 
         <section id="autocomplete-input" class="scroll-mt-8 py-10" data-testid="section-autocomplete-input">
@@ -797,6 +857,45 @@ dropdown.addEventListener("select", (e) => console.log(e.detail.value));</code><
 &lt;/form-actions&gt;</code></pre>
         </section>
 
+        <section id="form-field" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-form-field">
+          <h3 class="text-xl font-semibold text-slate-900">form-field</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Per-field wrapper: label, slotted control, and an optional hint or error
+            message, repeated once per field throughout a form.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
+            <form-field label="Task state" hint="Only affects your own view">
+              <form-select id="field-select" data-testid="field-select"></form-select>
+            </form-field>
+
+            <div>
+              <form-field id="field-checkbox-wrap" data-testid="field-checkbox-wrap" label="Terms" required>
+                <ui-checkbox id="field-checkbox" data-testid="field-checkbox" label="I agree to the terms"></ui-checkbox>
+              </form-field>
+              <button
+                id="field-error-toggle"
+                data-testid="field-error-toggle"
+                type="button"
+                class="mt-1 rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Simulate error
+              </button>
+            </div>
+
+            <form-field label="Language" hint="Backed by a local option list">
+              <autocomplete-input id="field-autocomplete" data-testid="field-autocomplete" name="field-language" placeholder="Start typing…"></autocomplete-input>
+            </form-field>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/form-field.js";
+
+&lt;form-field label="Task state" hint="Only affects your own view"&gt;
+  &lt;form-select&gt;&lt;/form-select&gt;
+&lt;/form-field&gt;
+&lt;form-field label="Terms" required error="You must accept to continue"&gt;
+  &lt;ui-checkbox label="I agree to the terms"&gt;&lt;/ui-checkbox&gt;
+&lt;/form-field&gt;</code></pre>
+        </section>
+
         <section id="form-select" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-form-select">
           <h3 class="text-xl font-semibold text-slate-900">form-select</h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -1106,6 +1205,28 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
 &lt;live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "&gt;&lt;/live-timer&gt;</code></pre>
         </section>
 
+        <section id="load-more" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-load-more">
+          <h3 class="text-xl font-semibold text-slate-900">load-more</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Click-to-load button for either end of a list. Fully property-driven: the consumer
+            sets <code>loading</code> during a fetch and <code>exhausted</code> once nothing's
+            left; a few clicks here reach the exhausted state.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <load-more id="load-more-top" data-testid="load-more-top" direction="top" label="Load older"></load-more>
+            <ul id="load-more-list" data-testid="load-more-list" class="my-3 flex flex-col gap-1 text-sm text-slate-700">
+              <li>Item 1</li>
+              <li>Item 2</li>
+              <li>Item 3</li>
+            </ul>
+            <load-more id="load-more-bottom" data-testid="load-more-bottom"></load-more>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/load-more.js";
+
+&lt;load-more direction="top" label="Load older"&gt;&lt;/load-more&gt;
+&lt;load-more&gt;&lt;/load-more&gt;</code></pre>
+        </section>
+
         <section id="map-circle" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-map-circle">
           <h3 class="text-xl font-semibold text-slate-900">map-circle</h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -1381,16 +1502,55 @@ See the [changelog](#markdown-view) for details.`;</code></pre>
 
         <section id="percent-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-percent-bar-chart">
           <h3 class="text-xl font-semibold text-slate-900">percent-bar-chart</h3>
-          <p class="mt-1 text-sm text-slate-500">Horizontal bar chart of labeled percentage rows.</p>
+          <p class="mt-1 text-sm text-slate-500">
+            Bar chart of labeled rows: horizontal bars or vertical columns, showing 0-100
+            percentages or arbitrary absolute values.
+          </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex items-center gap-2">
+              <button
+                id="percent-bar-mode-toggle"
+                data-testid="percent-bar-mode-toggle"
+                type="button"
+                class="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Mode: percent
+              </button>
+              <button
+                id="percent-bar-orientation-toggle"
+                data-testid="percent-bar-orientation-toggle"
+                type="button"
+                class="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Orientation: horizontal
+              </button>
+            </div>
             <percent-bar-chart id="percent-bar-demo" data-testid="percent-bar-demo"></percent-bar-chart>
+          </div>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <p class="mb-4 text-sm text-slate-500">
+              <code>mode="value"</code> + <code>orientation="vertical"</code>, with a custom
+              <code>valueFormat</code> for currency.
+            </p>
+            <percent-bar-chart
+              id="percent-bar-value-demo"
+              data-testid="percent-bar-value-demo"
+              mode="value"
+              orientation="vertical"
+            ></percent-bar-chart>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/percent-bar-chart.js";
 
-document.querySelector("percent-bar-chart").groups = [
-  { key: "a", label: "White", pct: 45.2, color: "#4f46e5" },
-  { key: "b", label: "Asian", pct: 28.1, color: "#0d9488" },
-];</code></pre>
+const chart = document.querySelector("percent-bar-chart");
+chart.groups = [
+  { key: "a", label: "White", value: 45.2, color: "#4f46e5" },
+  { key: "b", label: "Asian", value: 28.1, color: "#0d9488" },
+];
+
+// Absolute values instead of percentages, as vertical columns:
+chart.mode = "value";
+chart.orientation = "vertical";
+chart.valueFormat = (value) => `$${value.toLocaleString()}`;</code></pre>
         </section>
 
         <section id="photo-gallery" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-photo-gallery">
@@ -1662,6 +1822,100 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
           <pre class="usage mt-4"><code>import "@f-ewald/components/roman-numeral.js";
 
 &lt;roman-numeral value="2004"&gt;&lt;/roman-numeral&gt;</code></pre>
+        </section>
+
+        <section id="scroll-to-bottom" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-scroll-to-bottom">
+          <h3 class="text-xl font-semibold text-slate-900">scroll-to-bottom</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Pill button: appears once scrolled more than <code>threshold</code> px away from the
+            bottom edge, and scrolls back down on click. With no <code>target</code> (below), it's
+            fixed to the whole page; point <code>target</code> at a container (and give that
+            container <code>position: relative</code>) to have it float inside that container's
+            own scrollport instead.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <p class="text-sm text-slate-500">
+              Scroll this page down to see the window-target button appear bottom-right.
+            </p>
+            <div
+              id="scroll-bottom-container"
+              data-testid="scroll-bottom-container"
+              class="relative mt-4 h-40 overflow-y-auto rounded-md border border-slate-200 p-4 text-sm text-slate-600"
+            >
+              <p>Line 1 of a scrollable log.</p>
+              <p>Line 2 of a scrollable log.</p>
+              <p>Line 3 of a scrollable log.</p>
+              <p>Line 4 of a scrollable log.</p>
+              <p>Line 5 of a scrollable log.</p>
+              <p>Line 6 of a scrollable log.</p>
+              <p>Line 7 of a scrollable log.</p>
+              <p>Line 8 of a scrollable log.</p>
+              <p>Line 9 of a scrollable log.</p>
+              <p>Line 10 of a scrollable log.</p>
+              <scroll-to-bottom
+                id="scroll-bottom-container-btn"
+                data-testid="scroll-bottom-container-btn"
+                threshold="20"
+              ></scroll-to-bottom>
+            </div>
+            <p id="scroll-bottom-log" data-testid="scroll-bottom-log" class="mt-3 text-xs text-slate-500"></p>
+          </div>
+          <scroll-to-bottom id="scroll-bottom-window" data-testid="scroll-bottom-window"></scroll-to-bottom>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/scroll-to-bottom.js";
+
+&lt;scroll-to-bottom&gt;&lt;/scroll-to-bottom&gt;
+
+&lt;!-- Floats inside its own scrollport instead of the whole page: --&gt;
+&lt;div id="log" style="position: relative; overflow-y: auto; height: 10rem"&gt;
+  ...
+  &lt;scroll-to-bottom threshold="20"&gt;&lt;/scroll-to-bottom&gt;
+&lt;/div&gt;
+&lt;script type="module"&gt;
+  document.querySelector('scroll-to-bottom').target = document.querySelector('#log');
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="scroll-to-top" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-scroll-to-top">
+          <h3 class="text-xl font-semibold text-slate-900">scroll-to-top</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Pill button: appears once scrolled more than <code>threshold</code> px away from the
+            top edge, and scrolls back up on click. With no <code>target</code> (below), it's
+            fixed to the whole page; point <code>target</code> at a container (and give that
+            container <code>position: relative</code>) to have it float inside that container's
+            own scrollport instead.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <p class="text-sm text-slate-500">
+              Scroll this page down to see the window-target button appear bottom-right (offset
+              above the scroll-to-bottom button, above).
+            </p>
+            <div
+              id="scroll-top-container"
+              data-testid="scroll-top-container"
+              class="relative mt-4 h-40 overflow-y-auto rounded-md border border-slate-200 p-4 text-sm text-slate-600"
+            >
+              <p>Line 1 of a scrollable log.</p>
+              <p>Line 2 of a scrollable log.</p>
+              <p>Line 3 of a scrollable log.</p>
+              <p>Line 4 of a scrollable log.</p>
+              <p>Line 5 of a scrollable log.</p>
+              <p>Line 6 of a scrollable log.</p>
+              <p>Line 7 of a scrollable log.</p>
+              <p>Line 8 of a scrollable log.</p>
+              <p>Line 9 of a scrollable log.</p>
+              <p>Line 10 of a scrollable log.</p>
+              <scroll-to-top
+                id="scroll-top-container-btn"
+                data-testid="scroll-top-container-btn"
+                threshold="20"
+              ></scroll-to-top>
+            </div>
+            <p id="scroll-top-log" data-testid="scroll-top-log" class="mt-3 text-xs text-slate-500"></p>
+          </div>
+          <scroll-to-top id="scroll-top-window" data-testid="scroll-top-window" style="bottom: 3.25rem"></scroll-to-top>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/scroll-to-top.js";
+
+&lt;scroll-to-top&gt;&lt;/scroll-to-top&gt;</code></pre>
         </section>
 
         <section id="slide-panel" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-slide-panel">
@@ -1949,6 +2203,44 @@ tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
 &lt;ui-button variant="danger"&gt;Delete&lt;/ui-button&gt;
 &lt;ui-button variant="secondary" size="sm"&gt;Abort&lt;/ui-button&gt;
 &lt;ui-button variant="secondary" href="/properties?edit=42"&gt;Edit&lt;/ui-button&gt;</code></pre>
+        </section>
+
+        <section id="ui-checkbox" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-checkbox">
+          <h3 class="text-xl font-semibold text-slate-900">ui-checkbox</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Form-associated boolean checkbox, usable standalone or inside a native
+            <code>&lt;form&gt;</code>.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
+            <ui-checkbox id="checkbox-basic" data-testid="checkbox-basic" label="Subscribe to updates"></ui-checkbox>
+            <p id="checkbox-basic-log" data-testid="checkbox-basic-log" class="text-xs text-slate-500"></p>
+
+            <ui-checkbox id="checkbox-disabled" data-testid="checkbox-disabled" label="Disabled option" disabled checked></ui-checkbox>
+
+            <div class="flex items-center gap-3">
+              <ui-checkbox id="checkbox-indeterminate" data-testid="checkbox-indeterminate" label="Select all"></ui-checkbox>
+              <button
+                id="checkbox-indeterminate-toggle"
+                data-testid="checkbox-indeterminate-toggle"
+                type="button"
+                class="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Toggle indeterminate
+              </button>
+            </div>
+
+            <form id="checkbox-form" data-testid="checkbox-form" class="flex flex-col gap-2">
+              <ui-checkbox id="checkbox-required" data-testid="checkbox-required" name="terms" label="I agree to the terms" required></ui-checkbox>
+              <div class="flex items-center gap-3">
+                <button type="submit" class="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white">Submit</button>
+                <p id="checkbox-form-log" data-testid="checkbox-form-log" class="text-xs text-slate-500"></p>
+              </div>
+            </form>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/ui-checkbox.js";
+
+&lt;ui-checkbox label="Subscribe to updates"&gt;&lt;/ui-checkbox&gt;
+&lt;ui-checkbox name="terms" label="I agree to the terms" required&gt;&lt;/ui-checkbox&gt;</code></pre>
         </section>
 
         <section id="user-avatar" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-user-avatar">

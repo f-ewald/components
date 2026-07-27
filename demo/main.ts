@@ -22,6 +22,10 @@ import {
   type EditableText,
   type LiveTimer,
   type ChatMessage,
+  type UiCheckbox,
+  type AutoScroll,
+  type LoadMore,
+  type FormField,
   type FormSelect,
   type MultiSelect,
   type MultiSelectOption,
@@ -165,6 +169,37 @@ document.getElementById("toast-success")?.addEventListener("click", () => notify
 document.getElementById("toast-error")?.addEventListener("click", () => notifyError("Something went wrong"));
 document.getElementById("toast-info")?.addEventListener("click", () => notifyInfo("Heads up: new listings nearby"));
 
+// scroll-to-bottom (window instance + container-target instance, log clicks)
+const scrollBottomContainer = document.getElementById("scroll-bottom-container") as HTMLElement;
+const scrollBottomContainerBtn = document.getElementById("scroll-bottom-container-btn") as HTMLElement & {
+  target: HTMLElement | null;
+};
+if (scrollBottomContainerBtn) scrollBottomContainerBtn.target = scrollBottomContainer;
+const scrollBottomLog = document.getElementById("scroll-bottom-log")!;
+document.getElementById("scroll-bottom-window")?.addEventListener("scroll-to-bottom-triggered", () => {
+  scrollBottomLog.textContent = "scroll-to-bottom-triggered: window";
+});
+scrollBottomContainerBtn?.addEventListener("scroll-to-bottom-triggered", () => {
+  scrollBottomLog.textContent = "scroll-to-bottom-triggered: container";
+});
+
+// scroll-to-top (window instance + container-target instance, log clicks)
+const scrollTopContainer = document.getElementById("scroll-top-container") as HTMLElement;
+const scrollTopContainerBtn = document.getElementById("scroll-top-container-btn") as HTMLElement & {
+  target: HTMLElement | null;
+};
+if (scrollTopContainerBtn) scrollTopContainerBtn.target = scrollTopContainer;
+const scrollTopLog = document.getElementById("scroll-top-log")!;
+document.getElementById("scroll-top-window")?.addEventListener("scroll-to-top-triggered", () => {
+  scrollTopLog.textContent = "scroll-to-top-triggered: window";
+});
+scrollTopContainerBtn?.addEventListener("scroll-to-top-triggered", () => {
+  scrollTopLog.textContent = "scroll-to-top-triggered: container";
+});
+// Start the container-target scroll-to-top demo scrolled down so its button
+// is visible without requiring the reviewer to scroll the container first.
+if (scrollTopContainer) scrollTopContainer.scrollTop = scrollTopContainer.scrollHeight;
+
 // slide-panel
 const panelDemo = document.getElementById("panel-demo") as SlidePanel;
 document.getElementById("panel-open")?.addEventListener("click", () => {
@@ -228,15 +263,41 @@ if (distributionDemo) {
   distributionDemo.metric = "sqft";
 }
 
-// percent-bar-chart
+// percent-bar-chart (toggle mode/orientation on the primary demo instance)
 const percentBarDemo = document.getElementById("percent-bar-demo") as PercentBarChart;
 if (percentBarDemo) {
   percentBarDemo.groups = [
-    { key: "white", label: "White", pct: 45.2, color: "#4f46e5" },
-    { key: "asian", label: "Asian", pct: 28.1, color: "#0d9488" },
-    { key: "hispanic", label: "Hispanic", pct: 18.4, color: "#d97706" },
-    { key: "other", label: "Other", pct: 8.3, color: "#e11d48" },
+    { key: "white", label: "White", value: 45.2, color: "#4f46e5" },
+    { key: "asian", label: "Asian", value: 28.1, color: "#0d9488" },
+    { key: "hispanic", label: "Hispanic", value: 18.4, color: "#d97706" },
+    { key: "other", label: "Other", value: 8.3, color: "#e11d48" },
   ];
+}
+const percentBarModeToggle = document.getElementById("percent-bar-mode-toggle") as HTMLButtonElement;
+percentBarModeToggle?.addEventListener("click", () => {
+  if (!percentBarDemo) return;
+  percentBarDemo.mode = percentBarDemo.mode === "percent" ? "value" : "percent";
+  percentBarModeToggle.textContent = `Mode: ${percentBarDemo.mode}`;
+});
+const percentBarOrientationToggle = document.getElementById(
+  "percent-bar-orientation-toggle",
+) as HTMLButtonElement;
+percentBarOrientationToggle?.addEventListener("click", () => {
+  if (!percentBarDemo) return;
+  percentBarDemo.orientation = percentBarDemo.orientation === "horizontal" ? "vertical" : "horizontal";
+  percentBarOrientationToggle.textContent = `Orientation: ${percentBarDemo.orientation}`;
+});
+
+// percent-bar-chart (mode="value" + orientation="vertical", custom valueFormat)
+const percentBarValueDemo = document.getElementById("percent-bar-value-demo") as PercentBarChart;
+if (percentBarValueDemo) {
+  percentBarValueDemo.groups = [
+    { key: "q1", label: "Q1", value: 42000, color: "#4f46e5" },
+    { key: "q2", label: "Q2", value: 58500, color: "#0d9488" },
+    { key: "q3", label: "Q3", value: 39750, color: "#d97706" },
+    { key: "q4", label: "Q4", value: 71200, color: "#e11d48" },
+  ];
+  percentBarValueDemo.valueFormat = (value) => `$${Math.round(value / 1000)}k`;
 }
 
 // weight-bar-chart
@@ -275,6 +336,29 @@ if (addressDemo) {
 addressDemo?.addEventListener("address-select", (e) => {
   const detail = (e as CustomEvent).detail;
   addressSelected.textContent = `Selected: ${detail.address} (${detail.lat}, ${detail.lng})`;
+});
+
+// auto-scroll (append entries, wire the pinned-change "jump to latest" affordance)
+const autoScrollDemo = document.getElementById("auto-scroll-demo") as AutoScroll;
+const autoScrollTimeline = document.getElementById("auto-scroll-timeline")!;
+const autoScrollJump = document.getElementById("auto-scroll-jump") as HTMLButtonElement;
+let autoScrollMessageCount = 3;
+document.getElementById("auto-scroll-add")?.addEventListener("click", () => {
+  autoScrollMessageCount += 1;
+  const entry = document.createElement("timeline-entry");
+  entry.dataset.testid = `auto-scroll-e${autoScrollMessageCount}`;
+  const headline = document.createElement("span");
+  headline.slot = "headline";
+  headline.textContent = "Progress";
+  entry.append(headline, `Step ${autoScrollMessageCount - 1} complete.`);
+  autoScrollTimeline.append(entry);
+});
+autoScrollDemo?.addEventListener("pinned-change", (e) => {
+  const pinned = (e as CustomEvent<{ pinned: boolean }>).detail.pinned;
+  autoScrollJump.hidden = pinned;
+});
+autoScrollJump?.addEventListener("click", () => {
+  autoScrollDemo?.scrollToBottom();
 });
 
 // autocomplete-input
@@ -433,6 +517,39 @@ document.getElementById("timer-start")?.addEventListener("click", () => {
   if (timerCompact) timerCompact.since = now;
 });
 
+// load-more (simulate a fetch with setTimeout, reach the exhausted state)
+const loadMoreList = document.getElementById("load-more-list") as HTMLUListElement;
+let loadMoreItemCount = 3;
+
+const loadMoreBottom = document.getElementById("load-more-bottom") as LoadMore;
+let loadMoreBottomLoads = 0;
+loadMoreBottom?.addEventListener("load-more", () => {
+  loadMoreBottom.loading = true;
+  setTimeout(() => {
+    for (let i = 0; i < 2; i++) {
+      loadMoreItemCount += 1;
+      const li = document.createElement("li");
+      li.textContent = `Item ${loadMoreItemCount}`;
+      loadMoreList.append(li);
+    }
+    loadMoreBottom.loading = false;
+    loadMoreBottomLoads += 1;
+    if (loadMoreBottomLoads >= 2) loadMoreBottom.exhausted = true;
+  }, 500);
+});
+
+const loadMoreTop = document.getElementById("load-more-top") as LoadMore;
+loadMoreTop?.addEventListener("load-more", () => {
+  loadMoreTop.loading = true;
+  setTimeout(() => {
+    const li = document.createElement("li");
+    li.textContent = "Item 0 (older)";
+    loadMoreList.prepend(li);
+    loadMoreTop.loading = false;
+    loadMoreTop.exhausted = true;
+  }, 500);
+});
+
 // chat-message (log collapsible toggles)
 const chatToggleLog = document.getElementById("chat-toggle-log")!;
 for (const id of ["msg-tool", "msg-thinking"]) {
@@ -441,6 +558,27 @@ for (const id of ["msg-tool", "msg-thinking"]) {
     chatToggleLog.textContent = `${id} collapsed: ${(e as CustomEvent).detail.collapsed}`;
   });
 }
+
+// ui-checkbox (log toggles, wire the indeterminate demo, log form submission)
+const checkboxBasic = document.getElementById("checkbox-basic") as UiCheckbox;
+const checkboxBasicLog = document.getElementById("checkbox-basic-log")!;
+checkboxBasic?.addEventListener("change", (e) => {
+  checkboxBasicLog.textContent = `checked: ${(e as CustomEvent<{ checked: boolean }>).detail.checked}`;
+});
+
+const checkboxIndeterminate = document.getElementById("checkbox-indeterminate") as UiCheckbox;
+if (checkboxIndeterminate) checkboxIndeterminate.indeterminate = true;
+document.getElementById("checkbox-indeterminate-toggle")?.addEventListener("click", () => {
+  if (checkboxIndeterminate) checkboxIndeterminate.indeterminate = !checkboxIndeterminate.indeterminate;
+});
+
+const checkboxForm = document.getElementById("checkbox-form") as HTMLFormElement;
+const checkboxFormLog = document.getElementById("checkbox-form-log")!;
+checkboxForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const data = new FormData(checkboxForm);
+  checkboxFormLog.textContent = `submitted terms=${data.get("terms") ?? "(unchecked)"}`;
+});
 
 // form-select (seed options, log picked changes)
 const selectOptions = [
@@ -460,6 +598,28 @@ if (selectSearchable) {
   selectSearchable.options = selectOptions;
   selectSearchable.value = "open";
 }
+// form-field (compose form-select/ui-checkbox/autocomplete-input, toggle error)
+const fieldSelect = document.getElementById("field-select") as FormSelect;
+if (fieldSelect) {
+  fieldSelect.options = selectOptions;
+  fieldSelect.value = "open";
+}
+const fieldCheckboxWrap = document.getElementById("field-checkbox-wrap") as FormField;
+document.getElementById("field-error-toggle")?.addEventListener("click", () => {
+  if (!fieldCheckboxWrap) return;
+  fieldCheckboxWrap.error = fieldCheckboxWrap.error ? "" : "You must accept to continue";
+});
+const fieldAutocomplete = document.getElementById("field-autocomplete") as HTMLElement & {
+  options: { key: string; value: string }[];
+};
+if (fieldAutocomplete) {
+  fieldAutocomplete.options = [
+    { key: "ts", value: "TypeScript" },
+    { key: "js", value: "JavaScript" },
+    { key: "py", value: "Python" },
+  ];
+}
+
 const selectInline = document.getElementById("select-inline") as FormSelect;
 if (selectInline) {
   selectInline.options = selectOptions;

@@ -18,6 +18,8 @@ export {
   notifyInfo,
   type ToastVariant,
 } from "./toast-notification.js";
+export { ScrollToBottom } from "./scroll-to-bottom.js";
+export { ScrollToTop } from "./scroll-to-top.js";
 export { SlidePanel } from "./slide-panel.js";
 export { CopyLinkButton } from "./copy-link-button.js";
 export { RelativeTime } from "./relative-time.js";
@@ -45,11 +47,14 @@ export { StatMeter } from "./stat-meter.js";
 export { StatusPill, type StatusPillColor } from "./status-pill.js";
 export { EditableText } from "./editable-text.js";
 export { LiveTimer } from "./live-timer.js";
+export { LoadMore } from "./load-more.js";
 export {
   ChatMessage,
   type ChatMessageRole,
   type ChatMessageVariant,
 } from "./chat-message.js";
+export { UiCheckbox } from "./ui-checkbox.js";
+export { FormField } from "./form-field.js";
 export { FormSelect, type SelectOption } from "./form-select.js";
 export {
   MultiSelect,
@@ -88,6 +93,7 @@ export { TextArea } from "./text-area.js";
 export { LinkCard, type LinkCardStatus } from "./link-card.js";
 export { CardGrid } from "./card-grid.js";
 export { MarkdownView } from "./markdown-view.js";
+export { AutoScroll } from "./auto-scroll.js";
 export { formatDuration, type DurationFormat } from "./utils/duration.js";
 export { tokens, tokenValues, darkTokenValues } from "./tokens.js";
 export * from "./icons.js";

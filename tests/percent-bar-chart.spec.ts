@@ -76,11 +76,11 @@ test.describe("percent-bar-chart", () => {
     await chart.evaluate((element) => {
       element.style.setProperty("--ui-primary", "#0d9488");
       (element as HTMLElement & { groups: unknown }).groups = [
-        { key: "hex", label: "Hex", pct: 30, color: "#4f46e5" },
-        { key: "rgb", label: "Rgb", pct: 25, color: "rgb(13, 148, 136)" },
-        { key: "named", label: "Named", pct: 20, color: "tomato" },
-        { key: "hsl", label: "Hsl", pct: 15, color: "hsl(42 100% 50%)" },
-        { key: "var", label: "Var", pct: 10, color: "var(--ui-primary, #4f46e5)" },
+        { key: "hex", label: "Hex", value: 30, color: "#4f46e5" },
+        { key: "rgb", label: "Rgb", value: 25, color: "rgb(13, 148, 136)" },
+        { key: "named", label: "Named", value: 20, color: "tomato" },
+        { key: "hsl", label: "Hsl", value: 15, color: "hsl(42 100% 50%)" },
+        { key: "var", label: "Var", value: 10, color: "var(--ui-primary, #4f46e5)" },
       ];
     });
     const svg = chart.locator("svg");
@@ -102,16 +102,16 @@ test.describe("percent-bar-chart", () => {
     }
   });
 
-  test("clamps zero-width bars and scales widths proportionally to pct, independent of gradient stops", async ({
+  test("clamps zero-width bars and scales widths proportionally to value, independent of gradient stops", async ({
     page,
   }) => {
     await page.goto("/");
     const chart = page.locator("#percent-bar-demo");
     await chart.evaluate((element) => {
       (element as HTMLElement & { groups: unknown }).groups = [
-        { key: "zero", label: "Zero", pct: 0, color: "#4f46e5" },
-        { key: "half", label: "Half", pct: 50, color: "#0d9488" },
-        { key: "full", label: "Full", pct: 100, color: "#d97706" },
+        { key: "zero", label: "Zero", value: 0, color: "#4f46e5" },
+        { key: "half", label: "Half", value: 50, color: "#0d9488" },
+        { key: "full", label: "Full", value: 100, color: "#d97706" },
       ];
     });
     const svg = chart.locator("svg");
@@ -140,5 +140,81 @@ test.describe("percent-bar-chart", () => {
       "color(srgb 0.516863 0.492157 0.928627)",
     );
     await expect(svg.locator("rect").first()).toHaveAttribute("fill", /^url\(#percent-bar-grad-/);
+  });
+
+  test("mode toggle switches between percent (%) and value labels/aria-label on the same data", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const chart = page.locator("#percent-bar-demo");
+    const svg = chart.locator("svg");
+    const toggle = page.locator("#percent-bar-mode-toggle");
+
+    await expect(svg).toContainText("45.2%");
+    await expect(svg).toHaveAccessibleName(/^Percentages: /);
+
+    await toggle.click();
+    await expect(chart).toHaveJSProperty("mode", "value");
+    await expect(svg).toContainText("45.2");
+    await expect(svg).not.toContainText("45.2%");
+    await expect(svg).toHaveAccessibleName(/^Values: /);
+  });
+
+  test("orientation toggle switches between rects laid out as rows and as columns", async ({ page }) => {
+    await page.goto("/");
+    const chart = page.locator("#percent-bar-demo");
+    const svg = chart.locator("svg");
+    const toggle = page.locator("#percent-bar-orientation-toggle");
+
+    const horizontalRect = svg.locator("rect").first();
+    const horizontalWidth = Number(await horizontalRect.getAttribute("width"));
+    const horizontalHeight = Number(await horizontalRect.getAttribute("height"));
+    expect(horizontalHeight).toBe(10);
+    expect(horizontalWidth).toBeGreaterThan(horizontalHeight);
+
+    await toggle.click();
+    await expect(chart).toHaveJSProperty("orientation", "vertical");
+    const verticalRect = svg.locator("rect").first();
+    const verticalWidth = Number(await verticalRect.getAttribute("width"));
+    const verticalHeight = Number(await verticalRect.getAttribute("height"));
+    // Columns are narrow and tall — the opposite aspect ratio from rows.
+    expect(verticalWidth).toBeLessThan(verticalHeight);
+
+    // Bars are horizontally spread across distinct column centers.
+    const rects = svg.locator("rect");
+    const xs = await rects.evaluateAll((els) => els.map((el) => Number(el.getAttribute("x"))));
+    expect(new Set(xs).size).toBe(xs.length);
+  });
+
+  test("value mode auto-computes the domain max from the data and formats with valueFormat", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const chart = page.locator("#percent-bar-value-demo");
+    const svg = chart.locator("svg");
+
+    await expect(svg).toHaveAccessibleName("Values: Q1 $42k, Q2 $59k, Q3 $40k, Q4 $71k");
+
+    const rects = svg.locator("rect");
+    const heights = await rects.evaluateAll((els) => els.map((el) => Number(el.getAttribute("height"))));
+    // Q4 (71200, the largest value) should fill the full track height.
+    const maxHeight = Math.max(...heights);
+    expect(heights[3]).toBe(maxHeight);
+    // Q3 (39750) is roughly proportional to Q4 (71200) since no explicit `max` is set.
+    expect(heights[2] / heights[3]).toBeCloseTo(39750 / 71200, 1);
+  });
+
+  test("explicit max overrides the auto-computed domain in value mode", async ({ page }) => {
+    await page.goto("/");
+    const chart = page.locator("#percent-bar-value-demo");
+    await chart.evaluate((element) => {
+      (element as HTMLElement & { max: number }).max = 200000;
+    });
+    const svg = chart.locator("svg");
+    const rects = svg.locator("rect");
+    const heights = await rects.evaluateAll((els) => els.map((el) => Number(el.getAttribute("height"))));
+    // Against a 200000 domain max, even the largest value (71200) fills well under
+    // the full 96px track (COL_TRACK_H) that an auto-computed domain would reach.
+    expect(Math.max(...heights)).toBeLessThan(96 * 0.5);
   });
 });

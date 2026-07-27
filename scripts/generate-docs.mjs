@@ -81,6 +81,35 @@ const PLAYGROUND_ANCHORS = {
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
 const EXAMPLES = {
+  "ui-checkbox": `<ui-checkbox label="Subscribe to updates"></ui-checkbox>
+<ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>`,
+  "form-field": `<form-field label="Task state" hint="Only affects your own view">
+  <form-select></form-select>
+</form-field>
+<form-field label="Terms" required error="You must accept to continue">
+  <ui-checkbox label="I agree to the terms"></ui-checkbox>
+</form-field>`,
+  "auto-scroll": `<auto-scroll style="height: 24rem">
+  <timeline-container>
+    <timeline-entry datetime="2026-07-23T09:00:00Z">
+      <span slot="headline">Deployment started</span>
+      Release v1.4.0 is rolling out.
+    </timeline-entry>
+  </timeline-container>
+</auto-scroll>`,
+  "scroll-to-bottom": `<scroll-to-bottom></scroll-to-bottom>
+
+<!-- Floats inside its own scrollport instead of the whole page: -->
+<div id="log" style="position: relative; overflow-y: auto; height: 10rem">
+  ...
+  <scroll-to-bottom threshold="20"></scroll-to-bottom>
+</div>
+<script type="module">
+  document.querySelector('scroll-to-bottom').target = document.querySelector('#log');
+</script>`,
+  "scroll-to-top": `<scroll-to-top></scroll-to-top>`,
+  "load-more": `<load-more direction="top" label="Load older"></load-more>
+<load-more></load-more>`,
   "content-divider": `<content-divider></content-divider>
 
 <content-divider label="OR"></content-divider>`,
@@ -204,10 +233,16 @@ const EXAMPLES = {
 </script>`,
   "percent-bar-chart": `<percent-bar-chart></percent-bar-chart>
 <script type="module">
-  document.querySelector("percent-bar-chart").groups = [
-    { key: "a", label: "White", pct: 45.2, color: "#4f46e5" },
-    { key: "b", label: "Asian", pct: 28.1, color: "#0d9488" },
+  const chart = document.querySelector("percent-bar-chart");
+  chart.groups = [
+    { key: "a", label: "White", value: 45.2, color: "#4f46e5" },
+    { key: "b", label: "Asian", value: 28.1, color: "#0d9488" },
   ];
+
+  // Absolute values instead of percentages, as vertical columns:
+  chart.mode = "value";
+  chart.orientation = "vertical";
+  chart.valueFormat = (value) => \`$\${value.toLocaleString()}\`;
 </script>`,
   "weight-bar-chart": `<weight-bar-chart></weight-bar-chart>
 <script type="module">

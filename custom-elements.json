@@ -1317,6 +1317,148 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/auto-scroll.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Wraps arbitrary slotted content (e.g. `timeline-container`) and keeps it\nscrolled to the bottom as new children are appended — but only while the\nuser is already scrolled near the bottom (\"stick to bottom\", a chat/log-\nviewer convention). If the user has scrolled up to read earlier content,\nnew content does not yank the scroll position back down.\n\nNew content is detected via a `MutationObserver`, so no cooperation from\nwhatever is slotted in is required. The host itself is the scrollable\nregion (`overflow-y: auto`) and needs a consumer-supplied bounded height to\nhave anything to scroll, e.g. `auto-scroll { height: 24rem; }`.",
+          "name": "AutoScroll",
+          "slots": [
+            {
+              "description": "Content to auto-scroll.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "threshold",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "description": "Pixels of tolerance from the bottom edge counted as \"still at the bottom\".",
+              "attribute": "threshold"
+            },
+            {
+              "kind": "field",
+              "name": "_pinned",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "#observer",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pinned",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the view is currently stuck to the bottom. Read-only; see `scrollToBottom()`.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "scrollToBottom",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Scrolls to the bottom immediately, regardless of the current `pinned` state."
+            },
+            {
+              "kind": "field",
+              "name": "#onScroll",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#onMutation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setPinned",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "pinned",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "pinned-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The stick-to-bottom state toggled; detail: `{ pinned }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "threshold",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "description": "Pixels of tolerance from the bottom edge counted as \"still at the bottom\".",
+              "fieldName": "threshold"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "auto-scroll",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AutoScroll",
+          "declaration": {
+            "name": "AutoScroll",
+            "module": "src/auto-scroll.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "auto-scroll",
+          "declaration": {
+            "name": "AutoScroll",
+            "module": "src/auto-scroll.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/autocomplete-input.ts",
       "declarations": [
         {
@@ -4221,6 +4363,134 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/form-field.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Per-field wrapper for a form control: label, slotted control, and an\noptional hint or error message, in one consistent unit repeated across a\nform. Purely presentational — composes whatever control is slotted\n(`form-select`, `multi-select`, `autocomplete-input`, `ui-checkbox`, etc.)\nwithout intercepting its events or value.\n\nThe label wraps the default slot for a best-effort visual/click\nassociation only: every existing value-entry control encapsulates its\nreal `<input>` inside its own shadow DOM, so there is no light-DOM `id` a\n`for` attribute could target from outside, and this component cannot set\n`aria-describedby`/`aria-invalid` on an arbitrary slotted control's\nshadow-encapsulated input for the same reason. The error message uses\n`role=\"alert\"` as the practical accessibility mitigation instead of true\n`aria-describedby` association.",
+          "name": "FormField",
+          "slots": [
+            {
+              "description": "The wrapped form control.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Field label text.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional helper text shown below the control when there's no `error`.",
+              "attribute": "hint"
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional error text; replaces the `hint` display when non-empty.",
+              "attribute": "error"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a required indicator next to the label.",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "#messageId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`form-field-message-${++instanceCount}`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Field label text.",
+              "fieldName": "label"
+            },
+            {
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional helper text shown below the control when there's no `error`.",
+              "fieldName": "hint"
+            },
+            {
+              "name": "error",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional error text; replaces the `hint` display when non-empty.",
+              "fieldName": "error"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a required indicator next to the label.",
+              "fieldName": "required"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "form-field",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FormField",
+          "declaration": {
+            "name": "FormField",
+            "module": "src/form-field.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "form-field",
+          "declaration": {
+            "name": "FormField",
+            "module": "src/form-field.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/form-select.ts",
       "declarations": [
         {
@@ -5228,6 +5498,16 @@
         },
         {
           "kind": "function",
+          "name": "iconChevronUp",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
           "name": "iconCog",
           "parameters": [
             {
@@ -5697,6 +5977,14 @@
           "name": "iconChevronRight",
           "declaration": {
             "name": "iconChevronRight",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconChevronUp",
+          "declaration": {
+            "name": "iconChevronUp",
             "module": "src/icons.ts"
           }
         },
@@ -6189,6 +6477,22 @@
         },
         {
           "kind": "js",
+          "name": "ScrollToBottom",
+          "declaration": {
+            "name": "ScrollToBottom",
+            "module": "./scroll-to-bottom.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ScrollToTop",
+          "declaration": {
+            "name": "ScrollToTop",
+            "module": "./scroll-to-top.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "SlidePanel",
           "declaration": {
             "name": "SlidePanel",
@@ -6445,6 +6749,14 @@
         },
         {
           "kind": "js",
+          "name": "LoadMore",
+          "declaration": {
+            "name": "LoadMore",
+            "module": "./load-more.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "ChatMessage",
           "declaration": {
             "name": "ChatMessage",
@@ -6465,6 +6777,22 @@
           "declaration": {
             "name": "ChatMessageVariant",
             "module": "./chat-message.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "UiCheckbox",
+          "declaration": {
+            "name": "UiCheckbox",
+            "module": "./ui-checkbox.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FormField",
+          "declaration": {
+            "name": "FormField",
+            "module": "./form-field.js"
           }
         },
         {
@@ -6801,6 +7129,14 @@
           "declaration": {
             "name": "MarkdownView",
             "module": "./markdown-view.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AutoScroll",
+          "declaration": {
+            "name": "AutoScroll",
+            "module": "./auto-scroll.js"
           }
         },
         {
@@ -8082,6 +8418,159 @@
           "declaration": {
             "name": "LiveTimer",
             "module": "src/live-timer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/load-more.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Click-to-load button for either end of a list. Fully property-driven: the\nconsumer sets `loading` while a fetch is in flight and `exhausted` once\nthere's nothing left to load; this component never fetches or manages\nstate itself.",
+          "name": "LoadMore",
+          "members": [
+            {
+              "kind": "field",
+              "name": "direction",
+              "type": {
+                "text": "\"top\" | \"bottom\""
+              },
+              "default": "\"bottom\"",
+              "description": "Which end of a list this instance loads more content for.",
+              "attribute": "direction"
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Consumer-managed busy flag, forwarded to the internal `ui-button`'s `busy`.",
+              "attribute": "loading"
+            },
+            {
+              "kind": "field",
+              "name": "exhausted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Terminal \"no more content\" state: disables the button and swaps its label.",
+              "attribute": "exhausted"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Load more\"",
+              "description": "Button text in the normal (loadable) state.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "exhaustedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No more results\"",
+              "description": "Button text shown once `exhausted` is true.",
+              "attribute": "exhausted-label"
+            },
+            {
+              "kind": "method",
+              "name": "#onClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "load-more",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The button was clicked while not `loading`/`exhausted`; detail: `{ direction }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "direction",
+              "type": {
+                "text": "\"top\" | \"bottom\""
+              },
+              "default": "\"bottom\"",
+              "description": "Which end of a list this instance loads more content for.",
+              "fieldName": "direction"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Consumer-managed busy flag, forwarded to the internal `ui-button`'s `busy`.",
+              "fieldName": "loading"
+            },
+            {
+              "name": "exhausted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Terminal \"no more content\" state: disables the button and swaps its label.",
+              "fieldName": "exhausted"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Load more\"",
+              "description": "Button text in the normal (loadable) state.",
+              "fieldName": "label"
+            },
+            {
+              "name": "exhausted-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No more results\"",
+              "description": "Button text shown once `exhausted` is true.",
+              "fieldName": "exhaustedLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "load-more",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LoadMore",
+          "declaration": {
+            "name": "LoadMore",
+            "module": "src/load-more.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "load-more",
+          "declaration": {
+            "name": "LoadMore",
+            "module": "src/load-more.ts"
           }
         }
       ]
@@ -9691,7 +10180,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Horizontal bar chart for labeled percentage rows, using D3's linear scale.\nEach group gets its own labeled row; bars are proportional to percentage of 100.",
+          "description": "Bar chart for labeled rows, using D3's linear scale. Horizontal (default)\nrenders stacked rows with bars growing rightward; `orientation=\"vertical\"`\nrenders side-by-side columns growing upward instead. `mode=\"percent\"`\n(default) scales `value` against a fixed 0-100 domain and labels it with a\n`%` suffix; `mode=\"value\"` scales it against `max` (or the largest `value`\npresent) and formats it with `valueFormat`.",
           "name": "PercentBarChart",
           "members": [
             {
@@ -9702,6 +10191,43 @@
               },
               "default": "[]",
               "description": "Rows to render, one per group."
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "PercentBarMode"
+              },
+              "default": "\"percent\"",
+              "description": "Whether `value` is a 0-100 percentage (fixed domain) or an arbitrary number (domain from data/`max`).",
+              "attribute": "mode"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "PercentBarOrientation"
+              },
+              "default": "\"horizontal\"",
+              "description": "Bar direction: stacked rows growing rightward, or columns growing upward.",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Explicit domain max for `mode=\"value\"`; auto-computed from `groups` when unset. Ignored in `mode=\"percent\"`.",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "valueFormat",
+              "type": {
+                "text": "(value: number) => string"
+              },
+              "description": "Formats a row's value for its label in `mode=\"value\"`. Defaults to locale-formatted number."
             },
             {
               "kind": "field",
@@ -9746,6 +10272,79 @@
                 }
               ],
               "description": "Per-row gradient id, unique across instances and rows."
+            },
+            {
+              "kind": "method",
+              "name": "_labelFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "The row's value formatted for display, per the current `mode`."
+            },
+            {
+              "kind": "method",
+              "name": "_domainMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "The scale domain's upper bound for the current `mode`."
+            },
+            {
+              "kind": "method",
+              "name": "_renderGradients",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderHorizontal",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderVertical",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "mode",
+              "type": {
+                "text": "PercentBarMode"
+              },
+              "default": "\"percent\"",
+              "description": "Whether `value` is a 0-100 percentage (fixed domain) or an arbitrary number (domain from data/`max`).",
+              "fieldName": "mode"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "PercentBarOrientation"
+              },
+              "default": "\"horizontal\"",
+              "description": "Bar direction: stacked rows growing rightward, or columns growing upward.",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Explicit domain max for `mode=\"value\"`; auto-computed from `groups` when unset. Ignored in `mode=\"percent\"`.",
+              "fieldName": "max"
             }
           ],
           "superclass": {
@@ -11257,6 +11856,302 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/scroll-to-bottom.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Overlay button that appears once the page (or a given `target` container)\nhas scrolled more than `threshold` pixels away from the bottom edge, and\nscrolls back to the bottom on click.\n\nWith no `target` (default), the button is `position: fixed` to the\nviewport. When `target` is set, the button switches to `position:\nabsolute` and expects to be placed as a descendant of a `position:\nrelative` (or otherwise positioned) ancestor that establishes the visual\nbounds to float within — typically `target` itself, given `overflow-y:\nauto; position: relative`, so the button stays pinned to that container's\nown visible corner as its content scrolls, rather than floating over the\nwhole page.",
+          "name": "ScrollToBottom",
+          "members": [
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "Scrollable container to control; `null` (default) scrolls `window`."
+            },
+            {
+              "kind": "field",
+              "name": "threshold",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "description": "Pixels scrolled away from the bottom before the button appears.",
+              "attribute": "threshold"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Scroll to bottom\"",
+              "description": "Visible button text, and its accessible name.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "_visible",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#listenedTo",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | Window | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#subscribe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unsubscribe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onScroll",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#onClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "scroll-to-bottom-triggered",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The button was clicked, just before scrolling; detail: `{ target }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "threshold",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "description": "Pixels scrolled away from the bottom before the button appears.",
+              "fieldName": "threshold"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Scroll to bottom\"",
+              "description": "Visible button text, and its accessible name.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "scroll-to-bottom",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ScrollToBottom",
+          "declaration": {
+            "name": "ScrollToBottom",
+            "module": "src/scroll-to-bottom.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "scroll-to-bottom",
+          "declaration": {
+            "name": "ScrollToBottom",
+            "module": "src/scroll-to-bottom.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/scroll-to-top.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Overlay button that appears once the page (or a given `target` container)\nhas scrolled more than `threshold` pixels away from the top edge, and\nscrolls back to the top on click.\n\nWith no `target` (default), the button is `position: fixed` to the\nviewport. When `target` is set, the button switches to `position:\nabsolute` and expects to be placed as a descendant of a `position:\nrelative` (or otherwise positioned) ancestor that establishes the visual\nbounds to float within — typically `target` itself, given `overflow-y:\nauto; position: relative`, so the button stays pinned to that container's\nown visible corner as its content scrolls, rather than floating over the\nwhole page.",
+          "name": "ScrollToTop",
+          "members": [
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "Scrollable container to control; `null` (default) scrolls `window`."
+            },
+            {
+              "kind": "field",
+              "name": "threshold",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "description": "Pixels scrolled away from the top before the button appears.",
+              "attribute": "threshold"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Scroll to top\"",
+              "description": "Visible button text, and its accessible name.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "_visible",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#listenedTo",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | Window | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#subscribe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unsubscribe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onScroll",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#onClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "scroll-to-top-triggered",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The button was clicked, just before scrolling; detail: `{ target }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "threshold",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "description": "Pixels scrolled away from the top before the button appears.",
+              "fieldName": "threshold"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Scroll to top\"",
+              "description": "Visible button text, and its accessible name.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "scroll-to-top",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ScrollToTop",
+          "declaration": {
+            "name": "ScrollToTop",
+            "module": "src/scroll-to-top.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "scroll-to-top",
+          "declaration": {
+            "name": "ScrollToTop",
+            "module": "src/scroll-to-top.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/slide-panel.ts",
       "declarations": [
         {
@@ -12750,6 +13645,308 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/ui-checkbox.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A form-associated boolean checkbox, usable standalone or inside a native\n`<form>`. Submits `name=on` when checked (matching native\n`<input type=\"checkbox\">` semantics) and participates fully in form\n`reset()`, ancestor `<fieldset disabled>`, and `required` validity.\n\nRenders a native `<input type=\"checkbox\">` wrapped in a `<label>`, styled\nvia `:has()` on the wrapping label (matching `radio-pills`/`radio-cards`)\nrather than styling the native input directly; the checkbox itself renders\nat `1rem`, matching the existing radio-input convention.",
+          "name": "UiCheckbox",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the box is checked.",
+              "attribute": "checked"
+            },
+            {
+              "kind": "field",
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Visual \"partial selection\" state; cleared on the next user interaction.",
+              "attribute": "indeterminate"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables interaction; merged with an ancestor `<fieldset disabled>`.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control invalid via `ElementInternals` while unchecked.",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form field name; submitted as `name=on` only while checked.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Visible label text rendered next to the box.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#defaultChecked",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#inputEl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Restores the checked state captured at first render, per the form contract."
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mirrors an ancestor fieldset's disabled state."
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ],
+              "description": "Restores the checked state from saved form state (bfcache/autofill)."
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValidity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onInputRef",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The checkbox was toggled by the user, in either direction; detail: `{ checked }`. Programmatic `checked` assignments do not fire it."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the box is checked.",
+              "fieldName": "checked"
+            },
+            {
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Visual \"partial selection\" state; cleared on the next user interaction.",
+              "fieldName": "indeterminate"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables interaction; merged with an ancestor `<fieldset disabled>`.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control invalid via `ElementInternals` while unchecked.",
+              "fieldName": "required"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form field name; submitted as `name=on` only while checked.",
+              "fieldName": "name"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Visible label text rendered next to the box.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "ui-checkbox",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "UiCheckbox",
+          "declaration": {
+            "name": "UiCheckbox",
+            "module": "src/ui-checkbox.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ui-checkbox",
+          "declaration": {
+            "name": "UiCheckbox",
+            "module": "src/ui-checkbox.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/user-avatar.ts",
       "declarations": [
         {
@@ -13509,6 +14706,98 @@
           "declaration": {
             "name": "claimEscape",
             "module": "src/utils/layer-stack.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/scroll.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "distanceFromTop",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "ScrollableTarget"
+              }
+            }
+          ],
+          "description": "Pixels between the current scroll position and the top edge."
+        },
+        {
+          "kind": "function",
+          "name": "distanceFromBottom",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "ScrollableTarget"
+              }
+            }
+          ],
+          "description": "Pixels between the current scroll position and the bottom edge."
+        },
+        {
+          "kind": "function",
+          "name": "scrollToEdge",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "ScrollableTarget"
+              }
+            },
+            {
+              "name": "edge",
+              "type": {
+                "text": "\"top\" | \"bottom\""
+              }
+            }
+          ],
+          "description": "Scrolls `target` to its top or bottom edge, honoring `prefers-reduced-motion`."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "distanceFromTop",
+          "declaration": {
+            "name": "distanceFromTop",
+            "module": "src/utils/scroll.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "distanceFromBottom",
+          "declaration": {
+            "name": "distanceFromBottom",
+            "module": "src/utils/scroll.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "scrollToEdge",
+          "declaration": {
+            "name": "scrollToEdge",
+            "module": "src/utils/scroll.ts"
           }
         }
       ]

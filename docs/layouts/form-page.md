@@ -24,8 +24,11 @@ column so the eye tracks one field to the next.
   </page-header>
 
   <form style="max-width: 40rem;">
-    <frame-box label="Details"><!-- name, email fields --></frame-box>
-    <frame-box label="Role"><!-- role field --></frame-box>
+    <frame-box label="Details">
+      <form-field label="Name"><autocomplete-input name="name"></autocomplete-input></form-field>
+      <form-field label="Email" hint="Work email preferred"><autocomplete-input name="email"></autocomplete-input></form-field>
+    </frame-box>
+    <frame-box label="Role"><!-- role field, also wrapped in form-field --></frame-box>
 
     <form-actions>
       <ui-button slot="secondary" variant="secondary">Cancel</ui-button>
@@ -43,10 +46,11 @@ column so the eye tracks one field to the next.
 - Constrain the form with a `max-width` (about `40rem`); a full-width form on a
   wide dashboard is hard to scan.
 - Group related fields with `frame-box`; keep one field per row in a single
-  column.
+  column. Wrap each individual field in `form-field` for a consistent
+  label/hint/error layout.
 - `ui-button type="submit"` associates with the ancestor `<form>` even from
   inside `form-actions`.
 
 **Live demo:** `demo/layouts/form-page.html`
 
-**Components:** app-shell, app-sidebar, page-header, frame-box, form-actions, ui-button
+**Components:** app-shell, app-sidebar, page-header, frame-box, form-field, form-actions, ui-button

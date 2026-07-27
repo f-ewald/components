@@ -14,6 +14,7 @@ const ICONS = {
   Bars3: { slug: "bars-3" },
   ChevronLeft: { slug: "chevron-left", size: 16 },
   ChevronRight: { slug: "chevron-right", size: 16 },
+  ChevronUp: { slug: "chevron-up", size: 16 },
   Cog: { slug: "cog-6-tooth", size: 20 },
   Info: { slug: "information-circle", size: 20 },
   QuestionMarkCircle: { slug: "question-mark-circle", size: 20 },
