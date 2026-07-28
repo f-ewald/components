@@ -40,8 +40,10 @@ export {
 export { UserAvatar } from "./user-avatar.js";
 export { MapPin } from "./map-pin.js";
 export { MapCircle } from "./map-circle.js";
+export { MapboxMap } from "./mapbox-map.js";
 export { RadioCards, type RadioCardOption } from "./radio-cards.js";
 export { RadioPills, type RadioPillOption } from "./radio-pills.js";
+export { RangeSlider } from "./range-slider.js";
 export { ButtonGroup, type ButtonGroupOption } from "./button-group.js";
 export { UiButton, type ButtonVariant } from "./ui-button.js";
 export { StatMeter } from "./stat-meter.js";

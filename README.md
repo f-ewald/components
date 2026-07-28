@@ -93,6 +93,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<price-history-chart>` | [API reference](https://f-ewald.github.io/components/docs/price-history-chart.html) |
 | `<radio-cards>` | [API reference](https://f-ewald.github.io/components/docs/radio-cards.html) |
 | `<radio-pills>` | [API reference](https://f-ewald.github.io/components/docs/radio-pills.html) |
+| `<range-slider>` | [API reference](https://f-ewald.github.io/components/docs/range-slider.html) |
 | `<relative-time>` | [API reference](https://f-ewald.github.io/components/docs/relative-time.html) |
 | `<reveal-button>` | [API reference](https://f-ewald.github.io/components/docs/reveal-button.html) |
 | `<roman-numeral>` | [API reference](https://f-ewald.github.io/components/docs/roman-numeral.html) |

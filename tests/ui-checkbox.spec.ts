@@ -16,6 +16,17 @@ test.describe("ui-checkbox", () => {
     await expect(page.locator("#checkbox-basic-log")).toHaveText("checked: false");
   });
 
+  test("icon renders inside the clickable label and toggling still works", async ({ page }) => {
+    await page.goto("/");
+    const box = page.locator("#checkbox-icon");
+    const input = box.locator("input");
+
+    await expect(box.locator(".checkbox-icon svg")).toBeVisible();
+    await expect(input).not.toBeChecked();
+    await box.locator(".checkbox-icon").click();
+    await expect(input).toBeChecked();
+  });
+
   test("disabled checkbox blocks interaction", async ({ page }) => {
     await page.goto("/");
     const input = page.locator("#checkbox-disabled input");

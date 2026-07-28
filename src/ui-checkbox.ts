@@ -1,4 +1,4 @@
-import { LitElement, css, html, type PropertyValues } from "lit";
+import { LitElement, css, html, nothing, type PropertyValues, type TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { ref } from "lit/directives/ref.js";
 import { tokens } from "./tokens.js";
@@ -12,7 +12,11 @@ import { tokens } from "./tokens.js";
  * Renders a native `<input type="checkbox">` wrapped in a `<label>`, styled
  * via `:has()` on the wrapping label (matching `radio-pills`/`radio-cards`)
  * rather than styling the native input directly; the checkbox itself renders
- * at `1rem`, matching the existing radio-input convention.
+ * at `1rem`, matching the existing radio-input convention. An optional
+ * pre-rendered `icon` (matching `form-select`'s per-option icon convention)
+ * renders between the box and the label, inside the same clickable `<label>`
+ * — for a row that pairs a checkbox with an icon/swatch and needs the whole
+ * row, icon included, to stay one click target.
  *
  * @element ui-checkbox
  * @fires change - The checkbox was toggled by the user, in either direction;
@@ -64,6 +68,16 @@ export class UiCheckbox extends LitElement {
       .required-mark {
         color: var(--ui-danger, #dc2626);
       }
+      .checkbox-icon {
+        display: inline-flex;
+        width: var(--checkbox-icon-size);
+        height: var(--checkbox-icon-size);
+        flex: 0 0 var(--checkbox-icon-size);
+      }
+      .checkbox-icon > svg {
+        width: 100%;
+        height: 100%;
+      }
       .sr-only {
         position: absolute;
         width: 1px;
@@ -102,6 +116,10 @@ export class UiCheckbox extends LitElement {
   @property() name = "";
   /** Visible label text rendered next to the box. */
   @property() label = "";
+  /** Pre-rendered icon template displayed between the box and the label, e.g. `iconPencil(14)` from this package's icon set. */
+  @property({ attribute: false }) icon: TemplateResult | null = null;
+  /** Square icon size in pixels — 14 (inline icon size) by default. */
+  @property({ type: Number }) iconSize = 14;
 
   @state() private _formDisabled = false;
 
@@ -194,6 +212,11 @@ export class UiCheckbox extends LitElement {
           ?required=${this.required}
           @change=${(e: Event) => this.#onChange(e)}
         />
+        ${this.icon
+          ? html`<span class="checkbox-icon" style=${`--checkbox-icon-size: ${this.iconSize}px`} aria-hidden="true"
+              >${this.icon}</span
+            >`
+          : nothing}
         <span
           >${this.label}${this.required
             ? html`<span class="required-mark" aria-hidden="true"> *</span><span class="sr-only">

@@ -82,7 +82,26 @@ const PLAYGROUND_ANCHORS = {
 /** One copy-paste usage example per component, mirroring the playground snippets. */
 const EXAMPLES = {
   "ui-checkbox": `<ui-checkbox label="Subscribe to updates"></ui-checkbox>
-<ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>`,
+<ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>
+<!-- .icon is set programmatically (a pre-rendered TemplateResult), not an attribute -->
+<ui-checkbox label="Show list view"></ui-checkbox>`,
+  "range-slider": `<range-slider min="100" max="5000" step="50" value="1000"></range-slider>
+<script type="module">
+  document.querySelector("range-slider").addEventListener("input", (e) => {
+    console.log(e.detail.value);
+  });
+</script>`,
+  "mapbox-map": `<mapbox-map
+  access-token="pk.your-token"
+  style-url="mapbox://styles/mapbox/light-v11"
+></mapbox-map>
+<script type="module">
+  document.querySelector("mapbox-map").addEventListener("map-ready", (e) => {
+    const map = e.detail.map; // the underlying mapboxgl.Map
+    map.addSource("mine", { type: "geojson", data: "/mine.geojson" });
+    map.addLayer({ id: "mine", type: "circle", source: "mine", paint: { "circle-color": "#4f46e5" } });
+  });
+</script>`,
   "form-field": `<form-field label="Task state" hint="Only affects your own view">
   <form-select></form-select>
 </form-field>

@@ -6671,6 +6671,14 @@
         },
         {
           "kind": "js",
+          "name": "MapboxMap",
+          "declaration": {
+            "name": "MapboxMap",
+            "module": "./mapbox-map.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "RadioCards",
           "declaration": {
             "name": "RadioCards",
@@ -6699,6 +6707,14 @@
           "declaration": {
             "name": "RadioPillOption",
             "module": "./radio-pills.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RangeSlider",
+          "declaration": {
+            "name": "RangeSlider",
+            "module": "./range-slider.js"
           }
         },
         {
@@ -9044,6 +9060,188 @@
           "declaration": {
             "name": "MapPin",
             "module": "src/map-pin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/mapbox-map.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A thin, generic wrapper around a `mapboxgl.Map` — construction, access\ntoken, style loading/switching, and container resizing only. It carries no\ndomain logic: no layer registry, no click-handler system, no markers or\npopups. A consumer registers its own sources/layers/handlers against the\n`mapboxgl.Map` instance handed back on `map-ready`, the same instance\n`mapbox-map` continues to own (this component never calls `map.remove()`\nexcept on disconnect, so a consumer's own registrations survive style\nreloads exactly as they would using `mapboxgl.Map` directly).\n\nDeliberately does not construct the map until `styleUrl` is a non-empty\nstring — if a consumer knows the desired style only after an async\nlookup (e.g. a saved user preference), delay setting `styleUrl` rather\nthan setting a default and swapping it later, which would visibly flash\nthe wrong basemap before the real one loads.",
+          "name": "MapboxMap",
+          "members": [
+            {
+              "kind": "field",
+              "name": "accessToken",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Mapbox access token. Required before the map can be constructed.",
+              "attribute": "access-token"
+            },
+            {
+              "kind": "field",
+              "name": "styleUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Style URL (e.g. `mapbox://styles/mapbox/light-v11`). The map is not\nconstructed until this is a non-empty string — see the class doc.",
+              "attribute": "style-url"
+            },
+            {
+              "kind": "field",
+              "name": "center",
+              "type": {
+                "text": "[number, number]"
+              },
+              "default": "[0, 0]",
+              "description": "Initial center as `[lng, lat]`. Only read at construction time."
+            },
+            {
+              "kind": "field",
+              "name": "zoom",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Initial zoom level. Only read at construction time.",
+              "attribute": "zoom"
+            },
+            {
+              "kind": "field",
+              "name": "mapContainer",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "map",
+              "type": {
+                "text": "mapboxgl.Map | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "mapLoaded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "currentStyleUrl",
+              "type": {
+                "text": "string | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getMap",
+              "return": {
+                "type": {
+                  "text": "mapboxgl.Map | undefined"
+                }
+              },
+              "description": "The live `mapboxgl.Map` instance, once constructed (also available via `map-ready`'s event detail)."
+            },
+            {
+              "kind": "method",
+              "name": "#initializeMap",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "map-style-reloaded",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A subsequent `styleUrl` change finished loading its new style (sources/layers registered by a consumer via the `map-ready` instance do not survive a style change and must be re-registered — same behavior as calling `map.setStyle()` directly); detail: `{ map: mapboxgl.Map }`."
+            },
+            {
+              "name": "map-ready",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The map (and, if `styleUrl` changed before the initial load finished, its final requested style) has finished loading; detail: `{ map: mapboxgl.Map }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "access-token",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Mapbox access token. Required before the map can be constructed.",
+              "fieldName": "accessToken"
+            },
+            {
+              "name": "style-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Style URL (e.g. `mapbox://styles/mapbox/light-v11`). The map is not\nconstructed until this is a non-empty string — see the class doc.",
+              "fieldName": "styleUrl"
+            },
+            {
+              "name": "zoom",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Initial zoom level. Only read at construction time.",
+              "fieldName": "zoom"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "mapbox-map",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MapboxMap",
+          "declaration": {
+            "name": "MapboxMap",
+            "module": "src/mapbox-map.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "mapbox-map",
+          "declaration": {
+            "name": "MapboxMap",
+            "module": "src/mapbox-map.ts"
           }
         }
       ]
@@ -11861,6 +12059,308 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/range-slider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A form-associated numeric range slider, usable standalone or inside a\nnative `<form>`. Wraps a native `<input type=\"range\">` (kept for its free\nkeyboard, drag, and screen-reader support) restyled to match this\npackage's track/fill visual language (`stat-meter`, `percent-bar-chart`)\ninstead of the browser-default appearance. Purely a value control — no\nbuilt-in label; wrap in `form-field` for a labeled field, or render a\nvalue readout next to it (see the playground example), matching\n`autocomplete-input`/`form-select`.",
+          "name": "RangeSlider",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Minimum value.",
+              "attribute": "min"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "Maximum value.",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Step increment.",
+              "attribute": "step"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Current value.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables interaction; merged with an ancestor `<fieldset disabled>`.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form field name.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#defaultValue",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#percent",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Resets to the value present at first render, per the form contract."
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mirrors an ancestor fieldset's disabled state."
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData | null"
+                  }
+                }
+              ],
+              "description": "Restores the value from saved form state (bfcache/autofill)."
+            },
+            {
+              "kind": "method",
+              "name": "#onInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fires continuously while dragging/typing; detail: `{ value }`."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fires once the value is committed (drag released, arrow key released); detail: `{ value }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Minimum value.",
+              "fieldName": "min"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "Maximum value.",
+              "fieldName": "max"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Step increment.",
+              "fieldName": "step"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Current value.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables interaction; merged with an ancestor `<fieldset disabled>`.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form field name.",
+              "fieldName": "name"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "range-slider",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RangeSlider",
+          "declaration": {
+            "name": "RangeSlider",
+            "module": "src/range-slider.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "range-slider",
+          "declaration": {
+            "name": "RangeSlider",
+            "module": "src/range-slider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/relative-time.ts",
       "declarations": [
         {
@@ -13979,7 +14479,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A form-associated boolean checkbox, usable standalone or inside a native\n`<form>`. Submits `name=on` when checked (matching native\n`<input type=\"checkbox\">` semantics) and participates fully in form\n`reset()`, ancestor `<fieldset disabled>`, and `required` validity.\n\nRenders a native `<input type=\"checkbox\">` wrapped in a `<label>`, styled\nvia `:has()` on the wrapping label (matching `radio-pills`/`radio-cards`)\nrather than styling the native input directly; the checkbox itself renders\nat `1rem`, matching the existing radio-input convention.",
+          "description": "A form-associated boolean checkbox, usable standalone or inside a native\n`<form>`. Submits `name=on` when checked (matching native\n`<input type=\"checkbox\">` semantics) and participates fully in form\n`reset()`, ancestor `<fieldset disabled>`, and `required` validity.\n\nRenders a native `<input type=\"checkbox\">` wrapped in a `<label>`, styled\nvia `:has()` on the wrapping label (matching `radio-pills`/`radio-cards`)\nrather than styling the native input directly; the checkbox itself renders\nat `1rem`, matching the existing radio-input convention. An optional\npre-rendered `icon` (matching `form-select`'s per-option icon convention)\nrenders between the box and the label, inside the same clickable `<label>`\n— for a row that pairs a checkbox with an icon/swatch and needs the whole\nrow, icon included, to stay one click target.",
           "name": "UiCheckbox",
           "members": [
             {
@@ -14050,6 +14550,25 @@
               "default": "\"\"",
               "description": "Visible label text rendered next to the box.",
               "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "TemplateResult | null"
+              },
+              "default": "null",
+              "description": "Pre-rendered icon template displayed between the box and the label, e.g. `iconPencil(14)` from this package's icon set."
+            },
+            {
+              "kind": "field",
+              "name": "iconSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "14",
+              "description": "Square icon size in pixels — 14 (inline icon size) by default.",
+              "attribute": "iconSize"
             },
             {
               "kind": "field",
@@ -14246,6 +14765,15 @@
               "default": "\"\"",
               "description": "Visible label text rendered next to the box.",
               "fieldName": "label"
+            },
+            {
+              "name": "iconSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "14",
+              "description": "Square icon size in pixels — 14 (inline icon size) by default.",
+              "fieldName": "iconSize"
             }
           ],
           "superclass": {

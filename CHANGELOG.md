@@ -1,5 +1,26 @@
 # @f-ewald/components
 
+## 1.17.0
+
+- Added `mapbox-map`, a thin wrapper around a `mapboxgl.Map` — construction,
+  access token, style loading/switching, and container resizing only. Adds
+  `mapbox-gl` as the package's first mapping-library runtime dependency. No
+  layer registry, no click-handler system, no markers/popups — a consumer
+  registers its own sources/layers/handlers on the `mapboxgl.Map` instance
+  handed back via the `map-ready` event. Deliberately does not construct the
+  map until both `access-token` and `style-url` are set, so a consumer that
+  only learns the desired style asynchronously (e.g. a saved user
+  preference) never flashes a default style before swapping to the real one.
+- Added `range-slider`, a form-associated numeric slider restyled from a
+  native `<input type="range">` to match `stat-meter`/`percent-bar-chart`'s
+  track/fill look, keeping the native element's keyboard/drag/screen-reader
+  support. No built-in label — compose with `form-field`, matching
+  `autocomplete-input`/`form-select`.
+- `ui-checkbox` gains an optional `icon` (+ `iconSize`) property — a
+  pre-rendered template rendered between the box and the label, inside the
+  same clickable `<label>`, for a row that pairs a checkbox with an
+  icon/swatch and needs the whole row to stay one click target.
+
 ## 1.16.0
 
 - `photo-gallery` no longer changes height as it cycles when only some slides

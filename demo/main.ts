@@ -15,9 +15,11 @@ import {
   type DistanceValue,
   type RadioCards,
   type RadioPills,
+  type RangeSlider,
   type ButtonGroup,
   type MapPin,
   type MapCircle,
+  type MapboxMap,
   type MarkdownView,
   type StatMeter,
   type EditableText,
@@ -431,6 +433,21 @@ radioPillsDemo?.addEventListener("change", (e) => {
   radioPillsSelected.textContent = (e as CustomEvent).detail.value;
 });
 
+// range-slider (value readout + form submission)
+const rangeSliderDemo = document.getElementById("range-slider-demo") as RangeSlider;
+const rangeSliderValue = document.getElementById("range-slider-value")!;
+rangeSliderDemo?.addEventListener("input", (e) => {
+  rangeSliderValue.textContent = `${(e as CustomEvent<{ value: number }>).detail.value.toLocaleString()} ft`;
+});
+
+const rangeSliderForm = document.getElementById("range-slider-form") as HTMLFormElement;
+const rangeSliderFormLog = document.getElementById("range-slider-form-log")!;
+rangeSliderForm?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const data = new FormData(rangeSliderForm);
+  rangeSliderFormLog.textContent = `submitted volume=${data.get("volume")}`;
+});
+
 // button-group
 const buttonGroupDemo = document.getElementById("button-group-demo") as ButtonGroup;
 const buttonGroupSelected = document.getElementById("button-group-selected")!;
@@ -479,6 +496,23 @@ const circleHighlightDemo = document.getElementById("circle-highlight-demo") as 
 document.getElementById("circle-highlight-toggle")?.addEventListener("click", () => {
   if (circleHighlightDemo) circleHighlightDemo.highlighted = !circleHighlightDemo.highlighted;
 });
+
+// mapbox-map (token-gated: needs VITE_MAPBOX_TOKEN to actually render)
+const mapboxMapDemo = document.getElementById("mapbox-map-demo") as MapboxMap;
+const mapboxMapStatus = document.getElementById("mapbox-map-status")!;
+const mapboxToken = (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_MAPBOX_TOKEN;
+if (mapboxMapDemo) {
+  if (mapboxToken) {
+    mapboxMapDemo.accessToken = mapboxToken;
+    mapboxMapDemo.center = [-122.42, 37.77];
+    mapboxMapDemo.zoom = 10;
+    mapboxMapDemo.addEventListener("map-ready", () => {
+      mapboxMapStatus.textContent = "map-ready fired — mapboxgl.Map instance available via e.detail.map.";
+    });
+  } else {
+    mapboxMapStatus.textContent = "Set VITE_MAPBOX_TOKEN in the playground's .env to see a live map here.";
+  }
+}
 
 // markdown-view
 const markdownViewDemo = document.getElementById("markdown-view-demo") as MarkdownView;
@@ -578,6 +612,9 @@ const checkboxBasicLog = document.getElementById("checkbox-basic-log")!;
 checkboxBasic?.addEventListener("change", (e) => {
   checkboxBasicLog.textContent = `checked: ${(e as CustomEvent<{ checked: boolean }>).detail.checked}`;
 });
+
+const checkboxIcon = document.getElementById("checkbox-icon") as UiCheckbox;
+if (checkboxIcon) checkboxIcon.icon = iconListBullet(14);
 
 const checkboxIndeterminate = document.getElementById("checkbox-indeterminate") as UiCheckbox;
 if (checkboxIndeterminate) checkboxIndeterminate.indeterminate = true;
