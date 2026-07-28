@@ -1,6 +1,7 @@
 /node_modules/
 /lib/
 dist/
+.DS_Store
 demo-dist/
 pages-dist/
 test-results/
