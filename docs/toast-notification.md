@@ -1,13 +1,18 @@
 # `<toast-notification>`
 
 Fixed-position stack of dismissible notifications, anchored top-right
-(top-full-width on mobile). Not wired to any app state yet — callers add
-toasts imperatively via the `show()` method on a live element reference,
+(top-full-width on mobile). Every toast shares one fixed width so entries
+never appear narrower or wider than one another. Not wired to any app state
+yet — callers add toasts imperatively via the `show()` method on a live
+element reference,
 e.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,
 or via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers
-exported from this file. Each toast auto-dismisses after `duration` ms and
-can also be dismissed via its ✕ button. Appears/disappears instantly — no
-slide/fade transitions.
+exported from this file. The first argument is the required bold headline; an
+optional `description` renders a smaller, non-bold second line. Each variant
+leads with a matching status icon (success → check, error → exclamation
+circle, info → information circle, warning → exclamation triangle). Each toast
+auto-dismisses after `duration` ms and can also be dismissed via its ✕
+button. Appears/disappears instantly — no slide/fade transitions.
 
 ## Install
 
@@ -21,7 +26,7 @@ import "@f-ewald/components/toast-notification.js";
 <toast-notification></toast-notification>
 <script type="module">
   import { notifySuccess } from "@f-ewald/components/toast-notification.js";
-  notifySuccess("Saved!");
+  notifySuccess("Saved!", "Your changes are now live.");
 </script>
 ```
 
@@ -45,6 +50,9 @@ _None._
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size` |
+| `--ui-font-size-sm` |
+| `--ui-font-weight-regular` |
+| `--ui-font-weight-semibold` |
 | `--ui-hover-overlay` |
 | `--ui-info` |
 | `--ui-line-height-glyph` |
@@ -55,3 +63,4 @@ _None._
 | `--ui-shadow-lg` |
 | `--ui-success` |
 | `--ui-text` |
+| `--ui-warning` |

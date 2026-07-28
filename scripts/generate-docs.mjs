@@ -218,7 +218,7 @@ const EXAMPLES = {
   "toast-notification": `<toast-notification></toast-notification>
 <script type="module">
   import { notifySuccess } from "@f-ewald/components/toast-notification.js";
-  notifySuccess("Saved!");
+  notifySuccess("Saved!", "Your changes are now live.");
 </script>`,
   "slide-panel": `<slide-panel open heading="Property details">
   Panel body content goes here.

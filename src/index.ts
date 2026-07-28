@@ -16,6 +16,7 @@ export {
   notifySuccess,
   notifyError,
   notifyInfo,
+  notifyWarning,
   type ToastVariant,
 } from "./toast-notification.js";
 export { ScrollToBottom } from "./scroll-to-bottom.js";

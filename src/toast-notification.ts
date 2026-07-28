@@ -1,34 +1,51 @@
 import { LitElement, css, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { iconX } from "./icons.js";
+import {
+  iconCheckCircle,
+  iconExclamationCircle,
+  iconExclamationTriangle,
+  iconInfo,
+  iconX,
+} from "./icons.js";
 import { tokens } from "./tokens.js";
 
-export type ToastVariant = "error" | "info" | "success";
+export type ToastVariant = "error" | "info" | "success" | "warning";
 
 interface ToastOptions {
   /** Visual style; also selects the accent color. Defaults to "info". */
   variant?: ToastVariant;
   /** Auto-dismiss delay in ms. Pass 0 to require a manual close. Defaults to 5000. */
   duration?: number;
+  /**
+   * Optional secondary line shown beneath the headline in smaller, non-bold
+   * type. Omit for a single-line toast.
+   */
+  description?: string;
 }
 
 interface Toast {
   id: number;
   message: string;
   variant: ToastVariant;
+  description?: string;
 }
 
 const DEFAULT_DURATION_MS = 5000;
 
 /**
  * Fixed-position stack of dismissible notifications, anchored top-right
- * (top-full-width on mobile). Not wired to any app state yet — callers add
- * toasts imperatively via the `show()` method on a live element reference,
+ * (top-full-width on mobile). Every toast shares one fixed width so entries
+ * never appear narrower or wider than one another. Not wired to any app state
+ * yet — callers add toasts imperatively via the `show()` method on a live
+ * element reference,
  * e.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,
  * or via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers
- * exported from this file. Each toast auto-dismisses after `duration` ms and
- * can also be dismissed via its ✕ button. Appears/disappears instantly — no
- * slide/fade transitions.
+ * exported from this file. The first argument is the required bold headline; an
+ * optional `description` renders a smaller, non-bold second line. Each variant
+ * leads with a matching status icon (success → check, error → exclamation
+ * circle, info → information circle, warning → exclamation triangle). Each toast
+ * auto-dismisses after `duration` ms and can also be dismissed via its ✕
+ * button. Appears/disappears instantly — no slide/fade transitions.
  *
  * @element toast-notification
  */
@@ -50,7 +67,7 @@ export class ToastNotification extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        max-width: 22.5rem;
+        width: 22.5rem;
         pointer-events: none;
       }
       .toast {
@@ -89,8 +106,29 @@ export class ToastNotification extends LitElement {
       .toast.info {
         background: var(--ui-info, #0ea5e9);
       }
-      .message {
+      .toast.warning {
+        background: var(--ui-warning, #d97706);
+      }
+      .icon {
+        flex: 0 0 auto;
+        margin-top: 0.125rem;
+        line-height: var(--ui-line-height-glyph, 1);
+      }
+      .content {
         flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .message {
+        font-weight: var(--ui-font-weight-semibold, 600);
+        word-break: break-word;
+      }
+      .description {
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-weight: var(--ui-font-weight-regular, 400);
+        line-height: var(--ui-line-height-normal, 1.5);
         word-break: break-word;
       }
       .close {
@@ -135,7 +173,7 @@ export class ToastNotification extends LitElement {
           top: 0.75rem;
           right: 0.75rem;
           left: 0.75rem;
-          max-width: none;
+          width: auto;
         }
       }
     `,
@@ -151,7 +189,7 @@ export class ToastNotification extends LitElement {
     const id = this._nextId++;
     const variant = options.variant ?? "info";
     const duration = options.duration ?? DEFAULT_DURATION_MS;
-    this._toasts = [...this._toasts, { id, message, variant }];
+    this._toasts = [...this._toasts, { id, message, variant, description: options.description }];
     if (duration > 0) {
       this._timers.set(
         id,
@@ -180,6 +218,24 @@ export class ToastNotification extends LitElement {
     this._timers.clear();
   }
 
+  /**
+   * Returns the decorative status icon for a variant, sized as a standalone
+   * 18px glyph to match the dismiss button.
+   * @param variant The toast variant.
+   */
+  private _variantIcon(variant: ToastVariant) {
+    switch (variant) {
+      case "success":
+        return iconCheckCircle(18);
+      case "error":
+        return iconExclamationCircle(18);
+      case "warning":
+        return iconExclamationTriangle(18);
+      default:
+        return iconInfo(18);
+    }
+  }
+
   override render() {
     if (this._toasts.length === 0) return nothing;
     return html`
@@ -190,7 +246,11 @@ export class ToastNotification extends LitElement {
             role=${t.variant === "error" ? "alert" : "status"}
             aria-atomic="true"
           >
-            <span class="message">${t.message}</span>
+            <span class="icon" aria-hidden="true">${this._variantIcon(t.variant)}</span>
+            <div class="content">
+              <span class="message">${t.message}</span>
+              ${t.description ? html`<span class="description">${t.description}</span>` : nothing}
+            </div>
             <button class="close" aria-label="Dismiss notification" @click=${() => this.dismiss(t.id)}>
               <span aria-hidden="true">${iconX(18)}</span>
             </button>
@@ -212,16 +272,21 @@ function getToast(): ToastNotification | null {
 }
 
 /** Shows an error toast. Use for connection/network failures, not validation errors. */
-export function notifyError(message: string) {
-  getToast()?.show(message, { variant: "error" });
+export function notifyError(message: string, description?: string) {
+  getToast()?.show(message, { variant: "error", description });
 }
 
 /** Shows a success toast. */
-export function notifySuccess(message: string) {
-  getToast()?.show(message, { variant: "success" });
+export function notifySuccess(message: string, description?: string) {
+  getToast()?.show(message, { variant: "success", description });
 }
 
 /** Shows an info toast. */
-export function notifyInfo(message: string) {
-  getToast()?.show(message, { variant: "info" });
+export function notifyInfo(message: string, description?: string) {
+  getToast()?.show(message, { variant: "info", description });
+}
+
+/** Shows a warning toast. */
+export function notifyWarning(message: string, description?: string) {
+  getToast()?.show(message, { variant: "warning", description });
 }

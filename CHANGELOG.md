@@ -1,5 +1,20 @@
 # @f-ewald/components
 
+## 1.16.0
+
+- `toast-notification` now gives every toast one shared fixed width
+  (`22.5rem`, full-width below `48rem`) so stacked notifications never appear
+  narrower or wider than one another based on their text length.
+- `toast-notification` gains an optional `description`: `show()` and the
+  `notifySuccess`/`notifyError`/`notifyInfo` helpers take a second string that
+  renders as a smaller, non-bold line beneath the now-semibold headline. Toasts
+  with no description stay single-line and unchanged.
+- `toast-notification` now leads every toast with a matching status icon —
+  success → check circle, error → exclamation circle, info → information
+  circle, warning → exclamation triangle.
+- `toast-notification` gains a `warning` variant (amber `--ui-warning` fill)
+  plus a `notifyWarning` helper. Added the `iconExclamationCircle` icon.
+
 ## 1.15.0
 
 - Added `loading-spinner`, an indeterminate circular spinner — a rotating arc

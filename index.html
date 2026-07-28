@@ -2208,12 +2208,28 @@ import "@f-ewald/components/timeline-entry.js";
             >
               Info
             </button>
+            <button
+              id="toast-warning"
+              data-testid="toast-warning"
+              type="button"
+              class="rounded-md bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700"
+            >
+              Warning
+            </button>
+            <button
+              id="toast-description"
+              data-testid="toast-description"
+              type="button"
+              class="rounded-md bg-slate-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-900"
+            >
+              With description
+            </button>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/toast-notification.js";
 import { notifySuccess } from "@f-ewald/components/toast-notification.js";
 
 &lt;toast-notification&gt;&lt;/toast-notification&gt;
-&lt;script&gt;notifySuccess("Saved!");&lt;/script&gt;</code></pre>
+&lt;script&gt;notifySuccess("Saved!", "Your changes are now live.");&lt;/script&gt;</code></pre>
         </section>
 
         <section id="tree-view" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-tree-view">

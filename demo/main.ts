@@ -3,6 +3,7 @@ import {
   notifySuccess,
   notifyError,
   notifyInfo,
+  notifyWarning,
   type PriceHistoryChart,
   type DistributionChart,
   type PercentBarChart,
@@ -170,6 +171,16 @@ confirmDemo?.addEventListener("cancel", () => {
 document.getElementById("toast-success")?.addEventListener("click", () => notifySuccess("Saved successfully"));
 document.getElementById("toast-error")?.addEventListener("click", () => notifyError("Something went wrong"));
 document.getElementById("toast-info")?.addEventListener("click", () => notifyInfo("Heads up: new listings nearby"));
+document
+  .getElementById("toast-warning")
+  ?.addEventListener("click", () =>
+    notifyWarning("Listing expires soon", "This listing will be archived in 3 days unless renewed."),
+  );
+document
+  .getElementById("toast-description")
+  ?.addEventListener("click", () =>
+    notifySuccess("Listing published", "Your listing is now visible to buyers in this area."),
+  );
 
 // scroll-to-bottom (window instance + container-target instance, log clicks)
 const scrollBottomContainer = document.getElementById("scroll-bottom-container") as HTMLElement;

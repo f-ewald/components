@@ -5908,6 +5908,16 @@
         },
         {
           "kind": "function",
+          "name": "iconExclamationCircle",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
           "name": "iconMoon",
           "parameters": [
             {
@@ -6310,6 +6320,14 @@
         },
         {
           "kind": "js",
+          "name": "iconExclamationCircle",
+          "declaration": {
+            "name": "iconExclamationCircle",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "iconMoon",
           "declaration": {
             "name": "iconMoon",
@@ -6464,6 +6482,14 @@
           "name": "notifyInfo",
           "declaration": {
             "name": "notifyInfo",
+            "module": "./toast-notification.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifyWarning",
+          "declaration": {
+            "name": "notifyWarning",
             "module": "./toast-notification.js"
           }
         },
@@ -13208,7 +13234,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Fixed-position stack of dismissible notifications, anchored top-right\n(top-full-width on mobile). Not wired to any app state yet — callers add\ntoasts imperatively via the `show()` method on a live element reference,\ne.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,\nor via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers\nexported from this file. Each toast auto-dismisses after `duration` ms and\ncan also be dismissed via its ✕ button. Appears/disappears instantly — no\nslide/fade transitions.",
+          "description": "Fixed-position stack of dismissible notifications, anchored top-right\n(top-full-width on mobile). Every toast shares one fixed width so entries\nnever appear narrower or wider than one another. Not wired to any app state\nyet — callers add toasts imperatively via the `show()` method on a live\nelement reference,\ne.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,\nor via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers\nexported from this file. The first argument is the required bold headline; an\noptional `description` renders a smaller, non-bold second line. Each variant\nleads with a matching status icon (success → check, error → exclamation\ncircle, info → information circle, warning → exclamation triangle). Each toast\nauto-dismisses after `duration` ms and can also be dismissed via its ✕\nbutton. Appears/disappears instantly — no slide/fade transitions.",
           "name": "ToastNotification",
           "members": [
             {
@@ -13275,6 +13301,21 @@
                 }
               ],
               "description": "Removes a toast immediately, cancelling its pending auto-dismiss timer if any."
+            },
+            {
+              "kind": "method",
+              "name": "_variantIcon",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "variant",
+                  "type": {
+                    "text": "ToastVariant"
+                  },
+                  "description": "The toast variant."
+                }
+              ],
+              "description": "Returns the decorative status icon for a variant, sized as a standalone\n18px glyph to match the dismiss button."
             }
           ],
           "superclass": {
@@ -13293,6 +13334,13 @@
               "type": {
                 "text": "string"
               }
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "description": "Shows an error toast. Use for connection/network failures, not validation errors."
@@ -13303,6 +13351,13 @@
           "parameters": [
             {
               "name": "message",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "description",
+              "optional": true,
               "type": {
                 "text": "string"
               }
@@ -13319,9 +13374,36 @@
               "type": {
                 "text": "string"
               }
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "description": "Shows an info toast."
+        },
+        {
+          "kind": "function",
+          "name": "notifyWarning",
+          "parameters": [
+            {
+              "name": "message",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "description",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Shows a warning toast."
         }
       ],
       "exports": [
@@ -13362,6 +13444,14 @@
           "name": "notifyInfo",
           "declaration": {
             "name": "notifyInfo",
+            "module": "src/toast-notification.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "notifyWarning",
+          "declaration": {
+            "name": "notifyWarning",
             "module": "src/toast-notification.ts"
           }
         }
