@@ -2238,10 +2238,15 @@ import { notifySuccess } from "@f-ewald/components/toast-notification.js";
             Generic recursive tree shell: one row per <code>nodes</code> entry, content from
             <code>renderNode</code>. A node with a <code>children</code> array is a folder
             (click toggles expand/collapse); otherwise it's a leaf (click fires
-            <code>node-click</code>).
+            <code>node-click</code>). Add the <code>lines</code> attribute for classic
+            file-tree connector guides.
           </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
             <tree-view id="tree-files" data-testid="tree-files"></tree-view>
+          </div>
+          <p class="mt-4 text-sm font-medium text-slate-700">With connector lines (<code>lines</code>)</p>
+          <div class="mt-2 rounded-lg border border-slate-200 p-6">
+            <tree-view id="tree-lines" data-testid="tree-lines" lines default-expanded></tree-view>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/tree-view.js";
 
@@ -2255,6 +2260,7 @@ tree.nodes = [
   { id: "fil_2", label: "readme.md", data: { id: "fil_2" } },
 ];
 tree.renderNode = (node) => node.label;
+tree.lines = true; // optional: draw connector guides
 tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
         </section>
 

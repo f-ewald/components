@@ -13,6 +13,10 @@ every folder expanded instead. Expansion state is otherwise managed
 internally and untouched by later `nodes` updates, so a user's manual
 toggles survive a data refresh.
 
+Set the `lines` boolean to draw classic file-tree connector guides: a
+vertical line per continuing ancestor level and a branch elbow (`└`) or
+tee (`├`) linking each node to its parent. Off by default (indentation only).
+
 ## Install
 
 ```js
@@ -22,7 +26,7 @@ import "@f-ewald/components/tree-view.js";
 ## Usage
 
 ```html
-<tree-view></tree-view>
+<tree-view lines></tree-view>
 <script type="module">
   const tree = document.querySelector("tree-view");
   tree.nodes = [
@@ -45,6 +49,7 @@ import "@f-ewald/components/tree-view.js";
 | `nodes` | _(JS property only)_ | `TreeNode[]` | `[]` | Tree data; opaque to this component beyond what `renderNode` does with it. |
 | `renderNode` | _(JS property only)_ | `(node: TreeNode) => unknown` | `—` | Produces a row's rendered content for `node`. Default: plain label text. |
 | `defaultExpanded` | `default-expanded` | `boolean` | `false` | Start every folder expanded instead of the default all-collapsed. |
+| `lines` | `lines` | `boolean` | `false` | Draw classic file-tree connector guides (vertical ancestor lines plus a branch elbow/tee per row) instead of indentation alone. Off by default. |
 
 ## Events
 
@@ -60,6 +65,7 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-border` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |

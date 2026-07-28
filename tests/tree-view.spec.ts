@@ -120,4 +120,56 @@ test.describe("tree-view", () => {
       .evaluate((node) => (node as HTMLElement).style.paddingLeft);
     expect(parseFloat(childPadding)).toBeGreaterThan(parseFloat(parentPadding));
   });
+
+  test("without lines, no connector guides are rendered", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("#tree-files")).not.toHaveAttribute("lines", /.*/);
+    await expect(page.locator("#tree-files .guides")).toHaveCount(0);
+  });
+
+  test("lines draws one guide column per depth with an elbow on the last child", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const el = page.locator("#tree-lines");
+    await el.locator(".row").first().waitFor();
+
+    // default-expanded → src / components / button.ts / tree.ts / index.ts / README.md
+    await expect(el.locator(".row")).toHaveCount(6);
+
+    // A node at depth d renders d ancestor columns + 1 connector = d + 1 guides.
+    const button = el.locator(".row").filter({ hasText: "button.ts" });
+    await expect(button.locator(".guide")).toHaveCount(3);
+    // button.ts is not the last child of components → tee, not elbow.
+    await expect(button.locator(".guide.connector")).not.toHaveClass(/\blast\b/);
+    await expect(button.locator(".guide.connector")).toHaveCSS("width", "16px");
+
+    // tree.ts is the last child of components → elbow.
+    const tree = el.locator(".row").filter({ hasText: "tree.ts" });
+    await expect(tree.locator(".guide")).toHaveCount(3);
+    await expect(tree.locator(".guide.connector.last")).toHaveCount(1);
+
+    // README.md is the last root node → single elbow connector, no ancestor columns.
+    const readme = el.locator(".row").filter({ hasText: "README.md" });
+    await expect(readme.locator(".guide")).toHaveCount(1);
+    await expect(readme.locator(".guide.connector.last")).toHaveCount(1);
+  });
+
+  test("lines is a reflected, togglable attribute", async ({ page }) => {
+    await page.goto("/");
+    const el = page.locator("#tree-files");
+    await expect(el.locator(".guides")).toHaveCount(0);
+
+    await el.evaluate((node) => {
+      (node as HTMLElement & { lines: boolean }).lines = true;
+    });
+    await expect(el).toHaveAttribute("lines", /.*/);
+    await expect(el.locator(".guides").first()).toBeVisible();
+
+    await el.evaluate((node) => {
+      (node as HTMLElement & { lines: boolean }).lines = false;
+    });
+    await expect(el).not.toHaveAttribute("lines", /.*/);
+    await expect(el.locator(".guides")).toHaveCount(0);
+  });
 });

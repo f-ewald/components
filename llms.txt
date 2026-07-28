@@ -1273,11 +1273,15 @@ Example:
 Responsive, accessible image carousel composed from declarative
 `gallery-item` children.
 
+The image viewport keeps a fixed `aspect-ratio`, and the caption row is
+reserved for every slide whenever any slide has a caption, so the carousel's
+total height stays constant as it cycles — it never shifts the page below it.
+
 Import: `import "@f-ewald/components/photo-gallery.js";`
 
 Properties: `currentIndex` (attribute `current-index`) : number, default 0; `delay` (attribute `delay`) : number, default 0; `showControls` (attribute `show-controls`) : boolean, default true; `showCounter` (attribute `show-counter`) : boolean, default false; `showIndicators` (attribute `show-indicators`) : boolean, default false; `showAutoplayControl` (attribute `show-autoplay-control`) : boolean, default true; `paused` (attribute `paused`) : boolean, default false; `aspectRatio` (attribute `aspect-ratio`) : string, default "16 / 9"; `objectFit` (attribute `object-fit`) : PhotoGalleryObjectFit, default "cover"
 Events: `slide-change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1755,15 +1759,19 @@ every folder expanded instead. Expansion state is otherwise managed
 internally and untouched by later `nodes` updates, so a user's manual
 toggles survive a data refresh.
 
+Set the `lines` boolean to draw classic file-tree connector guides: a
+vertical line per continuing ancestor level and a branch elbow (`└`) or
+tee (`├`) linking each node to its parent. Off by default (indentation only).
+
 Import: `import "@f-ewald/components/tree-view.js";`
 
-Properties: `nodes` (JS property only) : TreeNode[], default []; `renderNode` (JS property only) : (node: TreeNode) => unknown, default —; `defaultExpanded` (attribute `default-expanded`) : boolean, default false
+Properties: `nodes` (JS property only) : TreeNode[], default []; `renderNode` (JS property only) : (node: TreeNode) => unknown, default —; `defaultExpanded` (attribute `default-expanded`) : boolean, default false; `lines` (attribute `lines`) : boolean, default false
 Events: `node-click`
-CSS custom properties: `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
-<tree-view></tree-view>
+<tree-view lines></tree-view>
 <script type="module">
   const tree = document.querySelector("tree-view");
   tree.nodes = [

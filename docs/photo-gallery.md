@@ -3,6 +3,10 @@
 Responsive, accessible image carousel composed from declarative
 `gallery-item` children.
 
+The image viewport keeps a fixed `aspect-ratio`, and the caption row is
+reserved for every slide whenever any slide has a caption, so the carousel's
+total height stays constant as it cycles — it never shifts the page below it.
+
 ## Install
 
 ```js
@@ -67,6 +71,7 @@ import "@f-ewald/components/photo-gallery.js";
 | `--ui-font` |
 | `--ui-font-size` |
 | `--ui-font-size-sm` |
+| `--ui-line-height-normal` |
 | `--ui-line-height-tight` |
 | `--ui-on-accent` |
 | `--ui-overlay` |

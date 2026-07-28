@@ -26,6 +26,10 @@ export interface TreeNode {
  * internally and untouched by later `nodes` updates, so a user's manual
  * toggles survive a data refresh.
  *
+ * Set the `lines` boolean to draw classic file-tree connector guides: a
+ * vertical line per continuing ancestor level and a branch elbow (`└`) or
+ * tee (`├`) linking each node to its parent. Off by default (indentation only).
+ *
  * @element tree-view
  * @fires node-click - A leaf row was activated; detail is `{ id, data }`.
  */
@@ -77,11 +81,51 @@ export class TreeView extends LitElement {
         min-width: 0;
         flex: 1;
       }
+      :host([lines]) .row {
+        padding-top: 0;
+        padding-bottom: 0;
+        min-height: 1.5rem;
+      }
+      .guides {
+        display: flex;
+        align-self: stretch;
+        flex-shrink: 0;
+      }
+      .guide {
+        position: relative;
+        flex: 0 0 auto;
+        width: 1rem;
+      }
+      .guide.v::before,
+      .guide.connector::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        border-left: 1px solid var(--ui-border, #e2e8f0);
+      }
+      .guide.connector.last::before {
+        bottom: 50%;
+      }
+      .guide.connector::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        right: 0;
+        top: 50%;
+        border-top: 1px solid var(--ui-border, #e2e8f0);
+      }
       @media (forced-colors: active) {
         .row:focus-visible {
           outline: 2px solid CanvasText;
           outline-offset: -2px;
           box-shadow: none;
+        }
+        .guide.v::before,
+        .guide.connector::before,
+        .guide.connector::after {
+          border-color: CanvasText;
         }
       }
     `,
@@ -93,6 +137,11 @@ export class TreeView extends LitElement {
   @property({ attribute: false }) renderNode: (node: TreeNode) => unknown = (node) => node.label;
   /** Start every folder expanded instead of the default all-collapsed. */
   @property({ type: Boolean, attribute: "default-expanded" }) defaultExpanded = false;
+  /**
+   * Draw classic file-tree connector guides (vertical ancestor lines plus a
+   * branch elbow/tee per row) instead of indentation alone. Off by default.
+   */
+  @property({ type: Boolean, reflect: true }) lines = false;
 
   @state() private expanded = new Set<string>();
   #initializedExpansion = false;
@@ -156,19 +205,33 @@ export class TreeView extends LitElement {
     return false;
   }
 
-  #renderNode(node: TreeNode, depth: number): TemplateResult {
+  #renderNode(
+    node: TreeNode,
+    depth: number,
+    isLast: boolean,
+    ancestorHasNext: boolean[],
+  ): TemplateResult {
     const isFolder = !!node.children;
     const isOpen = isFolder && this.expanded.has(node.id);
+    const guides = this.lines
+      ? html`<span class="guides" aria-hidden="true">
+          ${ancestorHasNext.map(
+            (hasNext) => html`<span class="guide ${hasNext ? "v" : ""}"></span>`,
+          )}
+          <span class="guide connector ${isLast ? "last" : ""}"></span>
+        </span>`
+      : nothing;
     return html`
       <div
         class="row"
         role=${isFolder ? "button" : "link"}
         aria-expanded=${isFolder ? String(isOpen) : nothing}
         tabindex="0"
-        style="padding-left: ${depth * 1.25}rem"
+        style=${this.lines ? nothing : `padding-left: ${depth * 1.25}rem`}
         @click=${(e: MouseEvent) => this.#onRowClick(node, e)}
         @keydown=${(e: KeyboardEvent) => this.#onKeydown(node, e)}
       >
+        ${guides}
         <span class="toggle" aria-hidden="true">
           ${isFolder ? (isOpen ? iconChevronDown(14) : iconChevronRight(14)) : nothing}
         </span>
@@ -178,7 +241,11 @@ export class TreeView extends LitElement {
         ? repeat(
             node.children!,
             (child) => child.id,
-            (child) => this.#renderNode(child, depth + 1),
+            (child, i) =>
+              this.#renderNode(child, depth + 1, i === node.children!.length - 1, [
+                ...ancestorHasNext,
+                !isLast,
+              ]),
           )
         : nothing}
     `;
@@ -188,7 +255,7 @@ export class TreeView extends LitElement {
     return repeat(
       this.nodes,
       (node) => node.id,
-      (node) => this.#renderNode(node, 0),
+      (node, i) => this.#renderNode(node, 0, i === this.nodes.length - 1, []),
     );
   }
 }

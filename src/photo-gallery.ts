@@ -37,6 +37,10 @@ const booleanAttribute = {
  * Responsive, accessible image carousel composed from declarative
  * `gallery-item` children.
  *
+ * The image viewport keeps a fixed `aspect-ratio`, and the caption row is
+ * reserved for every slide whenever any slide has a caption, so the carousel's
+ * total height stays constant as it cycles — it never shifts the page below it.
+ *
  * @element photo-gallery
  * @slot - `gallery-item` elements rendered as slides.
  * @fires slide-change - The active image changed.
@@ -206,6 +210,8 @@ export class PhotoGallery extends LitElement {
       }
       figcaption {
         padding: 0.5rem 0.25rem 0;
+        min-height: 1lh;
+        line-height: var(--ui-line-height-normal, 1.5);
         color: var(--ui-text-muted, #64748b);
       }
       .footer {
@@ -629,6 +635,11 @@ export class PhotoGallery extends LitElement {
   protected override render() {
     const itemCount = this._galleryItems.length;
     const currentItem = this._galleryItems[this.currentIndex];
+    // Reserve the caption row for every slide as soon as any slide has a
+    // caption, so the gallery's total height stays constant while it cycles
+    // (a slide without a caption no longer collapses the box and shifts the
+    // page below it).
+    const hasCaptions = this._galleryItems.some((item) => item.caption);
     const objectFit: PhotoGalleryObjectFit = this.objectFit === "contain" ? "contain" : "cover";
     const viewportStyles = {
       "--photo-gallery-aspect-ratio": this.aspectRatio.trim() || "16 / 9",
@@ -687,7 +698,9 @@ export class PhotoGallery extends LitElement {
                       `
                     : nothing}
                 </div>
-                ${currentItem.caption ? html`<figcaption>${currentItem.caption}</figcaption>` : nothing}
+                ${hasCaptions
+                  ? html`<figcaption>${currentItem.caption}</figcaption>`
+                  : nothing}
               </figure>
               ${this._renderFooter(itemCount)}
             `

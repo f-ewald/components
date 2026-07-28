@@ -909,6 +909,29 @@ if (treeFiles) {
   });
 }
 
+const treeLines = document.getElementById("tree-lines") as TreeView;
+if (treeLines) {
+  treeLines.nodes = [
+    {
+      id: "src",
+      label: "src",
+      children: [
+        {
+          id: "components",
+          label: "components",
+          children: [
+            { id: "button.ts", label: "button.ts", data: { id: "button.ts" } },
+            { id: "tree.ts", label: "tree.ts", data: { id: "tree.ts" } },
+          ],
+        },
+        { id: "index.ts", label: "index.ts", data: { id: "index.ts" } },
+      ],
+    },
+    { id: "readme.md", label: "README.md", data: { id: "readme.md" } },
+  ] satisfies TreeNode[];
+  treeLines.renderNode = (node) => (node as TreeNode).label;
+}
+
 // calendar-year
 const calendarYearSelect = document.getElementById("calendar-year-select") as HTMLSelectElement | null;
 const calendarYearDemo = document.getElementById("calendar-year-demo") as CalendarYear | null;

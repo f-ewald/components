@@ -2,6 +2,14 @@
 
 ## 1.16.0
 
+- `photo-gallery` no longer changes height as it cycles when only some slides
+  have a caption: the caption row is now reserved for every slide as soon as
+  any slide has one, so the carousel keeps a constant total height and never
+  shifts the content below it. Galleries with no captions are unaffected.
+- `tree-view` gains an opt-in `lines` boolean that draws classic file-tree
+  connector guides — a vertical line for each continuing ancestor level plus a
+  branch elbow (`└`) on the last child or tee (`├`) otherwise. Off by default,
+  so existing trees keep their indentation-only look.
 - `toast-notification` now gives every toast one shared fixed width
   (`22.5rem`, full-width below `48rem`) so stacked notifications never appear
   narrower or wider than one another based on their text length.

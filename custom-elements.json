@@ -10614,7 +10614,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Responsive, accessible image carousel composed from declarative\n`gallery-item` children.",
+          "description": "Responsive, accessible image carousel composed from declarative\n`gallery-item` children.\n\nThe image viewport keeps a fixed `aspect-ratio`, and the caption row is\nreserved for every slide whenever any slide has a caption, so the carousel's\ntotal height stays constant as it cycles — it never shifts the page below it.",
           "name": "PhotoGallery",
           "slots": [
             {
@@ -13519,7 +13519,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A generic, presentational tree shell: renders `nodes` recursively, one row\nper node, with each row's content produced by `renderNode` (default: plain\nlabel). Modeled on `data-table`'s headless pattern — knows nothing about\nwhat a node's `data` means beyond what `renderNode` does with it.\n\nA node with a `children` array (even empty) is a folder: clicking or\nactivating its row toggles expand/collapse instead of firing `node-click`.\nA node with no `children` is a leaf: clicking or activating its row fires\n`node-click`. Folders start collapsed; set `default-expanded` to start\nevery folder expanded instead. Expansion state is otherwise managed\ninternally and untouched by later `nodes` updates, so a user's manual\ntoggles survive a data refresh.",
+          "description": "A generic, presentational tree shell: renders `nodes` recursively, one row\nper node, with each row's content produced by `renderNode` (default: plain\nlabel). Modeled on `data-table`'s headless pattern — knows nothing about\nwhat a node's `data` means beyond what `renderNode` does with it.\n\nA node with a `children` array (even empty) is a folder: clicking or\nactivating its row toggles expand/collapse instead of firing `node-click`.\nA node with no `children` is a leaf: clicking or activating its row fires\n`node-click`. Folders start collapsed; set `default-expanded` to start\nevery folder expanded instead. Expansion state is otherwise managed\ninternally and untouched by later `nodes` updates, so a user's manual\ntoggles survive a data refresh.\n\nSet the `lines` boolean to draw classic file-tree connector guides: a\nvertical line per continuing ancestor level and a branch elbow (`└`) or\ntee (`├`) linking each node to its parent. Off by default (indentation only).",
           "name": "TreeView",
           "members": [
             {
@@ -13548,6 +13548,17 @@
               "default": "false",
               "description": "Start every folder expanded instead of the default all-collapsed.",
               "attribute": "default-expanded"
+            },
+            {
+              "kind": "field",
+              "name": "lines",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draw classic file-tree connector guides (vertical ancestor lines plus a\nbranch elbow/tee per row) instead of indentation alone. Off by default.",
+              "attribute": "lines",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -13693,6 +13704,18 @@
                   "type": {
                     "text": "number"
                   }
+                },
+                {
+                  "name": "isLast",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "ancestorHasNext",
+                  "type": {
+                    "text": "boolean[]"
+                  }
                 }
               ]
             }
@@ -13715,6 +13738,15 @@
               "default": "false",
               "description": "Start every folder expanded instead of the default all-collapsed.",
               "fieldName": "defaultExpanded"
+            },
+            {
+              "name": "lines",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draw classic file-tree connector guides (vertical ancestor lines plus a\nbranch elbow/tee per row) instead of indentation alone. Off by default.",
+              "fieldName": "lines"
             }
           ],
           "superclass": {

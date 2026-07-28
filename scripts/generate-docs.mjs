@@ -469,7 +469,7 @@ See the [changelog](#markdown-view) for details.\`;
   ];
   grid.renderTile = (item) => item.name;
 </script>`,
-  "tree-view": `<tree-view></tree-view>
+  "tree-view": `<tree-view lines></tree-view>
 <script type="module">
   const tree = document.querySelector("tree-view");
   tree.nodes = [

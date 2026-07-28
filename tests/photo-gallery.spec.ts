@@ -281,4 +281,30 @@ test.describe("photo-gallery", () => {
 
     await expect(gallery.locator(".arrow-button").first()).toHaveCSS("color", "rgb(255, 255, 255)");
   });
+
+  test("keeps a constant height across slides when only some slides have a caption", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const gallery = page.locator(gallerySelector);
+    await disableAutoplay(gallery);
+
+    // The third demo slide (cliffs) has no caption; the first two do.
+    const heightAt = async (index: number): Promise<number> => {
+      await gallery.evaluate((element, i) => {
+        (element as HTMLElement & { currentIndex: number }).currentIndex = i;
+      }, index);
+      await expect(activeImage(gallery)).toBeVisible();
+      const box = await gallery.boundingBox();
+      return box!.height;
+    };
+
+    const captioned = await heightAt(0);
+    const uncaptioned = await heightAt(2);
+    expect(uncaptioned).toBe(captioned);
+
+    // The caption row is reserved (present) on the captionless slide, but empty.
+    await expect(gallery.locator("figcaption")).toHaveCount(1);
+    await expect(gallery.locator("figcaption")).toHaveText("");
+  });
 });
