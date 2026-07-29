@@ -13,6 +13,12 @@
 - `DropdownOption` gains an optional `danger` flag that renders a menu item in
   `--ui-danger`, for destructive actions such as Delete.
 - Added the `iconEllipsisVertical` heroicon.
+- Fixed `timeline-entry`'s `running` spinner in Safari by eliminating
+  transform-based rotation entirely. The SVG geometry remains stationary
+  while `stroke-dashoffset` advances a fixed-length arc around the ring,
+  avoiding Safari's transform-compositing wobble. An opaque
+  `--ui-surface` backing also prevents the timeline line from showing through
+  the ring.
 
 ## 1.19.0
 

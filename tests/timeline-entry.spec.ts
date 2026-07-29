@@ -59,12 +59,43 @@ test.describe("timeline-entry", () => {
     expect(parseFloat(paddingBottom)).toBeLessThan(24);
   });
 
-  test("running entry shows a spinner instead of the dot", async ({ page }) => {
+  test("running entry animates a static ring's dash instead of transforming it", async ({
+    page,
+  }) => {
     await page.goto("/");
     const entry = page.locator('[data-testid="timeline-e8"]');
     await expect(entry).toHaveAttribute("running", "");
     await expect(entry.locator(".spinner")).toBeVisible();
     await expect(entry.locator(".dot")).toHaveCount(0);
+
+    const motion = await entry.evaluate((el) => {
+      const spinner = el.shadowRoot!.querySelector<HTMLElement>(".spinner")!;
+      const svg = spinner.querySelector<SVGElement>("svg")!;
+      const arc = spinner.querySelector<SVGElement>(".spinner-arc")!;
+      const animation = arc.getAnimations()[0];
+      animation.pause();
+      animation.currentTime = 0;
+      const startOffset = getComputedStyle(arc).strokeDashoffset;
+      animation.currentTime = 400;
+      const midpointOffset = getComputedStyle(arc).strokeDashoffset;
+
+      return {
+        spinnerTransform: getComputedStyle(spinner).transform,
+        svgTransform: getComputedStyle(svg).transform,
+        arcTransform: getComputedStyle(arc).transform,
+        animationName: getComputedStyle(arc).animationName,
+        startOffset,
+        midpointOffset,
+      };
+    });
+
+    expect(motion).toMatchObject({
+      spinnerTransform: "none",
+      svgTransform: "none",
+      arcTransform: "none",
+      animationName: "spinner-orbit",
+    });
+    expect(motion.midpointOffset).not.toBe(motion.startOffset);
   });
 
   test("reduced motion makes the running spinner static", async ({ page }) => {
@@ -72,7 +103,9 @@ test.describe("timeline-entry", () => {
     await page.goto("/");
     const animationName = await page
       .locator('[data-testid="timeline-e8"]')
-      .evaluate((el) => getComputedStyle(el.shadowRoot!.querySelector(".spinner")!).animationName);
+      .evaluate(
+        (el) => getComputedStyle(el.shadowRoot!.querySelector(".spinner-arc")!).animationName,
+      );
     expect(animationName).toBe("none");
   });
 });

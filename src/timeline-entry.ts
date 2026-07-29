@@ -136,11 +136,20 @@ export class TimelineEntry extends LitElement {
       .spinner {
         position: absolute;
         top: 0.125rem;
-        left: 50%;
+        left: 0;
+        display: block;
         width: 0.75rem;
         height: 0.75rem;
-        transform: translateX(-50%);
-        animation: spin 0.8s linear infinite;
+        border-radius: 9999px;
+        /* Opaque backing so the connecting line is masked exactly like it is
+           behind the solid .dot, instead of showing through the ring's
+           hollow center and corners. */
+        background: var(--ui-surface, #ffffff);
+      }
+      .spinner svg {
+        display: block;
+        width: 100%;
+        height: 100%;
       }
       .spinner-track {
         fill: none;
@@ -152,19 +161,29 @@ export class TimelineEntry extends LitElement {
         stroke: var(--ui-text-muted, #64748b);
         stroke-width: 3;
         stroke-linecap: round;
-        stroke-dasharray: 42 100;
+        /* r=9 gives a 56.55-unit circumference. Keeping the dash and gap
+           total equal to that circumference makes the fixed-length arc loop
+           seamlessly while its dash offset advances around the static ring. */
+        stroke-dasharray: 42.41 14.14;
+        animation: spinner-orbit 0.8s linear infinite;
       }
-      @keyframes spin {
+      @keyframes spinner-orbit {
+        from {
+          stroke-dashoffset: 0;
+        }
         to {
-          transform: rotate(360deg);
+          stroke-dashoffset: -56.55;
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        .spinner {
+        .spinner-arc {
           animation: none;
         }
       }
       @media (forced-colors: active) {
+        .spinner {
+          background: Canvas;
+        }
         .spinner-track {
           stroke: GrayText;
         }
@@ -244,10 +263,12 @@ export class TimelineEntry extends LitElement {
           <span class="line line-bottom"></span>
           ${this.running
             ? html`
-                <svg class="spinner" viewBox="0 0 24 24">
-                  <circle class="spinner-track" cx="12" cy="12" r="9"></circle>
-                  <circle class="spinner-arc" cx="12" cy="12" r="9"></circle>
-                </svg>
+                <span class="spinner">
+                  <svg viewBox="0 0 24 24">
+                    <circle class="spinner-track" cx="12" cy="12" r="9"></circle>
+                    <circle class="spinner-arc" cx="12" cy="12" r="9"></circle>
+                  </svg>
+                </span>
               `
             : html`<span class="dot ${this.color}"></span>`}
         </div>
