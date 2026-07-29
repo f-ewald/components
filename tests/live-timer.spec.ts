@@ -2,7 +2,10 @@ import { test, expect } from "@playwright/test";
 
 test.describe("live-timer", () => {
   test("ticks deterministically across duration boundaries", async ({ page }) => {
+    // `install` alone lets real wall-clock time keep progressing; `pauseAt`
+    // freezes it so only explicit `fastForward` calls advance the timer.
     await page.clock.install({ time: new Date("2026-07-21T12:00:00Z") });
+    await page.clock.pauseAt(new Date("2026-07-21T12:00:00Z"));
     await page.goto("/");
 
     const secondsTimer = page.locator("#timer-seconds");
