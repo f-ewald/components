@@ -14343,7 +14343,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.\n\n`datetime` is the entry's one timestamp. A nested element that has its own\ntimestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —\nsetting both renders the same time twice.\n\nThe dot's `color` types the entry using the shared status-pill palette —\n`primary` by default, plus `neutral`, `info`, `success`, `warning`, and\n`danger`.\n\nSet `compact` for dense, one-line system-status entries (running spinners,\nstate changes): it tightens the vertical spacing and renders the content\nsmaller and muted.",
+          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.\n\n`datetime` is the entry's one timestamp. A nested element that has its own\ntimestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —\nsetting both renders the same time twice.\n\nThe dot's `color` types the entry using the shared status-pill palette —\n`primary` by default, plus `neutral`, `info`, `success`, `warning`, and\n`danger`.\n\nSet `compact` for dense, one-line system-status entries: it tightens the\nvertical spacing and renders the content smaller and muted.\n\nSet `running` to replace the dot with an animated gray ring spinner,\nindicating the entry represents in-progress work; `color` has no visible\neffect while `running` is set.",
           "name": "TimelineEntry",
           "slots": [
             {
@@ -14385,6 +14385,17 @@
               "default": "false",
               "description": "Dense, one-line presentation for system-status entries: tighter vertical\nspacing and smaller, muted content.",
               "attribute": "compact",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "running",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an animated ring spinner in place of the dot, indicating the entry\nrepresents in-progress work. Overrides `color` while set — the spinner\nalways uses the muted/gray palette.",
+              "attribute": "running",
               "reflects": true
             },
             {
@@ -14444,6 +14455,15 @@
               "default": "false",
               "description": "Dense, one-line presentation for system-status entries: tighter vertical\nspacing and smaller, muted content.",
               "fieldName": "compact"
+            },
+            {
+              "name": "running",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an animated ring spinner in place of the dot, indicating the entry\nrepresents in-progress work. Overrides `color` while set — the spinner\nalways uses the muted/gray palette.",
+              "fieldName": "running"
             }
           ],
           "superclass": {

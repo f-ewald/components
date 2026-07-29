@@ -58,4 +58,21 @@ test.describe("timeline-entry", () => {
     // 0.5rem compact vs the default 1.5rem (24px) — assert it's tightened.
     expect(parseFloat(paddingBottom)).toBeLessThan(24);
   });
+
+  test("running entry shows a spinner instead of the dot", async ({ page }) => {
+    await page.goto("/");
+    const entry = page.locator('[data-testid="timeline-e8"]');
+    await expect(entry).toHaveAttribute("running", "");
+    await expect(entry.locator(".spinner")).toBeVisible();
+    await expect(entry.locator(".dot")).toHaveCount(0);
+  });
+
+  test("reduced motion makes the running spinner static", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const animationName = await page
+      .locator('[data-testid="timeline-e8"]')
+      .evaluate((el) => getComputedStyle(el.shadowRoot!.querySelector(".spinner")!).animationName);
+    expect(animationName).toBe("none");
+  });
 });

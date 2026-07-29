@@ -20,9 +20,12 @@ import type { StatusPillColor } from "./status-pill.js";
  * `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
  * `danger`.
  *
- * Set `compact` for dense, one-line system-status entries (running spinners,
- * state changes): it tightens the vertical spacing and renders the content
- * smaller and muted.
+ * Set `compact` for dense, one-line system-status entries: it tightens the
+ * vertical spacing and renders the content smaller and muted.
+ *
+ * Set `running` to replace the dot with an animated gray ring spinner,
+ * indicating the entry represents in-progress work; `color` has no visible
+ * effect while `running` is set.
  *
  * @element timeline-entry
  * @slot headline - Optional headline/title for the event.
@@ -44,6 +47,13 @@ export class TimelineEntry extends LitElement {
    * spacing and smaller, muted content.
    */
   @property({ type: Boolean, reflect: true }) compact = false;
+
+  /**
+   * Shows an animated ring spinner in place of the dot, indicating the entry
+   * represents in-progress work. Overrides `color` while set — the spinner
+   * always uses the muted/gray palette.
+   */
+  @property({ type: Boolean, reflect: true }) running = false;
 
   /** Whether the headline slot currently has assigned content. */
   @state() private _hasHeadline = false;
@@ -123,6 +133,45 @@ export class TimelineEntry extends LitElement {
       .dot.danger {
         --_dot: var(--ui-danger, #dc2626);
       }
+      .spinner {
+        position: absolute;
+        top: 0.125rem;
+        left: 50%;
+        width: 0.75rem;
+        height: 0.75rem;
+        transform: translateX(-50%);
+        animation: spin 0.8s linear infinite;
+      }
+      .spinner-track {
+        fill: none;
+        stroke: color-mix(in srgb, var(--ui-text-muted, #64748b) 25%, transparent);
+        stroke-width: 3;
+      }
+      .spinner-arc {
+        fill: none;
+        stroke: var(--ui-text-muted, #64748b);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-dasharray: 42 100;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner {
+          animation: none;
+        }
+      }
+      @media (forced-colors: active) {
+        .spinner-track {
+          stroke: GrayText;
+        }
+        .spinner-arc {
+          stroke: CanvasText;
+        }
+      }
       :host(:first-child) .line-top {
         display: none;
       }
@@ -193,7 +242,14 @@ export class TimelineEntry extends LitElement {
         <div class="rail" aria-hidden="true">
           <span class="line line-top"></span>
           <span class="line line-bottom"></span>
-          <span class="dot ${this.color}"></span>
+          ${this.running
+            ? html`
+                <svg class="spinner" viewBox="0 0 24 24">
+                  <circle class="spinner-track" cx="12" cy="12" r="9"></circle>
+                  <circle class="spinner-arc" cx="12" cy="12" r="9"></circle>
+                </svg>
+              `
+            : html`<span class="dot ${this.color}"></span>`}
         </div>
         <div class="body">
           <div class="head">

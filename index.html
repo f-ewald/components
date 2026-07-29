@@ -2400,6 +2400,10 @@ grid.fileIcon = true; // or the `file-icon` attribute</code></pre>
                 <span slot="headline">System</span>
                 Compact status entry.
               </timeline-entry>
+              <timeline-entry data-testid="timeline-e8" data-ago="8" running>
+                <span slot="headline">Deploying</span>
+                Uploading build artifacts to the release bucket…
+              </timeline-entry>
             </timeline-container>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/timeline-container.js";
@@ -2413,6 +2417,10 @@ import "@f-ewald/components/timeline-entry.js";
   &lt;timeline-entry datetime="2026-07-23T08:45:00Z" color="success"&gt;
     &lt;span slot="headline"&gt;Review approved&lt;/span&gt;
     &lt;status-pill label="In Review" color="info"&gt;&lt;/status-pill&gt;
+  &lt;/timeline-entry&gt;
+  &lt;timeline-entry running&gt;
+    &lt;span slot="headline"&gt;Deploying&lt;/span&gt;
+    Uploading build artifacts…
   &lt;/timeline-entry&gt;
 &lt;/timeline-container&gt;</code></pre>
         </section>

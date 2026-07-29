@@ -1893,13 +1893,16 @@ The dot's `color` types the entry using the shared status-pill palette —
 `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
 `danger`.
 
-Set `compact` for dense, one-line system-status entries (running spinners,
-state changes): it tightens the vertical spacing and renders the content
-smaller and muted.
+Set `compact` for dense, one-line system-status entries: it tightens the
+vertical spacing and renders the content smaller and muted.
+
+Set `running` to replace the dot with an animated gray ring spinner,
+indicating the entry represents in-progress work; `color` has no visible
+effect while `running` is set.
 
 Import: `import "@f-ewald/components/timeline-entry.js";`
 
-Properties: `datetime` (attribute `datetime`) : string | null, default null; `color` (attribute `color`) : StatusPillColor, default "primary"; `compact` (attribute `compact`) : boolean, default false
+Properties: `datetime` (attribute `datetime`) : string | null, default null; `color` (attribute `color`) : StatusPillColor, default "primary"; `compact` (attribute `compact`) : boolean, default false; `running` (attribute `running`) : boolean, default false
 Events: none
 CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-success`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
 
