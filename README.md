@@ -100,6 +100,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<scroll-to-bottom>` | [API reference](https://f-ewald.github.io/components/docs/scroll-to-bottom.html) |
 | `<scroll-to-top>` | [API reference](https://f-ewald.github.io/components/docs/scroll-to-top.html) |
 | `<slide-panel>` | [API reference](https://f-ewald.github.io/components/docs/slide-panel.html) |
+| `<split-hero>` | [API reference](https://f-ewald.github.io/components/docs/split-hero.html) |
 | `<stat-meter>` | [API reference](https://f-ewald.github.io/components/docs/stat-meter.html) |
 | `<status-pill>` | [API reference](https://f-ewald.github.io/components/docs/status-pill.html) |
 | `<text-area>` | [API reference](https://f-ewald.github.io/components/docs/text-area.html) |

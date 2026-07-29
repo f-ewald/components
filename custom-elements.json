@@ -7199,6 +7199,14 @@
         },
         {
           "kind": "js",
+          "name": "SplitHero",
+          "declaration": {
+            "name": "SplitHero",
+            "module": "./split-hero.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "formatDuration",
           "declaration": {
             "name": "formatDuration",
@@ -12985,6 +12993,89 @@
           "declaration": {
             "name": "SlidePanel",
             "module": "src/slide-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/split-hero.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Full-viewport split layout: a user-supplied photo fills one half, the\ndefault slot (typically a sign-in/sign-up form) fills the other. Below the\nshared 48rem breakpoint the photo hides so the slotted content spans the\nfull width.\n\nGive the host a height the same way as `app-shell` (e.g. `height: 100vh`).",
+          "name": "SplitHero",
+          "slots": [
+            {
+              "description": "Form or other content for the non-image half.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the image filling the visual half; omit to render content full-width.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible alternative text for the image; leave empty for a decorative photo.",
+              "attribute": "alt"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the image filling the visual half; omit to render content full-width.",
+              "fieldName": "src"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible alternative text for the image; leave empty for a decorative photo.",
+              "fieldName": "alt"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "split-hero",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SplitHero",
+          "declaration": {
+            "name": "SplitHero",
+            "module": "src/split-hero.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "split-hero",
+          "declaration": {
+            "name": "SplitHero",
+            "module": "src/split-hero.ts"
           }
         }
       ]

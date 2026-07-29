@@ -10,6 +10,7 @@ import {
   type WeightBarChart,
   type ConfirmDialog,
   type SlidePanel,
+  type SplitHero,
   type RomanNumeral,
   type RelativeTime,
   type DistanceValue,
@@ -1013,7 +1014,7 @@ if (navFilter) {
 
 // ---------------------------------------------------------------------------
 // Layout components: action-bar, app-shell, app-sidebar, form-actions,
-// page-header, pagination-nav.
+// page-header, pagination-nav, split-hero.
 // ---------------------------------------------------------------------------
 
 // app-shell — assembled dashboard: seed the table, toggle the detail column,
@@ -1050,6 +1051,16 @@ appSidebarToggle?.addEventListener("click", () => {
   appSidebarDemo.collapsed = !appSidebarDemo.collapsed;
   appSidebarFrame.style.width = appSidebarDemo.collapsed ? "3.5rem" : "16rem";
   appSidebarToggle.textContent = appSidebarDemo.collapsed ? "Expand" : "Collapse";
+});
+
+// split-hero — set the photo from a local demo asset, and let the toggle
+// button clear/restore `src` to show the single-column fallback.
+const splitHeroDemo = document.getElementById("split-hero-demo") as SplitHero | null;
+const splitHeroPhoto = new URL("./assets/photo-gallery/golden-gate.jpg", import.meta.url).href;
+if (splitHeroDemo) splitHeroDemo.src = splitHeroPhoto;
+document.getElementById("split-hero-toggle-photo")?.addEventListener("click", () => {
+  if (!splitHeroDemo) return;
+  splitHeroDemo.src = splitHeroDemo.src ? "" : splitHeroPhoto;
 });
 
 // form-actions — report which action fired without navigating away.

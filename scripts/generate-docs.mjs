@@ -31,6 +31,9 @@ const SLOTS = {
     { name: "(default)", description: "Optional `gallery-item-variant` responsive image sources." },
   ],
   "confirm-dialog": [{ name: "(default)", description: "Dialog body content." }],
+  "split-hero": [
+    { name: "(default)", description: "Form or other content for the non-image half." },
+  ],
   "slide-panel": [
     { name: "(default)", description: "Panel body content." },
     { name: "title", description: "Overrides the header title text (falls back to the `heading` property)." },
@@ -242,6 +245,14 @@ const EXAMPLES = {
   "slide-panel": `<slide-panel open heading="Property details">
   Panel body content goes here.
 </slide-panel>`,
+  "split-hero": `<split-hero src="/photos/coast.jpg" alt="Coastal road" style="height: 100vh">
+  <form>
+    <h1>Sign in</h1>
+    <form-field label="Email"><input type="email" name="email" /></form-field>
+    <form-field label="Password"><input type="password" name="password" /></form-field>
+    <ui-button type="submit" variant="primary">Sign in</ui-button>
+  </form>
+</split-hero>`,
   "copy-link-button": `<copy-link-button value="https://example.com/listing/42" label="Copy listing link"></copy-link-button>`,
   "relative-time": `<relative-time datetime="2026-07-17T07:00:00Z"></relative-time>`,
   "distance-value": `<distance-value miles="5"></distance-value>`,

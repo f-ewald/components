@@ -99,6 +99,7 @@ export { LinkCard, type LinkCardStatus } from "./link-card.js";
 export { CardGrid } from "./card-grid.js";
 export { MarkdownView } from "./markdown-view.js";
 export { AutoScroll } from "./auto-scroll.js";
+export { SplitHero } from "./split-hero.js";
 export { formatDuration, type DurationFormat } from "./utils/duration.js";
 export { tokens, tokenValues, darkTokenValues } from "./tokens.js";
 export * from "./icons.js";
