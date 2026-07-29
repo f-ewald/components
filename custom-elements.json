@@ -13003,7 +13003,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Full-viewport split layout: a user-supplied photo fills one half, the\ndefault slot (typically a sign-in/sign-up form) fills the other. Below the\nshared 48rem breakpoint the photo hides so the slotted content spans the\nfull width.\n\nGive the host a height the same way as `app-shell` (e.g. `height: 100vh`).",
+          "description": "Full-viewport split layout: a user-supplied photo fills one half, the\ndefault slot (typically a sign-in/sign-up form) fills the other. Below the\nshared 48rem breakpoint the photo becomes a blurred, full-bleed backdrop\nbehind a solid content card instead of disappearing outright.\n\nGive the host a height the same way as `app-shell` (e.g. `height: 100vh`).",
           "name": "SplitHero",
           "slots": [
             {

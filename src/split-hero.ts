@@ -5,8 +5,8 @@ import { tokens } from "./tokens.js";
 /**
  * Full-viewport split layout: a user-supplied photo fills one half, the
  * default slot (typically a sign-in/sign-up form) fills the other. Below the
- * shared 48rem breakpoint the photo hides so the slotted content spans the
- * full width.
+ * shared 48rem breakpoint the photo becomes a blurred, full-bleed backdrop
+ * behind a solid content card instead of disappearing outright.
  *
  * Give the host a height the same way as `app-shell` (e.g. `height: 100vh`).
  *
@@ -51,6 +51,7 @@ export class SplitHero extends LitElement {
         object-fit: cover;
       }
       .content {
+        position: relative;
         flex: 1 1 0;
         min-width: 0;
         display: flex;
@@ -62,7 +63,12 @@ export class SplitHero extends LitElement {
         background: var(--ui-surface, #ffffff);
         color: var(--ui-text, #0f172a);
       }
-      .content ::slotted(*) {
+      .backdrop {
+        display: none;
+      }
+      .content-inner {
+        position: relative;
+        z-index: 1;
         width: 100%;
         max-width: 25rem;
       }
@@ -73,14 +79,39 @@ export class SplitHero extends LitElement {
         .content {
           padding: 1.5rem;
         }
+        .backdrop {
+          display: block;
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          filter: blur(2.5rem);
+          pointer-events: none;
+        }
+        .content-inner.card {
+          background: var(--ui-surface, #ffffff);
+          border-radius: var(--ui-radius, 0.5rem);
+          box-shadow: var(
+            --ui-shadow-lg,
+            0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 8px 10px -6px rgb(0 0 0 / 0.1)
+          );
+          padding: 1.5rem;
+        }
       }
     `,
   ];
 
   override render() {
+    const hasPhoto = Boolean(this.src);
     return html`
-      ${this.src ? html`<figure class="visual"><img src=${this.src} alt=${this.alt} /></figure>` : ""}
-      <div class="content"><slot></slot></div>
+      ${hasPhoto ? html`<figure class="visual"><img src=${this.src} alt=${this.alt} /></figure>` : ""}
+      <div class="content">
+        ${hasPhoto ? html`<img class="backdrop" src=${this.src} alt="" aria-hidden="true" />` : ""}
+        <div class="content-inner ${hasPhoto ? "card" : ""}"><slot></slot></div>
+      </div>
     `;
   }
 }

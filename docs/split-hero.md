@@ -2,8 +2,8 @@
 
 Full-viewport split layout: a user-supplied photo fills one half, the
 default slot (typically a sign-in/sign-up form) fills the other. Below the
-shared 48rem breakpoint the photo hides so the slotted content spans the
-full width.
+shared 48rem breakpoint the photo becomes a blurred, full-bleed backdrop
+behind a solid content card instead of disappearing outright.
 
 Give the host a height the same way as `app-shell` (e.g. `height: 100vh`).
 
@@ -48,6 +48,8 @@ _None._
 | Custom property |
 | --- |
 | `--ui-font` |
+| `--ui-radius` |
+| `--ui-shadow-lg` |
 | `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
