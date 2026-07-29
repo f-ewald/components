@@ -5955,6 +5955,26 @@
               "default": "18"
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "iconUsers",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowRightOnRectangle",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
         }
       ],
       "exports": [
@@ -6355,6 +6375,22 @@
           "name": "iconPuzzlePiece",
           "declaration": {
             "name": "iconPuzzlePiece",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconUsers",
+          "declaration": {
+            "name": "iconUsers",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowRightOnRectangle",
+          "declaration": {
+            "name": "iconArrowRightOnRectangle",
             "module": "src/icons.ts"
           }
         }
