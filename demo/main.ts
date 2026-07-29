@@ -51,6 +51,7 @@ import {
   type KanbanColumnData,
   iconArrowPath,
   iconCheckCircle,
+  iconEllipsisVertical,
   iconInfo,
   iconEye,
   iconListBullet,
@@ -802,6 +803,28 @@ const dropdownSelectLog = document.getElementById("dropdown-select-log")!;
 dropdownResolve?.addEventListener("select", (e) => {
   dropdownSelectLog.textContent = `dropdown-resolve: ${(e as CustomEvent).detail.value}`;
 });
+const dropdownTextIcon = document.getElementById("dropdown-text-icon") as DropdownButton;
+if (dropdownTextIcon) {
+  dropdownTextIcon.icon = iconArrowPath(16);
+  dropdownTextIcon.options = [
+    { value: "rerun", label: "Re-run" },
+    { value: "delete", label: "Delete", danger: true },
+  ];
+  dropdownTextIcon.addEventListener("select", (e) => {
+    dropdownSelectLog.textContent = `dropdown-text-icon: ${(e as CustomEvent).detail.value}`;
+  });
+}
+const dropdownIcon = document.getElementById("dropdown-icon") as DropdownButton;
+if (dropdownIcon) {
+  dropdownIcon.icon = iconEllipsisVertical(16);
+  dropdownIcon.options = [
+    { value: "rename", label: "Rename" },
+    { value: "delete", label: "Delete", danger: true },
+  ];
+  dropdownIcon.addEventListener("select", (e) => {
+    dropdownSelectLog.textContent = `dropdown-icon: ${(e as CustomEvent).detail.value}`;
+  });
+}
 const dropdownDisabled = document.getElementById("dropdown-disabled") as DropdownButton;
 if (dropdownDisabled) {
   dropdownDisabled.options = [{ value: "x", label: "X" }];

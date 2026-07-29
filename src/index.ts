@@ -71,7 +71,11 @@ export { DataTable, type DataTableColumn } from "./data-table.js";
 export { TileGrid } from "./tile-grid.js";
 export { TreeView, type TreeNode } from "./tree-view.js";
 export { PopoverPanel } from "./popover-panel.js";
-export { DropdownButton, type DropdownOption } from "./dropdown-button.js";
+export {
+  DropdownButton,
+  type DropdownButtonVariant,
+  type DropdownOption,
+} from "./dropdown-button.js";
 export { IconButton } from "./icon-button.js";
 export { KbdHint, type KbdPlatform } from "./kbd-hint.js";
 export { FrameBox } from "./frame-box.js";

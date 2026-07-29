@@ -448,14 +448,22 @@ See the [changelog](#markdown-view) for details.\`;
   select.addEventListener("change", (e) => console.log(e.detail.value));
 </script>`,
   "dropdown-button": `<dropdown-button label="Resolve…"></dropdown-button>
+<dropdown-button variant="icon" label="Row actions"></dropdown-button>
 <script type="module">
+  import { iconEllipsisVertical } from "@f-ewald/components/icons.js";
+
   const dropdown = document.querySelector("dropdown-button");
   dropdown.options = [
     { value: "retry", label: "Retry" },
     { value: "close", label: "Close" },
-    { value: "backlog", label: "Backlog" },
+    { value: "delete", label: "Delete", danger: true },
   ];
   dropdown.addEventListener("select", (e) => console.log(e.detail.value));
+
+  // Icon-only overflow ("three dot") menu — label becomes the accessible name.
+  const kebab = document.querySelector('dropdown-button[variant="icon"]');
+  kebab.icon = iconEllipsisVertical(16);
+  kebab.options = [{ value: "delete", label: "Delete", danger: true }];
 </script>`,
   "icon-button": `<icon-button label="Edit"></icon-button>
 <script type="module">

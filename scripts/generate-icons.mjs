@@ -20,6 +20,7 @@ const ICONS = {
   QuestionMarkCircle: { slug: "question-mark-circle", size: 20 },
   Pencil: { slug: "pencil", size: 16 },
   Trash: { slug: "trash", size: 16 },
+  EllipsisVertical: { slug: "ellipsis-vertical", size: 16 },
   Plus: { slug: "plus", size: 16 },
   ListBullet: { slug: "list-bullet" },
   CurrencyDollar: { slug: "currency-dollar", size: 16 },

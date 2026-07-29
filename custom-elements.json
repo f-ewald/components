@@ -3881,7 +3881,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A primary-styled button with a label and chevron that opens an anchored\nmenu of actions — essentially `form-select` minus \"current value\"\nsemantics: a menu, not a select. Use for a set of mutually exclusive\nnext-step actions (e.g. a failed task's Retry / Close / Backlog).",
+          "description": "A button that opens an anchored menu of actions — essentially `form-select`\nminus \"current value\" semantics: a menu, not a select. Use for a set of\nmutually exclusive next-step actions (e.g. a failed task's Retry / Close /\nBacklog, or a table row's overflow actions).\n\nThree trigger presentations share one base: `text` (the default — a\nprimary-filled button with a label and a rotating chevron), `text-icon`\n(the same, with `icon` ahead of the label), and `icon` (a borderless,\nsquare, low-emphasis icon target in the style of `icon-button` — the\nclassic \"three-dot\"/overflow menu, where `label` becomes the accessible\nname rather than visible text).",
           "name": "DropdownButton",
           "members": [
             {
@@ -3891,7 +3891,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "The trigger button's label.",
+              "description": "The trigger button's label. In the `icon` variant it is the accessible name instead of visible text.",
               "attribute": "label"
             },
             {
@@ -3912,6 +3912,26 @@
               "default": "false",
               "description": "Disables the trigger, preventing the menu from opening.",
               "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "DropdownButtonVariant"
+              },
+              "default": "\"text\"",
+              "description": "Trigger presentation: label only, icon only, or icon + label.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "TemplateResult | null"
+              },
+              "default": "null",
+              "description": "Icon template rendered by the `icon` and `text-icon` variants."
             },
             {
               "kind": "field",
@@ -4039,7 +4059,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "The trigger button's label.",
+              "description": "The trigger button's label. In the `icon` variant it is the accessible name instead of visible text.",
               "fieldName": "label"
             },
             {
@@ -4050,6 +4070,15 @@
               "default": "false",
               "description": "Disables the trigger, preventing the menu from opening.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "DropdownButtonVariant"
+              },
+              "default": "\"text\"",
+              "description": "Trigger presentation: label only, icon only, or icon + label.",
+              "fieldName": "variant"
             }
           ],
           "superclass": {
@@ -5558,6 +5587,16 @@
         },
         {
           "kind": "function",
+          "name": "iconEllipsisVertical",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ]
+        },
+        {
+          "kind": "function",
           "name": "iconPlus",
           "parameters": [
             {
@@ -6055,6 +6094,14 @@
           "name": "iconTrash",
           "declaration": {
             "name": "iconTrash",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconEllipsisVertical",
+          "declaration": {
+            "name": "iconEllipsisVertical",
             "module": "src/icons.ts"
           }
         },
@@ -6998,6 +7045,14 @@
           "name": "DropdownButton",
           "declaration": {
             "name": "DropdownButton",
+            "module": "./dropdown-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropdownButtonVariant",
+          "declaration": {
+            "name": "DropdownButtonVariant",
             "module": "./dropdown-button.js"
           }
         },

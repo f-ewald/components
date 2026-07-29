@@ -795,11 +795,26 @@ table.rowHref = (row) => `#/tasks/${row.id}`;</code></pre>
         <section id="dropdown-button" class="scroll-mt-8 py-10" data-testid="section-dropdown-button">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#dropdown-button">dropdown-button</a></h3>
           <p class="mt-1 text-sm text-slate-500">
-            A primary-styled button with a label and chevron that opens an anchored menu of
-            actions, firing <code>select</code> with <code>{ value }</code>.
+            A button that opens an anchored menu of actions, firing <code>select</code> with
+            <code>{ value }</code>. Three trigger presentations share one base:
+            <code>text</code> (default), <code>text-icon</code>, and <code>icon</code> — the
+            borderless three-dot/overflow trigger, where <code>label</code> becomes the
+            accessible name. A menu item can set <code>danger</code> for a destructive action.
           </p>
           <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6">
             <dropdown-button id="dropdown-resolve" data-testid="dropdown-resolve" label="Resolve…"></dropdown-button>
+            <dropdown-button
+              id="dropdown-text-icon"
+              data-testid="dropdown-text-icon"
+              variant="text-icon"
+              label="Actions"
+            ></dropdown-button>
+            <dropdown-button
+              id="dropdown-icon"
+              data-testid="dropdown-icon"
+              variant="icon"
+              label="Row actions"
+            ></dropdown-button>
             <dropdown-button
               id="dropdown-disabled"
               data-testid="dropdown-disabled"
@@ -809,15 +824,22 @@ table.rowHref = (row) => `#/tasks/${row.id}`;</code></pre>
             <p id="dropdown-select-log" data-testid="dropdown-select-log" class="text-xs text-slate-500"></p>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/dropdown-button.js";
+import { iconEllipsisVertical } from "@f-ewald/components/icons.js";
 
 const dropdown = document.querySelector("dropdown-button");
 dropdown.label = "Resolve…";
 dropdown.options = [
   { value: "retry", label: "Retry" },
   { value: "close", label: "Close" },
-  { value: "backlog", label: "Backlog" },
+  { value: "delete", label: "Delete", danger: true },
 ];
-dropdown.addEventListener("select", (e) => console.log(e.detail.value));</code></pre>
+dropdown.addEventListener("select", (e) => console.log(e.detail.value));
+
+// Icon-only overflow menu — `label` becomes the accessible name.
+const kebab = document.querySelector("dropdown-button#row-actions");
+kebab.variant = "icon";
+kebab.label = "Row actions";
+kebab.icon = iconEllipsisVertical(16);</code></pre>
         </section>
 
         <section id="editable-text" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-editable-text">

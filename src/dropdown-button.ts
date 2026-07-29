@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing, type PropertyValues } from "lit";
+import { LitElement, css, html, nothing, type PropertyValues, type TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { iconChevronRight } from "./icons.js";
 import { tokens } from "./tokens.js";
@@ -9,13 +9,25 @@ let instanceCount = 0;
 export interface DropdownOption {
   value: string;
   label: string;
+  /** Renders the item in the danger color, for a destructive action (e.g. Delete). */
+  danger?: boolean;
 }
 
+/** How the trigger presents itself: label only, icon only, or icon + label. */
+export type DropdownButtonVariant = "text" | "icon" | "text-icon";
+
 /**
- * A primary-styled button with a label and chevron that opens an anchored
- * menu of actions — essentially `form-select` minus "current value"
- * semantics: a menu, not a select. Use for a set of mutually exclusive
- * next-step actions (e.g. a failed task's Retry / Close / Backlog).
+ * A button that opens an anchored menu of actions — essentially `form-select`
+ * minus "current value" semantics: a menu, not a select. Use for a set of
+ * mutually exclusive next-step actions (e.g. a failed task's Retry / Close /
+ * Backlog, or a table row's overflow actions).
+ *
+ * Three trigger presentations share one base: `text` (the default — a
+ * primary-filled button with a label and a rotating chevron), `text-icon`
+ * (the same, with `icon` ahead of the label), and `icon` (a borderless,
+ * square, low-emphasis icon target in the style of `icon-button` — the
+ * classic "three-dot"/overflow menu, where `label` becomes the accessible
+ * name rather than visible text).
  *
  * @element dropdown-button
  * @fires select - Fired with `{ value: string }` when a menu item is picked.
@@ -40,9 +52,12 @@ export class DropdownButton extends LitElement {
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
+      /* Shared trigger base — layout, type, shape, and interaction states every
+         variant has in common. Variant blocks below only add fill/padding. */
       button.trigger {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.25rem;
         height: 2rem;
         font-family: var(
@@ -58,15 +73,9 @@ export class DropdownButton extends LitElement {
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: var(--ui-font-weight-medium, 500);
         line-height: var(--ui-line-height-tight, 1.25);
-        color: var(--ui-on-accent, #ffffff);
-        background: var(--ui-primary, #4f46e5);
         border: 1px solid transparent;
         border-radius: var(--ui-radius-sm, 0.25rem);
-        padding: 0.5rem 1rem;
         cursor: pointer;
-      }
-      button.trigger:hover:not(:disabled) {
-        background: var(--ui-primary-hover, #4338ca);
       }
       button.trigger:disabled {
         cursor: not-allowed;
@@ -75,6 +84,32 @@ export class DropdownButton extends LitElement {
       button.trigger:focus-visible {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      /* text + text-icon: the primary-filled trigger. Written as :not([variant="icon"])
+         rather than two positive selectors so the default presentation is correct
+         even before the reflected attribute lands. */
+      :host(:not([variant="icon"])) button.trigger {
+        color: var(--ui-on-accent, #ffffff);
+        background: var(--ui-primary, #4f46e5);
+        padding: 0.5rem 1rem;
+      }
+      :host(:not([variant="icon"])) button.trigger:hover:not(:disabled) {
+        background: var(--ui-primary-hover, #4338ca);
+      }
+      /* icon: borderless low-emphasis square target, matching icon-button. */
+      :host([variant="icon"]) button.trigger {
+        width: 2rem;
+        padding: 0;
+        color: var(--ui-text-muted, #64748b);
+        background: none;
+      }
+      :host([variant="icon"]) button.trigger:hover:not(:disabled) {
+        background: var(--ui-surface-muted, #f8fafc);
+        color: var(--ui-text, #0f172a);
+      }
+      .icon {
+        display: flex;
+        line-height: 0;
       }
       .chevron {
         display: flex;
@@ -106,9 +141,16 @@ export class DropdownButton extends LitElement {
         cursor: pointer;
         color: var(--ui-text, #0f172a);
       }
+      li.danger {
+        color: var(--ui-danger, #dc2626);
+      }
       li.active,
       li:hover {
         background: var(--ui-surface-muted, #f8fafc);
+      }
+      li.danger.active,
+      li.danger:hover {
+        color: var(--ui-danger-hover, #b91c1c);
       }
       @media (prefers-reduced-motion: reduce) {
         .chevron {
@@ -126,7 +168,9 @@ export class DropdownButton extends LitElement {
           opacity: 1;
         }
         li.active,
-        li:hover {
+        li:hover,
+        li.danger.active,
+        li.danger:hover {
           color: HighlightText;
           background: Highlight;
         }
@@ -134,12 +178,16 @@ export class DropdownButton extends LitElement {
     `,
   ];
 
-  /** The trigger button's label. */
+  /** The trigger button's label. In the `icon` variant it is the accessible name instead of visible text. */
   @property() label = "";
   /** The menu's actions. */
   @property({ attribute: false }) options: DropdownOption[] = [];
   /** Disables the trigger, preventing the menu from opening. */
   @property({ type: Boolean }) disabled = false;
+  /** Trigger presentation: label only, icon only, or icon + label. */
+  @property({ reflect: true }) variant: DropdownButtonVariant = "text";
+  /** Icon template rendered by the `icon` and `text-icon` variants. */
+  @property({ attribute: false }) icon: TemplateResult | null = null;
 
   @state() private _open = false;
   @state() private _activeIndex = -1;
@@ -218,7 +266,9 @@ export class DropdownButton extends LitElement {
             <li
               id=${`${this.#menuId}-item-${i}`}
               role="menuitem"
-              class=${i === this._activeIndex ? "active" : ""}
+              class=${[i === this._activeIndex ? "active" : "", o.danger ? "danger" : ""]
+                .filter(Boolean)
+                .join(" ")}
               @mousedown=${(e: MouseEvent) => {
                 if (e.button !== 0) return;
                 e.preventDefault();
@@ -238,6 +288,7 @@ export class DropdownButton extends LitElement {
       this._open && this._activeIndex >= 0
         ? `${this.#menuId}-item-${this._activeIndex}`
         : nothing;
+    const iconOnly = this.variant === "icon";
     return html`
       <button
         type="button"
@@ -246,12 +297,19 @@ export class DropdownButton extends LitElement {
         aria-expanded=${this._open}
         aria-controls=${this.#menuId}
         aria-activedescendant=${activeDescendant}
+        aria-label=${iconOnly && this.label ? this.label : nothing}
+        title=${iconOnly && this.label ? this.label : nothing}
         ?disabled=${this.disabled}
         @click=${() => this.#toggle()}
         @keydown=${(e: KeyboardEvent) => this.#onTriggerKeydown(e)}
       >
-        <span>${this.label}</span>
-        <span class="chevron" aria-hidden="true">${iconChevronRight(14)}</span>
+        ${this.variant !== "text" && this.icon
+          ? html`<span class="icon" aria-hidden="true">${this.icon}</span>`
+          : nothing}
+        ${iconOnly ? nothing : html`<span>${this.label}</span>`}
+        ${iconOnly
+          ? nothing
+          : html`<span class="chevron" aria-hidden="true">${iconChevronRight(14)}</span>`}
       </button>
       ${this.renderMenu()}
     `;

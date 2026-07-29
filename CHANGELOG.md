@@ -1,5 +1,19 @@
 # @f-ewald/components
 
+## Unreleased
+
+- `dropdown-button` now shares one trigger base across three presentations,
+  selected with a reflected `variant` property: `text` (the default,
+  pixel-identical to the previous primary-filled label+chevron button),
+  `text-icon` (the same, with a new `icon` template ahead of the label), and
+  `icon` — a borderless, square, low-emphasis trigger matching `icon-button`,
+  i.e. the classic "three dot"/overflow menu. In the `icon` variant the
+  existing `label` becomes the accessible name (`aria-label`/`title`) rather
+  than visible text, and the chevron is dropped.
+- `DropdownOption` gains an optional `danger` flag that renders a menu item in
+  `--ui-danger`, for destructive actions such as Delete.
+- Added the `iconEllipsisVertical` heroicon.
+
 ## 1.19.0
 
 - Added `iconUsers` and `iconArrowRightOnRectangle` heroicons.
