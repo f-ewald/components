@@ -60,6 +60,8 @@ const ICONS = {
   ComputerDesktop: { slug: "computer-desktop", size: 16 },
   CodeBracketSquare: { slug: "code-bracket-square", size: 16 },
   PuzzlePiece: { slug: "puzzle-piece", size: 18 },
+  Users: { slug: "users", size: 18 },
+  ArrowRightOnRectangle: { slug: "arrow-right-on-rectangle", size: 16 },
 };
 
 /**
