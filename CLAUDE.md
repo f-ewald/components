@@ -14,6 +14,15 @@ than rendering charts (`d3-array`/`d3-scale`/`d3-shape` were already runtime
 deps). It always parses with `marked` and sanitizes with `DOMPurify` before
 injecting — the `markdown` property is treated as untrusted input.
 
+`tab-bar`/`tab-item` are the package's first WAI-ARIA tabs implementation —
+`tab-bar` renders the `role="tab"` strip from declarative `tab-item`
+children (each owning its own visibility via a reflected `selected`
+attribute), with roving tabindex and automatic activation. `markdown-editor`
+composes `tab-bar`, `text-area`, `markdown-view`, and `frame-box` into a
+GitHub-style Write/Preview editor; it added `yaml` as a runtime dependency to
+parse leading `---`-delimited front matter, shown as a key-value table above
+the previewed body.
+
 `ui-button` has a `size: "sm" | "md"` property (`sm` shrinks
 height/padding/font-size one step; `md` is pixel-identical to the pre-`size`
 default). `button-group` has an `icon-only` reflected boolean (labels hidden

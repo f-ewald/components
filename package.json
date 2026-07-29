@@ -1,7 +1,7 @@
 {
   "name": "@f-ewald/components",
   "private": false,
-  "version": "1.19.0",
+  "version": "1.20.0",
   "description": "A collection of universally usable web components for various tasks.",
   "type": "module",
   "main": "dist/index.js",
@@ -67,6 +67,7 @@
     "lit": "^3.3.3",
     "mapbox-gl": "^3.9.0",
     "marked": "^18.0.7",
+    "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
   "publishConfig": {

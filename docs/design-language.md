@@ -33,6 +33,11 @@ defines the details used when creating or reviewing components.
 - White map rings, image-overlay controls, avatar foregrounds, and celebratory
   confetti may remain literal when their contrast is intentionally independent
   of the surrounding theme.
+- There is no dedicated secondary accent color. `tab-bar`'s inactive-tab
+  indicator reuses `--ui-border` (a shared line beneath the whole strip, with
+  the active tab's `--ui-primary` line drawn on top of it) rather than
+  introducing a new token — the same precedent as `ui-button`'s `secondary`
+  variant, which is realized via `--ui-border`/`--ui-text-muted`, not a hue.
 
 ## Typography
 
@@ -125,6 +130,10 @@ literal values are migrated onto them.
 - Modal/centered overlays expose a name, `role="dialog"`, `aria-modal`, initial
   focus, Escape behavior, focus containment, and focus restoration.
 - Collapsible controls expose `aria-expanded` and `aria-controls`.
+- Tab strips (`tab-bar`/`tab-item`) follow the WAI-ARIA tabs pattern:
+  `role="tablist"/"tab"/"tabpanel"`, `aria-selected`, roving tabindex, and
+  automatic activation (arrow keys both move focus and select; Home/End jump
+  to the first/last tab).
 - Charts expose a concise accessible data summary.
 - Decorative icons/keycaps inside already-labelled controls are hidden from
   assistive technology; standalone equivalents expose their own name.
@@ -135,7 +144,8 @@ literal values are migrated onto them.
 - Metadata-only tags may omit standalone playground sections when their full
   behavior is demonstrated through a parent:
   `calendar-entry`, `gallery-item`, `gallery-item-variant`, `kanban-card`,
-  `kanban-column`, and `timeline-entry` (shown through `timeline-container`).
+  `kanban-column`, `tab-item` (shown through `tab-bar`), and `timeline-entry`
+  (shown through `timeline-container`).
 - Styleless inline formatters may omit empty `static styles`/token imports:
   `distance-value`, `live-timer`, `relative-time`, and `roman-numeral`.
 - Domain visuals may deliberately diverge in geometry and data color, but their

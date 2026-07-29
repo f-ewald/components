@@ -7243,6 +7243,62 @@
         },
         {
           "kind": "js",
+          "name": "TabBar",
+          "declaration": {
+            "name": "TabBar",
+            "module": "./tab-bar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TabChangeDetail",
+          "declaration": {
+            "name": "TabChangeDetail",
+            "module": "./tab-bar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TabItem",
+          "declaration": {
+            "name": "TabItem",
+            "module": "./tab-item.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MarkdownEditor",
+          "declaration": {
+            "name": "MarkdownEditor",
+            "module": "./markdown-editor.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseFrontMatter",
+          "declaration": {
+            "name": "parseFrontMatter",
+            "module": "./utils/front-matter.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatFrontMatterValue",
+          "declaration": {
+            "name": "formatFrontMatterValue",
+            "module": "./utils/front-matter.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FrontMatterResult",
+          "declaration": {
+            "name": "FrontMatterResult",
+            "module": "./utils/front-matter.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "formatDuration",
           "declaration": {
             "name": "formatDuration",
@@ -9286,6 +9342,154 @@
           "declaration": {
             "name": "MapboxMap",
             "module": "src/mapbox-map.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/markdown-editor.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "GitHub-style markdown editor: a \"Write\" tab holding a plain textarea and a\n\"Preview\" tab rendering the markdown body (via `markdown-view`). Leading\nYAML front matter (a `---`-delimited block) is detected, parsed, and shown\nas a key-value table above the rendered body rather than as raw text.",
+          "name": "MarkdownEditor",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Full raw document text, including any front matter block.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "12",
+              "description": "Visible row count for the Write tab's textarea.",
+              "attribute": "rows"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the Write tab is empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "method",
+              "name": "_onInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fires on every keystroke in the Write tab; detail: { value: string }."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Native change semantics (on blur, if the value changed); detail: { value: string }."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Full raw document text, including any front matter block.",
+              "fieldName": "value"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "12",
+              "description": "Visible row count for the Write tab's textarea.",
+              "fieldName": "rows"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the Write tab is empty.",
+              "fieldName": "placeholder"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "markdown-editor",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MarkdownEditor",
+          "declaration": {
+            "name": "MarkdownEditor",
+            "module": "src/markdown-editor.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "markdown-editor",
+          "declaration": {
+            "name": "MarkdownEditor",
+            "module": "src/markdown-editor.ts"
           }
         }
       ]
@@ -13329,6 +13533,326 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/tab-bar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "WAI-ARIA tabs pattern (automatic activation, roving tabindex) driving a\nstrip of declarative `tab-item` children. `tab-bar` renders the `role=\"tab\"`\nbutton strip itself, reading `label`/`value`/`selected` off each slotted\n`tab-item`; each `tab-item` owns its own visibility via its reflected\n`selected` attribute.\n\nThe active tab's underline uses `--ui-primary`; a `--ui-border` line spans\nthe full strip beneath every tab, standing in for the inactive state since\nthis design system has no dedicated secondary accent color.",
+          "name": "TabBar",
+          "slots": [
+            {
+              "description": "`tab-item` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible name for the tablist (e.g. \"Editor mode\").",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "_tabItems",
+              "type": {
+                "text": "TabItem[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_version",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_uid",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`tab-bar-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
+              "name": "_observer",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_ensureSelection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Defaults the first tab-item to selected if none was marked so by the consumer."
+            },
+            {
+              "kind": "method",
+              "name": "_currentIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_tabButtonId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_select",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ focus?: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_focusButton",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Arrow/Home/End roving-tabindex navigation with automatic activation."
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The active tab changed via click or keyboard; detail: `TabChangeDetail`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible name for the tablist (e.g. \"Editor mode\").",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tab-bar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TabBar",
+          "declaration": {
+            "name": "TabBar",
+            "module": "src/tab-bar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tab-bar",
+          "declaration": {
+            "name": "TabBar",
+            "module": "src/tab-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tab-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single labeled panel inside a `tab-bar`. Renders its default slot as an\nARIA `tabpanel`, shown or hidden based on `selected` — `tab-bar` reads\n`label`/`value` to build its tab strip and toggles `selected` on the\nactive panel.",
+          "name": "TabItem",
+          "slots": [
+            {
+              "description": "Panel content, shown only while `selected`.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text shown in the tab-bar's tab button for this panel.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Stable identifier reported in `tab-bar`'s `change` event; defaults to `label`.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether this panel is the active one; `tab-bar` owns this.",
+              "attribute": "selected",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text shown in the tab-bar's tab button for this panel.",
+              "fieldName": "label"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Stable identifier reported in `tab-bar`'s `change` event; defaults to `label`.",
+              "fieldName": "value"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether this panel is the active one; `tab-bar` owns this.",
+              "fieldName": "selected"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tab-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TabItem",
+          "declaration": {
+            "name": "TabItem",
+            "module": "src/tab-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tab-item",
+          "declaration": {
+            "name": "TabItem",
+            "module": "src/tab-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/text-area.ts",
       "declarations": [
         {
@@ -15573,6 +16097,66 @@
           "declaration": {
             "name": "submitWithDefaultButton",
             "module": "src/utils/form.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/front-matter.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "parseFrontMatter",
+          "return": {
+            "type": {
+              "text": "FrontMatterResult"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Splits a leading `---`-delimited YAML front matter block off a document.\n\nOnly treats the block as front matter if it parses as a non-empty plain\nobject — this avoids misreading a markdown horizontal rule (also `---`) as\nfront matter, and tolerates malformed YAML typed mid-edit by falling back\nto treating the whole document as plain body text."
+        },
+        {
+          "kind": "function",
+          "name": "formatFrontMatterValue",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ],
+          "description": "Stringifies a parsed front matter value for key-value table display."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "parseFrontMatter",
+          "declaration": {
+            "name": "parseFrontMatter",
+            "module": "src/utils/front-matter.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatFrontMatterValue",
+          "declaration": {
+            "name": "formatFrontMatterValue",
+            "module": "src/utils/front-matter.ts"
           }
         }
       ]

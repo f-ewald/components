@@ -70,6 +70,8 @@ const SLOTS = {
       description: "Declarative `calendar-entry` elements spanning the displayed year, re-projected into each month.",
     },
   ],
+  "tab-bar": [{ name: "(default)", description: "`tab-item` elements." }],
+  "tab-item": [{ name: "(default)", description: "Panel content, shown only while `selected`." }],
 };
 
 /** Metadata-only components are demonstrated through their visual parent. */
@@ -79,6 +81,7 @@ const PLAYGROUND_ANCHORS = {
   "gallery-item-variant": "photo-gallery",
   "kanban-card": "kanban-board",
   "kanban-column": "kanban-board",
+  "tab-item": "tab-bar",
   "timeline-entry": "timeline-container",
 };
 
@@ -347,6 +350,28 @@ const EXAMPLES = {
   "map-circle": `<map-circle color="#6b7280"></map-circle>
 <map-circle color="#0099D8" size="14" ring-width="3"></map-circle>
 <map-circle color="#1a73e8" size="24" ring-width="5" highlighted>1</map-circle>`,
+  "markdown-editor": `<markdown-editor></markdown-editor>
+<script type="module">
+  const el = document.querySelector("markdown-editor");
+  el.value = \`---
+title: Weekly status
+author: Ada Lovelace
+tags: [engineering, updates]
+---
+
+# Weekly status
+
+Some **markdown** content here.\`;
+  el.addEventListener("input", (e) => console.log(e.detail.value));
+</script>`,
+  "tab-bar": `<tab-bar label="Project sections">
+  <tab-item label="Overview" value="overview" selected>Overview content</tab-item>
+  <tab-item label="Activity" value="activity">Activity content</tab-item>
+  <tab-item label="Settings" value="settings">Settings content</tab-item>
+</tab-bar>
+<script type="module">
+  document.querySelector("tab-bar").addEventListener("change", (e) => console.log(e.detail.value));
+</script>`,
   "markdown-view": `<markdown-view></markdown-view>
 <script type="module">
   const el = document.querySelector("markdown-view");

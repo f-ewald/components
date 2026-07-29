@@ -9,6 +9,7 @@ const metadataOnly = new Set([
   "gallery-item-variant",
   "kanban-card",
   "kanban-column",
+  "tab-item",
   "timeline-entry",
 ]);
 const styleless = new Set([

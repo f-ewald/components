@@ -22,6 +22,9 @@ import {
   type MapCircle,
   type MapboxMap,
   type MarkdownView,
+  type MarkdownEditor,
+  type TabBar,
+  type TabChangeDetail,
   type StatMeter,
   type EditableText,
   type LiveTimer,
@@ -514,6 +517,30 @@ if (mapboxMapDemo) {
     mapboxMapStatus.textContent = "Set VITE_MAPBOX_TOKEN in the playground's .env to see a live map here.";
   }
 }
+
+// markdown-editor (seed a sample doc with YAML front matter)
+const markdownEditorDemo = document.getElementById("markdown-editor-demo") as MarkdownEditor;
+if (markdownEditorDemo) {
+  markdownEditorDemo.value = [
+    "---",
+    "title: Weekly status",
+    "author: Ada Lovelace",
+    "tags: [engineering, updates]",
+    "---",
+    "",
+    "# Weekly status",
+    "",
+    "Shipped **markdown-editor** this week, switch to Preview to see it rendered.",
+  ].join("\n");
+}
+
+// tab-bar (log the active tab's value on change)
+const tabBarLog = document.getElementById("tab-bar-log");
+const tabBarDemo = document.getElementById("tab-bar-demo") as TabBar;
+tabBarDemo?.addEventListener("change", (e) => {
+  const { value } = (e as CustomEvent<TabChangeDetail>).detail;
+  if (tabBarLog) tabBarLog.textContent = `Active tab: ${value}`;
+});
 
 // markdown-view
 const markdownViewDemo = document.getElementById("markdown-view-demo") as MarkdownView;

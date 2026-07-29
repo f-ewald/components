@@ -1120,6 +1120,37 @@ Example:
 </script>
 ```
 
+## <markdown-editor>
+
+GitHub-style markdown editor: a "Write" tab holding a plain textarea and a
+"Preview" tab rendering the markdown body (via `markdown-view`). Leading
+YAML front matter (a `---`-delimited block) is detected, parsed, and shown
+as a key-value table above the rendered body rather than as raw text.
+
+Import: `import "@f-ewald/components/markdown-editor.js";`
+
+Properties: `value` (attribute `value`) : string, default ""; `rows` (attribute `rows`) : number, default 12; `placeholder` (attribute `placeholder`) : string, default ""
+Events: `input`, `change`
+CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-normal`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<markdown-editor></markdown-editor>
+<script type="module">
+  const el = document.querySelector("markdown-editor");
+  el.value = `---
+title: Weekly status
+author: Ada Lovelace
+tags: [engineering, updates]
+---
+
+# Weekly status
+
+Some **markdown** content here.`;
+  el.addEventListener("input", (e) => console.log(e.detail.value));
+</script>
+```
+
 ## <markdown-view>
 
 Renders a markdown string as sanitized, styled HTML — headings, lists,
@@ -1680,6 +1711,54 @@ Example:
 ```html
 <status-pill label="Running" color="primary" spinner></status-pill>
 <status-pill label="Blocked" color="danger"></status-pill>
+```
+
+## <tab-bar>
+
+WAI-ARIA tabs pattern (automatic activation, roving tabindex) driving a
+strip of declarative `tab-item` children. `tab-bar` renders the `role="tab"`
+button strip itself, reading `label`/`value`/`selected` off each slotted
+`tab-item`; each `tab-item` owns its own visibility via its reflected
+`selected` attribute.
+
+The active tab's underline uses `--ui-primary`; a `--ui-border` line spans
+the full strip beneath every tab, standing in for the inactive state since
+this design system has no dedicated secondary accent color.
+
+Import: `import "@f-ewald/components/tab-bar.js";`
+
+Properties: `label` (attribute `label`) : string, default ""
+Events: `change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<tab-bar label="Project sections">
+  <tab-item label="Overview" value="overview" selected>Overview content</tab-item>
+  <tab-item label="Activity" value="activity">Activity content</tab-item>
+  <tab-item label="Settings" value="settings">Settings content</tab-item>
+</tab-bar>
+<script type="module">
+  document.querySelector("tab-bar").addEventListener("change", (e) => console.log(e.detail.value));
+</script>
+```
+
+## <tab-item>
+
+A single labeled panel inside a `tab-bar`. Renders its default slot as an
+ARIA `tabpanel`, shown or hidden based on `selected` — `tab-bar` reads
+`label`/`value` to build its tab strip and toggles `selected` on the
+active panel.
+
+Import: `import "@f-ewald/components/tab-item.js";`
+
+Properties: `label` (attribute `label`) : string, default ""; `value` (attribute `value`) : string, default ""; `selected` (attribute `selected`) : boolean, default false
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<tab-item></tab-item>
 ```
 
 ## <text-area>

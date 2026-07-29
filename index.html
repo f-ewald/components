@@ -58,6 +58,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-circle">map-circle</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#map-pin">map-pin</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#mapbox-map">mapbox-map</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#markdown-editor">markdown-editor</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#markdown-view">markdown-view</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#multi-select">multi-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#page-header">page-header</a>
@@ -78,6 +79,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#split-hero">split-hero</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#status-pill">status-pill</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tab-bar">tab-bar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#text-area">text-area</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tile-grid">tile-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#timeline-container">timeline-container</a>
@@ -1400,6 +1402,30 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
 &lt;/script&gt;</code></pre>
         </section>
 
+        <section id="markdown-editor" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-markdown-editor">
+          <h3 class="text-xl font-semibold text-slate-900">markdown-editor</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            GitHub-style Write/Preview markdown editor built on <code>tab-bar</code>. Leading YAML
+            front matter is detected and rendered as a key-value table above the previewed body.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <markdown-editor id="markdown-editor-demo" data-testid="markdown-editor-demo"></markdown-editor>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/markdown-editor.js";
+
+const el = document.querySelector("markdown-editor");
+el.value = `---
+title: Weekly status
+author: Ada Lovelace
+tags: [engineering, updates]
+---
+
+# Weekly status
+
+Some **markdown** content here.`;
+el.addEventListener("input", (event) =&gt; console.log(event.detail.value));</code></pre>
+        </section>
+
         <section id="markdown-view" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-markdown-view">
           <h3 class="text-xl font-semibold text-slate-900">markdown-view</h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -2214,6 +2240,42 @@ import "@f-ewald/components/ui-button.js";
 
 &lt;status-pill label="Running" color="primary" spinner&gt;&lt;/status-pill&gt;
 &lt;status-pill label="Blocked" color="danger"&gt;&lt;/status-pill&gt;</code></pre>
+        </section>
+
+        <section id="tab-bar" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-tab-bar">
+          <h3 class="text-xl font-semibold text-slate-900">tab-bar</h3>
+          <p class="mt-1 text-sm text-slate-500">
+            WAI-ARIA tabs: a strip of <code>tab-item</code> panels, switched by click or the
+            arrow/Home/End keys. The active tab's underline uses the primary color; a shared
+            border line runs beneath the whole strip for the inactive state.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <tab-bar id="tab-bar-demo" data-testid="tab-bar-demo" label="Project sections">
+              <tab-item label="Overview" value="overview">
+                <p class="text-sm text-slate-600">Project overview content goes here.</p>
+              </tab-item>
+              <tab-item label="Activity" value="activity">
+                <p class="text-sm text-slate-600">Recent activity content goes here.</p>
+              </tab-item>
+              <tab-item label="Settings" value="settings">
+                <p class="text-sm text-slate-600">Settings content goes here.</p>
+              </tab-item>
+            </tab-bar>
+            <p id="tab-bar-log" data-testid="tab-bar-log" class="mt-4 text-xs text-slate-500">Active tab: overview</p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/tab-bar.js";
+import "@f-ewald/components/tab-item.js";
+
+&lt;tab-bar label="Project sections"&gt;
+  &lt;tab-item label="Overview" value="overview" selected&gt;Overview content&lt;/tab-item&gt;
+  &lt;tab-item label="Activity" value="activity"&gt;Activity content&lt;/tab-item&gt;
+  &lt;tab-item label="Settings" value="settings"&gt;Settings content&lt;/tab-item&gt;
+&lt;/tab-bar&gt;
+&lt;script type="module"&gt;
+  document.querySelector("tab-bar").addEventListener("change", (event) =&gt; {
+    console.log(event.detail.value);
+  });
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="text-area" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-text-area">
