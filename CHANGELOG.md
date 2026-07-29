@@ -1,5 +1,14 @@
 # @f-ewald/components
 
+## 1.19.0
+
+- Added `iconUsers` and `iconArrowRightOnRectangle` heroicons.
+- `split-hero`: below the 48rem breakpoint the photo now renders as a blurred, full-bleed backdrop behind a solid card holding the slotted content, instead of disappearing outright.
+
+## 1.18.0
+
+- Added `split-hero`, a full-viewport split layout for sign-in/sign-up pages: a user-supplied photo (`src`/`alt`) fills one half, a default slot (typically a form) fills the other.
+
 ## 1.17.0
 
 - Added `mapbox-map`, a thin wrapper around a `mapboxgl.Map` — construction,
