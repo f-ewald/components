@@ -1919,7 +1919,7 @@ Import: `import "@f-ewald/components/timeline-entry.js";`
 
 Properties: `datetime` (attribute `datetime`) : string | null, default null; `color` (attribute `color`) : StatusPillColor, default "primary"; `compact` (attribute `compact`) : boolean, default false; `running` (attribute `running`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-success`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
 
 Example:
 ```html

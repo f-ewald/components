@@ -69,6 +69,7 @@ _None._
 | `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-success` |
+| `--ui-surface` |
 | `--ui-text` |
 | `--ui-text-muted` |
 | `--ui-warning` |
