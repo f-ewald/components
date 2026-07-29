@@ -1696,6 +1696,33 @@ Example:
 <stat-meter label="GPU" percent="88" color="#dc2626"></stat-meter>
 ```
 
+## <status-banner>
+
+Full-width, app-level status bar for a persistent condition — "Reconnecting…",
+"Read-only mode", "New version available". Unlike `toast-notification` (which
+is transient, imperative, and stacks in a corner) this stays put for as long
+as the condition holds, so the consumer controls its presence by rendering it
+or not.
+
+Colors mirror `status-pill`: a tinted background with accent-colored text.
+Announced to assistive tech via `role="status"` (or `role="alert"` for the
+`danger` variant, matching `toast-notification`'s split).
+
+Import: `import "@f-ewald/components/status-banner.js";`
+
+Properties: `variant` (attribute `variant`) : StatusBannerVariant, default "info"; `icon` (JS property only) : TemplateResult | null, default null
+Events: none
+CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-info`, `--ui-line-height-normal`, `--ui-success`, `--ui-text-muted`, `--ui-warning`
+
+Example:
+```html
+<status-banner variant="warning">Reconnecting… — data may be stale</status-banner>
+<status-banner variant="info">
+  A new version is available.
+  <button slot="actions">Reload</button>
+</status-banner>
+```
+
 ## <status-pill>
 
 Small colored status pill, optionally with a spinning icon — for task/run

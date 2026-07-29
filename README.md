@@ -103,6 +103,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<slide-panel>` | [API reference](https://f-ewald.github.io/components/docs/slide-panel.html) |
 | `<split-hero>` | [API reference](https://f-ewald.github.io/components/docs/split-hero.html) |
 | `<stat-meter>` | [API reference](https://f-ewald.github.io/components/docs/stat-meter.html) |
+| `<status-banner>` | [API reference](https://f-ewald.github.io/components/docs/status-banner.html) |
 | `<status-pill>` | [API reference](https://f-ewald.github.io/components/docs/status-pill.html) |
 | `<tab-bar>` | [API reference](https://f-ewald.github.io/components/docs/tab-bar.html) |
 | `<tab-item>` | [API reference](https://f-ewald.github.io/components/docs/tab-item.html) |

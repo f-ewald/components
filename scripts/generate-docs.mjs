@@ -414,6 +414,11 @@ See the [changelog](#markdown-view) for details.\`;
 <stat-meter label="MEM" percent="76"></stat-meter>
 <stat-meter label="I/O"></stat-meter> <!-- percent unset -> null -> renders "—" -->
 <stat-meter label="GPU" percent="88" color="#dc2626"></stat-meter>`,
+  "status-banner": `<status-banner variant="warning">Reconnecting… — data may be stale</status-banner>
+<status-banner variant="info">
+  A new version is available.
+  <button slot="actions">Reload</button>
+</status-banner>`,
   "status-pill": `<status-pill label="Running" color="primary" spinner></status-pill>
 <status-pill label="Blocked" color="danger"></status-pill>`,
   "editable-text": `<editable-text value="Write the quarterly report" label="Title"></editable-text>

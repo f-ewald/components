@@ -26,6 +26,7 @@ import {
   type TabBar,
   type TabChangeDetail,
   type StatMeter,
+  type StatusBanner,
   type EditableText,
   type LiveTimer,
   type ChatMessage,
@@ -50,6 +51,7 @@ import {
   type KanbanColumnData,
   iconArrowPath,
   iconCheckCircle,
+  iconInfo,
   iconEye,
   iconListBullet,
   iconSquares2x2,
@@ -565,6 +567,15 @@ if (markdownViewDemo) {
     "> See the [changelog](#markdown-view) for details.",
   ].join("\n");
 }
+
+// status-banner (exercise the icon property and the actions slot)
+const bannerWarning = document.getElementById("banner-warning") as StatusBanner | null;
+if (bannerWarning) bannerWarning.icon = iconArrowPath(14);
+const bannerInfo = document.getElementById("banner-info") as StatusBanner | null;
+if (bannerInfo) bannerInfo.icon = iconInfo(14);
+document.getElementById("banner-reload")?.addEventListener("click", () => {
+  if (bannerInfo) bannerInfo.textContent = "Reloaded.";
+});
 
 // stat-meter (randomize CPU/MEM readings; I/O stays unset to show the null state)
 const meterCpu = document.getElementById("meter-cpu") as StatMeter;

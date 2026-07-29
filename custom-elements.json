@@ -6795,6 +6795,22 @@
         },
         {
           "kind": "js",
+          "name": "StatusBanner",
+          "declaration": {
+            "name": "StatusBanner",
+            "module": "./status-banner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StatusBannerVariant",
+          "declaration": {
+            "name": "StatusBannerVariant",
+            "module": "./status-banner.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "StatusPill",
           "declaration": {
             "name": "StatusPill",
@@ -13431,6 +13447,84 @@
           "declaration": {
             "name": "StatMeter",
             "module": "src/stat-meter.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/status-banner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Full-width, app-level status bar for a persistent condition — \"Reconnecting…\",\n\"Read-only mode\", \"New version available\". Unlike `toast-notification` (which\nis transient, imperative, and stacks in a corner) this stays put for as long\nas the condition holds, so the consumer controls its presence by rendering it\nor not.\n\nColors mirror `status-pill`: a tinted background with accent-colored text.\nAnnounced to assistive tech via `role=\"status\"` (or `role=\"alert\"` for the\n`danger` variant, matching `toast-notification`'s split).",
+          "name": "StatusBanner",
+          "slots": [
+            {
+              "description": "The message text.",
+              "name": ""
+            },
+            {
+              "description": "Optional trailing controls, e.g. a \"Retry\" button.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "StatusBannerVariant"
+              },
+              "default": "\"info\"",
+              "description": "Visual style; also selects the accent color.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "TemplateResult | null"
+              },
+              "default": "null",
+              "description": "Optional leading icon, pre-rendered by the consumer (e.g. `iconInfo(14)`),\nmatching `nav-item`/`icon-button` — icons are passed in, not named, so the\ncomponent never has to know the icon catalog."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "StatusBannerVariant"
+              },
+              "default": "\"info\"",
+              "description": "Visual style; also selects the accent color.",
+              "fieldName": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "status-banner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "StatusBanner",
+          "declaration": {
+            "name": "StatusBanner",
+            "module": "src/status-banner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "status-banner",
+          "declaration": {
+            "name": "StatusBanner",
+            "module": "src/status-banner.ts"
           }
         }
       ]

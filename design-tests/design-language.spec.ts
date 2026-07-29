@@ -207,6 +207,13 @@ test("public tags have tests/docs and an alphabetized playground catalog", () =>
 
   expect(navIds).toEqual(expected);
   expect(sectionIds).toEqual(expected);
+
+  // Every section headline is its own anchor, so any component can be linked
+  // to directly. Kept on one line: a bare <a> on its own 10-space-indented
+  // line would be swept up by the navIds regex above.
+  for (const id of sectionIds) {
+    expect(html, `${id} headline anchor`).toContain(`<a class="hover:underline" href="#${id}">${id}</a>`);
+  }
 });
 
 test("component sources follow shared style and import contracts", () => {
