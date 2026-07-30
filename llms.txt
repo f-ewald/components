@@ -56,15 +56,19 @@ Supports two suggestion sources:
   request. Useful for small/fixed address lists, offline use, or tests.
   Takes priority over `endpoint` whenever it's non-null.
 
+Set `clearable` to show an in-field clear action whenever a value is
+present.
+
 Import: `import "@f-ewald/components/address-autocomplete.js";`
 
-Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `types` (attribute `types`) : string, default "address"; `endpoint` (attribute `endpoint`) : string, default "https://api.mapbox.com/search/geocode/v6/forward"; `accessToken` (attribute `access-token`) : string, default ""; `bbox` (attribute `bbox`) : string, default ""; `proximity` (attribute `proximity`) : string, default ""; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `suggestions` (JS property only) : AddressSuggestion[] | null, default null; `selectedSuggestion` (JS property only) : AddressSuggestion | null, default —
-Events: `address-select`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `clearable` (attribute `clearable`) : boolean, default false; `types` (attribute `types`) : string, default "address"; `endpoint` (attribute `endpoint`) : string, default "https://api.mapbox.com/search/geocode/v6/forward"; `accessToken` (attribute `access-token`) : string, default ""; `bbox` (attribute `bbox`) : string, default ""; `proximity` (attribute `proximity`) : string, default ""; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `suggestions` (JS property only) : AddressSuggestion[] | null, default null; `selectedSuggestion` (JS property only) : AddressSuggestion | null, default —
+Events: `address-select`, `input`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
 <address-autocomplete
+  clearable
   placeholder="Start typing an address…"
   access-token="pk.your-mapbox-token"
 ></address-autocomplete>
@@ -220,16 +224,19 @@ Supports two suggestion sources:
   request. Useful for small/fixed lists, offline use, or tests. Takes
   priority over `endpoint` whenever it's non-null.
 
+Set `clearable` to show an in-field clear action whenever a value is
+present.
+
 Import: `import "@f-ewald/components/autocomplete-input.js";`
 
-Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `endpoint` (attribute `endpoint`) : string, default ""; `queryParam` (attribute `query-param`) : string, default "q"; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `options` (JS property only) : AutocompleteOption[] | null, default null; `selectedOption` (JS property only) : AutocompleteOption | null, default —
-Events: `option-select`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `clearable` (attribute `clearable`) : boolean, default false; `endpoint` (attribute `endpoint`) : string, default ""; `queryParam` (attribute `query-param`) : string, default "q"; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `options` (JS property only) : AutocompleteOption[] | null, default null; `selectedOption` (JS property only) : AutocompleteOption | null, default —
+Events: `option-select`, `input`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
 <form>
-  <autocomplete-input name="language" placeholder="Start typing a language…"></autocomplete-input>
+  <autocomplete-input clearable name="language" placeholder="Start typing a language…"></autocomplete-input>
 </form>
 <script type="module">
   // Local mode: filters client-side, no network request.
@@ -662,6 +669,11 @@ form. Purely presentational — composes whatever control is slotted
 (`form-select`, `multi-select`, `autocomplete-input`, `ui-checkbox`, etc.)
 without intercepting its events or value.
 
+Set `floating-label` for supported text controls (`input`, `textarea`,
+`autocomplete-input`, `address-autocomplete`, and `text-area`). The label
+then rests inside an empty field and moves to a smaller top-left position
+while focused or non-empty. Other controls keep the external label.
+
 The label wraps the default slot for a best-effort visual/click
 association only: every existing value-entry control encapsulates its
 real `<input>` inside its own shadow DOM, so there is no light-DOM `id` a
@@ -673,9 +685,9 @@ shadow-encapsulated input for the same reason. The error message uses
 
 Import: `import "@f-ewald/components/form-field.js";`
 
-Properties: `label` (attribute `label`) : string, default ""; `hint` (attribute `hint`) : string, default ""; `error` (attribute `error`) : string, default ""; `required` (attribute `required`) : boolean, default false
+Properties: `label` (attribute `label`) : string, default ""; `hint` (attribute `hint`) : string, default ""; `error` (attribute `error`) : string, default ""; `required` (attribute `required`) : boolean, default false; `floatingLabel` (attribute `floating-label`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -684,6 +696,12 @@ Example:
 </form-field>
 <form-field label="Terms" required error="You must accept to continue">
   <ui-checkbox label="I agree to the terms"></ui-checkbox>
+</form-field>
+<form-field floating-label label="Email">
+  <input type="email" placeholder="name@example.com" />
+</form-field>
+<form-field floating-label label="Language">
+  <autocomplete-input clearable placeholder="Start typing…"></autocomplete-input>
 </form-field>
 ```
 
@@ -1810,16 +1828,19 @@ Plain multi-line text field — a thin, tokenized wrapper around a native
 (autocomplete-input, form-select, ...). Not a rich editor; use `readonly`
 to display pre-formatted text (e.g. an error message) that the user can
 still select and copy, typically paired with `<copy-link-button>`.
+Supports `form-field`'s opt-in floating-label mode when slotted inside it.
 
 Import: `import "@f-ewald/components/text-area.js";`
 
 Properties: `value` (attribute `value`) : string, default ""; `rows` (attribute `rows`) : number, default 4; `placeholder` (attribute `placeholder`) : string, default ""; `readonly` (attribute `readonly`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false
 Events: `input`, `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
-<text-area placeholder="Describe the issue…" rows="4"></text-area>
+<form-field floating-label label="Description">
+  <text-area placeholder="Describe the issue…" rows="4"></text-area>
+</form-field>
 <text-area readonly value="Error code: 429 - No deployments available for selected model."></text-area>
 ```
 

@@ -84,6 +84,15 @@ literal values are migrated onto them.
 
 - Standard interactive controls share a single `2rem` height; padding is
   applied by role (inline text, icon-only, standalone) rather than ad hoc.
+- An autocomplete's opt-in in-field clear action remains a `2rem` target with
+  an 18px standalone icon. It overlays reserved trailing input padding, so
+  enabling or showing it never changes the field's outer dimensions.
+- `form-field[floating-label]` is the explicit text-field exception: supported
+  single-line controls grow to `3rem` so an `--ui-font-size-xs` label and the
+  entered value remain distinct. Empty, unfocused labels rest at the normal
+  placeholder position; focus or content floats the label to the top-left.
+  Native and package text areas reserve equivalent top space but retain their
+  row-driven height. Unsupported controls keep the normal external label.
 - Icons are `14px` inline (next to text) and `18px` standalone; icon-only tap
   targets are `32px`.
 - Control corners use `--ui-radius-sm` (4px); enclosing surfaces use
@@ -118,6 +127,8 @@ literal values are migrated onto them.
   duration.
 - Nonessential transitions and animations must be removed under
   `prefers-reduced-motion: reduce`.
+- Floating-label position/type transitions use the normal 120–250ms range and
+  become instantaneous under reduced motion.
 - Progress spinners may become static indicators in reduced motion.
 - Components driven by timers must clean up on disconnect.
 

@@ -343,17 +343,18 @@ document.getElementById("weight-shuffle")?.addEventListener("click", () => {
 
 // address-autocomplete
 const addressSelected = document.getElementById("address-selected")!;
+const addressSuggestions = [
+  { address: "1 Infinite Loop, Cupertino, CA", lat: 37.3318, lng: -122.0312 },
+  { address: "1600 Amphitheatre Parkway, Mountain View, CA", lat: 37.4224, lng: -122.084 },
+  { address: "1600 Pennsylvania Ave NW, Washington, DC", lat: 38.8977, lng: -77.0365 },
+  { address: "10 Downing Street, London", lat: 51.5034, lng: -0.1276 },
+  { address: "350 Fifth Avenue, New York, NY", lat: 40.7484, lng: -73.9857 },
+];
 const addressDemo = document.getElementById("address-demo") as HTMLElement & {
   suggestions: { address: string; lat: number; lng: number }[];
 };
 if (addressDemo) {
-  addressDemo.suggestions = [
-    { address: "1 Infinite Loop, Cupertino, CA", lat: 37.3318, lng: -122.0312 },
-    { address: "1600 Amphitheatre Parkway, Mountain View, CA", lat: 37.4224, lng: -122.084 },
-    { address: "1600 Pennsylvania Ave NW, Washington, DC", lat: 38.8977, lng: -77.0365 },
-    { address: "10 Downing Street, London", lat: 51.5034, lng: -0.1276 },
-    { address: "350 Fifth Avenue, New York, NY", lat: 40.7484, lng: -73.9857 },
-  ];
+  addressDemo.suggestions = addressSuggestions;
 }
 addressDemo?.addEventListener("address-select", (e) => {
   const detail = (e as CustomEvent).detail;
@@ -709,6 +710,10 @@ if (fieldAutocomplete) {
     { key: "py", value: "Python" },
   ];
 }
+const fieldAddress = document.getElementById("field-address") as HTMLElement & {
+  suggestions: { address: string; lat: number; lng: number }[];
+};
+if (fieldAddress) fieldAddress.suggestions = addressSuggestions;
 
 const selectInline = document.getElementById("select-inline") as FormSelect;
 if (selectInline) {

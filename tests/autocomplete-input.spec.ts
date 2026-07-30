@@ -212,9 +212,94 @@ test.describe("autocomplete-input", () => {
   test("input uses the tokenized text-field padding", async ({ page }) => {
     await page.goto("/");
     const input = page.locator("#autocomplete-demo input");
-    await expect(input).toHaveCSS("padding", "8px 12px");
+    await expect(input).toHaveCSS("padding-top", "8px");
+    await expect(input).toHaveCSS("padding-right", "32px");
+    await expect(input).toHaveCSS("padding-bottom", "8px");
+    await expect(input).toHaveCSS("padding-left", "12px");
     await expect(input).toHaveCSS("border-radius", "4px");
     await expect(input).toHaveCSS("height", "32px");
     await expect(input).toHaveCSS("line-height", "15px");
+  });
+
+  test("clearable empties selected and form state without changing field size", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const autocomplete = page.locator("#autocomplete-demo");
+    await autocomplete.evaluate((element) => {
+      (element as HTMLElement & { clearable: boolean }).clearable = true;
+    });
+    const input = autocomplete.locator("input");
+
+    await input.fill("Jav");
+    await autocomplete.locator(".suggestion").first().click();
+    await expect(input).toHaveValue("JavaScript");
+
+    const clear = autocomplete.getByRole("button", { name: "Clear input" });
+    await expect(clear).toBeVisible();
+    await expect(clear.locator("svg")).toHaveAttribute("width", "18");
+    const before = await input.boundingBox();
+    await autocomplete.evaluate((element) => {
+      document.body.dataset.autocompleteClearInputs = "0";
+      element.addEventListener(
+        "input",
+        (event) => {
+          if (!(event instanceof InputEvent) || event.inputType !== "deleteContentBackward") {
+            return;
+          }
+          document.body.dataset.autocompleteClearInputs = String(
+            Number(document.body.dataset.autocompleteClearInputs) + 1,
+          );
+        },
+        { once: true },
+      );
+    });
+
+    await clear.focus();
+    await clear.press("Enter");
+
+    await expect(input).toHaveValue("");
+    await expect(input).toBeFocused();
+    await expect(clear).toHaveCount(0);
+    await expect(autocomplete.getByRole("listbox")).toHaveCount(0);
+    await expect(page.locator("body")).toHaveAttribute("data-autocomplete-clear-inputs", "1");
+    expect(await input.boundingBox()).toEqual(before);
+    expect(
+      await autocomplete.evaluate(
+        (element) =>
+          (element as HTMLElement & { selectedOption: unknown }).selectedOption,
+      ),
+    ).toBeNull();
+    expect(
+      await page.locator("#autocomplete-form").evaluate((form) =>
+        new FormData(form as HTMLFormElement).get("language"),
+      ),
+    ).toBe("");
+  });
+
+  test("clearable reserves space but hides its action while empty or disabled", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const autocomplete = page.locator("#autocomplete-demo");
+    await autocomplete.evaluate((element) => {
+      const control = element as HTMLElement & {
+        clearable: boolean;
+        disabled: boolean;
+        value: string;
+      };
+      control.clearable = true;
+      control.value = "Python";
+      control.disabled = true;
+    });
+
+    await expect(autocomplete.getByRole("button", { name: "Clear input" })).toHaveCount(0);
+    await expect(autocomplete.locator("input")).toHaveCSS("padding-right", "32px");
+    await autocomplete.evaluate((element) => {
+      const control = element as HTMLElement & { disabled: boolean; value: string };
+      control.disabled = false;
+      control.value = "";
+    });
+    await expect(autocomplete.getByRole("button", { name: "Clear input" })).toHaveCount(0);
   });
 });

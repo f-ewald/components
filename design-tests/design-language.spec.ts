@@ -372,6 +372,8 @@ test("component icon calls use the approved inline and standalone sizes", () => 
   }
 
   const requiredCalls: Record<string, string[]> = {
+    "src/address-autocomplete.ts": ["iconX(18)"],
+    "src/autocomplete-input.ts": ["iconX(18)"],
     "src/chat-message.ts": ["iconChevronRight(14)"],
     "src/confirm-dialog.ts": ["iconArrowPath(14)"],
     "src/copy-link-button.ts": ["iconLink(18)"],
@@ -396,7 +398,9 @@ test("component icon calls use the approved inline and standalone sizes", () => 
 test("interactive controls use the approved 2rem target", () => {
   const exactHeightRules: Array<[string, string]> = [
     ["src/address-autocomplete.ts", "input"],
+    ["src/address-autocomplete.ts", "\\.clear-button"],
     ["src/autocomplete-input.ts", "input"],
+    ["src/autocomplete-input.ts", "\\.clear-button"],
     ["src/copy-link-button.ts", "button"],
     ["src/dropdown-button.ts", "button\\.trigger"],
     ["src/form-select.ts", "button\\.trigger"],
@@ -415,6 +419,30 @@ test("interactive controls use the approved 2rem target", () => {
     expectRuleDeclaration(modulePath, selector, "height", "2rem");
   }
 
+  expectRuleDeclaration(
+    "src/address-autocomplete.ts",
+    "\\.field-shell\\.floating input",
+    "height",
+    "3rem",
+  );
+  expectRuleDeclaration(
+    "src/autocomplete-input.ts",
+    "\\.field-shell\\.floating input",
+    "height",
+    "3rem",
+  );
+  expectRuleDeclaration(
+    "src/form-field.ts",
+    "\\.control-label\\.floating-native ::slotted\\(input\\)",
+    "height",
+    "3rem",
+  );
+  expectRuleDeclaration(
+    "src/text-area.ts",
+    "\\.field-shell\\.floating textarea",
+    "min-height",
+    "3rem",
+  );
   expectRuleDeclaration("src/chat-message.ts", "button\\.header", "min-height", "2rem");
   expectRuleDeclaration("src/radio-pills.ts", "\\.pill", "min-height", "2rem");
   expect(componentSource("src/confirm-dialog.ts"), "confirm-dialog button height").toMatch(

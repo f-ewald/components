@@ -140,13 +140,14 @@
             <address-autocomplete
               id="address-demo"
               data-testid="address-demo"
+              clearable
               placeholder="Start typing an address…"
             ></address-autocomplete>
             <p id="address-selected" data-testid="address-selected" class="mt-3 text-sm text-slate-500"></p>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/address-autocomplete.js";
 
-&lt;address-autocomplete placeholder="Start typing an address…"&gt;&lt;/address-autocomplete&gt;
+&lt;address-autocomplete clearable placeholder="Start typing an address…"&gt;&lt;/address-autocomplete&gt;
 &lt;script type="module"&gt;
   // Local mode: filters client-side, no network request.
   document.querySelector("address-autocomplete").suggestions = [
@@ -329,6 +330,7 @@ import "@f-ewald/components/app-sidebar.js";
                 id="autocomplete-demo"
                 data-testid="autocomplete-demo"
                 name="language"
+                clearable
                 placeholder="Start typing a language…"
               ></autocomplete-input>
               <button
@@ -343,7 +345,7 @@ import "@f-ewald/components/app-sidebar.js";
           <pre class="usage mt-4"><code>import "@f-ewald/components/autocomplete-input.js";
 
 &lt;form&gt;
-  &lt;autocomplete-input name="language" placeholder="Start typing a language…"&gt;&lt;/autocomplete-input&gt;
+  &lt;autocomplete-input clearable name="language" placeholder="Start typing a language…"&gt;&lt;/autocomplete-input&gt;
 &lt;/form&gt;
 &lt;script type="module"&gt;
   // Local mode: filters client-side, no network request.
@@ -921,8 +923,50 @@ kebab.icon = iconEllipsisVertical(16);</code></pre>
               </button>
             </div>
 
-            <form-field label="Language" hint="Backed by a local option list">
-              <autocomplete-input id="field-autocomplete" data-testid="field-autocomplete" name="field-language" placeholder="Start typing…"></autocomplete-input>
+            <form-field floating-label label="Email">
+              <input
+                id="field-floating-email"
+                data-testid="field-floating-email"
+                type="email"
+                placeholder="name@example.com"
+              />
+            </form-field>
+
+            <form-field floating-label label="Language" hint="Backed by a local option list">
+              <autocomplete-input
+                id="field-autocomplete"
+                data-testid="field-autocomplete"
+                name="field-language"
+                clearable
+                placeholder="Start typing…"
+              ></autocomplete-input>
+            </form-field>
+
+            <form-field floating-label label="Address">
+              <address-autocomplete
+                id="field-address"
+                data-testid="field-address"
+                clearable
+                placeholder="Start typing an address…"
+              ></address-autocomplete>
+            </form-field>
+
+            <form-field floating-label label="Notes">
+              <text-area
+                id="field-notes"
+                data-testid="field-notes"
+                rows="3"
+                placeholder="Add context…"
+              ></text-area>
+            </form-field>
+
+            <form-field floating-label label="Biography">
+              <textarea
+                id="field-native-textarea"
+                data-testid="field-native-textarea"
+                rows="3"
+                placeholder="A short introduction"
+              ></textarea>
             </form-field>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/form-field.js";
@@ -932,6 +976,12 @@ kebab.icon = iconEllipsisVertical(16);</code></pre>
 &lt;/form-field&gt;
 &lt;form-field label="Terms" required error="You must accept to continue"&gt;
   &lt;ui-checkbox label="I agree to the terms"&gt;&lt;/ui-checkbox&gt;
+&lt;/form-field&gt;
+&lt;form-field floating-label label="Email"&gt;
+  &lt;input type="email" placeholder="name@example.com" /&gt;
+&lt;/form-field&gt;
+&lt;form-field floating-label label="Language"&gt;
+  &lt;autocomplete-input clearable placeholder="Start typing…"&gt;&lt;/autocomplete-input&gt;
 &lt;/form-field&gt;</code></pre>
         </section>
 

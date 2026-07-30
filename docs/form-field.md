@@ -6,6 +6,11 @@ form. Purely presentational — composes whatever control is slotted
 (`form-select`, `multi-select`, `autocomplete-input`, `ui-checkbox`, etc.)
 without intercepting its events or value.
 
+Set `floating-label` for supported text controls (`input`, `textarea`,
+`autocomplete-input`, `address-autocomplete`, and `text-area`). The label
+then rests inside an empty field and moves to a smaller top-left position
+while focused or non-empty. Other controls keep the external label.
+
 The label wraps the default slot for a best-effort visual/click
 association only: every existing value-entry control encapsulates its
 real `<input>` inside its own shadow DOM, so there is no light-DOM `id` a
@@ -30,6 +35,12 @@ import "@f-ewald/components/form-field.js";
 <form-field label="Terms" required error="You must accept to continue">
   <ui-checkbox label="I agree to the terms"></ui-checkbox>
 </form-field>
+<form-field floating-label label="Email">
+  <input type="email" placeholder="name@example.com" />
+</form-field>
+<form-field floating-label label="Language">
+  <autocomplete-input clearable placeholder="Start typing…"></autocomplete-input>
+</form-field>
 ```
 
 ## Attributes / properties
@@ -40,6 +51,7 @@ import "@f-ewald/components/form-field.js";
 | `hint` | `hint` | `string` | `""` | Optional helper text shown below the control when there's no `error`. |
 | `error` | `error` | `string` | `""` | Optional error text; replaces the `hint` display when non-empty. |
 | `required` | `required` | `boolean` | `false` | Shows a required indicator next to the label. |
+| `floatingLabel` | `floating-label` | `boolean` | `false` | Moves labels inside supported text controls until they receive focus or content. |
 
 ## Events
 
@@ -53,11 +65,17 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-border` |
 | `--ui-danger` |
+| `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
+| `--ui-font-weight-regular` |
 | `--ui-line-height-tight` |
+| `--ui-primary` |
+| `--ui-radius-sm` |
+| `--ui-surface` |
 | `--ui-text` |
 | `--ui-text-muted` |

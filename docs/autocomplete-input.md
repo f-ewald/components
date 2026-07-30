@@ -18,6 +18,9 @@ Supports two suggestion sources:
   request. Useful for small/fixed lists, offline use, or tests. Takes
   priority over `endpoint` whenever it's non-null.
 
+Set `clearable` to show an in-field clear action whenever a value is
+present.
+
 ## Install
 
 ```js
@@ -28,7 +31,7 @@ import "@f-ewald/components/autocomplete-input.js";
 
 ```html
 <form>
-  <autocomplete-input name="language" placeholder="Start typing a language…"></autocomplete-input>
+  <autocomplete-input clearable name="language" placeholder="Start typing a language…"></autocomplete-input>
 </form>
 <script type="module">
   // Local mode: filters client-side, no network request.
@@ -50,6 +53,7 @@ import "@f-ewald/components/autocomplete-input.js";
 | `placeholder` | `placeholder` | `string` | `""` | Placeholder text shown when the input is empty. |
 | `required` | `required` | `boolean` | `false` | Marks the input as required for native form validation. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables the input and closes its suggestion popup. |
+| `clearable` | `clearable` | `boolean` | `false` | Shows an in-field clear action while the control has a value. |
 | `endpoint` | `endpoint` | `string` | `""` | API endpoint queried in API mode. Ignored when `options` is set. |
 | `queryParam` | `query-param` | `string` | `"q"` | Query string parameter name the current input text is sent under. |
 | `debounce` | `debounce` | `number` | `300` | Debounce delay (ms) before firing a request/filter after typing. |
@@ -62,6 +66,7 @@ import "@f-ewald/components/autocomplete-input.js";
 | Event | Description |
 | --- | --- |
 | `option-select` | An option was picked; detail: AutocompleteOption. |
+| `input` | Native-compatible input event fired while editing or clearing. |
 
 ## Slots
 
@@ -72,9 +77,12 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-size-xs` |
+| `--ui-font-weight-regular` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius-sm` |

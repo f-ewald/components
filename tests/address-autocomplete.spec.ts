@@ -176,9 +176,96 @@ test.describe("address-autocomplete", () => {
   test("input uses the tokenized text-field padding", async ({ page }) => {
     await page.goto("/");
     const input = page.locator("#address-demo input");
-    await expect(input).toHaveCSS("padding", "8px 12px");
+    await expect(input).toHaveCSS("padding-top", "8px");
+    await expect(input).toHaveCSS("padding-right", "32px");
+    await expect(input).toHaveCSS("padding-bottom", "8px");
+    await expect(input).toHaveCSS("padding-left", "12px");
     await expect(input).toHaveCSS("border-radius", "4px");
     await expect(input).toHaveCSS("height", "32px");
     await expect(input).toHaveCSS("line-height", "15px");
+  });
+
+  test("clearable empties the picked address, closes suggestions, and keeps its size", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const autocomplete = page.locator("#address-demo");
+    await autocomplete.evaluate((element) => {
+      (element as HTMLElement & { clearable: boolean }).clearable = true;
+    });
+    const input = autocomplete.locator("input");
+
+    await input.fill("ing");
+    await autocomplete.locator(".suggestion").first().click();
+    const clear = autocomplete.getByRole("button", { name: "Clear address" });
+    await expect(clear).toBeVisible();
+    await expect(clear.locator("svg")).toHaveAttribute("width", "18");
+    const before = await input.boundingBox();
+
+    await clear.click();
+
+    await expect(input).toHaveValue("");
+    await expect(input).toBeFocused();
+    await expect(clear).toHaveCount(0);
+    await expect(autocomplete.getByRole("listbox")).toHaveCount(0);
+    expect(await input.boundingBox()).toEqual(before);
+    expect(
+      await autocomplete.evaluate(
+        (element) =>
+          (element as HTMLElement & { selectedSuggestion: unknown }).selectedSuggestion,
+      ),
+    ).toBeNull();
+  });
+
+  test("clearing aborts an in-flight request so stale suggestions stay closed", async ({
+    page,
+  }) => {
+    let releaseResponse: (() => void) | undefined;
+    const responseGate = new Promise<void>((resolve) => {
+      releaseResponse = resolve;
+    });
+    await page.route("**/api/geocode**", async (route) => {
+      await responseGate;
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          features: [
+            {
+              properties: { full_address: "Stale result" },
+              geometry: { coordinates: [0, 0] },
+            },
+          ],
+        }),
+      });
+    });
+    await page.goto("/");
+    await page.evaluate(() => {
+      const element = document.createElement("address-autocomplete") as HTMLElement & {
+        accessToken: string;
+        clearable: boolean;
+        debounce: number;
+        endpoint: string;
+        minLength: number;
+      };
+      element.id = "clearable-address-api";
+      element.accessToken = "demo";
+      element.clearable = true;
+      element.debounce = 0;
+      element.endpoint = "/api/geocode";
+      element.minLength = 1;
+      document.body.append(element);
+    });
+    const autocomplete = page.locator("#clearable-address-api");
+    const input = autocomplete.locator("input");
+    const request = page.waitForRequest("**/api/geocode**");
+    await input.fill("x");
+    await request;
+    await autocomplete.getByRole("button", { name: "Clear address" }).click();
+    releaseResponse?.();
+
+    await page.waitForTimeout(50);
+    await expect(input).toHaveValue("");
+    await expect(autocomplete.getByRole("listbox")).toHaveCount(0);
   });
 });

@@ -54,7 +54,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Form-associated text input with a suggestion dropdown. Works as a\ndrop-in replacement for a plain `<input name=\"address\">`: consumers keep\nreading `new FormData(form).get(\"address\")` and calling `form.reset()`\nunchanged.\n\nSupports two suggestion sources:\n- **API** (default): fetches from `endpoint`, a Mapbox Geocoding v6-shaped\n  forward-geocode URL, debounced as the user types.\n- **Local array**: set `suggestions` to a fixed `AddressSuggestion[]` and\n  the component filters it client-side instead of making any network\n  request. Useful for small/fixed address lists, offline use, or tests.\n  Takes priority over `endpoint` whenever it's non-null.",
+          "description": "Form-associated text input with a suggestion dropdown. Works as a\ndrop-in replacement for a plain `<input name=\"address\">`: consumers keep\nreading `new FormData(form).get(\"address\")` and calling `form.reset()`\nunchanged.\n\nSupports two suggestion sources:\n- **API** (default): fetches from `endpoint`, a Mapbox Geocoding v6-shaped\n  forward-geocode URL, debounced as the user types.\n- **Local array**: set `suggestions` to a fixed `AddressSuggestion[]` and\n  the component filters it client-side instead of making any network\n  request. Useful for small/fixed address lists, offline use, or tests.\n  Takes priority over `endpoint` whenever it's non-null.\n\nSet `clearable` to show an in-field clear action whenever a value is\npresent.",
           "name": "AddressAutocomplete",
           "members": [
             {
@@ -105,6 +105,17 @@
               "default": "false",
               "description": "Disables the input and closes its suggestion popup.",
               "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "attribute": "clearable",
               "reflects": true
             },
             {
@@ -224,6 +235,23 @@
             },
             {
               "kind": "field",
+              "name": "_formFieldConfig",
+              "type": {
+                "text": "FormFieldControlConfig | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_input",
+              "type": {
+                "text": "HTMLInputElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "#internals",
               "privacy": "private"
             },
@@ -283,10 +311,17 @@
             },
             {
               "kind": "field",
+              "name": "#inputId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`address-autocomplete-field-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
               "name": "#listboxId",
               "privacy": "private",
               "readonly": true,
-              "default": "`address-autocomplete-listbox-${++instanceCount}`"
+              "default": "`address-autocomplete-listbox-${instanceCount}`"
             },
             {
               "kind": "field",
@@ -306,6 +341,25 @@
               },
               "description": "Last-picked suggestion, or null once the input diverges from it.",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "[formFieldControl]",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "text": "FormFieldControlConfig | null"
+                  }
+                }
+              ],
+              "description": "Applies or clears label configuration supplied by a wrapping `form-field`.",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -506,6 +560,17 @@
             },
             {
               "kind": "method",
+              "name": "#clear",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the field and all pending autocomplete state, then restores input focus."
+            },
+            {
+              "kind": "method",
               "name": "#onSuggestionMousedown",
               "privacy": "private",
               "parameters": [
@@ -537,6 +602,13 @@
                 "text": "CustomEvent"
               },
               "description": "A suggestion was picked; detail: AddressSuggestion."
+            },
+            {
+              "name": "input",
+              "type": {
+                "text": "InputEvent"
+              },
+              "description": "Native-compatible input event fired while editing or clearing."
             }
           ],
           "attributes": [
@@ -575,6 +647,15 @@
               "default": "false",
               "description": "Disables the input and closes its suggestion popup.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "fieldName": "clearable"
             },
             {
               "name": "types",
@@ -1463,7 +1544,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Generic form-associated text input with a suggestion dropdown, for any\n\"type to filter a list of `{key, value}` options\" use case. Works as a\ndrop-in replacement for a plain `<input>` inside a `<form>`: set `name` on\nthe element itself and consumers keep reading\n`new FormData(form).get(name)` and calling `form.reset()` unchanged — the\nsubmitted value is the picked option's `value`, while `key` is available\nvia the `option-select` event and the `selectedOption` getter for cases\nthat need the underlying id rather than the display text.\n\nSupports two suggestion sources:\n- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`\n  query string, responds with a JSON array of `{key, value}` objects.\n  Requests are debounced as the user types.\n- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the\n  component filters it client-side instead of making any network\n  request. Useful for small/fixed lists, offline use, or tests. Takes\n  priority over `endpoint` whenever it's non-null.",
+          "description": "Generic form-associated text input with a suggestion dropdown, for any\n\"type to filter a list of `{key, value}` options\" use case. Works as a\ndrop-in replacement for a plain `<input>` inside a `<form>`: set `name` on\nthe element itself and consumers keep reading\n`new FormData(form).get(name)` and calling `form.reset()` unchanged — the\nsubmitted value is the picked option's `value`, while `key` is available\nvia the `option-select` event and the `selectedOption` getter for cases\nthat need the underlying id rather than the display text.\n\nSupports two suggestion sources:\n- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`\n  query string, responds with a JSON array of `{key, value}` objects.\n  Requests are debounced as the user types.\n- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the\n  component filters it client-side instead of making any network\n  request. Useful for small/fixed lists, offline use, or tests. Takes\n  priority over `endpoint` whenever it's non-null.\n\nSet `clearable` to show an in-field clear action whenever a value is\npresent.",
           "name": "AutocompleteInput",
           "members": [
             {
@@ -1514,6 +1595,17 @@
               "default": "false",
               "description": "Disables the input and closes its suggestion popup.",
               "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "attribute": "clearable",
               "reflects": true
             },
             {
@@ -1603,6 +1695,23 @@
             },
             {
               "kind": "field",
+              "name": "_formFieldConfig",
+              "type": {
+                "text": "FormFieldControlConfig | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_input",
+              "type": {
+                "text": "HTMLInputElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "#internals",
               "privacy": "private"
             },
@@ -1662,10 +1771,17 @@
             },
             {
               "kind": "field",
+              "name": "#inputId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`autocomplete-input-field-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
               "name": "#listboxId",
               "privacy": "private",
               "readonly": true,
-              "default": "`autocomplete-input-listbox-${++instanceCount}`"
+              "default": "`autocomplete-input-listbox-${instanceCount}`"
             },
             {
               "kind": "field",
@@ -1685,6 +1801,25 @@
               },
               "description": "Last-picked option, or null once the input diverges from it.",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "[formFieldControl]",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "text": "FormFieldControlConfig | null"
+                  }
+                }
+              ],
+              "description": "Applies or clears label configuration supplied by a wrapping `form-field`.",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -1885,6 +2020,17 @@
             },
             {
               "kind": "method",
+              "name": "#clear",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the field and all pending autocomplete state, then restores input focus."
+            },
+            {
+              "kind": "method",
               "name": "#onSuggestionMousedown",
               "privacy": "private",
               "parameters": [
@@ -1916,6 +2062,13 @@
                 "text": "CustomEvent"
               },
               "description": "An option was picked; detail: AutocompleteOption."
+            },
+            {
+              "name": "input",
+              "type": {
+                "text": "InputEvent"
+              },
+              "description": "Native-compatible input event fired while editing or clearing."
             }
           ],
           "attributes": [
@@ -1954,6 +2107,15 @@
               "default": "false",
               "description": "Disables the input and closes its suggestion popup.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "fieldName": "clearable"
             },
             {
               "name": "endpoint",
@@ -4396,7 +4558,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Per-field wrapper for a form control: label, slotted control, and an\noptional hint or error message, in one consistent unit repeated across a\nform. Purely presentational — composes whatever control is slotted\n(`form-select`, `multi-select`, `autocomplete-input`, `ui-checkbox`, etc.)\nwithout intercepting its events or value.\n\nThe label wraps the default slot for a best-effort visual/click\nassociation only: every existing value-entry control encapsulates its\nreal `<input>` inside its own shadow DOM, so there is no light-DOM `id` a\n`for` attribute could target from outside, and this component cannot set\n`aria-describedby`/`aria-invalid` on an arbitrary slotted control's\nshadow-encapsulated input for the same reason. The error message uses\n`role=\"alert\"` as the practical accessibility mitigation instead of true\n`aria-describedby` association.",
+          "description": "Per-field wrapper for a form control: label, slotted control, and an\noptional hint or error message, in one consistent unit repeated across a\nform. Purely presentational — composes whatever control is slotted\n(`form-select`, `multi-select`, `autocomplete-input`, `ui-checkbox`, etc.)\nwithout intercepting its events or value.\n\nSet `floating-label` for supported text controls (`input`, `textarea`,\n`autocomplete-input`, `address-autocomplete`, and `text-area`). The label\nthen rests inside an empty field and moves to a smaller top-left position\nwhile focused or non-empty. Other controls keep the external label.\n\nThe label wraps the default slot for a best-effort visual/click\nassociation only: every existing value-entry control encapsulates its\nreal `<input>` inside its own shadow DOM, so there is no light-DOM `id` a\n`for` attribute could target from outside, and this component cannot set\n`aria-describedby`/`aria-invalid` on an arbitrary slotted control's\nshadow-encapsulated input for the same reason. The error message uses\n`role=\"alert\"` as the practical accessibility mitigation instead of true\n`aria-describedby` association.",
           "name": "FormField",
           "slots": [
             {
@@ -4447,10 +4609,349 @@
             },
             {
               "kind": "field",
+              "name": "floatingLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Moves labels inside supported text controls until they receive focus or content.",
+              "attribute": "floating-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_assignedElements",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_floatingKind",
+              "type": {
+                "text": "\"delegated\" | \"native\" | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_nativeHasValue",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "#messageId",
               "privacy": "private",
               "readonly": true,
               "default": "`form-field-message-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
+              "name": "#configuredControls",
+              "privacy": "private",
+              "default": "new Set<FormFieldControl>()"
+            },
+            {
+              "kind": "field",
+              "name": "#resetForm",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#placeholderControl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | HTMLTextAreaElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#placeholder",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "#accessibleNameControl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | HTMLTextAreaElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#accessibleName",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#nativeEventControl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | HTMLTextAreaElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#nativeFocused",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#onNativeValueChange",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onNativeFocus",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onNativeBlur",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onNativeAnimation",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onFormReset",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_onSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Handles assigned-control changes and updates the floating-label strategy."
+            },
+            {
+              "kind": "method",
+              "name": "_onControlValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Tracks native input/textarea content after user edits."
+            },
+            {
+              "kind": "method",
+              "name": "_onControlFocusIn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Reveals the native placeholder once focus floats the label."
+            },
+            {
+              "kind": "method",
+              "name": "_onControlFocusOut",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hides the native placeholder again when an empty field loses focus."
+            },
+            {
+              "kind": "method",
+              "name": "_onControlLabelClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Focuses a native control when its shadow-rendered floating label is clicked."
+            },
+            {
+              "kind": "method",
+              "name": "_onNativeAnimationStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "AnimationEvent"
+                  }
+                }
+              ],
+              "description": "Synchronizes native value state when WebKit applies autofill without input events."
+            },
+            {
+              "kind": "method",
+              "name": "#nativeControl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | null"
+                }
+              },
+              "description": "Finds the sole assigned native text control, if present."
+            },
+            {
+              "kind": "method",
+              "name": "#syncControls",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Pushes current label configuration into a supported slotted control."
+            },
+            {
+              "kind": "method",
+              "name": "#updateNativeValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Updates whether a native control currently contains a value."
+            },
+            {
+              "kind": "method",
+              "name": "#bindNativePlaceholder",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "control",
+                  "type": {
+                    "text": "HTMLInputElement | HTMLTextAreaElement | null"
+                  }
+                }
+              ],
+              "description": "Preserves the consumer placeholder while floating mode temporarily hides it."
+            },
+            {
+              "kind": "method",
+              "name": "#syncNativePlaceholder",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Applies the correct placeholder for the native label's focus/value state."
+            },
+            {
+              "kind": "method",
+              "name": "#bindNativeAccessibleName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "control",
+                  "type": {
+                    "text": "HTMLInputElement | HTMLTextAreaElement | null"
+                  }
+                }
+              ],
+              "description": "Applies a shadow-boundary-safe accessible name and restores any prior value."
+            },
+            {
+              "kind": "method",
+              "name": "#bindNativeEvents",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "control",
+                  "type": {
+                    "text": "HTMLInputElement | HTMLTextAreaElement | null"
+                  }
+                }
+              ],
+              "description": "Moves native field listeners directly between assigned controls."
+            },
+            {
+              "kind": "method",
+              "name": "#bindResetForm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "form",
+                  "type": {
+                    "text": "HTMLFormElement | null"
+                  }
+                }
+              ],
+              "description": "Moves the reset listener to the native control's current owner form."
             }
           ],
           "attributes": [
@@ -4489,6 +4990,15 @@
               "default": "false",
               "description": "Shows a required indicator next to the label.",
               "fieldName": "required"
+            },
+            {
+              "name": "floating-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Moves labels inside supported text controls until they receive focus or content.",
+              "fieldName": "floatingLabel"
             }
           ],
           "superclass": {
@@ -14006,7 +14516,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Plain multi-line text field — a thin, tokenized wrapper around a native\n`<textarea>`, styled to match the other value-entry form fields\n(autocomplete-input, form-select, ...). Not a rich editor; use `readonly`\nto display pre-formatted text (e.g. an error message) that the user can\nstill select and copy, typically paired with `<copy-link-button>`.",
+          "description": "Plain multi-line text field — a thin, tokenized wrapper around a native\n`<textarea>`, styled to match the other value-entry form fields\n(autocomplete-input, form-select, ...). Not a rich editor; use `readonly`\nto display pre-formatted text (e.g. an error message) that the user can\nstill select and copy, typically paired with `<copy-link-button>`.\nSupports `form-field`'s opt-in floating-label mode when slotted inside it.",
           "name": "TextArea",
           "members": [
             {
@@ -14058,6 +14568,41 @@
               "default": "false",
               "description": "Disables the field entirely (no interaction, dimmed).",
               "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "_formFieldConfig",
+              "type": {
+                "text": "FormFieldControlConfig | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#textareaId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`text-area-field-${++instanceCount}`"
+            },
+            {
+              "kind": "method",
+              "name": "[formFieldControl]",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "text": "FormFieldControlConfig | null"
+                  }
+                }
+              ],
+              "description": "Applies or clears label configuration supplied by a wrapping `form-field`.",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -16232,6 +16777,53 @@
           "declaration": {
             "name": "formatDuration",
             "module": "src/utils/duration.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/form-field-control.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "formFieldControl",
+          "description": "Internal protocol key used to configure controls across their shadow boundary."
+        },
+        {
+          "kind": "function",
+          "name": "supportsFormFieldControl",
+          "return": {
+            "type": {
+              "text": "element is FormFieldControl"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Returns whether an assigned element implements the internal form-field protocol."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "formFieldControl",
+          "declaration": {
+            "name": "formFieldControl",
+            "module": "src/utils/form-field-control.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "supportsFormFieldControl",
+          "declaration": {
+            "name": "supportsFormFieldControl",
+            "module": "src/utils/form-field-control.ts"
           }
         }
       ]

@@ -19,6 +19,13 @@
   avoiding Safari's transform-compositing wobble. An opaque
   `--ui-surface` backing also prevents the timeline line from showing through
   the ring.
+- `autocomplete-input` and `address-autocomplete` gain an opt-in `clearable`
+  in-field action that empties value, selection, form, popup, and pending
+  request state without changing the normal field dimensions.
+- `form-field` gains an opt-in `floating-label` mode for native text controls,
+  `autocomplete-input`, `address-autocomplete`, and `text-area`. Empty labels
+  rest inside the field and move to a smaller top-left position on focus or
+  content; unsupported controls retain the external-label layout.
 
 ## 1.19.0
 

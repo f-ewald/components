@@ -113,6 +113,12 @@ const EXAMPLES = {
 </form-field>
 <form-field label="Terms" required error="You must accept to continue">
   <ui-checkbox label="I agree to the terms"></ui-checkbox>
+</form-field>
+<form-field floating-label label="Email">
+  <input type="email" placeholder="name@example.com" />
+</form-field>
+<form-field floating-label label="Language">
+  <autocomplete-input clearable placeholder="Start typing…"></autocomplete-input>
 </form-field>`,
   "auto-scroll": `<auto-scroll style="height: 24rem">
   <timeline-container>
@@ -292,11 +298,12 @@ const EXAMPLES = {
   ];
 </script>`,
   "address-autocomplete": `<address-autocomplete
+  clearable
   placeholder="Start typing an address…"
   access-token="pk.your-mapbox-token"
 ></address-autocomplete>`,
   "autocomplete-input": `<form>
-  <autocomplete-input name="language" placeholder="Start typing a language…"></autocomplete-input>
+  <autocomplete-input clearable name="language" placeholder="Start typing a language…"></autocomplete-input>
 </form>
 <script type="module">
   // Local mode: filters client-side, no network request.
@@ -526,7 +533,9 @@ See the [changelog](#markdown-view) for details.\`;
   ];
   table.rowHref = (row) => \`#/tasks/\${row.id}\`;
 </script>`,
-  "text-area": `<text-area placeholder="Describe the issue…" rows="4"></text-area>
+  "text-area": `<form-field floating-label label="Description">
+  <text-area placeholder="Describe the issue…" rows="4"></text-area>
+</form-field>
 <text-area readonly value="Error code: 429 - No deployments available for selected model."></text-area>`,
   "tile-grid": `<tile-grid file-icon></tile-grid>
 <script type="module">

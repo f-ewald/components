@@ -5,6 +5,7 @@ Plain multi-line text field — a thin, tokenized wrapper around a native
 (autocomplete-input, form-select, ...). Not a rich editor; use `readonly`
 to display pre-formatted text (e.g. an error message) that the user can
 still select and copy, typically paired with `<copy-link-button>`.
+Supports `form-field`'s opt-in floating-label mode when slotted inside it.
 
 ## Install
 
@@ -15,7 +16,9 @@ import "@f-ewald/components/text-area.js";
 ## Usage
 
 ```html
-<text-area placeholder="Describe the issue…" rows="4"></text-area>
+<form-field floating-label label="Description">
+  <text-area placeholder="Describe the issue…" rows="4"></text-area>
+</form-field>
 <text-area readonly value="Error code: 429 - No deployments available for selected model."></text-area>
 ```
 
@@ -45,12 +48,17 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-size-xs` |
+| `--ui-font-weight-regular` |
 | `--ui-line-height-normal` |
+| `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
+| `--ui-text-muted` |

@@ -1,6 +1,11 @@
 import { LitElement, css, html, nothing, type PropertyValues } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { customElement, property, query, state } from "lit/decorators.js";
+import { iconX } from "./icons.js";
 import { tokens } from "./tokens.js";
+import {
+  formFieldControl,
+  type FormFieldControlConfig,
+} from "./utils/form-field-control.js";
 import { submitWithDefaultButton } from "./utils/form.js";
 
 let instanceCount = 0;
@@ -31,8 +36,12 @@ interface MapboxGeocodeFeature {
  *   request. Useful for small/fixed address lists, offline use, or tests.
  *   Takes priority over `endpoint` whenever it's non-null.
  *
+ * Set `clearable` to show an in-field clear action whenever a value is
+ * present.
+ *
  * @element address-autocomplete
  * @fires address-select - A suggestion was picked; detail: AddressSuggestion.
+ * @fires input - Native-compatible input event fired while editing or clearing.
  */
 @customElement("address-autocomplete")
 export class AddressAutocomplete extends LitElement {
@@ -43,6 +52,9 @@ export class AddressAutocomplete extends LitElement {
     css`
       :host {
         display: block;
+        position: relative;
+      }
+      .field-shell {
         position: relative;
       }
       input {
@@ -66,6 +78,107 @@ export class AddressAutocomplete extends LitElement {
         width: 100%;
         height: 2rem;
         box-sizing: border-box;
+      }
+      .field-shell.clearable input {
+        padding-right: 2rem;
+      }
+      .clear-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: 0;
+        border-radius: var(--ui-radius-sm, 0.25rem);
+        color: var(--ui-text-muted, #64748b);
+        background: transparent;
+        cursor: pointer;
+        line-height: 0;
+      }
+      .clear-button:hover {
+        color: var(--ui-text, #0f172a);
+        background: var(--ui-surface-muted, #f8fafc);
+      }
+      .clear-button:focus-visible {
+        outline: none;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      .floating-label {
+        position: absolute;
+        top: 50%;
+        left: 0.75rem;
+        right: 0.75rem;
+        z-index: 1;
+        display: flex;
+        align-items: baseline;
+        gap: 0.25rem;
+        overflow: hidden;
+        transform: translateY(-50%);
+        color: var(--ui-text-muted, #64748b);
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-weight: var(--ui-font-weight-regular, 400);
+        line-height: var(--ui-line-height-tight, 1.25);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: text;
+        transition:
+          top 150ms ease,
+          transform 150ms ease,
+          font-size 150ms ease;
+      }
+      .field-shell.clearable .floating-label {
+        right: 2rem;
+      }
+      .field-shell.floating input {
+        height: 3rem;
+        padding-top: 1.25rem;
+        padding-bottom: 0.25rem;
+      }
+      .field-shell.floating .clear-button {
+        top: 0.5rem;
+      }
+      .field-shell.floating.has-value .floating-label,
+      .field-shell.floating:focus-within .floating-label {
+        top: 0.25rem;
+        transform: none;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
+      }
+      .field-shell.floating:not(.has-value):not(:focus-within) input::placeholder {
+        opacity: 0;
+      }
+      .field-shell.disabled .floating-label {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      .required-mark {
+        flex: 0 0 auto;
+        color: var(--ui-danger, #dc2626);
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
       }
       input:disabled {
         cursor: not-allowed;
@@ -117,10 +230,24 @@ export class AddressAutocomplete extends LitElement {
           color: GrayText;
           opacity: 1;
         }
+        .clear-button:focus-visible {
+          outline: 2px solid CanvasText;
+          outline-offset: -2px;
+          box-shadow: none;
+        }
+        .field-shell.disabled .floating-label {
+          color: GrayText;
+          opacity: 1;
+        }
         .suggestion.active,
         .suggestion:hover {
           color: HighlightText;
           background: Highlight;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .floating-label {
+          transition: none;
         }
       }
     `,
@@ -134,6 +261,8 @@ export class AddressAutocomplete extends LitElement {
   @property({ type: Boolean }) required = false;
   /** Disables the input and closes its suggestion popup. */
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /** Shows an in-field clear action while the control has a value. */
+  @property({ type: Boolean, reflect: true }) clearable = false;
   /** Mapbox `types` param, e.g. "address" or "address,poi". */
   @property() types = "address";
   /** Geocoding endpoint URL. Defaults to the Mapbox Geocoding v6 forward URL. */
@@ -159,6 +288,9 @@ export class AddressAutocomplete extends LitElement {
   @state() private _open = false;
   @state() private _activeIndex = -1;
   @state() private _formDisabled = false;
+  @state() private _formFieldConfig: FormFieldControlConfig | null = null;
+
+  @query("input") private _input?: HTMLInputElement;
 
   #internals = this.attachInternals();
   #lastPicked: AddressSuggestion | null = null;
@@ -167,7 +299,8 @@ export class AddressAutocomplete extends LitElement {
   #isComposing = false;
   #compositionJustEnded = false;
   #compositionEndTimer: ReturnType<typeof setTimeout> | null = null;
-  readonly #listboxId = `address-autocomplete-listbox-${++instanceCount}`;
+  readonly #inputId = `address-autocomplete-field-${++instanceCount}`;
+  readonly #listboxId = `address-autocomplete-listbox-${instanceCount}`;
 
   /** Whether the host or an ancestor fieldset currently disables the control. */
   get #isDisabled(): boolean {
@@ -178,6 +311,14 @@ export class AddressAutocomplete extends LitElement {
   get selectedSuggestion(): AddressSuggestion | null {
     if (this.#lastPicked && this.#lastPicked.address === this.value) return this.#lastPicked;
     return null;
+  }
+
+  /**
+   * Applies or clears label configuration supplied by a wrapping `form-field`.
+   * @private
+   */
+  [formFieldControl](config: FormFieldControlConfig | null): void {
+    this._formFieldConfig = config;
   }
 
   protected override willUpdate(changed: PropertyValues) {
@@ -367,6 +508,30 @@ export class AddressAutocomplete extends LitElement {
     this.dispatchEvent(new CustomEvent<AddressSuggestion>("address-select", { detail: s, bubbles: true, composed: true }));
   }
 
+  /** Clears the field and all pending autocomplete state, then restores input focus. */
+  #clear(): void {
+    if (this.#isDisabled || !this.value) return;
+    if (this.#debounceTimer) clearTimeout(this.#debounceTimer);
+    this.#debounceTimer = null;
+    this.#abortController?.abort();
+    this.#abortController = null;
+    this.#resetComposition();
+    this.value = "";
+    this.#lastPicked = null;
+    this._suggestions = [];
+    this._activeIndex = -1;
+    this._open = false;
+    this.#internals.setFormValue("");
+    this.dispatchEvent(
+      new InputEvent("input", {
+        bubbles: true,
+        composed: true,
+        inputType: "deleteContentBackward",
+      }),
+    );
+    this._input?.focus({ preventScroll: true });
+  }
+
   /** Selects on mousedown (not click) so it wins over the input's blur, which closes the list. */
   #onSuggestionMousedown(e: MouseEvent, s: AddressSuggestion) {
     e.preventDefault();
@@ -405,9 +570,30 @@ export class AddressAutocomplete extends LitElement {
         ? `${this.#listboxId}-option-${this._activeIndex}`
         : nothing;
     const expanded = this._open && !this.#isDisabled;
+    const floating =
+      Boolean(this._formFieldConfig?.floating) && Boolean(this._formFieldConfig?.label);
+    const showClear = this.clearable && Boolean(this.value) && !this.#isDisabled;
     return html`
-      <div>
+      <div
+        class="field-shell ${this.clearable ? "clearable" : ""} ${floating
+          ? "floating"
+          : ""} ${this.value ? "has-value" : ""} ${this.#isDisabled ? "disabled" : ""}"
+      >
+        ${floating
+          ? html`
+              <label class="floating-label" for=${this.#inputId}>
+                <span>${this._formFieldConfig!.label}</span>
+                ${this._formFieldConfig!.required
+                  ? html`
+                      <span class="required-mark" aria-hidden="true">*</span>
+                      <span class="sr-only"> (required)</span>
+                    `
+                  : nothing}
+              </label>
+            `
+          : nothing}
         <input
+          id=${this.#inputId}
           type="text"
           role="combobox"
           aria-autocomplete="list"
@@ -425,6 +611,20 @@ export class AddressAutocomplete extends LitElement {
           @keydown=${this.onKeydown}
           @blur=${this.onBlur}
         />
+        ${showClear
+          ? html`
+              <button
+                type="button"
+                class="clear-button"
+                aria-label="Clear address"
+                title="Clear address"
+                @mousedown=${(event: MouseEvent) => event.preventDefault()}
+                @click=${() => this.#clear()}
+              >
+                ${iconX(18)}
+              </button>
+            `
+          : nothing}
         ${this.renderSuggestions()}
       </div>
     `;
