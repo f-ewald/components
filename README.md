@@ -170,7 +170,7 @@ by `npm run test:design`.
 
 `npm run mcp` (or `node dist/mcp-server.js` after `npm run build`) starts a
 stdio [MCP](https://modelcontextprotocol.io) server exposing the component
-catalog to AI coding assistants, with four tools:
+catalog to AI coding assistants, with five tools:
 
 - `list_components` — every tag + one-line description.
 - `get_component_docs(tag)` — the full generated Markdown doc for one tag
@@ -180,6 +180,9 @@ catalog to AI coding assistants, with four tools:
   summary.
 - `get_layout(name)` — the full recipe for one page template (which components
   fill which `app-shell` slots, markup, and notes).
+- `list_icons` — every icon in `icons.js`, its default size, and its intended
+  use case (e.g. delete vs. edit vs. close), for consistent icon choices
+  across apps. See [`docs/icons.md`](./docs/icons.md) for the same catalog.
 
 It's read-only over the same `custom-elements.json`/`docs/*.md` this package
 already generates via `npm run docs`, plus the authored `docs/layouts/*.md`

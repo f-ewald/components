@@ -14,6 +14,12 @@
   `--ui-danger`, for destructive actions such as Delete.
 - Added the `iconWrenchScrewdriver` heroicon.
 - Added the `iconEllipsisVertical` heroicon.
+- Added a use-case guideline to every icon (e.g. `iconTrash` → "Delete/remove
+  actions"), sourced from a JSDoc comment on each generated export in
+  `src/icons.ts` and surfaced three ways: in `custom-elements.json`, in the
+  new checked-in `docs/icons.md` catalog and matching `llms.txt` section, and
+  via a new `list_icons` MCP tool — so consistent icon choices are
+  discoverable by both humans and AI coding agents.
 - Fixed `timeline-entry`'s `running` spinner in Safari by eliminating
   transform-based rotation entirely. The SVG geometry remains stationary
   while `stroke-dashoffset` advances a fixed-length arc around the ring,

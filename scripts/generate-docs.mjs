@@ -644,6 +644,33 @@ for (const mod of manifest.modules) {
     });
   }
 }
+
+/** @typedef {{ name: string, defaultSize: string, usage: string }} IconInfo */
+
+/**
+ * Extracts {name, defaultSize, usage} for every generated `icon*` export in
+ * `src/icons.ts`, sorted alphabetically. `usage` is the JSDoc comment
+ * `scripts/generate-icons.mjs` writes above each export (its `usage` field),
+ * lifted into `custom-elements.json` by `npm run analyze` — this keeps the
+ * icon's use-case guidance defined in exactly one place.
+ * @returns {IconInfo[]}
+ */
+function iconCatalog() {
+  const icons = [];
+  for (const mod of manifest.modules) {
+    if (mod.path !== "src/icons.ts") continue;
+    for (const decl of mod.declarations ?? []) {
+      if (decl.kind !== "function" || !decl.name.startsWith("icon")) continue;
+      icons.push({
+        name: decl.name,
+        defaultSize: decl.parameters?.[0]?.default ?? "18",
+        usage: decl.description ?? "",
+      });
+    }
+  }
+  icons.sort((a, b) => a.name.localeCompare(b.name));
+  return icons;
+}
 components.sort((a, b) => a.tagName.localeCompare(b.tagName));
 
 /** Extracts the unique `--ui-*` custom property names referenced in a source file. */
@@ -971,9 +998,40 @@ async function componentDocumentation() {
   );
 }
 
+/** Renders the `docs/icons.md` catalog table body shared by the file and llms.txt. */
+function iconsTableBody(icons) {
+  return icons
+    .map((icon) => `| \`${icon.name}\` | ${icon.defaultSize}px | ${icon.usage} |`)
+    .join("\n");
+}
+
+/** Writes `docs/icons.md`, the checked-in use-case catalog for every generated icon. */
+async function writeIconDocumentation(icons) {
+  const md = `# Icon catalog
+
+Every icon in \`@f-ewald/components/icons.js\`, generated from
+\`scripts/generate-icons.mjs\` by \`npm run icons\`, with the intended use case
+for each so consumers (including AI coding agents) pick a consistent icon for
+a given situation instead of ad hoc choices. Each is a function taking an
+optional \`size\` (pixels) and returning a Lit \`TemplateResult\`:
+
+\`\`\`js
+import { iconPencil } from "@f-ewald/components/icons.js";
+
+const icon = iconPencil(16); // 16px, defaults shown below if omitted
+\`\`\`
+
+| Icon | Default size | Use for |
+| --- | --- | --- |
+${iconsTableBody(icons)}
+`;
+  await writeFile(path.join(docsDir, "icons.md"), md, "utf8");
+}
+
 /** Writes the checked-in Markdown docs and compact LLM reference. */
-async function writeMarkdownDocumentation(componentDocs) {
+async function writeMarkdownDocumentation(componentDocs, icons) {
   await mkdir(docsDir, { recursive: true });
+  await writeIconDocumentation(icons);
   const llmsSections = [];
 
   for (const component of componentDocs) {
@@ -1047,10 +1105,19 @@ render correctly with zero external CSS. Override any \`--ui-*\` property on
 \`:root\` (or an ancestor) to retheme, or import the optional
 \`@f-ewald/components/tokens.css\` stylesheet as a starting point.
 
+## Icons
+
+Import from \`@f-ewald/components/icons.js\`, e.g. \`iconPencil(16)\`. Use this
+table to pick the icon matching a use case, for consistency across apps:
+
+| Icon | Default size | Use for |
+| --- | --- | --- |
+${iconsTableBody(icons)}
+
 ${llmsSections.join("\n")}`;
 
   await writeFile(path.join(rootDir, "llms.txt"), llmsTxt, "utf8");
-  console.log(`Wrote ${componentDocs.length} docs/*.md files and llms.txt`);
+  console.log(`Wrote ${componentDocs.length} docs/*.md files, docs/icons.md, and llms.txt`);
 }
 
 /** Writes the disposable static artifact consumed by GitHub Pages. */
@@ -1083,5 +1150,5 @@ const componentDocs = await componentDocumentation();
 if (siteOnly) {
   await writeSiteDocumentation(componentDocs);
 } else {
-  await writeMarkdownDocumentation(componentDocs);
+  await writeMarkdownDocumentation(componentDocs, iconCatalog());
 }

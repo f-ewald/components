@@ -6003,7 +6003,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Close, dismiss, or clear (e.g. a modal, toast, or clearable input)."
         },
         {
           "kind": "function",
@@ -6013,7 +6014,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "A hamburger menu toggle, e.g. collapsing or opening a sidebar/nav drawer."
         },
         {
           "kind": "function",
@@ -6023,7 +6025,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Previous\" navigation, e.g. pagination or carousel back controls."
         },
         {
           "kind": "function",
@@ -6033,7 +6036,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Next\" navigation, or a collapsed disclosure/submenu indicator."
         },
         {
           "kind": "function",
@@ -6043,7 +6047,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Scroll to top\", or an expanded/upward disclosure control."
         },
         {
           "kind": "function",
@@ -6053,7 +6058,8 @@
               "name": "size",
               "default": "20"
             }
-          ]
+          ],
+          "description": "Settings, preferences, or configuration entry points."
         },
         {
           "kind": "function",
@@ -6063,7 +6069,8 @@
               "name": "size",
               "default": "20"
             }
-          ]
+          ],
+          "description": "Neutral informational messages, e.g. an info toast or status banner."
         },
         {
           "kind": "function",
@@ -6073,7 +6080,8 @@
               "name": "size",
               "default": "20"
             }
-          ]
+          ],
+          "description": "Help, tooltips, or \"learn more\" affordances."
         },
         {
           "kind": "function",
@@ -6083,7 +6091,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Edit actions, e.g. an edit icon-button or inline edit toggle."
         },
         {
           "kind": "function",
@@ -6093,7 +6102,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Delete/remove actions, typically paired with a destructive/danger style."
         },
         {
           "kind": "function",
@@ -6103,7 +6113,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "An overflow (\"kebab\") menu trigger, e.g. dropdown-button's icon variant."
         },
         {
           "kind": "function",
@@ -6113,7 +6124,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Add new\" actions, e.g. creating a new item or row."
         },
         {
           "kind": "function",
@@ -6123,7 +6135,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "A list-view toggle, or to represent list-type content."
         },
         {
           "kind": "function",
@@ -6133,7 +6146,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Monetary values, pricing, or billing-related content."
         },
         {
           "kind": "function",
@@ -6143,7 +6157,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "A primary navigation link to the app's home or dashboard."
         },
         {
           "kind": "function",
@@ -6153,7 +6168,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "A location, address, or map marker."
         },
         {
           "kind": "function",
@@ -6163,7 +6179,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Timestamps, durations, or time-related metadata."
         },
         {
           "kind": "function",
@@ -6173,7 +6190,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Tags, labels, or categorical metadata."
         },
         {
           "kind": "function",
@@ -6183,7 +6201,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Dates, due dates, or calendar-related metadata."
         },
         {
           "kind": "function",
@@ -6193,7 +6212,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Expand\" or \"view fullscreen\" actions."
         },
         {
           "kind": "function",
@@ -6203,7 +6223,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "A map-view toggle, or to represent map/geographic content."
         },
         {
           "kind": "function",
@@ -6213,7 +6234,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Success states, confirmations, or a selected-item checkmark."
         },
         {
           "kind": "function",
@@ -6223,7 +6245,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "A light-theme toggle, or to represent daytime/light mode."
         },
         {
           "kind": "function",
@@ -6233,7 +6256,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Security warnings, or at-risk/compromised states."
         },
         {
           "kind": "function",
@@ -6243,7 +6267,8 @@
               "name": "size",
               "default": "12"
             }
-          ]
+          ],
+          "description": "Refresh actions, or an animated busy/loading spinner."
         },
         {
           "kind": "function",
@@ -6253,7 +6278,8 @@
               "name": "size",
               "default": "12"
             }
-          ]
+          ],
+          "description": "\"Continue\" or forward-progressing actions, e.g. a compact next-step arrow."
         },
         {
           "kind": "function",
@@ -6263,7 +6289,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Download or export actions."
         },
         {
           "kind": "function",
@@ -6273,7 +6300,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Swap, exchange, or compare actions between two items."
         },
         {
           "kind": "function",
@@ -6283,7 +6311,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Copy-link or hyperlink-related actions, e.g. copy-link-button."
         },
         {
           "kind": "function",
@@ -6293,7 +6322,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Like\"/\"favorite\" actions in their unselected state."
         },
         {
           "kind": "function",
@@ -6303,7 +6333,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Like\"/\"favorite\" actions in their selected/active state; pair with iconHeart for the unselected state."
         },
         {
           "kind": "function",
@@ -6313,7 +6344,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Show\"/\"preview\" actions or a visible/reviewed state, e.g. password visibility or a review status."
         },
         {
           "kind": "function",
@@ -6323,7 +6355,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Hide\" actions or a hidden/masked state; pair with iconEye for the visible state."
         },
         {
           "kind": "function",
@@ -6333,7 +6366,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Verified, secure, or trusted states."
         },
         {
           "kind": "function",
@@ -6343,7 +6377,8 @@
               "name": "size",
               "default": "20"
             }
-          ]
+          ],
+          "description": "A generic user/person fallback, e.g. user-avatar's icon fallback."
         },
         {
           "kind": "function",
@@ -6353,7 +6388,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Task lists, checklists, or clipboard/notes content."
         },
         {
           "kind": "function",
@@ -6363,7 +6399,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "System, hardware, or technical/processing content."
         },
         {
           "kind": "function",
@@ -6373,7 +6410,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Folders, directories, or grouped file content."
         },
         {
           "kind": "function",
@@ -6383,7 +6421,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "\"Scroll to bottom\", a downward disclosure, or an expanded tree/accordion indicator."
         },
         {
           "kind": "function",
@@ -6393,7 +6432,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "A generic file/document icon, e.g. tile-grid's default file icon."
         },
         {
           "kind": "function",
@@ -6403,7 +6443,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "A grid or kanban-view toggle, or to represent card/tile layouts."
         },
         {
           "kind": "function",
@@ -6413,7 +6454,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Messaging, comments, or conversation-related content."
         },
         {
           "kind": "function",
@@ -6423,7 +6465,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Links that open in a new tab/window, or navigate to an external site."
         },
         {
           "kind": "function",
@@ -6433,7 +6476,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Education, learning, or certification-related content."
         },
         {
           "kind": "function",
@@ -6443,7 +6487,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Queues, backlogs, or ordered work-item lists."
         },
         {
           "kind": "function",
@@ -6453,7 +6498,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Warning states, e.g. the warning variant of toast-notification."
         },
         {
           "kind": "function",
@@ -6463,7 +6509,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Error states, e.g. the error variant of toast-notification."
         },
         {
           "kind": "function",
@@ -6473,7 +6520,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "A dark-theme toggle, or to represent night/dark mode."
         },
         {
           "kind": "function",
@@ -6483,7 +6531,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "A \"system/auto\" theme option, or to represent a desktop device."
         },
         {
           "kind": "function",
@@ -6493,7 +6542,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Code snippets, developer tools, or technical/API content."
         },
         {
           "kind": "function",
@@ -6503,7 +6553,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Plugins, integrations, or extensible/add-on features."
         },
         {
           "kind": "function",
@@ -6513,7 +6564,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Teams, groups, or multi-user/collaboration content."
         },
         {
           "kind": "function",
@@ -6523,7 +6575,8 @@
               "name": "size",
               "default": "16"
             }
-          ]
+          ],
+          "description": "Logout/sign-out actions."
         },
         {
           "kind": "function",
@@ -6533,7 +6586,8 @@
               "name": "size",
               "default": "18"
             }
-          ]
+          ],
+          "description": "Tools, maintenance, or build/configuration actions."
         }
       ],
       "exports": [

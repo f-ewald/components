@@ -10,6 +10,7 @@
  * - `get_component_docs`: the full generated Markdown doc for one tag.
  * - `list_layouts`: every dashboard page template + one-line summary.
  * - `get_layout`: the full recipe for one page template.
+ * - `list_icons`: every icon, its default size, and its intended use case.
  *
  * No new data source — this is just a different transport over docs that
  * already exist. See `docs/mcp-evaluation.md` for the design rationale.
@@ -42,6 +43,13 @@ interface LayoutSummary {
   summary: string;
 }
 
+/** One row of the `list_icons` result. */
+interface IconSummary {
+  name: string;
+  defaultSize: number;
+  usage: string;
+}
+
 /** Reads the package's own version out of package.json, for server metadata. */
 async function readPackageVersion(): Promise<string> {
   const text = await readFile(path.join(packageRoot, "package.json"), "utf8");
@@ -64,6 +72,42 @@ async function listComponents(): Promise<ComponentSummary[]> {
   }
   components.sort((a, b) => a.tag.localeCompare(b.tag));
   return components;
+}
+
+/**
+ * Extracts {name, defaultSize, usage} for every `icon*` export in
+ * `src/icons.ts`, sorted by name. `usage` is the "use for ..." guideline
+ * `scripts/generate-icons.mjs` writes as a JSDoc comment above each export,
+ * which `npm run analyze` lifts into this same `custom-elements.json` — the
+ * same source `listComponents` reads, just a different module/kind filter.
+ */
+async function listIcons(): Promise<IconSummary[]> {
+  const text = await readFile(path.join(packageRoot, "custom-elements.json"), "utf8");
+  const manifest = JSON.parse(text) as {
+    modules: {
+      path: string;
+      declarations?: {
+        kind?: string;
+        name: string;
+        description?: string;
+        parameters?: { default?: string }[];
+      }[];
+    }[];
+  };
+  const icons: IconSummary[] = [];
+  for (const mod of manifest.modules) {
+    if (mod.path !== "src/icons.ts") continue;
+    for (const decl of mod.declarations ?? []) {
+      if (decl.kind !== "function" || !decl.name.startsWith("icon")) continue;
+      icons.push({
+        name: decl.name,
+        defaultSize: Number(decl.parameters?.[0]?.default ?? 18),
+        usage: decl.description ?? "",
+      });
+    }
+  }
+  icons.sort((a, b) => a.name.localeCompare(b.name));
+  return icons;
 }
 
 /**
@@ -190,6 +234,23 @@ server.registerTool(
       isError: true,
     };
   },
+);
+
+server.registerTool(
+  "list_icons",
+  {
+    title: "List icons",
+    description:
+      "Lists every icon in @f-ewald/components/icons.js (e.g. iconPencil) " +
+      "with its default size in pixels and its intended use case, so an " +
+      "agent picks the one consistent icon for a given situation (e.g. " +
+      "delete vs. edit vs. close) instead of guessing. Import as " +
+      '`import { iconPencil } from "@f-ewald/components/icons.js"` and call ' +
+      "with an optional size override, e.g. iconPencil(16).",
+  },
+  async () => ({
+    content: [{ type: "text", text: JSON.stringify(await listIcons(), null, 2) }],
+  }),
 );
 
 const transport = new StdioServerTransport();
