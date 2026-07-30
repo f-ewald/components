@@ -89,19 +89,23 @@ export class AddressAutocomplete extends LitElement {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
         width: 2rem;
         height: 2rem;
-        padding: 0;
+        /* Insets the hover/focus background by the input's 1px border so it
+           stays fully inside the field instead of painting over the border. */
+        padding: 1px;
+        background-clip: content-box;
         border: 0;
         border-radius: var(--ui-radius-sm, 0.25rem);
         color: var(--ui-text-muted, #64748b);
-        background: transparent;
+        background-color: transparent;
         cursor: pointer;
         line-height: 0;
       }
       .clear-button:hover {
         color: var(--ui-text, #0f172a);
-        background: var(--ui-surface-muted, #f8fafc);
+        background-color: var(--ui-surface-muted, #f8fafc);
       }
       .clear-button:focus-visible {
         outline: none;
