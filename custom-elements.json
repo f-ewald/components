@@ -6524,6 +6524,16 @@
               "default": "16"
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "iconWrenchScrewdriver",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ]
         }
       ],
       "exports": [
@@ -6948,6 +6958,14 @@
           "name": "iconArrowRightOnRectangle",
           "declaration": {
             "name": "iconArrowRightOnRectangle",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconWrenchScrewdriver",
+          "declaration": {
+            "name": "iconWrenchScrewdriver",
             "module": "src/icons.ts"
           }
         }

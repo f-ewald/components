@@ -63,6 +63,7 @@ const ICONS = {
   PuzzlePiece: { slug: "puzzle-piece", size: 18 },
   Users: { slug: "users", size: 18 },
   ArrowRightOnRectangle: { slug: "arrow-right-on-rectangle", size: 16 },
+  WrenchScrewdriver: { slug: "wrench-screwdriver", size: 18 },
 };
 
 /**

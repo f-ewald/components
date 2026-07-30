@@ -12,6 +12,7 @@
   than visible text, and the chevron is dropped.
 - `DropdownOption` gains an optional `danger` flag that renders a menu item in
   `--ui-danger`, for destructive actions such as Delete.
+- Added the `iconWrenchScrewdriver` heroicon.
 - Added the `iconEllipsisVertical` heroicon.
 - Fixed `timeline-entry`'s `running` spinner in Safari by eliminating
   transform-based rotation entirely. The SVG geometry remains stationary
