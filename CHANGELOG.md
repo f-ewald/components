@@ -20,6 +20,9 @@
   new checked-in `docs/icons.md` catalog and matching `llms.txt` section, and
   via a new `list_icons` MCP tool — so consistent icon choices are
   discoverable by both humans and AI coding agents.
+- Fixed the clear ("X") button in `autocomplete-input`/`address-autocomplete`
+  so its hover/focus background is inset within the input's border instead of
+  painting over it; the clickable hit target is unchanged.
 - Fixed `timeline-entry`'s `running` spinner in Safari by eliminating
   transform-based rotation entirely. The SVG geometry remains stationary
   while `stroke-dashoffset` advances a fixed-length arc around the ring,
