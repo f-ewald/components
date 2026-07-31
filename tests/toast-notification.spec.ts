@@ -136,4 +136,51 @@ test.describe("toast-notification", () => {
     await expect(toast).toHaveCSS("background-color", "rgb(217, 119, 6)");
     await expect(toast.locator(".icon svg")).toHaveAttribute("width", "18");
   });
+
+  test("gradient theme hooks (--ui-toast-*-background/-highlight/-text-shadow) layer a glossy gradient per variant", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const host = page.locator("toast-notification");
+    // Same literal values gradientTokenValues (src/tokens.ts) ships for
+    // data-theme="gradient" — set directly here since the dev playground
+    // never loads the built dist/tokens.css that mechanism relies on.
+    const gradients = {
+      success: "linear-gradient(180deg, #22c55e 0%, #16a34a 100%)",
+      error: "linear-gradient(180deg, #ef4444 0%, #dc2626 100%)",
+      info: "linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%)",
+      warning: "linear-gradient(180deg, #f59e0b 0%, #d97706 100%)",
+    } as const;
+    // Computed background-image drops the (default) 180deg angle and
+    // resolves hex stops to rgb() — one per variant, so a wire-up mixup
+    // between variants (e.g. success accidentally reading error's token)
+    // would fail these exact-match assertions.
+    const computedGradients = {
+      success: "linear-gradient(rgb(34, 197, 94) 0%, rgb(22, 163, 74) 100%)",
+      error: "linear-gradient(rgb(239, 68, 68) 0%, rgb(220, 38, 38) 100%)",
+      info: "linear-gradient(rgb(56, 189, 248) 0%, rgb(14, 165, 233) 100%)",
+      warning: "linear-gradient(rgb(245, 158, 11) 0%, rgb(217, 119, 6) 100%)",
+    } as const;
+
+    await host.evaluate((element, gradients) => {
+      element.style.setProperty("--ui-toast-highlight", "inset 0 1px 0 rgb(255 255 255 / 0.35)");
+      element.style.setProperty("--ui-toast-text-shadow", "0 1px 1px rgb(0 0 0 / 0.25)");
+      element.style.setProperty("--ui-toast-success-background", gradients.success);
+      element.style.setProperty("--ui-toast-error-background", gradients.error);
+      element.style.setProperty("--ui-toast-info-background", gradients.info);
+      element.style.setProperty("--ui-toast-warning-background", gradients.warning);
+      const el = element as HTMLElement & {
+        show: (msg: string, opts?: { variant?: string; duration?: number }) => number;
+      };
+      for (const variant of ["success", "error", "info", "warning"]) {
+        el.show(variant, { variant, duration: 0 });
+      }
+    }, gradients);
+
+    for (const [variant, gradient] of Object.entries(computedGradients)) {
+      const toast = host.locator(`.toast.${variant}`);
+      await expect(toast).toHaveCSS("background-image", gradient);
+      await expect(toast).toHaveCSS("text-shadow", "rgba(0, 0, 0, 0.25) 0px 1px 1px");
+    }
+  });
 });

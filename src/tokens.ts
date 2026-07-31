@@ -76,6 +76,20 @@ export const tokenValues: Record<string, string> = {
   "--ui-success": "#16a34a", // green-600
   "--ui-warning": "#d97706", // amber-600
   "--ui-warning-hover": "#b45309", // amber-700
+  // toast-notification's per-variant background hooks: default to the flat
+  // --ui-success/--ui-danger/--ui-info/--ui-warning tokens unchanged, so
+  // those stay the single source of truth for every other component —
+  // the same pattern as --ui-button-background/--ui-button-danger-background
+  // above. `-highlight`/`-text-shadow` are the same glossy-top-edge /
+  // legibility-shadow pair as --ui-button-highlight/--ui-button-text-shadow,
+  // kept as separate tokens so a theme can gloss toasts and buttons
+  // independently.
+  "--ui-toast-success-background": "var(--ui-success, #16a34a)",
+  "--ui-toast-error-background": "var(--ui-danger, #dc2626)",
+  "--ui-toast-info-background": "var(--ui-info, #0ea5e9)",
+  "--ui-toast-warning-background": "var(--ui-warning, #d97706)",
+  "--ui-toast-highlight": "0 0 0 0 transparent",
+  "--ui-toast-text-shadow": "none",
   "--ui-on-accent": "#ffffff",
   "--ui-text": "#0f172a", // slate-900
   "--ui-text-muted": "#64748b", // slate-500
@@ -159,14 +173,15 @@ export const darkTokenValues: Record<string, string> = {
  * `"light"` override and layers a glossy gradient look on top of the flat
  * light palette, using exactly the `--ui-button-*`/`--ui-button-danger-*`/
  * `--ui-button-secondary-*` hooks `ui-button.ts` already reads (see that
- * file's doc comment). Every other token (`--ui-text`, `--ui-surface`, …)
- * is left at its light-mode default — this theme is button-only by design.
- * Each variant's gradient runs light-to-dark top-to-bottom (`180deg`)
- * across one Tailwind shade step lighter/darker than the flat token so it
- * still reads as "the same color, glossy" rather than a different hue;
- * `-hover` shifts the whole pair one shade lighter, `-active` reverses the
- * two stops for a pressed/"indented" look, and `-border` is a shade darker
- * than the gradient's dark stop for a defining edge.
+ * file's doc comment), plus the `--ui-toast-*` hooks `toast-notification.ts`
+ * reads (see its doc comment). Every other token (`--ui-text`, `--ui-surface`,
+ * …) is left at its light-mode default — this theme only glosses buttons and
+ * toasts by design. Each variant's gradient runs light-to-dark top-to-bottom
+ * (`180deg`) across one Tailwind shade step lighter/darker than the flat
+ * token so it still reads as "the same color, glossy" rather than a
+ * different hue; `-hover` shifts the whole pair one shade lighter, `-active`
+ * reverses the two stops for a pressed/"indented" look, and `-border` is a
+ * shade darker than the gradient's dark stop for a defining edge.
  */
 export const gradientTokenValues: Record<string, string> = {
   "--ui-button-background": "linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)", // indigo-500 -> 600
@@ -189,6 +204,15 @@ export const gradientTokenValues: Record<string, string> = {
   "--ui-button-highlight": "inset 0 1px 0 rgb(255 255 255 / 0.35)", // glossy top edge
   "--ui-button-text-shadow": "0 1px 1px rgb(0 0 0 / 0.25)", // legibility on primary/danger
   "--ui-button-accent": "#4338ca", // indigo-700, matches --ui-button-border
+  // toast-notification: same light-to-dark, one-shade-step gradient
+  // convention as the button variants above; the bottom stop always matches
+  // the flat --ui-success/--ui-danger/--ui-info/--ui-warning value exactly.
+  "--ui-toast-success-background": "linear-gradient(180deg, #22c55e 0%, #16a34a 100%)", // green-500 -> 600
+  "--ui-toast-error-background": "linear-gradient(180deg, #ef4444 0%, #dc2626 100%)", // red-500 -> 600
+  "--ui-toast-info-background": "linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%)", // sky-400 -> 500
+  "--ui-toast-warning-background": "linear-gradient(180deg, #f59e0b 0%, #d97706 100%)", // amber-500 -> 600
+  "--ui-toast-highlight": "inset 0 1px 0 rgb(255 255 255 / 0.35)", // glossy top edge, same as --ui-button-highlight
+  "--ui-toast-text-shadow": "0 1px 1px rgb(0 0 0 / 0.25)", // legibility, same as --ui-button-text-shadow
 };
 
 /**

@@ -14,6 +14,20 @@ circle, info → information circle, warning → exclamation triangle). Each toa
 auto-dismisses after `duration` ms and can also be dismissed via its ✕
 button. Appears/disappears instantly — no slide/fade transitions.
 
+Each variant's background reads a dedicated `--ui-toast-*-background` hook
+(`success`/`error`/`info`/`warning`), which defaults to the flat
+`--ui-success`/`--ui-danger`/`--ui-info`/`--ui-warning` tokens unchanged —
+so those stay the single source of truth for every other component. A
+consumer can override just these toast-specific tokens with a
+`linear-gradient(...)` to opt every toast into a gradient look without
+touching component markup — `gradientTokenValues` in `tokens.ts` ships
+exactly this, wired up via `data-theme="gradient"` (see `tokens.css`'s
+"Gradient theme" section), the same mechanism `ui-button` uses.
+`--ui-toast-highlight` (a glossy top-edge box-shadow, layered onto the
+existing elevation shadow) and `--ui-toast-text-shadow` (legibility
+against the gradient's lighter stop) round out the effect, mirroring
+`ui-button`'s `--ui-button-highlight`/`--ui-button-text-shadow`.
+
 ## Install
 
 ```js
@@ -46,6 +60,8 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-button-highlight` |
+| `--ui-button-text-shadow` |
 | `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |
@@ -63,4 +79,11 @@ _None._
 | `--ui-shadow-lg` |
 | `--ui-success` |
 | `--ui-text` |
+| `--ui-toast-` |
+| `--ui-toast-error-background` |
+| `--ui-toast-highlight` |
+| `--ui-toast-info-background` |
+| `--ui-toast-success-background` |
+| `--ui-toast-text-shadow` |
+| `--ui-toast-warning-background` |
 | `--ui-warning` |

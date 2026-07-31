@@ -47,6 +47,20 @@ const DEFAULT_DURATION_MS = 5000;
  * auto-dismisses after `duration` ms and can also be dismissed via its ✕
  * button. Appears/disappears instantly — no slide/fade transitions.
  *
+ * Each variant's background reads a dedicated `--ui-toast-*-background` hook
+ * (`success`/`error`/`info`/`warning`), which defaults to the flat
+ * `--ui-success`/`--ui-danger`/`--ui-info`/`--ui-warning` tokens unchanged —
+ * so those stay the single source of truth for every other component. A
+ * consumer can override just these toast-specific tokens with a
+ * `linear-gradient(...)` to opt every toast into a gradient look without
+ * touching component markup — `gradientTokenValues` in `tokens.ts` ships
+ * exactly this, wired up via `data-theme="gradient"` (see `tokens.css`'s
+ * "Gradient theme" section), the same mechanism `ui-button` uses.
+ * `--ui-toast-highlight` (a glossy top-edge box-shadow, layered onto the
+ * existing elevation shadow) and `--ui-toast-text-shadow` (legibility
+ * against the gradient's lighter stop) round out the effect, mirroring
+ * `ui-button`'s `--ui-button-highlight`/`--ui-button-text-shadow`.
+ *
  * @element toast-notification
  */
 @customElement("toast-notification")
@@ -78,10 +92,10 @@ export class ToastNotification extends LitElement {
         border-radius: var(--ui-radius, 0.5rem);
         padding: 0.75rem;
         box-shadow: var(
-          --ui-shadow-lg,
-          0 20px 25px -5px rgb(0 0 0 / 0.1),
-          0 8px 10px -6px rgb(0 0 0 / 0.1)
-        );
+            --ui-shadow-lg,
+            0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 8px 10px -6px rgb(0 0 0 / 0.1)
+          ), var(--ui-toast-highlight, 0 0 0 0 transparent);
         font-family: var(
           --ui-font,
           ui-sans-serif,
@@ -96,18 +110,19 @@ export class ToastNotification extends LitElement {
         line-height: var(--ui-line-height-normal, 1.5);
         color: var(--ui-on-accent, #ffffff);
         background: var(--ui-text, #0f172a);
+        text-shadow: var(--ui-toast-text-shadow, none);
       }
       .toast.error {
-        background: var(--ui-danger, #dc2626);
+        background: var(--ui-toast-error-background, var(--ui-danger, #dc2626));
       }
       .toast.success {
-        background: var(--ui-success, #16a34a);
+        background: var(--ui-toast-success-background, var(--ui-success, #16a34a));
       }
       .toast.info {
-        background: var(--ui-info, #0ea5e9);
+        background: var(--ui-toast-info-background, var(--ui-info, #0ea5e9));
       }
       .toast.warning {
-        background: var(--ui-warning, #d97706);
+        background: var(--ui-toast-warning-background, var(--ui-warning, #d97706));
       }
       .icon {
         flex: 0 0 auto;

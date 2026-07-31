@@ -16,7 +16,8 @@ pre.usage {
  * Playground-only "button style" picker (see index.html/main.ts) — lets a
  * developer live-preview the ui-button gradient-theming hook
  * (--ui-button-background/-hover/-active/-border/-highlight/-text-shadow,
- * --ui-button-danger-*) added in src/ui-button.ts, without needing a real
+ * --ui-button-danger-*) added in src/ui-button.ts, plus the matching
+ * --ui-toast-* hooks toast-notification.ts reads, without needing a real
  * consuming app. Not part of the shipped design system: real theming happens
  * purely through those --ui-* custom properties, this is just a convenience
  * switch for this demo.
@@ -95,5 +96,15 @@ pre.usage {
      button-group, confirm-dialog, dropdown-button, radio-cards, radio-pills,
      range-slider, and reveal-button (see src/*.ts for each). */
   --ui-button-accent: var(--ui-button-gradient-dark);
+
+  /* toast-notification's per-variant gradient backgrounds + shared glossy
+     highlight/legibility text-shadow (see src/toast-notification.ts and the
+     matching gradientTokenValues entries in src/tokens.ts). */
+  --ui-toast-success-background: linear-gradient(to bottom, #22c55e, #16a34a);
+  --ui-toast-error-background: linear-gradient(to bottom, #ef4444, #dc2626);
+  --ui-toast-info-background: linear-gradient(to bottom, #38bdf8, #0ea5e9);
+  --ui-toast-warning-background: linear-gradient(to bottom, #f59e0b, #d97706);
+  --ui-toast-highlight: inset 0 1px 0 rgb(255 255 255 / 0.35);
+  --ui-toast-text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
 }
 

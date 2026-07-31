@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- The `"gradient"` theme (`data-theme="gradient"`) now also covers
+  `toast-notification`: all four variants (success, error, info, warning)
+  get the same glossy top-to-bottom linear-gradient treatment as `ui-button`,
+  via new `--ui-toast-*-background`/`--ui-toast-highlight`/
+  `--ui-toast-text-shadow` hooks (defaulting to the existing flat
+  `--ui-success`/`--ui-danger`/`--ui-info`/`--ui-warning` tokens, unchanged).
+  The theme is no longer button-only.
 - Added a `"gradient"` theme (`data-theme="gradient"` on `<html>`, alongside
   the existing `"light"`/`"dark"` overrides): layers a glossy gradient look
   onto `ui-button`'s primary/danger/secondary variants on top of the flat

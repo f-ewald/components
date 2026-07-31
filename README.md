@@ -166,10 +166,11 @@ set. Don't reintroduce that pattern.)
 ### Gradient theme
 
 Setting `data-theme="gradient"` on `<html>` layers a glossy gradient look
-onto `ui-button` (primary, danger, and secondary variants) on top of the
-flat light palette — see `gradientTokenValues` in
+onto `ui-button` (primary, danger, and secondary variants) and
+`toast-notification` (all four variants: success, error, info, warning) on
+top of the flat light palette — see `gradientTokenValues` in
 [`src/tokens.ts`](./src/tokens.ts). Every other token stays at its light-mode
-value; this theme is deliberately button-only. It takes precedence over the
+value. It takes precedence over the
 OS dark preference (like `data-theme="light"` does), since the gradient's
 color stops are hardcoded for a light surface.
 
