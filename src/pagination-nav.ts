@@ -18,6 +18,13 @@ export interface PageChangeDetail {
  * Previous is disabled on the first page and next on the last; neither fires an
  * event when there is nowhere to go.
  *
+ * The prev/next buttons are treated as `ui-button`'s `secondary` variant:
+ * they read the same shared `--ui-button-secondary-*`/`--ui-button-highlight`
+ * tokens (and `--ui-button-secondary-surface-muted` for hover, since — like
+ * `button-group`'s unchecked segments — they already paint
+ * `--ui-surface-muted` on hover by default), so a gradient theme applies
+ * consistently here too.
+ *
  * @element pagination-nav
  * @fires page-change - The user picked a new page (`detail: { page }`).
  */
@@ -54,15 +61,20 @@ export class PaginationNav extends LitElement {
         width: 2rem;
         height: 2rem;
         padding: 0;
-        background: none;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        background: var(--ui-button-secondary-background, none);
+        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         border-radius: var(--ui-radius-sm, 0.25rem);
         color: var(--ui-text, #0f172a);
         cursor: pointer;
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       button:hover:not(:disabled) {
-        background: var(--ui-surface-muted, #f8fafc);
-        border-color: var(--ui-text-muted, #64748b);
+        background: var(--ui-button-secondary-surface-muted, var(--ui-surface-muted, #f8fafc));
+        border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
+      }
+      button:active:not(:disabled) {
+        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        box-shadow: none;
       }
       button:disabled {
         opacity: 0.5;
@@ -71,6 +83,9 @@ export class PaginationNav extends LitElement {
       button:focus-visible {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      button:focus-visible:not(:active) {
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)), var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .status {
         font-size: var(--ui-font-size-sm, 0.75rem);

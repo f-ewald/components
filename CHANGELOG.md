@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- Added `audio-player`: a compact player wrapping a native `<audio>` element
+  behind a tokenized transport bar — play/pause, elapsed/total time, a
+  seekable progress bar, and a mute toggle + volume slider. The seek and
+  volume controls are native `<input type="range">` elements for free
+  keyboard/pointer support.
+- Added `video-player`: the same transport bar as `audio-player` around a
+  native `<video>` element, plus a fullscreen toggle. The control bar is
+  always visible (not a hover-reveal overlay) for keyboard/touch
+  accessibility.
+- Added `comment-composer`: a one-line text field that expands into a
+  textarea with bottom-right Cancel/Submit buttons (`form-actions` +
+  `ui-button`) on focus. Submitting clears the field and collapses it back to
+  one line, firing `submit` with `{ value }`; `Escape` cancels; `Cmd`/`Ctrl`+
+  `Enter` submits.
+- Added the `iconPlay`, `iconPause`, `iconSpeakerWave`, `iconSpeakerXMark`,
+  and `iconArrowsPointingIn` heroicons, for the new media player transport
+  controls.
+- Added `formatClockDuration` to format a duration in seconds as a
+  transport-bar clock label (`M:SS`/`H:MM:SS`).
+- `page-header` gains an optional `description` property: a muted supporting
+  line under the heading, capped at a 48rem measure, for explaining what a
+  page is for. The actions cluster now sits in the title row rather than
+  beside the whole block, so its position depends on the heading alone and no
+  longer shifts when a description is added, removed, or wraps to another
+  line at a narrower width — it acts on what the title names, not on the
+  prose beneath it. A header without a description is unchanged apart from
+  its actions centering on the heading instead of bottom-aligning with it.
 - `dropdown-button` now shares one trigger base across three presentations,
   selected with a reflected `variant` property: `text` (the default,
   pixel-identical to the previous primary-filled label+chevron button),

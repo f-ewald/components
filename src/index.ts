@@ -113,6 +113,13 @@ export {
   formatFrontMatterValue,
   type FrontMatterResult,
 } from "./utils/front-matter.js";
-export { formatDuration, type DurationFormat } from "./utils/duration.js";
+export {
+  formatDuration,
+  formatClockDuration,
+  type DurationFormat,
+} from "./utils/duration.js";
+export { AudioPlayer } from "./audio-player.js";
+export { VideoPlayer } from "./video-player.js";
+export { CommentComposer } from "./comment-composer.js";
 export { tokens, tokenValues, darkTokenValues } from "./tokens.js";
 export * from "./icons.js";

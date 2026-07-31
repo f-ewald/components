@@ -91,6 +91,23 @@ const EXAMPLES = {
 <ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>
 <!-- .icon is set programmatically (a pre-rendered TemplateResult), not an attribute -->
 <ui-checkbox label="Show list view"></ui-checkbox>`,
+  "audio-player": `<audio-player src="/episode-12.mp3" label="Episode 12"></audio-player>
+<script type="module">
+  document.querySelector("audio-player").addEventListener("ended", () => {
+    console.log("playback finished");
+  });
+</script>`,
+  "video-player": `<video-player
+  src="/clip.mp4"
+  poster="/clip-poster.jpg"
+  label="Episode 12"
+></video-player>`,
+  "comment-composer": `<comment-composer placeholder="Add a comment…"></comment-composer>
+<script type="module">
+  document.querySelector("comment-composer").addEventListener("submit", (e) => {
+    postComment(e.detail.value);
+  });
+</script>`,
   "range-slider": `<range-slider min="100" max="5000" step="50" value="1000"></range-slider>
 <script type="module">
   document.querySelector("range-slider").addEventListener("input", (e) => {
@@ -201,7 +218,7 @@ const EXAMPLES = {
   <ui-button slot="secondary" variant="secondary">Cancel</ui-button>
   <ui-button slot="primary" type="submit" variant="primary">Save</ui-button>
 </form-actions>`,
-  "page-header": `<page-header heading="Team members">
+  "page-header": `<page-header heading="Team members" description="Everyone with access to this workspace.">
   <nav slot="breadcrumb" aria-label="Breadcrumb">Home / Settings / Members</nav>
   <ui-button slot="actions" variant="primary">Invite</ui-button>
 </page-header>`,

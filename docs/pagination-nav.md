@@ -9,6 +9,13 @@ around a "Page N of M" status. It owns no data — the consumer sets
 Previous is disabled on the first page and next on the last; neither fires an
 event when there is nowhere to go.
 
+The prev/next buttons are treated as `ui-button`'s `secondary` variant:
+they read the same shared `--ui-button-secondary-*`/`--ui-button-highlight`
+tokens (and `--ui-button-secondary-surface-muted` for hover, since — like
+`button-group`'s unchecked segments — they already paint
+`--ui-surface-muted` on hover by default), so a gradient theme applies
+consistently here too.
+
 ## Install
 
 ```js
@@ -43,6 +50,13 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-button-highlight` |
+| `--ui-button-secondary-` |
+| `--ui-button-secondary-background` |
+| `--ui-button-secondary-background-active` |
+| `--ui-button-secondary-border` |
+| `--ui-button-secondary-border-hover` |
+| `--ui-button-secondary-surface-muted` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |

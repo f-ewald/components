@@ -14,7 +14,8 @@ import {
  * an optional error line, and Cancel/Confirm actions. Instant `display:none`
  * → `display:flex` toggle (no transitions). Fires `confirm`/`cancel`
  * (bubbling, composed) instead of owning any deletion logic itself —
- * callers stay in charge of the request.
+ * callers stay in charge of the request. Set `size="sm"` for compact
+ * actions one step below the default, matching `ui-button`'s `sm` size.
  *
  * @element confirm-dialog
  * @fires confirm - User clicked the confirm button.
@@ -92,20 +93,26 @@ export class ConfirmDialog extends LitElement {
         line-height: var(--ui-line-height-tight, 1.25);
       }
       .btn-cancel {
-        background: none;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        background: var(--ui-button-secondary-background, none);
+        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         color: var(--ui-text, #0f172a);
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 1rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         cursor: pointer;
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .btn-cancel:hover:not(:disabled) {
-        border-color: var(--ui-text-muted, #64748b);
+        background: var(--ui-button-secondary-background-hover, none);
+        border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
+      }
+      .btn-cancel:active:not(:disabled) {
+        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        box-shadow: none;
       }
       .btn-danger,
       .btn-primary {
-        border: none;
+        border: 1px solid transparent;
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 1rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
@@ -116,18 +123,32 @@ export class ConfirmDialog extends LitElement {
         gap: 0.25rem;
       }
       .btn-danger {
-        background: var(--ui-danger, #dc2626);
+        background: var(--ui-button-danger-background, var(--ui-danger, #dc2626));
+        border-color: var(--ui-button-danger-border, transparent);
         color: var(--ui-on-accent, #ffffff);
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
+        text-shadow: var(--ui-button-text-shadow, none);
       }
       .btn-danger:hover:not(:disabled) {
-        background: var(--ui-danger-hover, #b91c1c);
+        background: var(--ui-button-danger-background-hover, var(--ui-danger-hover, #b91c1c));
+      }
+      .btn-danger:active:not(:disabled) {
+        background: var(--ui-button-danger-background-active, var(--ui-button-danger-background, var(--ui-danger, #dc2626)));
+        box-shadow: none;
       }
       .btn-primary {
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-button-background, var(--ui-primary, #4f46e5));
+        border-color: var(--ui-button-border, transparent);
         color: var(--ui-on-accent, #ffffff);
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
+        text-shadow: var(--ui-button-text-shadow, none);
       }
       .btn-primary:hover:not(:disabled) {
-        background: var(--ui-primary-hover, #4338ca);
+        background: var(--ui-button-background-hover, var(--ui-primary-hover, #4338ca));
+      }
+      .btn-primary:active:not(:disabled) {
+        background: var(--ui-button-background-active, var(--ui-button-background, var(--ui-primary, #4f46e5)));
+        box-shadow: none;
       }
       button:disabled {
         opacity: 0.6;
@@ -136,6 +157,18 @@ export class ConfirmDialog extends LitElement {
       button:focus-visible {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      .btn-primary:focus-visible:not(:active),
+      .btn-danger:focus-visible:not(:active),
+      .btn-cancel:focus-visible:not(:active) {
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)), var(--ui-button-highlight, 0 0 0 0 transparent);
+      }
+      :host([size="sm"]) .btn-cancel,
+      :host([size="sm"]) .btn-danger,
+      :host([size="sm"]) .btn-primary {
+        height: 1.5rem;
+        padding: 0.25rem 0.5rem;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
       }
       .error-text {
         color: var(--ui-danger, #dc2626);
@@ -187,6 +220,8 @@ export class ConfirmDialog extends LitElement {
   @property({ type: Boolean }) busy = false;
   /** Inline error line shown below the body, or null for none. */
   @property() error: string | null = null;
+  /** Size — `sm` reduces both action buttons' height/padding/font-size one step below the default. */
+  @property({ reflect: true }) size: "sm" | "md" = "md";
 
   private _previousFocus: HTMLElement | null = null;
 

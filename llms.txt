@@ -28,6 +28,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconArrowPath` | 12px | Refresh actions, or an animated busy/loading spinner. |
 | `iconArrowRight` | 12px | "Continue" or forward-progressing actions, e.g. a compact next-step arrow. |
 | `iconArrowRightOnRectangle` | 16px | Logout/sign-out actions. |
+| `iconArrowsPointingIn` | 16px | "Exit fullscreen" actions; pair with iconArrowsPointingOut for entering fullscreen. |
 | `iconArrowsPointingOut` | 16px | "Expand" or "view fullscreen" actions. |
 | `iconArrowsRightLeft` | 16px | Swap, exchange, or compare actions between two items. |
 | `iconArrowTopRightOnSquare` | 16px | Links that open in a new tab/window, or navigate to an external site. |
@@ -62,13 +63,17 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconMap` | 16px | A map-view toggle, or to represent map/geographic content. |
 | `iconMapPin` | 16px | A location, address, or map marker. |
 | `iconMoon` | 16px | A dark-theme toggle, or to represent night/dark mode. |
+| `iconPause` | 18px | "Pause" transport actions, e.g. audio-player/video-player's playing state. |
 | `iconPencil` | 16px | Edit actions, e.g. an edit icon-button or inline edit toggle. |
+| `iconPlay` | 18px | "Play" transport actions, e.g. audio-player/video-player's paused state. |
 | `iconPlus` | 16px | "Add new" actions, e.g. creating a new item or row. |
 | `iconPuzzlePiece` | 18px | Plugins, integrations, or extensible/add-on features. |
 | `iconQuestionMarkCircle` | 20px | Help, tooltips, or "learn more" affordances. |
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
+| `iconSpeakerWave` | 18px | An unmuted volume control, e.g. audio-player/video-player's mute toggle. |
+| `iconSpeakerXMark` | 18px | A muted volume state; pair with iconSpeakerWave for the unmuted state. |
 | `iconSquares2x2` | 18px | A grid or kanban-view toggle, or to represent card/tile layouts. |
 | `iconSun` | 16px | A light-theme toggle, or to represent daytime/light mode. |
 | `iconTag` | 16px | Tags, labels, or categorical metadata. |
@@ -235,6 +240,33 @@ Example:
 </app-sidebar>
 ```
 
+## <audio-player>
+
+Compact audio player wrapping a native `<audio>` element (kept off-screen
+for its decoding/playback engine and free `timeupdate`/`loadedmetadata`
+events) behind a tokenized transport bar: a play/pause `icon-button`,
+elapsed/total time, a seekable progress bar, and a mute toggle + volume
+slider. The seek/volume sliders are native `<input type="range">`
+elements (see `utils/transport-controls.ts`) for free keyboard and
+pointer support, per this package's "native semantics before custom ARIA"
+rule.
+
+Import: `import "@f-ewald/components/audio-player.js";`
+
+Properties: `src` (attribute `src`) : string, default ""; `label` (attribute `label`) : string, default "Audio player"; `loop` (attribute `loop`) : boolean, default false; `preload` (attribute `preload`) : "none" | "metadata" | "auto", default "metadata"
+Events: `play`, `pause`, `ended`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius`, `--ui-surface`, `--ui-text-muted`
+
+Example:
+```html
+<audio-player src="/episode-12.mp3" label="Episode 12"></audio-player>
+<script type="module">
+  document.querySelector("audio-player").addEventListener("ended", () => {
+    console.log("playback finished");
+  });
+</script>
+```
+
 ## <auto-scroll>
 
 Wraps arbitrary slotted content (e.g. `timeline-container`) and keeps it
@@ -320,13 +352,22 @@ choices (a view switcher, a theme picker) where the *currently selected*
 option should read as visually "pressed," not just checked. For many
 short, individually pill-shaped choices, use `radio-pills` instead. Wraps
 native radio inputs for keyboard/a11y and fires `change` rather than
-relying on form submission.
+relying on form submission. Set `size="sm"` for a compact strip one step
+below the default, matching `ui-button`'s `sm` size.
+
+The checked segment reads `--ui-button-background`/`-hover`/`-active`,
+same as `ui-button`'s `primary` variant. Unchecked segments are treated as
+`ui-button`'s `secondary` variant: they read the shared
+`--ui-button-secondary-background`/`-active` (rest/pressed) so a gradient
+theme applies consistently, but use the shared `--ui-button-secondary-surface-muted`
+(also used by `pagination-nav`) for hover, since — unlike `secondary` — an
+unchecked segment already paints `--ui-surface-muted` on hover by default.
 
 Import: `import "@f-ewald/components/button-group.js";`
 
-Properties: `options` (JS property only) : ButtonGroupOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `iconOnly` (attribute `icon-only`) : boolean, default false
+Properties: `options` (JS property only) : ButtonGroupOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `iconOnly` (attribute `icon-only`) : boolean, default false; `size` (attribute `size`) : "sm" | "md", default "md"
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-highlight`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-surface-muted`, `--ui-button-text-shadow`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`
 
 Example:
 ```html
@@ -490,19 +531,51 @@ Example:
 </chat-message>
 ```
 
+## <comment-composer>
+
+GitHub/Slack-style comment composer: a one-line text field that expands
+into a multi-line textarea with a bottom-right Cancel/Submit footer
+(`form-actions`) as soon as it's focused or clicked. Submitting fires
+`submit` with the trimmed value, then clears the field and collapses back
+to one line — it's meant for posting one comment at a time, not editing a
+persistent value in place (see `editable-text` for that). Canceling (the
+Cancel button or `Escape`) discards the draft and collapses without
+firing `submit`. Clicking away (blur) does neither — the composer stays
+expanded until the user explicitly submits or cancels. `Cmd`/`Ctrl`+`Enter`
+submits from the textarea, matching `editable-text`'s multiline shortcut.
+Purely token-styled (no bespoke colors), so it's themeable via the same
+`--ui-*` custom properties as every other value-entry field.
+
+Import: `import "@f-ewald/components/comment-composer.js";`
+
+Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default "Add a comment…"; `label` (attribute `label`) : string, default "Comment"; `rows` (attribute `rows`) : number, default 4; `submitLabel` (attribute `submit-label`) : string, default "Submit"; `cancelLabel` (attribute `cancel-label`) : string, default "Cancel"; `disabled` (attribute `disabled`) : boolean, default false
+Events: `cancel`, `submit`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-line-height-normal`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`
+
+Example:
+```html
+<comment-composer placeholder="Add a comment…"></comment-composer>
+<script type="module">
+  document.querySelector("comment-composer").addEventListener("submit", (e) => {
+    postComment(e.detail.value);
+  });
+</script>
+```
+
 ## <confirm-dialog>
 
 Reusable confirmation dialog: overlay + centered card with a slotted body,
 an optional error line, and Cancel/Confirm actions. Instant `display:none`
 → `display:flex` toggle (no transitions). Fires `confirm`/`cancel`
 (bubbling, composed) instead of owning any deletion logic itself —
-callers stay in charge of the request.
+callers stay in charge of the request. Set `size="sm"` for compact
+actions one step below the default, matching `ui-button`'s `sm` size.
 
 Import: `import "@f-ewald/components/confirm-dialog.js";`
 
-Properties: `open` (attribute `open`) : boolean, default false; `confirmLabel` (attribute `confirm-label`) : string, default "Delete"; `cancelLabel` (attribute `cancel-label`) : string, default "Cancel"; `danger` (attribute `danger`) : boolean, default true; `busy` (attribute `busy`) : boolean, default false; `error` (attribute `error`) : string | null, default null
+Properties: `open` (attribute `open`) : boolean, default false; `confirmLabel` (attribute `confirm-label`) : string, default "Delete"; `cancelLabel` (attribute `cancel-label`) : string, default "Cancel"; `danger` (attribute `danger`) : boolean, default true; `busy` (attribute `busy`) : boolean, default false; `error` (attribute `error`) : string | null, default null; `size` (attribute `size`) : "sm" | "md", default "md"
 Events: `confirm`, `cancel`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -647,13 +720,14 @@ primary-filled button with a label and a rotating chevron), `text-icon`
 (the same, with `icon` ahead of the label), and `icon` (a borderless,
 square, low-emphasis icon target in the style of `icon-button` — the
 classic "three-dot"/overflow menu, where `label` becomes the accessible
-name rather than visible text).
+name rather than visible text). Set `size="sm"` for a compact trigger one
+step below the default, matching `ui-button`'s `sm` size.
 
 Import: `import "@f-ewald/components/dropdown-button.js";`
 
-Properties: `label` (attribute `label`) : string, default ""; `options` (JS property only) : DropdownOption[], default []; `disabled` (attribute `disabled`) : boolean, default false; `variant` (attribute `variant`) : DropdownButtonVariant, default "text"; `icon` (JS property only) : TemplateResult | null, default null
+Properties: `label` (attribute `label`) : string, default ""; `options` (JS property only) : DropdownOption[], default []; `disabled` (attribute `disabled`) : boolean, default false; `variant` (attribute `variant`) : DropdownButtonVariant, default "text"; `icon` (JS property only) : TemplateResult | null, default null; `size` (attribute `size`) : "sm" | "md", default "md"
 Events: `select`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-highlight`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1360,19 +1434,22 @@ Example:
 ## <page-header>
 
 Page title block for the top of a dashboard view: an optional breadcrumb
-trail, the page heading, and a right-aligned cluster of page-level actions.
-It only lays these out — the breadcrumb links and action buttons are entirely
-the consumer's, so it stays framework- and router-agnostic.
+trail, the page heading with a right-aligned cluster of page-level actions
+beside it, and an optional description of what the page is for underneath.
+The actions sit in the title row rather than beside the whole block, so a
+longer or wrapping description never moves them. It only lays these out —
+the breadcrumb links and action buttons are entirely the consumer's, so it
+stays framework- and router-agnostic.
 
 Import: `import "@f-ewald/components/page-header.js";`
 
-Properties: `heading` (attribute `heading`) : string, default ""
+Properties: `heading` (attribute `heading`) : string, default ""; `description` (attribute `description`) : string, default ""
 Events: none
-CSS custom properties: `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
-<page-header heading="Team members">
+<page-header heading="Team members" description="Everyone with access to this workspace.">
   <nav slot="breadcrumb" aria-label="Breadcrumb">Home / Settings / Members</nav>
   <ui-button slot="actions" variant="primary">Invite</ui-button>
 </page-header>
@@ -1389,11 +1466,18 @@ around a "Page N of M" status. It owns no data — the consumer sets
 Previous is disabled on the first page and next on the last; neither fires an
 event when there is nowhere to go.
 
+The prev/next buttons are treated as `ui-button`'s `secondary` variant:
+they read the same shared `--ui-button-secondary-*`/`--ui-button-highlight`
+tokens (and `--ui-button-secondary-surface-muted` for hover, since — like
+`button-group`'s unchecked segments — they already paint
+`--ui-surface-muted` on hover by default), so a gradient theme applies
+consistently here too.
+
 Import: `import "@f-ewald/components/pagination-nav.js";`
 
 Properties: `currentPage` (attribute `current-page`) : number, default 1; `totalPages` (attribute `total-pages`) : number, default 1
 Events: `page-change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1534,11 +1618,17 @@ description matters. For many short, same-shaped options (a color swatch,
 a basemap style), use `radio-pills` instead. Wraps native radio inputs for
 keyboard/a11y and fires `change` rather than relying on form submission.
 
+The selected card's border/radio dot read `--ui-button-accent` (a solid
+stand-in, since `border-color`/`accent-color` can't render a gradient),
+and its background reads the shared `--ui-button-secondary-surface-muted`
+plus `--ui-button-highlight`, so a gradient theme tints it consistently
+with `button-group`/`pagination-nav`'s equivalents.
+
 Import: `import "@f-ewald/components/radio-cards.js";`
 
 Properties: `options` (JS property only) : RadioCardOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-button-accent`, `--ui-button-highlight`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1562,11 +1652,17 @@ choices where a description matters, use `radio-cards` instead. Wraps
 native radio inputs for keyboard/a11y and fires `change` rather than
 relying on form submission.
 
+The selected pill's border/radio dot read `--ui-button-accent` (a solid
+stand-in, since `border-color`/`accent-color` can't render a gradient),
+and its background reads the shared `--ui-button-secondary-surface-muted`
+plus `--ui-button-highlight`, so a gradient theme tints it consistently
+with `button-group`/`pagination-nav`'s equivalents.
+
 Import: `import "@f-ewald/components/radio-pills.js";`
 
 Properties: `options` (JS property only) : RadioPillOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-button-accent`, `--ui-button-highlight`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-surface-muted`, `--ui-text`
 
 Example:
 ```html
@@ -1597,7 +1693,7 @@ Import: `import "@f-ewald/components/range-slider.js";`
 
 Properties: `min` (attribute `min`) : number, default 0; `max` (attribute `max`) : number, default 100; `step` (attribute `step`) : number, default 1; `value` (attribute `value`) : number, default 0; `disabled` (attribute `disabled`) : boolean, default false; `name` (attribute `name`) : string, default ""
 Events: `input`, `change`
-CSS custom properties: `--ui-focus-ring`, `--ui-primary`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`
+CSS custom properties: `--ui-button-accent`, `--ui-button-background`, `--ui-button-highlight`, `--ui-focus-ring`, `--ui-primary`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1630,13 +1726,15 @@ Example:
 
 ## <reveal-button>
 
-Button that reveals hidden slotted content when clicked.
+Button that reveals hidden slotted content when clicked. Set `size="sm"`
+for a compact button one step below the default, matching `ui-button`'s
+`sm` size.
 
 Import: `import "@f-ewald/components/reveal-button.js";`
 
-Properties: `label` (attribute `label`) : string, default "Reveal hidden content"; `disabled` (attribute `disabled`) : boolean, default false
+Properties: `label` (attribute `label`) : string, default "Reveal hidden content"; `disabled` (attribute `disabled`) : boolean, default false; `size` (attribute `size`) : "sm" | "md", default "md"
 Events: none
-CSS custom properties: `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`
+CSS custom properties: `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-highlight`, `--ui-button-text-shadow`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`
 
 Example:
 ```html
@@ -2101,11 +2199,27 @@ cross into from an ancestor light-DOM `<form>`. `type="submit"`/`"reset"`
 is instead wired through `ElementInternals.form` — the same mechanism
 `address-autocomplete` uses to associate with an ancestor form.
 
+`primary`/`danger` backgrounds read `--ui-button-background`/
+`--ui-button-danger-background` (and their `-hover`/`-active`
+counterparts), which default to the flat `--ui-primary`/`--ui-danger`
+tokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source
+of truth for every other component. A consumer can override just these
+button-specific tokens with a `linear-gradient(...)` to opt every
+`ui-button` into a gradient look without touching component markup,
+pairing it with `--ui-button-border`/`--ui-button-danger-border` (default
+`transparent`) for a defining edge a shade darker than the gradient's dark
+stop, and setting the `-active` variant's stops in reverse for a
+pressed/"indented" look while the button is held down. `secondary`'s
+background/border read the equivalent `--ui-button-secondary-*` tokens
+(shared with `confirm-dialog`'s Cancel button), defaulting to today's
+transparent/bordered look, so it can be themed into a matching (e.g.
+white-to-gray) gradient too.
+
 Import: `import "@f-ewald/components/ui-button.js";`
 
 Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2164,6 +2278,31 @@ CSS custom properties: `--ui-font`, `--ui-font-weight-semibold`, `--ui-on-accent
 Example:
 ```html
 <user-avatar src="https://example.com/photo.jpg" name="Freddy" size="40"></user-avatar>
+```
+
+## <video-player>
+
+Video player wrapping a native `<video>` element (native `controls`
+disabled) with the same tokenized transport bar as `audio-player` — a
+play/pause `icon-button`, elapsed/total time, a seekable progress bar, a
+mute toggle + volume slider — plus a fullscreen toggle. The control bar
+sits in a persistent strip under the video frame rather than a
+hover-reveal overlay, so it stays usable for keyboard/touch input without
+a pointer hover state.
+
+Import: `import "@f-ewald/components/video-player.js";`
+
+Properties: `src` (attribute `src`) : string, default ""; `poster` (attribute `poster`) : string, default ""; `label` (attribute `label`) : string, default "Video player"; `loop` (attribute `loop`) : boolean, default false; `preload` (attribute `preload`) : "none" | "metadata" | "auto", default "metadata"
+Events: `play`, `pause`, `ended`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius`, `--ui-surface`, `--ui-text-muted`
+
+Example:
+```html
+<video-player
+  src="/clip.mp4"
+  poster="/clip-poster.jpg"
+  label="Episode 12"
+></video-player>
 ```
 
 ## <weight-bar-chart>

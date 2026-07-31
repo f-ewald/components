@@ -25,3 +25,20 @@ export function formatDuration(ms: number, format: DurationFormat): string {
   if (minutes > 0) return `${minutes}m ${pad2(seconds)}s`;
   return `${seconds}s`;
 }
+
+/**
+ * Formats a duration in seconds as a transport-bar clock label:
+ * `M:SS` (e.g. `"3:45"`), or `H:MM:SS` once an hour is reached (e.g.
+ * `"1:02:03"`). `NaN`/negative/non-finite input (e.g. a not-yet-loaded
+ * media duration) renders as `"-:--"` rather than `"0:00"`, so a player can
+ * distinguish "no reading yet" from an actual zero-length duration.
+ */
+export function formatClockDuration(totalSeconds: number): string {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return "-:--";
+  const whole = Math.floor(totalSeconds);
+  const hours = Math.floor(whole / 3600);
+  const minutes = Math.floor((whole % 3600) / 60);
+  const seconds = whole % 60;
+  if (hours > 0) return `${hours}:${pad2(minutes)}:${pad2(seconds)}`;
+  return `${minutes}:${pad2(seconds)}`;
+}

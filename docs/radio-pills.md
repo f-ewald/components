@@ -6,6 +6,12 @@ choices where a description matters, use `radio-cards` instead. Wraps
 native radio inputs for keyboard/a11y and fires `change` rather than
 relying on form submission.
 
+The selected pill's border/radio dot read `--ui-button-accent` (a solid
+stand-in, since `border-color`/`accent-color` can't render a gradient),
+and its background reads the shared `--ui-button-secondary-surface-muted`
+plus `--ui-button-highlight`, so a gradient theme tints it consistently
+with `button-group`/`pagination-nav`'s equivalents.
+
 ## Install
 
 ```js
@@ -50,6 +56,9 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-button-accent` |
+| `--ui-button-highlight` |
+| `--ui-button-secondary-surface-muted` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |

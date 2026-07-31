@@ -52,6 +52,9 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-button-accent` |
+| `--ui-button-background` |
+| `--ui-button-highlight` |
 | `--ui-focus-ring` |
 | `--ui-primary` |
 | `--ui-surface` |

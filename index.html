@@ -14,6 +14,14 @@
           <p class="mt-1 text-xs text-slate-500">Playground</p>
         </div>
         <div class="px-3 pb-3">
+          <p class="mb-1 text-xs font-medium text-slate-500">Button style</p>
+          <form-select
+            id="button-style-picker"
+            data-testid="button-style-picker"
+            label="Button style"
+          ></form-select>
+        </div>
+        <div class="px-3 pb-3">
           <autocomplete-input
             id="nav-filter"
             data-testid="nav-filter"
@@ -29,6 +37,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#animate-confetti">animate-confetti</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#app-shell">app-shell</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#app-sidebar">app-sidebar</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#audio-player">audio-player</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#auto-scroll">auto-scroll</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#button-group">button-group</a>
@@ -36,6 +45,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-year">calendar-year</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#card-grid">card-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chat-message">chat-message</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#comment-composer">comment-composer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#confirm-dialog">confirm-dialog</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#content-divider">content-divider</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#copy-link-button">copy-link-button</a>
@@ -90,6 +100,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-button">ui-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-checkbox">ui-checkbox</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#user-avatar">user-avatar</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#video-player">video-player</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#weight-bar-chart">weight-bar-chart</a>
           <p class="mt-4 px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Templates</p>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="demo/layouts/list-only.html">list-only</a>
@@ -264,6 +275,27 @@ import "@f-ewald/components/app-sidebar.js";
 &lt;/app-sidebar&gt;</code></pre>
         </section>
 
+        <section id="audio-player" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-audio-player">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#audio-player">audio-player</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Play/pause, elapsed/total time, a seekable progress bar, and a mute toggle + volume
+            slider around a native <code>&lt;audio&gt;</code> element.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <audio-player
+              id="audio-player-demo"
+              data-testid="audio-player-demo"
+              label="Sample audio track"
+            ></audio-player>
+            <p class="mt-3 text-sm text-slate-500">
+              events: <span id="audio-player-log" data-testid="audio-player-log"></span>
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/audio-player.js";
+
+&lt;audio-player src="/track.mp3" label="Episode 12"&gt;&lt;/audio-player&gt;</code></pre>
+        </section>
+
         <section id="auto-scroll" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-auto-scroll">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#auto-scroll">auto-scroll</a></h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -368,6 +400,7 @@ import "@f-ewald/components/app-sidebar.js";
             <p class="mt-3 text-sm text-slate-500">Selected: <span id="button-group-selected" data-testid="button-group-selected"></span></p>
             <button-group id="button-group-icon-only" data-testid="button-group-icon-only" class="mt-4" icon-only></button-group>
             <p class="mt-3 text-sm text-slate-500">Selected: <span id="button-group-icon-only-selected" data-testid="button-group-icon-only-selected"></span></p>
+            <button-group id="button-group-sm" data-testid="button-group-sm" class="mt-4" size="sm"></button-group>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/button-group.js";
 
@@ -385,7 +418,11 @@ iconOnly.options = [
   { value: "list", label: "List", icon: iconListBullet() },
   { value: "kanban", label: "Kanban", icon: iconSquares2x2() },
 ];
-iconOnly.value = "list";</code></pre>
+iconOnly.value = "list";
+
+// size="sm": one step below the default.
+document.querySelector("#button-group-sm").options = el.options;
+document.querySelector("#button-group-sm").value = "list";</code></pre>
         </section>
 
         <section id="calendar-month" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-calendar-month">
@@ -655,6 +692,27 @@ content: |
 &lt;/chat-message&gt;</code></pre>
         </section>
 
+        <section id="comment-composer" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-comment-composer">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#comment-composer">comment-composer</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            One-line field that expands into a textarea with bottom-right Cancel/Submit buttons on
+            focus. Submitting clears and collapses it; <kbd>Escape</kbd> cancels;
+            <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Enter</kbd> submits.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <comment-composer id="comment-composer-demo" data-testid="comment-composer-demo"></comment-composer>
+            <p class="mt-3 text-sm text-slate-500">
+              last submitted: <span id="comment-composer-log" data-testid="comment-composer-log">(none)</span>
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/comment-composer.js";
+
+&lt;comment-composer placeholder="Add a comment…"&gt;&lt;/comment-composer&gt;
+
+document.querySelector("comment-composer")
+  .addEventListener("submit", (e) => post(e.detail.value));</code></pre>
+        </section>
+
         <section id="confirm-dialog" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-confirm-dialog">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#confirm-dialog">confirm-dialog</a></h3>
           <p class="mt-1 text-sm text-slate-500">Overlay confirmation dialog with Cancel/Confirm actions.</p>
@@ -667,6 +725,14 @@ content: |
             >
               Delete item
             </button>
+            <button
+              id="confirm-open-sm"
+              data-testid="confirm-open-sm"
+              type="button"
+              class="ml-3 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Delete item (size="sm")
+            </button>
             <p class="mt-3 text-sm text-slate-500">
               confirm: <span id="confirm-count" data-testid="confirm-count">0</span> · cancel:
               <span id="cancel-count" data-testid="cancel-count">0</span>
@@ -674,10 +740,24 @@ content: |
             <confirm-dialog id="confirm-demo" data-testid="confirm-demo" confirm-label="Delete" cancel-label="Cancel">
               Are you sure you want to delete this item? This cannot be undone.
             </confirm-dialog>
+            <confirm-dialog
+              id="confirm-demo-sm"
+              data-testid="confirm-demo-sm"
+              confirm-label="Delete"
+              cancel-label="Cancel"
+              size="sm"
+            >
+              Are you sure you want to delete this item? This cannot be undone.
+            </confirm-dialog>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/confirm-dialog.js";
 
 &lt;confirm-dialog open confirm-label="Delete" cancel-label="Cancel"&gt;
+  Are you sure you want to delete this item?
+&lt;/confirm-dialog&gt;
+
+&lt;!-- size="sm": one step below the default. --&gt;
+&lt;confirm-dialog open confirm-label="Delete" cancel-label="Cancel" size="sm"&gt;
   Are you sure you want to delete this item?
 &lt;/confirm-dialog&gt;</code></pre>
         </section>
@@ -824,6 +904,12 @@ table.rowHref = (row) => `#/tasks/${row.id}`;</code></pre>
               label="Disabled"
               disabled
             ></dropdown-button>
+            <dropdown-button
+              id="dropdown-sm"
+              data-testid="dropdown-sm"
+              label="Resolve…"
+              size="sm"
+            ></dropdown-button>
             <p id="dropdown-select-log" data-testid="dropdown-select-log" class="text-xs text-slate-500"></p>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/dropdown-button.js";
@@ -842,7 +928,10 @@ dropdown.addEventListener("select", (e) => console.log(e.detail.value));
 const kebab = document.querySelector("dropdown-button#row-actions");
 kebab.variant = "icon";
 kebab.label = "Row actions";
-kebab.icon = iconEllipsisVertical(16);</code></pre>
+kebab.icon = iconEllipsisVertical(16);
+
+// size="sm": one step below the default.
+dropdown.size = "sm";</code></pre>
         </section>
 
         <section id="editable-text" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-editable-text">
@@ -1666,18 +1755,20 @@ See the [changelog](#markdown-view) for details.`;</code></pre>
         <section id="page-header" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-page-header">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#page-header">page-header</a></h3>
           <p class="mt-1 text-sm text-slate-500">
-            Page title block: an optional breadcrumb trail, the heading, and a right-aligned cluster
-            of page actions. The breadcrumb row reserves no space when it's empty.
+            Page title block: an optional breadcrumb trail, the heading with its page actions
+            beside it, and an optional description of what the page is for underneath. The
+            breadcrumb row reserves no space when it's empty, and the actions stay on the title
+            row, so they don't move when the description wraps.
           </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
-            <page-header id="page-header-demo" data-testid="page-header-demo" heading="Team members">
+            <page-header id="page-header-demo" data-testid="page-header-demo" heading="Team members" description="Everyone with access to this workspace, and the role each of them was invited under.">
               <nav slot="breadcrumb" aria-label="Breadcrumb">Home / Settings / Members</nav>
               <ui-button slot="actions" variant="primary" data-testid="page-header-action">Invite</ui-button>
             </page-header>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/page-header.js";
 
-&lt;page-header heading="Team members"&gt;
+&lt;page-header heading="Team members" description="Everyone with access to this workspace."&gt;
   &lt;nav slot="breadcrumb" aria-label="Breadcrumb"&gt;Home / Settings / Members&lt;/nav&gt;
   &lt;ui-button slot="actions" variant="primary"&gt;Invite&lt;/ui-button&gt;
 &lt;/page-header&gt;</code></pre>
@@ -2033,14 +2124,22 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
         <section id="reveal-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-reveal-button">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#reveal-button">reveal-button</a></h3>
           <p class="mt-1 text-sm text-slate-500">Button that reveals hidden slotted content when clicked.</p>
-          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+          <div class="mt-6 flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 p-6">
             <reveal-button id="reveal-button-demo" data-testid="reveal-button-demo" label="Show the secret">
+              Surprise! This content was hidden.
+            </reveal-button>
+            <reveal-button id="reveal-button-sm" data-testid="reveal-button-sm" label="Show the secret" size="sm">
               Surprise! This content was hidden.
             </reveal-button>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/reveal-button.js";
 
 &lt;reveal-button label="Show the secret"&gt;
+  Surprise! This content was hidden.
+&lt;/reveal-button&gt;
+
+&lt;!-- size="sm": one step below the default. --&gt;
+&lt;reveal-button label="Show the secret" size="sm"&gt;
   Surprise! This content was hidden.
 &lt;/reveal-button&gt;</code></pre>
         </section>
@@ -2671,6 +2770,29 @@ tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
 
 &lt;user-avatar src="https://example.com/photo.jpg" name="Freddy" size="40"&gt;&lt;/user-avatar&gt;
 &lt;user-avatar name="Freddy" size="sm"&gt;&lt;/user-avatar&gt;</code></pre>
+        </section>
+
+        <section id="video-player" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-video-player">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#video-player">video-player</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Same transport bar as <code>audio-player</code> — play/pause, elapsed/total time, seek
+            bar, mute + volume — plus a fullscreen toggle, around a native
+            <code>&lt;video&gt;</code> element.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <video-player
+              id="video-player-demo"
+              data-testid="video-player-demo"
+              label="Sample video clip"
+              style="max-width: 32rem"
+            ></video-player>
+            <p class="mt-3 text-sm text-slate-500">
+              events: <span id="video-player-log" data-testid="video-player-log"></span>
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/video-player.js";
+
+&lt;video-player src="/clip.mp4" poster="/clip-poster.jpg" label="Episode 12"&gt;&lt;/video-player&gt;</code></pre>
         </section>
 
         <section id="weight-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-weight-bar-chart">

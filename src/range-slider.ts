@@ -44,10 +44,14 @@ export class RangeSlider extends LitElement {
       input[type="range"]::-webkit-slider-runnable-track {
         height: 0.375rem;
         border-radius: 9999px;
+        /* A hard-stop background gradient used as a two-tone fill trick —
+           its color-stops can't themselves hold a gradient value, so this
+           reads --ui-button-accent (a solid stand-in), not
+           --ui-button-background directly. */
         background: linear-gradient(
           to right,
-          var(--ui-primary, #4f46e5) 0%,
-          var(--ui-primary, #4f46e5) var(--range-percent, 0%),
+          var(--ui-button-accent, var(--ui-primary, #4f46e5)) 0%,
+          var(--ui-button-accent, var(--ui-primary, #4f46e5)) var(--range-percent, 0%),
           var(--ui-surface-muted, #f8fafc) var(--range-percent, 0%),
           var(--ui-surface-muted, #f8fafc) 100%
         );
@@ -60,7 +64,7 @@ export class RangeSlider extends LitElement {
       input[type="range"]::-moz-range-progress {
         height: 0.375rem;
         border-radius: 9999px;
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-button-accent, var(--ui-primary, #4f46e5));
       }
       /* Thumb */
       input[type="range"]::-webkit-slider-thumb {
@@ -73,17 +77,17 @@ export class RangeSlider extends LitElement {
            A transform offset (not margin) so it isn't a spacing-grid value. */
         transform: translateY(-0.3125rem);
         border-radius: 50%;
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-button-background, var(--ui-primary, #4f46e5));
         border: 2px solid var(--ui-surface, #ffffff);
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       input[type="range"]::-moz-range-thumb {
         width: 1rem;
         height: 1rem;
         border-radius: 50%;
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-button-background, var(--ui-primary, #4f46e5));
         border: 2px solid var(--ui-surface, #ffffff);
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       input[type="range"]:disabled::-webkit-slider-thumb {
         background: var(--ui-text-muted, #64748b);

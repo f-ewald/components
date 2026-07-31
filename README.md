@@ -49,6 +49,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<animate-confetti>` | [API reference](https://f-ewald.github.io/components/docs/animate-confetti.html) |
 | `<app-shell>` | [API reference](https://f-ewald.github.io/components/docs/app-shell.html) |
 | `<app-sidebar>` | [API reference](https://f-ewald.github.io/components/docs/app-sidebar.html) |
+| `<audio-player>` | [API reference](https://f-ewald.github.io/components/docs/audio-player.html) |
 | `<auto-scroll>` | [API reference](https://f-ewald.github.io/components/docs/auto-scroll.html) |
 | `<autocomplete-input>` | [API reference](https://f-ewald.github.io/components/docs/autocomplete-input.html) |
 | `<button-group>` | [API reference](https://f-ewald.github.io/components/docs/button-group.html) |
@@ -57,6 +58,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<calendar-year>` | [API reference](https://f-ewald.github.io/components/docs/calendar-year.html) |
 | `<card-grid>` | [API reference](https://f-ewald.github.io/components/docs/card-grid.html) |
 | `<chat-message>` | [API reference](https://f-ewald.github.io/components/docs/chat-message.html) |
+| `<comment-composer>` | [API reference](https://f-ewald.github.io/components/docs/comment-composer.html) |
 | `<confirm-dialog>` | [API reference](https://f-ewald.github.io/components/docs/confirm-dialog.html) |
 | `<content-divider>` | [API reference](https://f-ewald.github.io/components/docs/content-divider.html) |
 | `<copy-link-button>` | [API reference](https://f-ewald.github.io/components/docs/copy-link-button.html) |
@@ -116,6 +118,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<ui-button>` | [API reference](https://f-ewald.github.io/components/docs/ui-button.html) |
 | `<ui-checkbox>` | [API reference](https://f-ewald.github.io/components/docs/ui-checkbox.html) |
 | `<user-avatar>` | [API reference](https://f-ewald.github.io/components/docs/user-avatar.html) |
+| `<video-player>` | [API reference](https://f-ewald.github.io/components/docs/video-player.html) |
 | `<weight-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/weight-bar-chart.html) |
 
 Each doc lists the component's attributes/properties, events, slots, and the

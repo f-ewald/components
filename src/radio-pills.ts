@@ -17,6 +17,12 @@ let instanceCount = 0;
  * native radio inputs for keyboard/a11y and fires `change` rather than
  * relying on form submission.
  *
+ * The selected pill's border/radio dot read `--ui-button-accent` (a solid
+ * stand-in, since `border-color`/`accent-color` can't render a gradient),
+ * and its background reads the shared `--ui-button-secondary-surface-muted`
+ * plus `--ui-button-highlight`, so a gradient theme tints it consistently
+ * with `button-group`/`pagination-nav`'s equivalents.
+ *
  * @element radio-pills
  * @fires change - A pill was selected; detail: { value }.
  */
@@ -58,19 +64,23 @@ export class RadioPills extends LitElement {
         color: var(--ui-text, #0f172a);
       }
       .pill:has(input:checked) {
-        border-color: var(--ui-primary, #4f46e5);
-        background: var(--ui-surface-muted, #f8fafc);
+        border-color: var(--ui-button-accent, var(--ui-primary, #4f46e5));
+        background: var(--ui-button-secondary-surface-muted, var(--ui-surface-muted, #f8fafc));
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .pill input {
         width: 1rem;
         height: 1rem;
-        accent-color: var(--ui-primary, #4f46e5);
+        accent-color: var(--ui-button-accent, var(--ui-primary, #4f46e5));
         cursor: pointer;
         margin: 0;
       }
       .pill:has(input:focus-visible) {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      .pill:has(input:checked):has(input:focus-visible) {
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)), var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .pill:has(input:disabled) {
         cursor: not-allowed;

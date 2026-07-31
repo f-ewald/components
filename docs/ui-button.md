@@ -13,6 +13,22 @@ cross into from an ancestor light-DOM `<form>`. `type="submit"`/`"reset"`
 is instead wired through `ElementInternals.form` — the same mechanism
 `address-autocomplete` uses to associate with an ancestor form.
 
+`primary`/`danger` backgrounds read `--ui-button-background`/
+`--ui-button-danger-background` (and their `-hover`/`-active`
+counterparts), which default to the flat `--ui-primary`/`--ui-danger`
+tokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source
+of truth for every other component. A consumer can override just these
+button-specific tokens with a `linear-gradient(...)` to opt every
+`ui-button` into a gradient look without touching component markup,
+pairing it with `--ui-button-border`/`--ui-button-danger-border` (default
+`transparent`) for a defining edge a shade darker than the gradient's dark
+stop, and setting the `-active` variant's stops in reverse for a
+pressed/"indented" look while the button is held down. `secondary`'s
+background/border read the equivalent `--ui-button-secondary-*` tokens
+(shared with `confirm-dialog`'s Cancel button), defaulting to today's
+transparent/bordered look, so it can be themed into a matching (e.g.
+white-to-gray) gradient too.
+
 ## Install
 
 ```js
@@ -57,6 +73,22 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-button-background` |
+| `--ui-button-background-active` |
+| `--ui-button-background-hover` |
+| `--ui-button-border` |
+| `--ui-button-danger-background` |
+| `--ui-button-danger-background-active` |
+| `--ui-button-danger-background-hover` |
+| `--ui-button-danger-border` |
+| `--ui-button-highlight` |
+| `--ui-button-secondary-` |
+| `--ui-button-secondary-background` |
+| `--ui-button-secondary-background-active` |
+| `--ui-button-secondary-background-hover` |
+| `--ui-button-secondary-border` |
+| `--ui-button-secondary-border-hover` |
+| `--ui-button-text-shadow` |
 | `--ui-danger` |
 | `--ui-danger-hover` |
 | `--ui-focus-ring` |

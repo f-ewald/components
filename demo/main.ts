@@ -65,6 +65,9 @@ import {
   type CalendarYear,
   type AutocompleteInput,
   type AutocompleteOption,
+  type AudioPlayer,
+  type VideoPlayer,
+  type CommentComposer,
 } from "../src/index.js";
 
 /**
@@ -174,6 +177,17 @@ confirmDemo?.addEventListener("cancel", () => {
   cancels += 1;
   cancelCount.textContent = String(cancels);
   confirmDemo.open = false;
+});
+
+const confirmDemoSm = document.getElementById("confirm-demo-sm") as ConfirmDialog;
+document.getElementById("confirm-open-sm")?.addEventListener("click", () => {
+  confirmDemoSm.open = true;
+});
+confirmDemoSm?.addEventListener("confirm", () => {
+  confirmDemoSm.open = false;
+});
+confirmDemoSm?.addEventListener("cancel", () => {
+  confirmDemoSm.open = false;
 });
 
 // toast-notification
@@ -485,6 +499,15 @@ if (buttonGroupIconOnly) {
 buttonGroupIconOnly?.addEventListener("change", (e) => {
   buttonGroupIconOnlySelected.textContent = (e as CustomEvent).detail.value;
 });
+
+const buttonGroupSm = document.getElementById("button-group-sm") as ButtonGroup;
+if (buttonGroupSm) {
+  buttonGroupSm.options = [
+    { value: "list", label: "List" },
+    { value: "kanban", label: "Kanban" },
+  ];
+  buttonGroupSm.value = "list";
+}
 
 // ui-button (form-associated submit)
 document.getElementById("button-form")?.addEventListener("submit", (e) => {
@@ -834,6 +857,16 @@ const dropdownDisabled = document.getElementById("dropdown-disabled") as Dropdow
 if (dropdownDisabled) {
   dropdownDisabled.options = [{ value: "x", label: "X" }];
 }
+const dropdownSm = document.getElementById("dropdown-sm") as DropdownButton;
+if (dropdownSm) {
+  dropdownSm.options = [
+    { value: "retry", label: "Retry" },
+    { value: "close", label: "Close" },
+  ];
+  dropdownSm.addEventListener("select", (e) => {
+    dropdownSelectLog.textContent = `dropdown-sm: ${(e as CustomEvent).detail.value}`;
+  });
+}
 
 // icon-button (wire an icon, log clicks)
 const iconButtonEdit = document.getElementById("icon-button-edit") as IconButton;
@@ -1060,6 +1093,30 @@ const observer = new IntersectionObserver(
 );
 for (const section of sections) observer.observe(section);
 
+// Playground-only "button style" picker — live-previews the ui-button
+// gradient-theming hook (--ui-button-background/-hover/-border and the
+// --ui-button-danger-* equivalents; see src/ui-button.ts) by toggling the
+// data-button-style attribute demo/demo.css keys its gradient overrides off
+// of. Persisted across reloads so a chosen style survives navigation. Uses
+// form-select (this package's own styled dropdown) rather than a bare
+// <select> so it matches the other playground-chrome fields.
+const BUTTON_STYLE_KEY = "button-style";
+const buttonStylePicker = document.getElementById("button-style-picker") as FormSelect | null;
+if (buttonStylePicker) {
+  buttonStylePicker.options = [
+    { value: "flat", label: "Flat (default)" },
+    { value: "gradient", label: "Gradient" },
+  ];
+  const stored = localStorage.getItem(BUTTON_STYLE_KEY) ?? "flat";
+  buttonStylePicker.value = stored;
+  document.documentElement.dataset.buttonStyle = stored;
+  buttonStylePicker.addEventListener("change", (e) => {
+    const { value } = (e as CustomEvent<{ value: string }>).detail;
+    document.documentElement.dataset.buttonStyle = value;
+    localStorage.setItem(BUTTON_STYLE_KEY, value);
+  });
+}
+
 // Sidebar component filter: an autocomplete-input whose local options are the
 // in-page component anchors. Picking one jumps to that section by hash — a
 // fast "find a component" affordance rather than an in-place list filter.
@@ -1163,3 +1220,38 @@ for (const entry of document.querySelectorAll<HTMLElement>("#timeline-demo timel
     Date.now() - agoSeconds * 1000,
   ).toISOString();
 }
+
+// audio-player — set the sample track's src via Vite's asset pipeline (so
+// it's hashed/copied like photo-gallery's images) and log transport events.
+const audioPlayerDemo = document.getElementById("audio-player-demo") as AudioPlayer | null;
+const audioPlayerLog = document.getElementById("audio-player-log");
+if (audioPlayerDemo) {
+  audioPlayerDemo.src = new URL("./assets/audio-player/sample.mp3", import.meta.url).href;
+}
+for (const type of ["play", "pause", "ended"]) {
+  audioPlayerDemo?.addEventListener(type, () => {
+    if (audioPlayerLog) audioPlayerLog.textContent = type;
+  });
+}
+
+// video-player — same asset-pipeline sourcing as audio-player above, plus a
+// poster image; logs transport events fired by the demo clip.
+const videoPlayerDemo = document.getElementById("video-player-demo") as VideoPlayer | null;
+const videoPlayerLog = document.getElementById("video-player-log");
+if (videoPlayerDemo) {
+  videoPlayerDemo.src = new URL("./assets/video-player/sample.mp4", import.meta.url).href;
+  videoPlayerDemo.poster = new URL("./assets/video-player/poster.jpg", import.meta.url).href;
+}
+for (const type of ["play", "pause", "ended"]) {
+  videoPlayerDemo?.addEventListener(type, () => {
+    if (videoPlayerLog) videoPlayerLog.textContent = type;
+  });
+}
+
+// comment-composer — log the last submitted comment.
+const commentComposerDemo = document.getElementById("comment-composer-demo") as CommentComposer | null;
+const commentComposerLog = document.getElementById("comment-composer-log");
+commentComposerDemo?.addEventListener("submit", (event) => {
+  const { value } = (event as CustomEvent<{ value: string }>).detail;
+  if (commentComposerLog) commentComposerLog.textContent = value;
+});

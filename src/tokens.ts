@@ -12,10 +12,67 @@ export const tokenValues: Record<string, string> = {
   // Colors
   "--ui-primary": "#4f46e5", // indigo-600
   "--ui-primary-hover": "#4338ca", // indigo-700
+  // Button-specific background/border hooks: default to the flat --ui-primary
+  // / --ui-danger tokens above unchanged, so those stay the single source of
+  // truth for every other component. Overriding just these lets a theme opt
+  // ui-button into a gradient (or any other) background without touching
+  // component markup; --ui-button-border/--ui-button-danger-border default
+  // to transparent (today's look) and are meant to be paired with a shade
+  // darker than the gradient's dark stop when one is set. The `-active`
+  // variants default to whatever `-background` already resolved to (so a
+  // solid override still applies while pressed) — a gradient theme should
+  // set them to the same stops in reverse, for a pressed/"indented" look.
+  "--ui-button-background": "var(--ui-primary, #4f46e5)",
+  "--ui-button-background-hover": "var(--ui-primary-hover, #4338ca)",
+  "--ui-button-background-active": "var(--ui-button-background, var(--ui-primary, #4f46e5))",
+  "--ui-button-border": "transparent",
+  // The bordered, transparent-background secondary variant's equivalents —
+  // shared with confirm-dialog's Cancel button, which is the same visual
+  // pattern. Defaults reproduce today's literal secondary styling exactly
+  // (no background at any state, border colors matching --ui-border /
+  // --ui-text-muted), so a theme only needs to override these to make
+  // secondary/Cancel buttons match a primary/danger gradient theme.
+  "--ui-button-secondary-background": "none",
+  "--ui-button-secondary-background-hover": "none",
+  "--ui-button-secondary-background-active": "var(--ui-button-secondary-background, none)",
+  "--ui-button-secondary-border": "var(--ui-border, #e2e8f0)",
+  "--ui-button-secondary-border-hover": "var(--ui-text-muted, #64748b)",
+  // A muted-gray surface used wherever something already paints
+  // --ui-surface-muted as a state indicator in flat mode — button-group's
+  // unchecked-segment hover, pagination-nav's button hover, and
+  // radio-cards/radio-pills' checked background — which is a genuinely
+  // different default than secondary's borderless flat hover, so it can't
+  // reuse --ui-button-secondary-background-hover's "none" default.
+  "--ui-button-secondary-surface-muted": "var(--ui-surface-muted, #f8fafc)",
+  // Shared by both primary/danger — a purely cosmetic gloss/legibility pair,
+  // not color-specific, so one token covers both variants. `-highlight` is a
+  // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for
+  // a glossy top edge, defaulting to a fully transparent (so invisible)
+  // shadow rather than the keyword `none` — some usages combine it with
+  // another literal shadow in a comma-separated list, where a bare `none`
+  // item is invalid CSS and would zero out the *whole* declaration.
+  // `-text-shadow` is a full text-shadow value for label legibility against
+  // a gradient's lighter stop, always used standalone, so it keeps `none`.
+  "--ui-button-highlight": "0 0 0 0 transparent",
+  "--ui-button-text-shadow": "none",
+  // A solid stand-in for the same accent, for spots that can't render a
+  // background gradient at all — a native <input>'s accent-color only
+  // accepts a plain color, and a hard-stop background gradient (e.g.
+  // range-slider's filled track) can't nest another gradient inside its own
+  // color-stop list. Consumers that theme the buttons into a gradient should
+  // set this to the gradient's dark stop, so these non-button accents (radio
+  // selection indicators, the range-slider track/thumb) stay visually
+  // coordinated with it even though they can't literally paint a gradient.
+  "--ui-button-accent": "var(--ui-primary, #4f46e5)",
   "--ui-info": "#0ea5e9", // sky-500
   "--ui-info-hover": "#0284c7", // sky-600
   "--ui-danger": "#dc2626", // red-600
   "--ui-danger-hover": "#b91c1c", // red-700
+  "--ui-button-danger-background": "var(--ui-danger, #dc2626)",
+  "--ui-button-danger-background-hover": "var(--ui-danger-hover, #b91c1c)",
+  "--ui-button-danger-background-active":
+    "var(--ui-button-danger-background, var(--ui-danger, #dc2626))",
+  "--ui-button-danger-border": "transparent",
   "--ui-success": "#16a34a", // green-600
   "--ui-warning": "#d97706", // amber-600
   "--ui-warning-hover": "#b45309", // amber-700

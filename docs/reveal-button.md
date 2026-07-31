@@ -1,6 +1,8 @@
 # `<reveal-button>`
 
-Button that reveals hidden slotted content when clicked.
+Button that reveals hidden slotted content when clicked. Set `size="sm"`
+for a compact button one step below the default, matching `ui-button`'s
+`sm` size.
 
 ## Install
 
@@ -22,6 +24,7 @@ import "@f-ewald/components/reveal-button.js";
 | --- | --- | --- | --- | --- |
 | `label` | `label` | `string` | `"Reveal hidden content"` | Label shown on the button before it's clicked. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables revealing the slotted content. |
+| `size` | `size` | `"sm" | "md"` | `"md"` | Size — `sm` reduces the button's height/padding/font-size one step below the default. |
 
 ## Events
 
@@ -37,9 +40,16 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-button-background` |
+| `--ui-button-background-active` |
+| `--ui-button-background-hover` |
+| `--ui-button-border` |
+| `--ui-button-highlight` |
+| `--ui-button-text-shadow` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
 | `--ui-line-height-tight` |
 | `--ui-on-accent` |

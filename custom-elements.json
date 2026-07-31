@@ -1398,6 +1398,329 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/audio-player.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Compact audio player wrapping a native `<audio>` element (kept off-screen\nfor its decoding/playback engine and free `timeupdate`/`loadedmetadata`\nevents) behind a tokenized transport bar: a play/pause `icon-button`,\nelapsed/total time, a seekable progress bar, and a mute toggle + volume\nslider. The seek/volume sliders are native `<input type=\"range\">`\nelements (see `utils/transport-controls.ts`) for free keyboard and\npointer support, per this package's \"native semantics before custom ARIA\"\nrule.",
+          "name": "AudioPlayer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the audio file to play.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Audio player\"",
+              "description": "Accessible name for the player, e.g. a track/episode title.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loops playback once it reaches the end.",
+              "attribute": "loop"
+            },
+            {
+              "kind": "field",
+              "name": "preload",
+              "type": {
+                "text": "\"none\" | \"metadata\" | \"auto\""
+              },
+              "default": "\"metadata\"",
+              "description": "Native `<audio preload>` hint.",
+              "attribute": "preload"
+            },
+            {
+              "kind": "field",
+              "name": "_playing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_currentTime",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_duration",
+              "privacy": "private",
+              "default": "NaN"
+            },
+            {
+              "kind": "field",
+              "name": "_volume",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "_muted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_errored",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_audio",
+              "type": {
+                "text": "HTMLAudioElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_togglePlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_toggleMute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onSeekInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onVolumeInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onLoadedMetadata",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onTimeUpdate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onPlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onPause",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onEnded",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onVolumeChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "play",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The audio started playing."
+            },
+            {
+              "name": "pause",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The audio was paused."
+            },
+            {
+              "name": "ended",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Playback reached the end."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the audio file to play.",
+              "fieldName": "src"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Audio player\"",
+              "description": "Accessible name for the player, e.g. a track/episode title.",
+              "fieldName": "label"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loops playback once it reaches the end.",
+              "fieldName": "loop"
+            },
+            {
+              "name": "preload",
+              "type": {
+                "text": "\"none\" | \"metadata\" | \"auto\""
+              },
+              "default": "\"metadata\"",
+              "description": "Native `<audio preload>` hint.",
+              "fieldName": "preload"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "audio-player",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AudioPlayer",
+          "declaration": {
+            "name": "AudioPlayer",
+            "module": "src/audio-player.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "audio-player",
+          "declaration": {
+            "name": "AudioPlayer",
+            "module": "src/audio-player.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/auto-scroll.ts",
       "declarations": [
         {
@@ -2187,7 +2510,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Single-select segmented control — a strip of buttons joined into one\nshared-border shape, for a small, persistent set of mutually exclusive\nchoices (a view switcher, a theme picker) where the *currently selected*\noption should read as visually \"pressed,\" not just checked. For many\nshort, individually pill-shaped choices, use `radio-pills` instead. Wraps\nnative radio inputs for keyboard/a11y and fires `change` rather than\nrelying on form submission.",
+          "description": "Single-select segmented control — a strip of buttons joined into one\nshared-border shape, for a small, persistent set of mutually exclusive\nchoices (a view switcher, a theme picker) where the *currently selected*\noption should read as visually \"pressed,\" not just checked. For many\nshort, individually pill-shaped choices, use `radio-pills` instead. Wraps\nnative radio inputs for keyboard/a11y and fires `change` rather than\nrelying on form submission. Set `size=\"sm\"` for a compact strip one step\nbelow the default, matching `ui-button`'s `sm` size.\n\nThe checked segment reads `--ui-button-background`/`-hover`/`-active`,\nsame as `ui-button`'s `primary` variant. Unchecked segments are treated as\n`ui-button`'s `secondary` variant: they read the shared\n`--ui-button-secondary-background`/`-active` (rest/pressed) so a gradient\ntheme applies consistently, but use the shared `--ui-button-secondary-surface-muted`\n(also used by `pagination-nav`) for hover, since — unlike `secondary` — an\nunchecked segment already paints `--ui-surface-muted` on hover by default.",
           "name": "ButtonGroup",
           "members": [
             {
@@ -2228,6 +2551,17 @@
               "default": "false",
               "description": "Hides labels visually (icons only) while keeping them as the accessible name.",
               "attribute": "icon-only",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces segment height/padding/font-size one step below the default.",
+              "attribute": "size",
               "reflects": true
             },
             {
@@ -2287,6 +2621,15 @@
               "default": "false",
               "description": "Hides labels visually (icons only) while keeping them as the accessible name.",
               "fieldName": "iconOnly"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces segment height/padding/font-size one step below the default.",
+              "fieldName": "size"
             }
           ],
           "superclass": {
@@ -3223,11 +3566,291 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/comment-composer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "GitHub/Slack-style comment composer: a one-line text field that expands\ninto a multi-line textarea with a bottom-right Cancel/Submit footer\n(`form-actions`) as soon as it's focused or clicked. Submitting fires\n`submit` with the trimmed value, then clears the field and collapses back\nto one line — it's meant for posting one comment at a time, not editing a\npersistent value in place (see `editable-text` for that). Canceling (the\nCancel button or `Escape`) discards the draft and collapses without\nfiring `submit`. Clicking away (blur) does neither — the composer stays\nexpanded until the user explicitly submits or cancels. `Cmd`/`Ctrl`+`Enter`\nsubmits from the textarea, matching `editable-text`'s multiline shortcut.\nPurely token-styled (no bespoke colors), so it's themeable via the same\n`--ui-*` custom properties as every other value-entry field.",
+          "name": "CommentComposer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Committed value shown in the collapsed one-line field.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Add a comment…\"",
+              "description": "Placeholder text shown when empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Comment\"",
+              "description": "Accessible name applied to the input/textarea.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Visible row count once expanded.",
+              "attribute": "rows"
+            },
+            {
+              "kind": "field",
+              "name": "submitLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Submit\"",
+              "description": "Label for the primary submit button.",
+              "attribute": "submit-label"
+            },
+            {
+              "kind": "field",
+              "name": "cancelLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Cancel\"",
+              "description": "Label for the secondary cancel button.",
+              "attribute": "cancel-label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the field entirely.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "_expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_draft",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_textarea",
+              "type": {
+                "text": "HTMLTextAreaElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_expand",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_cancel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_submit",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "cancel",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User discarded the draft via the Cancel button or `Escape`."
+            },
+            {
+              "name": "submit",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User submitted a non-empty comment; detail: `{ value: string }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Committed value shown in the collapsed one-line field.",
+              "fieldName": "value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Add a comment…\"",
+              "description": "Placeholder text shown when empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Comment\"",
+              "description": "Accessible name applied to the input/textarea.",
+              "fieldName": "label"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Visible row count once expanded.",
+              "fieldName": "rows"
+            },
+            {
+              "name": "submit-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Submit\"",
+              "description": "Label for the primary submit button.",
+              "fieldName": "submitLabel"
+            },
+            {
+              "name": "cancel-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Cancel\"",
+              "description": "Label for the secondary cancel button.",
+              "fieldName": "cancelLabel"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the field entirely.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "comment-composer",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CommentComposer",
+          "declaration": {
+            "name": "CommentComposer",
+            "module": "src/comment-composer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "comment-composer",
+          "declaration": {
+            "name": "CommentComposer",
+            "module": "src/comment-composer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/confirm-dialog.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Reusable confirmation dialog: overlay + centered card with a slotted body,\nan optional error line, and Cancel/Confirm actions. Instant `display:none`\n→ `display:flex` toggle (no transitions). Fires `confirm`/`cancel`\n(bubbling, composed) instead of owning any deletion logic itself —\ncallers stay in charge of the request.",
+          "description": "Reusable confirmation dialog: overlay + centered card with a slotted body,\nan optional error line, and Cancel/Confirm actions. Instant `display:none`\n→ `display:flex` toggle (no transitions). Fires `confirm`/`cancel`\n(bubbling, composed) instead of owning any deletion logic itself —\ncallers stay in charge of the request. Set `size=\"sm\"` for compact\nactions one step below the default, matching `ui-button`'s `sm` size.",
           "name": "ConfirmDialog",
           "members": [
             {
@@ -3289,6 +3912,17 @@
               "default": "null",
               "description": "Inline error line shown below the body, or null for none.",
               "attribute": "error"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces both action buttons' height/padding/font-size one step below the default.",
+              "attribute": "size",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3410,6 +4044,15 @@
               "default": "null",
               "description": "Inline error line shown below the body, or null for none.",
               "fieldName": "error"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces both action buttons' height/padding/font-size one step below the default.",
+              "fieldName": "size"
             }
           ],
           "superclass": {
@@ -4043,7 +4686,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A button that opens an anchored menu of actions — essentially `form-select`\nminus \"current value\" semantics: a menu, not a select. Use for a set of\nmutually exclusive next-step actions (e.g. a failed task's Retry / Close /\nBacklog, or a table row's overflow actions).\n\nThree trigger presentations share one base: `text` (the default — a\nprimary-filled button with a label and a rotating chevron), `text-icon`\n(the same, with `icon` ahead of the label), and `icon` (a borderless,\nsquare, low-emphasis icon target in the style of `icon-button` — the\nclassic \"three-dot\"/overflow menu, where `label` becomes the accessible\nname rather than visible text).",
+          "description": "A button that opens an anchored menu of actions — essentially `form-select`\nminus \"current value\" semantics: a menu, not a select. Use for a set of\nmutually exclusive next-step actions (e.g. a failed task's Retry / Close /\nBacklog, or a table row's overflow actions).\n\nThree trigger presentations share one base: `text` (the default — a\nprimary-filled button with a label and a rotating chevron), `text-icon`\n(the same, with `icon` ahead of the label), and `icon` (a borderless,\nsquare, low-emphasis icon target in the style of `icon-button` — the\nclassic \"three-dot\"/overflow menu, where `label` becomes the accessible\nname rather than visible text). Set `size=\"sm\"` for a compact trigger one\nstep below the default, matching `ui-button`'s `sm` size.",
           "name": "DropdownButton",
           "members": [
             {
@@ -4094,6 +4737,17 @@
               },
               "default": "null",
               "description": "Icon template rendered by the `icon` and `text-icon` variants."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces the trigger's height/padding/font-size one step below the default.",
+              "attribute": "size",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -4241,6 +4895,15 @@
               "default": "\"text\"",
               "description": "Trigger presentation: label only, icon only, or icon + label.",
               "fieldName": "variant"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces the trigger's height/padding/font-size one step below the default.",
+              "fieldName": "size"
             }
           ],
           "superclass": {
@@ -6588,6 +7251,61 @@
             }
           ],
           "description": "Tools, maintenance, or build/configuration actions."
+        },
+        {
+          "kind": "function",
+          "name": "iconPlay",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "\"Play\" transport actions, e.g. audio-player/video-player's paused state."
+        },
+        {
+          "kind": "function",
+          "name": "iconPause",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "\"Pause\" transport actions, e.g. audio-player/video-player's playing state."
+        },
+        {
+          "kind": "function",
+          "name": "iconSpeakerWave",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "An unmuted volume control, e.g. audio-player/video-player's mute toggle."
+        },
+        {
+          "kind": "function",
+          "name": "iconSpeakerXMark",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "A muted volume state; pair with iconSpeakerWave for the unmuted state."
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowsPointingIn",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ],
+          "description": "\"Exit fullscreen\" actions; pair with iconArrowsPointingOut for entering fullscreen."
         }
       ],
       "exports": [
@@ -7020,6 +7738,46 @@
           "name": "iconWrenchScrewdriver",
           "declaration": {
             "name": "iconWrenchScrewdriver",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconPlay",
+          "declaration": {
+            "name": "iconPlay",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconPause",
+          "declaration": {
+            "name": "iconPause",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconSpeakerWave",
+          "declaration": {
+            "name": "iconSpeakerWave",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconSpeakerXMark",
+          "declaration": {
+            "name": "iconSpeakerXMark",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowsPointingIn",
+          "declaration": {
+            "name": "iconArrowsPointingIn",
             "module": "src/icons.ts"
           }
         }
@@ -7960,10 +8718,42 @@
         },
         {
           "kind": "js",
+          "name": "formatClockDuration",
+          "declaration": {
+            "name": "formatClockDuration",
+            "module": "./utils/duration.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "DurationFormat",
           "declaration": {
             "name": "DurationFormat",
             "module": "./utils/duration.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AudioPlayer",
+          "declaration": {
+            "name": "AudioPlayer",
+            "module": "./audio-player.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "VideoPlayer",
+          "declaration": {
+            "name": "VideoPlayer",
+            "module": "./video-player.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CommentComposer",
+          "declaration": {
+            "name": "CommentComposer",
+            "module": "./comment-composer.js"
           }
         },
         {
@@ -11311,7 +12101,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Page title block for the top of a dashboard view: an optional breadcrumb\ntrail, the page heading, and a right-aligned cluster of page-level actions.\nIt only lays these out — the breadcrumb links and action buttons are entirely\nthe consumer's, so it stays framework- and router-agnostic.",
+          "description": "Page title block for the top of a dashboard view: an optional breadcrumb\ntrail, the page heading with a right-aligned cluster of page-level actions\nbeside it, and an optional description of what the page is for underneath.\nThe actions sit in the title row rather than beside the whole block, so a\nlonger or wrapping description never moves them. It only lays these out —\nthe breadcrumb links and action buttons are entirely the consumer's, so it\nstays framework- and router-agnostic.",
           "name": "PageHeader",
           "slots": [
             {
@@ -11333,6 +12123,16 @@
               "default": "\"\"",
               "description": "The page heading text.",
               "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional supporting line under the heading, explaining what the page does.",
+              "attribute": "description"
             },
             {
               "kind": "field",
@@ -11373,6 +12173,15 @@
               "default": "\"\"",
               "description": "The page heading text.",
               "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional supporting line under the heading, explaining what the page does.",
+              "fieldName": "description"
             }
           ],
           "superclass": {
@@ -11408,7 +12217,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Minimal, controlled pager for list/table views: a previous/next control pair\naround a \"Page N of M\" status. It owns no data — the consumer sets\n`current-page` / `total-pages` and moves the page in response to the\n`page-change` event (typically alongside its own data fetch), exactly like\n`data-table` leaves the row data to the caller.\n\nPrevious is disabled on the first page and next on the last; neither fires an\nevent when there is nowhere to go.",
+          "description": "Minimal, controlled pager for list/table views: a previous/next control pair\naround a \"Page N of M\" status. It owns no data — the consumer sets\n`current-page` / `total-pages` and moves the page in response to the\n`page-change` event (typically alongside its own data fetch), exactly like\n`data-table` leaves the row data to the caller.\n\nPrevious is disabled on the first page and next on the last; neither fires an\nevent when there is nowhere to go.\n\nThe prev/next buttons are treated as `ui-button`'s `secondary` variant:\nthey read the same shared `--ui-button-secondary-*`/`--ui-button-highlight`\ntokens (and `--ui-button-secondary-surface-muted` for hover, since — like\n`button-group`'s unchecked segments — they already paint\n`--ui-surface-muted` on hover by default), so a gradient theme applies\nconsistently here too.",
           "name": "PaginationNav",
           "members": [
             {
@@ -12734,7 +13543,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Single-select group of full-width cards, each with a label and optional\ndescription — for a handful of meaningfully different choices where the\ndescription matters. For many short, same-shaped options (a color swatch,\na basemap style), use `radio-pills` instead. Wraps native radio inputs for\nkeyboard/a11y and fires `change` rather than relying on form submission.",
+          "description": "Single-select group of full-width cards, each with a label and optional\ndescription — for a handful of meaningfully different choices where the\ndescription matters. For many short, same-shaped options (a color swatch,\na basemap style), use `radio-pills` instead. Wraps native radio inputs for\nkeyboard/a11y and fires `change` rather than relying on form submission.\n\nThe selected card's border/radio dot read `--ui-button-accent` (a solid\nstand-in, since `border-color`/`accent-color` can't render a gradient),\nand its background reads the shared `--ui-button-secondary-surface-muted`\nplus `--ui-button-highlight`, so a gradient theme tints it consistently\nwith `button-group`/`pagination-nav`'s equivalents.",
           "name": "RadioCards",
           "members": [
             {
@@ -12849,7 +13658,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Single-select group of compact pill-shaped options — for many short,\nsame-shaped choices (a basemap style, a unit toggle). For a handful of\nchoices where a description matters, use `radio-cards` instead. Wraps\nnative radio inputs for keyboard/a11y and fires `change` rather than\nrelying on form submission.",
+          "description": "Single-select group of compact pill-shaped options — for many short,\nsame-shaped choices (a basemap style, a unit toggle). For a handful of\nchoices where a description matters, use `radio-cards` instead. Wraps\nnative radio inputs for keyboard/a11y and fires `change` rather than\nrelying on form submission.\n\nThe selected pill's border/radio dot read `--ui-button-accent` (a solid\nstand-in, since `border-color`/`accent-color` can't render a gradient),\nand its background reads the shared `--ui-button-secondary-surface-muted`\nplus `--ui-button-highlight`, so a gradient theme tints it consistently\nwith `button-group`/`pagination-nav`'s equivalents.",
           "name": "RadioPills",
           "members": [
             {
@@ -13338,7 +14147,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Button that reveals hidden slotted content when clicked.",
+          "description": "Button that reveals hidden slotted content when clicked. Set `size=\"sm\"`\nfor a compact button one step below the default, matching `ui-button`'s\n`sm` size.",
           "name": "RevealButton",
           "members": [
             {
@@ -13360,6 +14169,17 @@
               "default": "false",
               "description": "Disables revealing the slotted content.",
               "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces the button's height/padding/font-size one step below the default.",
+              "attribute": "size",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -13385,6 +14205,15 @@
               "default": "false",
               "description": "Disables revealing the slotted content.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "Size — `sm` reduces the button's height/padding/font-size one step below the default.",
+              "fieldName": "size"
             }
           ],
           "superclass": {
@@ -15404,7 +16233,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 // Button-specific background/border hooks: default to the flat --ui-primary // / --ui-danger tokens above unchanged, so those stay the single source of // truth for every other component. Overriding just these lets a theme opt // ui-button into a gradient (or any other) background without touching // component markup; --ui-button-border/--ui-button-danger-border default // to transparent (today's look) and are meant to be paired with a shade // darker than the gradient's dark stop when one is set. The `-active` // variants default to whatever `-background` already resolved to (so a // solid override still applies while pressed) — a gradient theme should // set them to the same stops in reverse, for a pressed/\"indented\" look. \"--ui-button-background\": \"var(--ui-primary, #4f46e5)\", \"--ui-button-background-hover\": \"var(--ui-primary-hover, #4338ca)\", \"--ui-button-background-active\": \"var(--ui-button-background, var(--ui-primary, #4f46e5))\", \"--ui-button-border\": \"transparent\", // The bordered, transparent-background secondary variant's equivalents — // shared with confirm-dialog's Cancel button, which is the same visual // pattern. Defaults reproduce today's literal secondary styling exactly // (no background at any state, border colors matching --ui-border / // --ui-text-muted), so a theme only needs to override these to make // secondary/Cancel buttons match a primary/danger gradient theme. \"--ui-button-secondary-background\": \"none\", \"--ui-button-secondary-background-hover\": \"none\", \"--ui-button-secondary-background-active\": \"var(--ui-button-secondary-background, none)\", \"--ui-button-secondary-border\": \"var(--ui-border, #e2e8f0)\", \"--ui-button-secondary-border-hover\": \"var(--ui-text-muted, #64748b)\", // A muted-gray surface used wherever something already paints // --ui-surface-muted as a state indicator in flat mode — button-group's // unchecked-segment hover, pagination-nav's button hover, and // radio-cards/radio-pills' checked background — which is a genuinely // different default than secondary's borderless flat hover, so it can't // reuse --ui-button-secondary-background-hover's \"none\" default. \"--ui-button-secondary-surface-muted\": \"var(--ui-surface-muted, #f8fafc)\", // Shared by both primary/danger — a purely cosmetic gloss/legibility pair, // not color-specific, so one token covers both variants. `-highlight` is a // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for // a glossy top edge, defaulting to a fully transparent (so invisible) // shadow rather than the keyword `none` — some usages combine it with // another literal shadow in a comma-separated list, where a bare `none` // item is invalid CSS and would zero out the *whole* declaration. // `-text-shadow` is a full text-shadow value for label legibility against // a gradient's lighter stop, always used standalone, so it keeps `none`. \"--ui-button-highlight\": \"0 0 0 0 transparent\", \"--ui-button-text-shadow\": \"none\", // A solid stand-in for the same accent, for spots that can't render a // background gradient at all — a native <input>'s accent-color only // accepts a plain color, and a hard-stop background gradient (e.g. // range-slider's filled track) can't nest another gradient inside its own // color-stop list. Consumers that theme the buttons into a gradient should // set this to the gradient's dark stop, so these non-button accents (radio // selection indicators, the range-slider track/thumb) stay visually // coordinated with it even though they can't literally paint a gradient. \"--ui-button-accent\": \"var(--ui-primary, #4f46e5)\", \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-button-danger-background\": \"var(--ui-danger, #dc2626)\", \"--ui-button-danger-background-hover\": \"var(--ui-danger-hover, #b91c1c)\", \"--ui-button-danger-background-active\": \"var(--ui-button-danger-background, var(--ui-danger, #dc2626))\", \"--ui-button-danger-border\": \"transparent\", \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {
@@ -15719,7 +16548,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Button (or link styled as one) with an optional leading icon, in three\nvisual weights. Set `href` to render an `<a>` instead of a `<button>` —\nsame styling either way — for cross-page navigation that should look like\nan action button; a disabled/busy link stays a real `<a>` with\n`aria-disabled` + `pointer-events: none` rather than losing its href.\nPut the icon in the `icon` slot and the label in the default slot.\n\nForm-associated (`type=\"submit\"`/`\"reset\"`): the actual `<button>` lives in\nthis element's shadow root, which native HTML form association does not\ncross into from an ancestor light-DOM `<form>`. `type=\"submit\"`/`\"reset\"`\nis instead wired through `ElementInternals.form` — the same mechanism\n`address-autocomplete` uses to associate with an ancestor form.",
+          "description": "Button (or link styled as one) with an optional leading icon, in three\nvisual weights. Set `href` to render an `<a>` instead of a `<button>` —\nsame styling either way — for cross-page navigation that should look like\nan action button; a disabled/busy link stays a real `<a>` with\n`aria-disabled` + `pointer-events: none` rather than losing its href.\nPut the icon in the `icon` slot and the label in the default slot.\n\nForm-associated (`type=\"submit\"`/`\"reset\"`): the actual `<button>` lives in\nthis element's shadow root, which native HTML form association does not\ncross into from an ancestor light-DOM `<form>`. `type=\"submit\"`/`\"reset\"`\nis instead wired through `ElementInternals.form` — the same mechanism\n`address-autocomplete` uses to associate with an ancestor form.\n\n`primary`/`danger` backgrounds read `--ui-button-background`/\n`--ui-button-danger-background` (and their `-hover`/`-active`\ncounterparts), which default to the flat `--ui-primary`/`--ui-danger`\ntokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source\nof truth for every other component. A consumer can override just these\nbutton-specific tokens with a `linear-gradient(...)` to opt every\n`ui-button` into a gradient look without touching component markup,\npairing it with `--ui-button-border`/`--ui-button-danger-border` (default\n`transparent`) for a defining edge a shade darker than the gradient's dark\nstop, and setting the `-active` variant's stops in reverse for a\npressed/\"indented\" look while the button is held down. `secondary`'s\nbackground/border read the equivalent `--ui-button-secondary-*` tokens\n(shared with `confirm-dialog`'s Cancel button), defaulting to today's\ntransparent/bordered look, so it can be themed into a matching (e.g.\nwhite-to-gray) gradient too.",
           "name": "UiButton",
           "slots": [
             {
@@ -16369,6 +17198,380 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/video-player.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Video player wrapping a native `<video>` element (native `controls`\ndisabled) with the same tokenized transport bar as `audio-player` — a\nplay/pause `icon-button`, elapsed/total time, a seekable progress bar, a\nmute toggle + volume slider — plus a fullscreen toggle. The control bar\nsits in a persistent strip under the video frame rather than a\nhover-reveal overlay, so it stays usable for keyboard/touch input without\na pointer hover state.",
+          "name": "VideoPlayer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the video file to play.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "poster",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Poster image shown before playback starts.",
+              "attribute": "poster"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Video player\"",
+              "description": "Accessible name for the player, e.g. a video title.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loops playback once it reaches the end.",
+              "attribute": "loop"
+            },
+            {
+              "kind": "field",
+              "name": "preload",
+              "type": {
+                "text": "\"none\" | \"metadata\" | \"auto\""
+              },
+              "default": "\"metadata\"",
+              "description": "Native `<video preload>` hint.",
+              "attribute": "preload"
+            },
+            {
+              "kind": "field",
+              "name": "_playing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_currentTime",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_duration",
+              "privacy": "private",
+              "default": "NaN"
+            },
+            {
+              "kind": "field",
+              "name": "_volume",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "_muted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_errored",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_fullscreen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_video",
+              "type": {
+                "text": "HTMLVideoElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "HTMLDivElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onFullscreenChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_togglePlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_toggleMute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_toggleFullscreen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onSeekInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onVolumeInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onLoadedMetadata",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onTimeUpdate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onPlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onPause",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onEnded",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onVolumeChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "play",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The video started playing."
+            },
+            {
+              "name": "pause",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The video was paused."
+            },
+            {
+              "name": "ended",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Playback reached the end."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "URL of the video file to play.",
+              "fieldName": "src"
+            },
+            {
+              "name": "poster",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Poster image shown before playback starts.",
+              "fieldName": "poster"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Video player\"",
+              "description": "Accessible name for the player, e.g. a video title.",
+              "fieldName": "label"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Loops playback once it reaches the end.",
+              "fieldName": "loop"
+            },
+            {
+              "name": "preload",
+              "type": {
+                "text": "\"none\" | \"metadata\" | \"auto\""
+              },
+              "default": "\"metadata\"",
+              "description": "Native `<video preload>` hint.",
+              "fieldName": "preload"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "video-player",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "VideoPlayer",
+          "declaration": {
+            "name": "VideoPlayer",
+            "module": "src/video-player.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "video-player",
+          "declaration": {
+            "name": "VideoPlayer",
+            "module": "src/video-player.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/weight-bar-chart.ts",
       "declarations": [
         {
@@ -16840,6 +18043,24 @@
             }
           ],
           "description": "Formats a millisecond duration for display.\n\n`\"seconds\"` renders a whole-second count with a pluralized unit word (e.g.\n\"1 second\", \"12 seconds\"). `\"compact\"` renders the shortest sensible\n`Xh Ym Zs` form, dropping leading-zero units (`\"12s\"`, `\"3m 12s\"`,\n`\"1h 03m 12s\"`) — minutes/seconds are zero-padded only once a larger unit\nis present."
+        },
+        {
+          "kind": "function",
+          "name": "formatClockDuration",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "totalSeconds",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Formats a duration in seconds as a transport-bar clock label:\n`M:SS` (e.g. `\"3:45\"`), or `H:MM:SS` once an hour is reached (e.g.\n`\"1:02:03\"`). `NaN`/negative/non-finite input (e.g. a not-yet-loaded\nmedia duration) renders as `\"-:--\"` rather than `\"0:00\"`, so a player can\ndistinguish \"no reading yet\" from an actual zero-length duration."
         }
       ],
       "exports": [
@@ -16848,6 +18069,14 @@
           "name": "formatDuration",
           "declaration": {
             "name": "formatDuration",
+            "module": "src/utils/duration.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatClockDuration",
+          "declaration": {
+            "name": "formatClockDuration",
             "module": "src/utils/duration.ts"
           }
         }
@@ -17267,6 +18496,28 @@
           "declaration": {
             "name": "formatRelativeTime",
             "module": "src/utils/time.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/transport-controls.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "transportRangeStyles",
+          "default": "css` input[type=\"range\"] { -webkit-appearance: none; appearance: none; /* Width is intentionally left to the consumer (e.g. .seek/.volume in audio-player/video-player) — this element+attribute selector has higher specificity than a single class rule, so setting a width here would win over a component's own narrower class and silently stretch every range input (including a fixed-width volume slider) to 100%. */ height: 1rem; margin: 0; background: transparent; cursor: pointer; } input[type=\"range\"]:disabled { cursor: not-allowed; opacity: 0.6; } input[type=\"range\"]::-webkit-slider-runnable-track { height: 0.25rem; border-radius: 9999px; /* A hard-stop gradient two-tone fill trick — see range-slider.ts for why this reads --ui-button-accent rather than --ui-button-background. */ background: linear-gradient( to right, var(--ui-button-accent, var(--ui-primary, #4f46e5)) 0%, var(--ui-button-accent, var(--ui-primary, #4f46e5)) var(--range-percent, 0%), var(--ui-surface-muted, #f8fafc) var(--range-percent, 0%), var(--ui-surface-muted, #f8fafc) 100% ); } input[type=\"range\"]::-moz-range-track { height: 0.25rem; border-radius: 9999px; background: var(--ui-surface-muted, #f8fafc); } input[type=\"range\"]::-moz-range-progress { height: 0.25rem; border-radius: 9999px; background: var(--ui-button-accent, var(--ui-primary, #4f46e5)); } input[type=\"range\"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 0.75rem; height: 0.75rem; /* WebKit centers the thumb on the input's full 1rem box, not the thinner custom track — nudge it up to align, as in range-slider.ts. */ transform: translateY(-0.25rem); border-radius: 50%; background: var(--ui-button-background, var(--ui-primary, #4f46e5)); border: 2px solid var(--ui-surface, #ffffff); box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent); } input[type=\"range\"]::-moz-range-thumb { width: 0.75rem; height: 0.75rem; border-radius: 50%; background: var(--ui-button-background, var(--ui-primary, #4f46e5)); border: 2px solid var(--ui-surface, #ffffff); box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent); } input[type=\"range\"]:disabled::-webkit-slider-thumb { background: var(--ui-text-muted, #64748b); } input[type=\"range\"]:disabled::-moz-range-thumb { background: var(--ui-text-muted, #64748b); } input[type=\"range\"]:focus-visible { outline: none; } input[type=\"range\"]:focus-visible::-webkit-slider-thumb { box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)); } input[type=\"range\"]:focus-visible::-moz-range-thumb { box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)); } @media (prefers-reduced-motion: no-preference) { input[type=\"range\"]::-webkit-slider-thumb { transition: box-shadow 120ms ease; } input[type=\"range\"]::-moz-range-thumb { transition: box-shadow 120ms ease; } } @media (forced-colors: active) { input[type=\"range\"]::-webkit-slider-runnable-track { background: Canvas; border: 1px solid CanvasText; } input[type=\"range\"]::-webkit-slider-thumb { background: Highlight; border-color: Canvas; } input[type=\"range\"]:focus-visible::-webkit-slider-thumb { outline: 2px solid CanvasText; outline-offset: 2px; box-shadow: none; } } `",
+          "description": "Shared `<input type=\"range\">` track/thumb styling for media transport\ncontrols (the seek bar and volume slider in `audio-player`/`video-player`).\nReuses `range-slider.ts`'s track/fill visual language (a filled portion up\nto `--range-percent`) so both players get free native keyboard/pointer\nseeking instead of a custom-built draggable control, matching the \"native\nsemantics before custom ARIA\" rule. Extracted here rather than duplicated\nbecause both components need the identical rule set."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "transportRangeStyles",
+          "declaration": {
+            "name": "transportRangeStyles",
+            "module": "src/utils/transport-controls.ts"
           }
         }
       ]

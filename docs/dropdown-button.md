@@ -10,7 +10,8 @@ primary-filled button with a label and a rotating chevron), `text-icon`
 (the same, with `icon` ahead of the label), and `icon` (a borderless,
 square, low-emphasis icon target in the style of `icon-button` — the
 classic "three-dot"/overflow menu, where `label` becomes the accessible
-name rather than visible text).
+name rather than visible text). Set `size="sm"` for a compact trigger one
+step below the default, matching `ui-button`'s `sm` size.
 
 ## Install
 
@@ -50,6 +51,7 @@ import "@f-ewald/components/dropdown-button.js";
 | `disabled` | `disabled` | `boolean` | `false` | Disables the trigger, preventing the menu from opening. |
 | `variant` | `variant` | `DropdownButtonVariant` | `"text"` | Trigger presentation: label only, icon only, or icon + label. |
 | `icon` | _(JS property only)_ | `TemplateResult | null` | `null` | Icon template rendered by the `icon` and `text-icon` variants. |
+| `size` | `size` | `"sm" | "md"` | `"md"` | Size — `sm` reduces the trigger's height/padding/font-size one step below the default. |
 
 ## Events
 
@@ -66,11 +68,18 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-button-background` |
+| `--ui-button-background-active` |
+| `--ui-button-background-hover` |
+| `--ui-button-border` |
+| `--ui-button-highlight` |
+| `--ui-button-text-shadow` |
 | `--ui-danger` |
 | `--ui-danger-hover` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
 | `--ui-line-height-tight` |
 | `--ui-on-accent` |

@@ -19,6 +19,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconArrowPath` | 12px | Refresh actions, or an animated busy/loading spinner. |
 | `iconArrowRight` | 12px | "Continue" or forward-progressing actions, e.g. a compact next-step arrow. |
 | `iconArrowRightOnRectangle` | 16px | Logout/sign-out actions. |
+| `iconArrowsPointingIn` | 16px | "Exit fullscreen" actions; pair with iconArrowsPointingOut for entering fullscreen. |
 | `iconArrowsPointingOut` | 16px | "Expand" or "view fullscreen" actions. |
 | `iconArrowsRightLeft` | 16px | Swap, exchange, or compare actions between two items. |
 | `iconArrowTopRightOnSquare` | 16px | Links that open in a new tab/window, or navigate to an external site. |
@@ -53,13 +54,17 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconMap` | 16px | A map-view toggle, or to represent map/geographic content. |
 | `iconMapPin` | 16px | A location, address, or map marker. |
 | `iconMoon` | 16px | A dark-theme toggle, or to represent night/dark mode. |
+| `iconPause` | 18px | "Pause" transport actions, e.g. audio-player/video-player's playing state. |
 | `iconPencil` | 16px | Edit actions, e.g. an edit icon-button or inline edit toggle. |
+| `iconPlay` | 18px | "Play" transport actions, e.g. audio-player/video-player's paused state. |
 | `iconPlus` | 16px | "Add new" actions, e.g. creating a new item or row. |
 | `iconPuzzlePiece` | 18px | Plugins, integrations, or extensible/add-on features. |
 | `iconQuestionMarkCircle` | 20px | Help, tooltips, or "learn more" affordances. |
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
+| `iconSpeakerWave` | 18px | An unmuted volume control, e.g. audio-player/video-player's mute toggle. |
+| `iconSpeakerXMark` | 18px | A muted volume state; pair with iconSpeakerWave for the unmuted state. |
 | `iconSquares2x2` | 18px | A grid or kanban-view toggle, or to represent card/tile layouts. |
 | `iconSun` | 16px | A light-theme toggle, or to represent daytime/light mode. |
 | `iconTag` | 16px | Tags, labels, or categorical metadata. |

@@ -20,7 +20,16 @@ let instanceCount = 0;
  * option should read as visually "pressed," not just checked. For many
  * short, individually pill-shaped choices, use `radio-pills` instead. Wraps
  * native radio inputs for keyboard/a11y and fires `change` rather than
- * relying on form submission.
+ * relying on form submission. Set `size="sm"` for a compact strip one step
+ * below the default, matching `ui-button`'s `sm` size.
+ *
+ * The checked segment reads `--ui-button-background`/`-hover`/`-active`,
+ * same as `ui-button`'s `primary` variant. Unchecked segments are treated as
+ * `ui-button`'s `secondary` variant: they read the shared
+ * `--ui-button-secondary-background`/`-active` (rest/pressed) so a gradient
+ * theme applies consistently, but use the shared `--ui-button-secondary-surface-muted`
+ * (also used by `pagination-nav`) for hover, since — unlike `secondary` — an
+ * unchecked segment already paints `--ui-surface-muted` on hover by default.
  *
  * @element button-group
  * @fires change - A segment was selected; detail: { value }.
@@ -66,6 +75,8 @@ export class ButtonGroup extends LitElement {
         line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
         white-space: nowrap;
+        background: var(--ui-button-secondary-background, none);
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .segment:first-child {
         border-left: none;
@@ -77,11 +88,16 @@ export class ButtonGroup extends LitElement {
         border-bottom-right-radius: var(--ui-radius-sm, 0.25rem);
       }
       .segment:has(input:checked) {
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-button-background, var(--ui-primary, #4f46e5));
         color: var(--ui-on-accent, #ffffff);
+        text-shadow: var(--ui-button-text-shadow, none);
       }
       .segment:not(:has(input:checked)):hover {
-        background: var(--ui-surface-muted, #f8fafc);
+        background: var(--ui-button-secondary-surface-muted, var(--ui-surface-muted, #f8fafc));
+      }
+      .segment:not(:has(input:checked)):active {
+        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        box-shadow: none;
       }
       .segment input {
         /* Fills the whole segment (not visually-hidden-offscreen) so a real
@@ -101,12 +117,23 @@ export class ButtonGroup extends LitElement {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
+      .segment:has(input:focus-visible):not(:active) {
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)), var(--ui-button-highlight, 0 0 0 0 transparent);
+      }
       .segment:has(input:disabled) {
         cursor: not-allowed;
         opacity: 0.6;
       }
       :host([icon-only]) .segment {
         padding: 0.5rem;
+      }
+      :host([size="sm"]) .segment {
+        height: 1.5rem;
+        padding: 0.25rem 0.5rem;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
+      }
+      :host([icon-only][size="sm"]) .segment {
+        padding: 0.25rem;
       }
       .sr-only {
         position: absolute;
@@ -145,6 +172,8 @@ export class ButtonGroup extends LitElement {
   @property({ type: Boolean }) disabled = false;
   /** Hides labels visually (icons only) while keeping them as the accessible name. */
   @property({ type: Boolean, reflect: true, attribute: "icon-only" }) iconOnly = false;
+  /** Size — `sm` reduces segment height/padding/font-size one step below the default. */
+  @property({ reflect: true }) size: "sm" | "md" = "md";
 
   readonly #name = `button-group-${++instanceCount}`;
 

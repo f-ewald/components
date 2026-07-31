@@ -173,6 +173,23 @@ const ICONS = {
   Users: { slug: "users", size: 18, usage: "Teams, groups, or multi-user/collaboration content." },
   ArrowRightOnRectangle: { slug: "arrow-right-on-rectangle", size: 16, usage: "Logout/sign-out actions." },
   WrenchScrewdriver: { slug: "wrench-screwdriver", size: 18, usage: "Tools, maintenance, or build/configuration actions." },
+  Play: { slug: "play", size: 18, usage: "\"Play\" transport actions, e.g. audio-player/video-player's paused state." },
+  Pause: { slug: "pause", size: 18, usage: "\"Pause\" transport actions, e.g. audio-player/video-player's playing state." },
+  SpeakerWave: {
+    slug: "speaker-wave",
+    size: 18,
+    usage: "An unmuted volume control, e.g. audio-player/video-player's mute toggle.",
+  },
+  SpeakerXMark: {
+    slug: "speaker-x-mark",
+    size: 18,
+    usage: "A muted volume state; pair with iconSpeakerWave for the unmuted state.",
+  },
+  ArrowsPointingIn: {
+    slug: "arrows-pointing-in",
+    size: 16,
+    usage: "\"Exit fullscreen\" actions; pair with iconArrowsPointingOut for entering fullscreen.",
+  },
 };
 
 /**

@@ -19,6 +19,22 @@ export type ButtonVariant = "primary" | "secondary" | "danger";
  * is instead wired through `ElementInternals.form` — the same mechanism
  * `address-autocomplete` uses to associate with an ancestor form.
  *
+ * `primary`/`danger` backgrounds read `--ui-button-background`/
+ * `--ui-button-danger-background` (and their `-hover`/`-active`
+ * counterparts), which default to the flat `--ui-primary`/`--ui-danger`
+ * tokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source
+ * of truth for every other component. A consumer can override just these
+ * button-specific tokens with a `linear-gradient(...)` to opt every
+ * `ui-button` into a gradient look without touching component markup,
+ * pairing it with `--ui-button-border`/`--ui-button-danger-border` (default
+ * `transparent`) for a defining edge a shade darker than the gradient's dark
+ * stop, and setting the `-active` variant's stops in reverse for a
+ * pressed/"indented" look while the button is held down. `secondary`'s
+ * background/border read the equivalent `--ui-button-secondary-*` tokens
+ * (shared with `confirm-dialog`'s Cancel button), defaulting to today's
+ * transparent/bordered look, so it can be themed into a matching (e.g.
+ * white-to-gray) gradient too.
+ *
  * @element ui-button
  * @slot icon - Optional leading icon (e.g. an inline SVG).
  * @slot - Button label.
@@ -60,26 +76,46 @@ export class UiButton extends LitElement {
         box-sizing: border-box;
       }
       .btn.primary {
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-button-background, var(--ui-primary, #4f46e5));
+        border-color: var(--ui-button-border, transparent);
         color: var(--ui-on-accent, #ffffff);
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
+        text-shadow: var(--ui-button-text-shadow, none);
       }
       .btn.primary:hover:not(:disabled) {
-        background: var(--ui-primary-hover, #4338ca);
+        background: var(--ui-button-background-hover, var(--ui-primary-hover, #4338ca));
+      }
+      .btn.primary:active:not(:disabled) {
+        background: var(--ui-button-background-active, var(--ui-button-background, var(--ui-primary, #4f46e5)));
+        box-shadow: none;
       }
       .btn.secondary {
-        background: none;
-        border-color: var(--ui-border, #e2e8f0);
+        background: var(--ui-button-secondary-background, none);
+        border-color: var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         color: var(--ui-text, #0f172a);
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .btn.secondary:hover:not(:disabled) {
-        border-color: var(--ui-text-muted, #64748b);
+        background: var(--ui-button-secondary-background-hover, none);
+        border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
+      }
+      .btn.secondary:active:not(:disabled) {
+        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        box-shadow: none;
       }
       .btn.danger {
-        background: var(--ui-danger, #dc2626);
+        background: var(--ui-button-danger-background, var(--ui-danger, #dc2626));
+        border-color: var(--ui-button-danger-border, transparent);
         color: var(--ui-on-accent, #ffffff);
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
+        text-shadow: var(--ui-button-text-shadow, none);
       }
       .btn.danger:hover:not(:disabled) {
-        background: var(--ui-danger-hover, #b91c1c);
+        background: var(--ui-button-danger-background-hover, var(--ui-danger-hover, #b91c1c));
+      }
+      .btn.danger:active:not(:disabled) {
+        background: var(--ui-button-danger-background-active, var(--ui-button-danger-background, var(--ui-danger, #dc2626)));
+        box-shadow: none;
       }
       .btn:disabled,
       .btn[aria-disabled="true"] {
@@ -90,6 +126,11 @@ export class UiButton extends LitElement {
       .btn:focus-visible {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      .btn.primary:focus-visible:not(:active),
+      .btn.danger:focus-visible:not(:active),
+      .btn.secondary:focus-visible:not(:active) {
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)), var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .btn.sm {
         height: 1.5rem;

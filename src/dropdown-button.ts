@@ -27,7 +27,8 @@ export type DropdownButtonVariant = "text" | "icon" | "text-icon";
  * (the same, with `icon` ahead of the label), and `icon` (a borderless,
  * square, low-emphasis icon target in the style of `icon-button` — the
  * classic "three-dot"/overflow menu, where `label` becomes the accessible
- * name rather than visible text).
+ * name rather than visible text). Set `size="sm"` for a compact trigger one
+ * step below the default, matching `ui-button`'s `sm` size.
  *
  * @element dropdown-button
  * @fires select - Fired with `{ value: string }` when a menu item is picked.
@@ -90,11 +91,21 @@ export class DropdownButton extends LitElement {
          even before the reflected attribute lands. */
       :host(:not([variant="icon"])) button.trigger {
         color: var(--ui-on-accent, #ffffff);
-        background: var(--ui-primary, #4f46e5);
+        background: var(--ui-button-background, var(--ui-primary, #4f46e5));
+        border-color: var(--ui-button-border, transparent);
+        box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
+        text-shadow: var(--ui-button-text-shadow, none);
         padding: 0.5rem 1rem;
       }
       :host(:not([variant="icon"])) button.trigger:hover:not(:disabled) {
-        background: var(--ui-primary-hover, #4338ca);
+        background: var(--ui-button-background-hover, var(--ui-primary-hover, #4338ca));
+      }
+      :host(:not([variant="icon"])) button.trigger:active:not(:disabled) {
+        background: var(--ui-button-background-active, var(--ui-button-background, var(--ui-primary, #4f46e5)));
+        box-shadow: none;
+      }
+      :host(:not([variant="icon"])) button.trigger:focus-visible:not(:active) {
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)), var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       /* icon: borderless low-emphasis square target, matching icon-button. */
       :host([variant="icon"]) button.trigger {
@@ -106,6 +117,16 @@ export class DropdownButton extends LitElement {
       :host([variant="icon"]) button.trigger:hover:not(:disabled) {
         background: var(--ui-surface-muted, #f8fafc);
         color: var(--ui-text, #0f172a);
+      }
+      :host([size="sm"]) button.trigger {
+        height: 1.5rem;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
+      }
+      :host(:not([variant="icon"])[size="sm"]) button.trigger {
+        padding: 0.25rem 0.5rem;
+      }
+      :host([variant="icon"][size="sm"]) button.trigger {
+        width: 1.5rem;
       }
       .icon {
         display: flex;
@@ -188,6 +209,8 @@ export class DropdownButton extends LitElement {
   @property({ reflect: true }) variant: DropdownButtonVariant = "text";
   /** Icon template rendered by the `icon` and `text-icon` variants. */
   @property({ attribute: false }) icon: TemplateResult | null = null;
+  /** Size — `sm` reduces the trigger's height/padding/font-size one step below the default. */
+  @property({ reflect: true }) size: "sm" | "md" = "md";
 
   @state() private _open = false;
   @state() private _activeIndex = -1;
