@@ -6913,6 +6913,17 @@
         },
         {
           "kind": "function",
+          "name": "iconSparkles",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ],
+          "description": "A gradient-theme toggle, or to represent a decorative/enhanced visual style."
+        },
+        {
+          "kind": "function",
           "name": "iconShieldExclamation",
           "parameters": [
             {
@@ -7490,6 +7501,14 @@
           "name": "iconSun",
           "declaration": {
             "name": "iconSun",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconSparkles",
+          "declaration": {
+            "name": "iconSparkles",
             "module": "src/icons.ts"
           }
         },
@@ -16247,6 +16266,15 @@
         },
         {
           "kind": "variable",
+          "name": "gradientTokenValues",
+          "type": {
+            "text": "Record<string, string>"
+          },
+          "default": "{ \"--ui-button-background\": \"linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)\", // indigo-500 -> 600 \"--ui-button-background-hover\": \"linear-gradient(180deg, #818cf8 0%, #6366f1 100%)\", // indigo-400 -> 500 \"--ui-button-background-active\": \"linear-gradient(180deg, #4f46e5 0%, #6366f1 100%)\", // reversed 600 -> 500 \"--ui-button-border\": \"#4338ca\", // indigo-700 \"--ui-button-danger-background\": \"linear-gradient(180deg, #ef4444 0%, #dc2626 100%)\", // red-500 -> 600 \"--ui-button-danger-background-hover\": \"linear-gradient(180deg, #f87171 0%, #ef4444 100%)\", // red-400 -> 500 \"--ui-button-danger-background-active\": \"linear-gradient(180deg, #dc2626 0%, #ef4444 100%)\", // reversed 600 -> 500 \"--ui-button-danger-border\": \"#b91c1c\", // red-700 // Secondary stays subtle (white -> slate-50) rather than a saturated hue, // matching its flat \"not the primary action\" role, with a slightly // stronger border (slate-300 instead of the flat slate-200) so its edge // still reads against the near-white gradient fill. \"--ui-button-secondary-background\": \"linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)\", // white -> slate-50 \"--ui-button-secondary-background-hover\": \"linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)\", // slate-50 -> 100 \"--ui-button-secondary-background-active\": \"linear-gradient(180deg, #f1f5f9 0%, #ffffff 100%)\", // reversed 100 -> white \"--ui-button-secondary-border\": \"#cbd5e1\", // slate-300 \"--ui-button-secondary-border-hover\": \"#94a3b8\", // slate-400 \"--ui-button-highlight\": \"inset 0 1px 0 rgb(255 255 255 / 0.35)\", // glossy top edge \"--ui-button-text-shadow\": \"0 1px 1px rgb(0 0 0 / 0.25)\", // legibility on primary/danger \"--ui-button-accent\": \"#4338ca\", // indigo-700, matches --ui-button-border }",
+          "description": "\"Gradient\" theme overrides, applied via `data-theme=\"gradient\"` on `<html>`\n(see `generate-tokens-css.mjs`) — forces `color-scheme: light` like the\n`\"light\"` override and layers a glossy gradient look on top of the flat\nlight palette, using exactly the `--ui-button-*`/`--ui-button-danger-*`/\n`--ui-button-secondary-*` hooks `ui-button.ts` already reads (see that\nfile's doc comment). Every other token (`--ui-text`, `--ui-surface`, …)\nis left at its light-mode default — this theme is button-only by design.\nEach variant's gradient runs light-to-dark top-to-bottom (`180deg`)\nacross one Tailwind shade step lighter/darker than the flat token so it\nstill reads as \"the same color, glossy\" rather than a different hue;\n`-hover` shifts the whole pair one shade lighter, `-active` reverses the\ntwo stops for a pressed/\"indented\" look, and `-border` is a shade darker\nthan the gradient's dark stop for a defining edge."
+        },
+        {
+          "kind": "variable",
           "name": "tokens",
           "default": "css``",
           "description": "Historically a shared `:host { --ui-x: var(--ui-x, fallback); } ` block,\nre-declaring every token on each component's own host element as a\n\"materialize the inherited value, or this fallback\" trick. That pattern\nturned out to be a genuine bug, not a working default: browsers treat\n`--ui-x: var(--ui-x, ...)` on `:host` as a self-referencing declaration\nthat computes to the guaranteed-invalid value REGARDLESS of what an\nancestor (e.g. `:root`) set — the host's own `:host` rule wins the cascade\nover the ancestor's, so this dropped whatever the app actually set and\nsilently substituted the component's own fallback everywhere. It went\nunnoticed because every component's fallback happened to equal the\nintended light-mode value — dark mode (a real, different value at\n`:root`) exposed it immediately (colors rendering as if no theme were\napplied at all). Fix: don't redeclare tokens on `:host` — plain\ninheritance already carries `:root`'s values into every shadow root\ncorrectly, and every component already has its own `var(--ui-x, fallback)`\nat each point of use, so nothing here is needed for the \"zero external\nCSS\" default to keep working. Kept as an empty export so the existing\n`static override styles = [tokens, css\\`...\\`]` import in every component\nkeeps compiling."
@@ -16266,6 +16294,14 @@
           "name": "darkTokenValues",
           "declaration": {
             "name": "darkTokenValues",
+            "module": "src/tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "gradientTokenValues",
+          "declaration": {
+            "name": "gradientTokenValues",
             "module": "src/tokens.ts"
           }
         },
@@ -16548,7 +16584,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Button (or link styled as one) with an optional leading icon, in three\nvisual weights. Set `href` to render an `<a>` instead of a `<button>` —\nsame styling either way — for cross-page navigation that should look like\nan action button; a disabled/busy link stays a real `<a>` with\n`aria-disabled` + `pointer-events: none` rather than losing its href.\nPut the icon in the `icon` slot and the label in the default slot.\n\nForm-associated (`type=\"submit\"`/`\"reset\"`): the actual `<button>` lives in\nthis element's shadow root, which native HTML form association does not\ncross into from an ancestor light-DOM `<form>`. `type=\"submit\"`/`\"reset\"`\nis instead wired through `ElementInternals.form` — the same mechanism\n`address-autocomplete` uses to associate with an ancestor form.\n\n`primary`/`danger` backgrounds read `--ui-button-background`/\n`--ui-button-danger-background` (and their `-hover`/`-active`\ncounterparts), which default to the flat `--ui-primary`/`--ui-danger`\ntokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source\nof truth for every other component. A consumer can override just these\nbutton-specific tokens with a `linear-gradient(...)` to opt every\n`ui-button` into a gradient look without touching component markup,\npairing it with `--ui-button-border`/`--ui-button-danger-border` (default\n`transparent`) for a defining edge a shade darker than the gradient's dark\nstop, and setting the `-active` variant's stops in reverse for a\npressed/\"indented\" look while the button is held down. `secondary`'s\nbackground/border read the equivalent `--ui-button-secondary-*` tokens\n(shared with `confirm-dialog`'s Cancel button), defaulting to today's\ntransparent/bordered look, so it can be themed into a matching (e.g.\nwhite-to-gray) gradient too.",
+          "description": "Button (or link styled as one) with an optional leading icon, in three\nvisual weights. Set `href` to render an `<a>` instead of a `<button>` —\nsame styling either way — for cross-page navigation that should look like\nan action button; a disabled/busy link stays a real `<a>` with\n`aria-disabled` + `pointer-events: none` rather than losing its href.\nPut the icon in the `icon` slot and the label in the default slot.\n\nForm-associated (`type=\"submit\"`/`\"reset\"`): the actual `<button>` lives in\nthis element's shadow root, which native HTML form association does not\ncross into from an ancestor light-DOM `<form>`. `type=\"submit\"`/`\"reset\"`\nis instead wired through `ElementInternals.form` — the same mechanism\n`address-autocomplete` uses to associate with an ancestor form.\n\n`primary`/`danger` backgrounds read `--ui-button-background`/\n`--ui-button-danger-background` (and their `-hover`/`-active`\ncounterparts), which default to the flat `--ui-primary`/`--ui-danger`\ntokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source\nof truth for every other component. A consumer can override just these\nbutton-specific tokens with a `linear-gradient(...)` to opt every\n`ui-button` into a gradient look without touching component markup —\n`gradientTokenValues` in `tokens.ts` ships exactly this, wired up via\n`data-theme=\"gradient\"` (see `tokens.css`'s \"Gradient theme\" section) —\npairing it with `--ui-button-border`/`--ui-button-danger-border` (default\n`transparent`) for a defining edge a shade darker than the gradient's dark\nstop, and setting the `-active` variant's stops in reverse for a\npressed/\"indented\" look while the button is held down. `secondary`'s\nbackground/border read the equivalent `--ui-button-secondary-*` tokens\n(shared with `confirm-dialog`'s Cancel button), defaulting to today's\ntransparent/bordered look, so it can be themed into a matching (e.g.\nwhite-to-gray) gradient too.",
           "name": "UiButton",
           "slots": [
             {

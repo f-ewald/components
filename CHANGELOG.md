@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added a `"gradient"` theme (`data-theme="gradient"` on `<html>`, alongside
+  the existing `"light"`/`"dark"` overrides): layers a glossy gradient look
+  onto `ui-button`'s primary/danger/secondary variants on top of the flat
+  light palette, via the new `gradientTokenValues` in `tokens.ts`. Every
+  other token is left at its light-mode value — this theme is button-only by
+  design. Added the `iconSparkles` heroicon for a gradient-theme toggle.
 - Added `audio-player`: a compact player wrapping a native `<audio>` element
   behind a tokenized transport bar — play/pause, elapsed/total time, a
   seekable progress bar, and a mute toggle + volume slider. The seek and

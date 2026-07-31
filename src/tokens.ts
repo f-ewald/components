@@ -154,6 +154,44 @@ export const darkTokenValues: Record<string, string> = {
 };
 
 /**
+ * "Gradient" theme overrides, applied via `data-theme="gradient"` on `<html>`
+ * (see `generate-tokens-css.mjs`) — forces `color-scheme: light` like the
+ * `"light"` override and layers a glossy gradient look on top of the flat
+ * light palette, using exactly the `--ui-button-*`/`--ui-button-danger-*`/
+ * `--ui-button-secondary-*` hooks `ui-button.ts` already reads (see that
+ * file's doc comment). Every other token (`--ui-text`, `--ui-surface`, …)
+ * is left at its light-mode default — this theme is button-only by design.
+ * Each variant's gradient runs light-to-dark top-to-bottom (`180deg`)
+ * across one Tailwind shade step lighter/darker than the flat token so it
+ * still reads as "the same color, glossy" rather than a different hue;
+ * `-hover` shifts the whole pair one shade lighter, `-active` reverses the
+ * two stops for a pressed/"indented" look, and `-border` is a shade darker
+ * than the gradient's dark stop for a defining edge.
+ */
+export const gradientTokenValues: Record<string, string> = {
+  "--ui-button-background": "linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)", // indigo-500 -> 600
+  "--ui-button-background-hover": "linear-gradient(180deg, #818cf8 0%, #6366f1 100%)", // indigo-400 -> 500
+  "--ui-button-background-active": "linear-gradient(180deg, #4f46e5 0%, #6366f1 100%)", // reversed 600 -> 500
+  "--ui-button-border": "#4338ca", // indigo-700
+  "--ui-button-danger-background": "linear-gradient(180deg, #ef4444 0%, #dc2626 100%)", // red-500 -> 600
+  "--ui-button-danger-background-hover": "linear-gradient(180deg, #f87171 0%, #ef4444 100%)", // red-400 -> 500
+  "--ui-button-danger-background-active": "linear-gradient(180deg, #dc2626 0%, #ef4444 100%)", // reversed 600 -> 500
+  "--ui-button-danger-border": "#b91c1c", // red-700
+  // Secondary stays subtle (white -> slate-50) rather than a saturated hue,
+  // matching its flat "not the primary action" role, with a slightly
+  // stronger border (slate-300 instead of the flat slate-200) so its edge
+  // still reads against the near-white gradient fill.
+  "--ui-button-secondary-background": "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)", // white -> slate-50
+  "--ui-button-secondary-background-hover": "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)", // slate-50 -> 100
+  "--ui-button-secondary-background-active": "linear-gradient(180deg, #f1f5f9 0%, #ffffff 100%)", // reversed 100 -> white
+  "--ui-button-secondary-border": "#cbd5e1", // slate-300
+  "--ui-button-secondary-border-hover": "#94a3b8", // slate-400
+  "--ui-button-highlight": "inset 0 1px 0 rgb(255 255 255 / 0.35)", // glossy top edge
+  "--ui-button-text-shadow": "0 1px 1px rgb(0 0 0 / 0.25)", // legibility on primary/danger
+  "--ui-button-accent": "#4338ca", // indigo-700, matches --ui-button-border
+};
+
+/**
  * Historically a shared `:host { --ui-x: var(--ui-x, fallback); } ` block,
  * re-declaring every token on each component's own host element as a
  * "materialize the inherited value, or this fallback" trick. That pattern

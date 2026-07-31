@@ -72,6 +72,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
+| `iconSparkles` | 16px | A gradient-theme toggle, or to represent a decorative/enhanced visual style. |
 | `iconSpeakerWave` | 18px | An unmuted volume control, e.g. audio-player/video-player's mute toggle. |
 | `iconSpeakerXMark` | 18px | A muted volume state; pair with iconSpeakerWave for the unmuted state. |
 | `iconSquares2x2` | 18px | A grid or kanban-view toggle, or to represent card/tile layouts. |
@@ -2205,7 +2206,9 @@ counterparts), which default to the flat `--ui-primary`/`--ui-danger`
 tokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source
 of truth for every other component. A consumer can override just these
 button-specific tokens with a `linear-gradient(...)` to opt every
-`ui-button` into a gradient look without touching component markup,
+`ui-button` into a gradient look without touching component markup —
+`gradientTokenValues` in `tokens.ts` ships exactly this, wired up via
+`data-theme="gradient"` (see `tokens.css`'s "Gradient theme" section) —
 pairing it with `--ui-button-border`/`--ui-button-danger-border` (default
 `transparent`) for a defining edge a shade darker than the gradient's dark
 stop, and setting the `-active` variant's stops in reverse for a

@@ -63,6 +63,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
+| `iconSparkles` | 16px | A gradient-theme toggle, or to represent a decorative/enhanced visual style. |
 | `iconSpeakerWave` | 18px | An unmuted volume control, e.g. audio-player/video-player's mute toggle. |
 | `iconSpeakerXMark` | 18px | A muted volume state; pair with iconSpeakerWave for the unmuted state. |
 | `iconSquares2x2` | 18px | A grid or kanban-view toggle, or to represent card/tile layouts. |

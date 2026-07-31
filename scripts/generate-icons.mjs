@@ -73,6 +73,11 @@ const ICONS = {
     usage: "Success states, confirmations, or a selected-item checkmark.",
   },
   Sun: { slug: "sun", size: 16, usage: "A light-theme toggle, or to represent daytime/light mode." },
+  Sparkles: {
+    slug: "sparkles",
+    size: 16,
+    usage: "A gradient-theme toggle, or to represent a decorative/enhanced visual style.",
+  },
   ShieldExclamation: {
     slug: "shield-exclamation",
     size: 16,

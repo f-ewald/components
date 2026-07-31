@@ -25,7 +25,9 @@ export type ButtonVariant = "primary" | "secondary" | "danger";
  * tokens unchanged — so `--ui-primary`/`--ui-danger` stay the single source
  * of truth for every other component. A consumer can override just these
  * button-specific tokens with a `linear-gradient(...)` to opt every
- * `ui-button` into a gradient look without touching component markup,
+ * `ui-button` into a gradient look without touching component markup —
+ * `gradientTokenValues` in `tokens.ts` ships exactly this, wired up via
+ * `data-theme="gradient"` (see `tokens.css`'s "Gradient theme" section) —
  * pairing it with `--ui-button-border`/`--ui-button-danger-border` (default
  * `transparent`) for a defining edge a shade darker than the gradient's dark
  * stop, and setting the `-active` variant's stops in reverse for a
