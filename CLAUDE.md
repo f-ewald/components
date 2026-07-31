@@ -25,9 +25,17 @@ the previewed body.
 
 `ui-button` has a `size: "sm" | "md"` property (`sm` shrinks
 height/padding/font-size one step; `md` is pixel-identical to the pre-`size`
-default). `button-group` has an `icon-only` reflected boolean (labels hidden
-via `sr-only` clip, kept as the accessible name via `aria-label`/`title` on
-each segment's radio input).
+default) and a `pill` boolean (fully rounded corners). `modal-dialog`
+is a generic centered overlay shell (the modal sibling to `slide-panel`'s
+fixed-edge and `popover-panel`'s anchored positioning) — no baked-in actions,
+just header chrome + a slotted body, with an opt-in `dismissible` boolean for
+backdrop-click-to-close (off by default, matching `confirm-dialog`'s
+no-accidental-dismiss precedent) and a `size: "default" | "lg" | "fullscreen"`
+property (`"lg"` widens to 60rem; `"fullscreen"` covers the viewport
+edge-to-edge with no border-radius or overlay padding, reusing the same
+focus-trap/Escape/layer-stack logic as the other sizes). `button-group` has an `icon-only` reflected
+boolean (labels hidden via `sr-only` clip, kept as the accessible name via
+`aria-label`/`title` on each segment's radio input).
 
 ## Layout
 

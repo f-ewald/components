@@ -7908,6 +7908,22 @@
         },
         {
           "kind": "js",
+          "name": "ModalDialog",
+          "declaration": {
+            "name": "ModalDialog",
+            "module": "./modal-dialog.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ModalDialogSize",
+          "declaration": {
+            "name": "ModalDialogSize",
+            "module": "./modal-dialog.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "ContentDivider",
           "declaration": {
             "name": "ContentDivider",
@@ -11048,6 +11064,189 @@
       "path": "src/mcp-server.ts",
       "declarations": [],
       "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/modal-dialog.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Generic centered modal-dialog shell: overlay + card with header chrome, a\nclose button, and an arbitrary slotted body — the modal sibling to\n`slide-panel` (fixed-edge) and `popover-panel` (anchored). Unlike\n`confirm-dialog`, it has no baked-in actions; the consumer supplies the\nbody content (a form, a read-only viewer, a table) and any footer buttons\nitself. Instant `display:none` → `display:flex` toggle, no transition.\nTraps focus, closes on Escape, and restores focus to the trigger on\nclose, stacking correctly against other open `confirm-dialog`/\n`slide-panel`/`popover-panel`/`modal-dialog` layers.",
+          "name": "ModalDialog",
+          "slots": [
+            {
+              "description": "Dialog body content.",
+              "name": ""
+            },
+            {
+              "description": "Overrides the header title text (falls back to the `heading` property).",
+              "name": "title"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the dialog is visible.",
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Title text shown in the dialog header (overridable via slot=\"title\").",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "ModalDialogSize"
+              },
+              "default": "\"default\"",
+              "description": "`\"lg\"` widens the dialog to 60rem for content like tables; `\"default\"`\nis 25rem; `\"fullscreen\"` covers the entire viewport edge-to-edge with\nno border-radius or overlay padding.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "dismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, clicking the backdrop also closes the dialog (off by default — safe for forms with unsaved input).",
+              "attribute": "dismissible"
+            },
+            {
+              "kind": "field",
+              "name": "_previousFocus",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_close",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_getFocusableElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_focusInitial",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_onDocumentFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onWindowKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onOverlayClick",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "panel-close",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked the close (✕) button, pressed Escape, or (when `dismissible`) clicked the backdrop."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the dialog is visible.",
+              "fieldName": "open"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Title text shown in the dialog header (overridable via slot=\"title\").",
+              "fieldName": "heading"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "ModalDialogSize"
+              },
+              "default": "\"default\"",
+              "description": "`\"lg\"` widens the dialog to 60rem for content like tables; `\"default\"`\nis 25rem; `\"fullscreen\"` covers the entire viewport edge-to-edge with\nno border-radius or overlay padding.",
+              "fieldName": "size"
+            },
+            {
+              "name": "dismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, clicking the backdrop also closes the dialog (off by default — safe for forms with unsaved input).",
+              "fieldName": "dismissible"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "modal-dialog",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ModalDialog",
+          "declaration": {
+            "name": "ModalDialog",
+            "module": "src/modal-dialog.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "modal-dialog",
+          "declaration": {
+            "name": "ModalDialog",
+            "module": "src/modal-dialog.ts"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",
@@ -16652,6 +16851,16 @@
             },
             {
               "kind": "field",
+              "name": "pill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders fully rounded (pill-shaped) corners instead of the default `--ui-radius-sm`.",
+              "attribute": "pill"
+            },
+            {
+              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string | null"
@@ -16729,6 +16938,15 @@
               "default": "\"md\"",
               "description": "Size — `sm` reduces height/padding/font-size one step below the default.",
               "fieldName": "size"
+            },
+            {
+              "name": "pill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders fully rounded (pill-shaped) corners instead of the default `--ui-radius-sm`.",
+              "fieldName": "pill"
             },
             {
               "name": "href",

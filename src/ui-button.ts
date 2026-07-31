@@ -139,6 +139,9 @@ export class UiButton extends LitElement {
         padding: 0.25rem 0.5rem;
         font-size: var(--ui-font-size-xs, 0.6875rem);
       }
+      .btn.pill {
+        border-radius: 999px;
+      }
       .spin {
         display: inline-flex;
         animation: spin 0.8s linear infinite;
@@ -176,6 +179,8 @@ export class UiButton extends LitElement {
   @property() variant: ButtonVariant = "primary";
   /** Size — `sm` reduces height/padding/font-size one step below the default. */
   @property() size: "sm" | "md" = "md";
+  /** Renders fully rounded (pill-shaped) corners instead of the default `--ui-radius-sm`. */
+  @property({ type: Boolean }) pill = false;
   /** Renders an `<a href="...">` instead of a `<button>` when set. */
   @property() href: string | null = null;
   /** Native button `type`. Ignored when `href` is set. */
@@ -198,7 +203,7 @@ export class UiButton extends LitElement {
   }
 
   override render() {
-    const classes = `btn ${this.variant} ${this.size}`;
+    const classes = `btn ${this.variant} ${this.size}${this.pill ? " pill" : ""}`;
     const isDisabled = this.disabled || this.busy;
     if (this.href) {
       return html`

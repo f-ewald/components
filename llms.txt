@@ -1364,6 +1364,31 @@ See the [changelog](#markdown-view) for details.`;
 </script>
 ```
 
+## <modal-dialog>
+
+Generic centered modal-dialog shell: overlay + card with header chrome, a
+close button, and an arbitrary slotted body — the modal sibling to
+`slide-panel` (fixed-edge) and `popover-panel` (anchored). Unlike
+`confirm-dialog`, it has no baked-in actions; the consumer supplies the
+body content (a form, a read-only viewer, a table) and any footer buttons
+itself. Instant `display:none` → `display:flex` toggle, no transition.
+Traps focus, closes on Escape, and restores focus to the trigger on
+close, stacking correctly against other open `confirm-dialog`/
+`slide-panel`/`popover-panel`/`modal-dialog` layers.
+
+Import: `import "@f-ewald/components/modal-dialog.js";`
+
+Properties: `open` (attribute `open`) : boolean, default false; `heading` (attribute `heading`) : string, default ""; `size` (attribute `size`) : ModalDialogSize, default "default"; `dismissible` (attribute `dismissible`) : boolean, default false
+Events: `panel-close`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-overlay`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<modal-dialog open heading="Changelog" dismissible>
+  Dialog body content goes here.
+</modal-dialog>
+```
+
 ## <multi-select>
 
 A form-associated multi-select: a trigger showing a compact summary of the
@@ -2238,7 +2263,7 @@ white-to-gray) gradient too.
 
 Import: `import "@f-ewald/components/ui-button.js";`
 
-Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
+Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `pill` (attribute `pill`) : boolean, default false; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
 CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
 

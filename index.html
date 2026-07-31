@@ -71,6 +71,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#mapbox-map">mapbox-map</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#markdown-editor">markdown-editor</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#markdown-view">markdown-view</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#modal-dialog">modal-dialog</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#multi-select">multi-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#page-header">page-header</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#pagination-nav">pagination-nav</a>
@@ -1617,6 +1618,84 @@ const x = 1;
 See the [changelog](#markdown-view) for details.`;</code></pre>
         </section>
 
+        <section id="modal-dialog" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-modal-dialog">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#modal-dialog">modal-dialog</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Generic centered overlay shell — header, close button, and an arbitrary slotted body.
+            No baked-in actions (unlike <code>confirm-dialog</code>); the consumer supplies the
+            body content and its own footer buttons if any.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <button
+              id="modal-open"
+              data-testid="modal-open"
+              type="button"
+              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Open dialog
+            </button>
+            <button
+              id="modal-lg-open"
+              data-testid="modal-lg-open"
+              type="button"
+              class="ml-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Open wide dialog
+            </button>
+            <button
+              id="modal-fullscreen-open"
+              data-testid="modal-fullscreen-open"
+              type="button"
+              class="ml-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Open full screen dialog
+            </button>
+            <modal-dialog id="modal-demo" data-testid="modal-demo" heading="Changelog" dismissible>
+              <div class="p-4 text-sm text-slate-600">
+                Read-only content goes here. Clicking the backdrop closes this one since
+                <code>dismissible</code> is set.
+              </div>
+            </modal-dialog>
+            <modal-dialog id="modal-lg-demo" data-testid="modal-lg-demo" heading="Wide content" size="lg">
+              <div class="p-4 text-sm text-slate-600">A 60rem-wide dialog for content like tables.</div>
+            </modal-dialog>
+            <modal-dialog
+              id="modal-fullscreen-demo"
+              data-testid="modal-fullscreen-demo"
+              heading="Full screen"
+              size="fullscreen"
+            >
+              <div class="p-4 text-sm text-slate-600">
+                <p class="mb-4">
+                  A full-viewport dialog for immersive content — covers the entire screen edge-to-edge
+                  with no border-radius or overlay padding, and scrolls when the body overflows.
+                </p>
+                <p class="mb-4">Paragraph 1 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 2 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 3 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 4 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 5 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 6 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 7 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 8 of filler content to demonstrate scrolling.</p>
+                <p class="mb-4">Paragraph 9 of filler content to demonstrate scrolling.</p>
+                <p>Paragraph 10 of filler content to demonstrate scrolling.</p>
+              </div>
+            </modal-dialog>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/modal-dialog.js";
+
+&lt;modal-dialog open heading="Changelog" dismissible&gt;
+  Dialog body content goes here.
+&lt;/modal-dialog&gt;
+&lt;modal-dialog open heading="Wide content" size="lg"&gt;
+  A 60rem-wide dialog for content like tables.
+&lt;/modal-dialog&gt;
+&lt;modal-dialog open heading="Full screen" size="fullscreen"&gt;
+  Covers the entire viewport and scrolls when content overflows.
+&lt;/modal-dialog&gt;</code></pre>
+        </section>
+
         <section id="multi-select" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-multi-select">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#multi-select">multi-select</a></h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -2694,6 +2773,7 @@ tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
             <ui-button id="button-busy" data-testid="button-busy" variant="primary" busy>Saving</ui-button>
             <ui-button id="button-link" data-testid="button-link" variant="secondary" href="#ui-button">Edit (as link)</ui-button>
             <ui-button id="button-sm" data-testid="button-sm" variant="secondary" size="sm">Abort</ui-button>
+            <ui-button id="button-pill" data-testid="button-pill" variant="primary" pill>Compare (2)</ui-button>
           </div>
           <form id="button-form" data-testid="button-form" class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
             <input name="note" placeholder="Required field" required class="rounded-md border border-slate-300 px-2 py-1 text-sm" />
@@ -2708,7 +2788,8 @@ tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
 &lt;/ui-button&gt;
 &lt;ui-button variant="danger"&gt;Delete&lt;/ui-button&gt;
 &lt;ui-button variant="secondary" size="sm"&gt;Abort&lt;/ui-button&gt;
-&lt;ui-button variant="secondary" href="/properties?edit=42"&gt;Edit&lt;/ui-button&gt;</code></pre>
+&lt;ui-button variant="secondary" href="/properties?edit=42"&gt;Edit&lt;/ui-button&gt;
+&lt;ui-button variant="primary" pill&gt;Compare (2)&lt;/ui-button&gt;</code></pre>
         </section>
 
         <section id="ui-checkbox" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-checkbox">

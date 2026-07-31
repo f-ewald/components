@@ -70,4 +70,14 @@ test.describe("ui-button", () => {
     const mdBtn = page.locator("#button-primary button.btn");
     await expect(mdBtn).toHaveCSS("height", "32px");
   });
+
+  test("pill renders fully rounded corners", async ({ page }) => {
+    await page.goto("/");
+    const pillBtn = page.locator("#button-pill button.btn");
+    await expect(pillBtn).toHaveClass(/\bpill\b/);
+    await expect(pillBtn).toHaveCSS("border-radius", "999px");
+
+    const primaryBtn = page.locator("#button-primary button.btn");
+    await expect(primaryBtn).not.toHaveCSS("border-radius", "999px");
+  });
 });

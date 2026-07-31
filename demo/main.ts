@@ -9,6 +9,7 @@ import {
   type PercentBarChart,
   type WeightBarChart,
   type ConfirmDialog,
+  type ModalDialog,
   type SlidePanel,
   type SplitHero,
   type RomanNumeral,
@@ -188,6 +189,29 @@ confirmDemoSm?.addEventListener("confirm", () => {
 });
 confirmDemoSm?.addEventListener("cancel", () => {
   confirmDemoSm.open = false;
+});
+
+// modal-dialog
+const modalDemo = document.getElementById("modal-demo") as ModalDialog;
+document.getElementById("modal-open")?.addEventListener("click", () => {
+  modalDemo.open = true;
+});
+modalDemo?.addEventListener("panel-close", () => {
+  modalDemo.open = false;
+});
+const modalLgDemo = document.getElementById("modal-lg-demo") as ModalDialog;
+document.getElementById("modal-lg-open")?.addEventListener("click", () => {
+  modalLgDemo.open = true;
+});
+modalLgDemo?.addEventListener("panel-close", () => {
+  modalLgDemo.open = false;
+});
+const modalFullscreenDemo = document.getElementById("modal-fullscreen-demo") as ModalDialog;
+document.getElementById("modal-fullscreen-open")?.addEventListener("click", () => {
+  modalFullscreenDemo.open = true;
+});
+modalFullscreenDemo?.addEventListener("panel-close", () => {
+  modalFullscreenDemo.open = false;
 });
 
 // toast-notification

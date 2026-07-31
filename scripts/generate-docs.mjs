@@ -31,6 +31,10 @@ const SLOTS = {
     { name: "(default)", description: "Optional `gallery-item-variant` responsive image sources." },
   ],
   "confirm-dialog": [{ name: "(default)", description: "Dialog body content." }],
+  "modal-dialog": [
+    { name: "(default)", description: "Dialog body content." },
+    { name: "title", description: "Overrides the header title text (falls back to the `heading` property)." },
+  ],
   "split-hero": [
     { name: "(default)", description: "Form or other content for the non-image half." },
   ],
@@ -263,6 +267,9 @@ const EXAMPLES = {
   "confirm-dialog": `<confirm-dialog open confirm-label="Delete" cancel-label="Cancel">
   Are you sure you want to delete this item?
 </confirm-dialog>`,
+  "modal-dialog": `<modal-dialog open heading="Changelog" dismissible>
+  Dialog body content goes here.
+</modal-dialog>`,
   "toast-notification": `<toast-notification></toast-notification>
 <script type="module">
   import { notifySuccess } from "@f-ewald/components/toast-notification.js";

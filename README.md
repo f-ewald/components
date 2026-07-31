@@ -87,6 +87,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<map-pin>` | [API reference](https://f-ewald.github.io/components/docs/map-pin.html) |
 | `<markdown-editor>` | [API reference](https://f-ewald.github.io/components/docs/markdown-editor.html) |
 | `<markdown-view>` | [API reference](https://f-ewald.github.io/components/docs/markdown-view.html) |
+| `<modal-dialog>` | [API reference](https://f-ewald.github.io/components/docs/modal-dialog.html) |
 | `<multi-select>` | [API reference](https://f-ewald.github.io/components/docs/multi-select.html) |
 | `<page-header>` | [API reference](https://f-ewald.github.io/components/docs/page-header.html) |
 | `<pagination-nav>` | [API reference](https://f-ewald.github.io/components/docs/pagination-nav.html) |

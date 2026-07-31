@@ -54,6 +54,7 @@ import "@f-ewald/components/ui-button.js";
 | --- | --- | --- | --- | --- |
 | `variant` | `variant` | `ButtonVariant` | `"primary"` | Visual weight. |
 | `size` | `size` | `"sm" | "md"` | `"md"` | Size — `sm` reduces height/padding/font-size one step below the default. |
+| `pill` | `pill` | `boolean` | `false` | Renders fully rounded (pill-shaped) corners instead of the default `--ui-radius-sm`. |
 | `href` | `href` | `string | null` | `null` | Renders an `<a href="...">` instead of a `<button>` when set. |
 | `type` | `type` | `"button" | "submit" | "reset"` | `"button"` | Native button `type`. Ignored when `href` is set. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables the control and dims it. |
