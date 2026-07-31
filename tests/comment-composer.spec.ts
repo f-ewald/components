@@ -62,4 +62,23 @@ test.describe("comment-composer", () => {
     await expect(composer.getByRole("img")).toHaveAccessibleName(/Enter/);
     await composer.locator("textarea").press("Escape");
   });
+
+  test("calling .focus() expands a collapsed composer and focuses its textarea", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const composer = page.locator("#comment-composer-demo");
+    await expect(composer.locator("textarea")).toHaveCount(0);
+
+    await composer.evaluate((el: HTMLElement) => el.focus());
+    const textarea = composer.locator("textarea");
+    await expect(textarea).toBeFocused();
+
+    // Already expanded: .focus() just re-focuses the textarea rather than
+    // throwing or collapsing it.
+    await textarea.blur();
+    await composer.evaluate((el: HTMLElement) => el.focus());
+    await expect(textarea).toBeFocused();
+    await textarea.press("Escape");
+  });
 });

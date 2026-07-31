@@ -17,7 +17,9 @@ import "./ui-button.js";
  * expanded until the user explicitly submits or cancels. `Cmd`/`Ctrl`+`Enter`
  * submits from the textarea, matching `editable-text`'s multiline shortcut —
  * the Submit button always shows a `kbd-hint` for it, so the shortcut is
- * discoverable rather than a hidden power-user feature.
+ * discoverable rather than a hidden power-user feature. Calling the standard
+ * `.focus()` method expands the composer (if collapsed) and focuses its
+ * field, for an ancestor that wants to drive it programmatically.
  * Purely token-styled (no bespoke colors), so it's themeable via the same
  * `--ui-*` custom properties as every other value-entry field.
  *
@@ -119,6 +121,23 @@ export class CommentComposer extends LitElement {
     if (this.disabled || this._expanded) return;
     this._draft = this.value;
     this._expanded = true;
+  }
+
+  /**
+   * Expands the composer (if collapsed) and focuses its field, so an
+   * ancestor can drive it programmatically — e.g. a "reply" affordance
+   * elsewhere on the page that should land the user in this composer
+   * already expanded, not just visually scrolled to a one-line input.
+   * A no-op while `disabled`. Expanding re-renders asynchronously; the
+   * actual focus happens in `updated()` once the textarea exists.
+   */
+  override focus(options?: FocusOptions): void {
+    if (this.disabled) return;
+    if (!this._expanded) {
+      this._expand();
+      return;
+    }
+    this._textarea?.focus(options);
   }
 
   private _onInput(e: Event): void {

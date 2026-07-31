@@ -3570,7 +3570,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "GitHub/Slack-style comment composer: a one-line text field that expands\ninto a multi-line textarea with a bottom-right Cancel/Submit footer\n(`form-actions`) as soon as it's focused or clicked. Submitting fires\n`submit` with the trimmed value, then clears the field and collapses back\nto one line — it's meant for posting one comment at a time, not editing a\npersistent value in place (see `editable-text` for that). Canceling (the\nCancel button or `Escape`) discards the draft and collapses without\nfiring `submit`. Clicking away (blur) does neither — the composer stays\nexpanded until the user explicitly submits or cancels. `Cmd`/`Ctrl`+`Enter`\nsubmits from the textarea, matching `editable-text`'s multiline shortcut —\nthe Submit button always shows a `kbd-hint` for it, so the shortcut is\ndiscoverable rather than a hidden power-user feature.\nPurely token-styled (no bespoke colors), so it's themeable via the same\n`--ui-*` custom properties as every other value-entry field.",
+          "description": "GitHub/Slack-style comment composer: a one-line text field that expands\ninto a multi-line textarea with a bottom-right Cancel/Submit footer\n(`form-actions`) as soon as it's focused or clicked. Submitting fires\n`submit` with the trimmed value, then clears the field and collapses back\nto one line — it's meant for posting one comment at a time, not editing a\npersistent value in place (see `editable-text` for that). Canceling (the\nCancel button or `Escape`) discards the draft and collapses without\nfiring `submit`. Clicking away (blur) does neither — the composer stays\nexpanded until the user explicitly submits or cancels. `Cmd`/`Ctrl`+`Enter`\nsubmits from the textarea, matching `editable-text`'s multiline shortcut —\nthe Submit button always shows a `kbd-hint` for it, so the shortcut is\ndiscoverable rather than a hidden power-user feature. Calling the standard\n`.focus()` method expands the composer (if collapsed) and focuses its\nfield, for an ancestor that wants to drive it programmatically.\nPurely token-styled (no bespoke colors), so it's themeable via the same\n`--ui-*` custom properties as every other value-entry field.",
           "name": "CommentComposer",
           "members": [
             {
@@ -3678,6 +3678,25 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Expands the composer (if collapsed) and focuses its field, so an\nancestor can drive it programmatically — e.g. a \"reply\" affordance\nelsewhere on the page that should land the user in this composer\nalready expanded, not just visually scrolled to a one-line input.\nA no-op while `disabled`. Expanding re-renders asynchronously; the\nactual focus happens in `updated()` once the textarea exists."
             },
             {
               "kind": "method",

@@ -11,7 +11,9 @@ firing `submit`. Clicking away (blur) does neither — the composer stays
 expanded until the user explicitly submits or cancels. `Cmd`/`Ctrl`+`Enter`
 submits from the textarea, matching `editable-text`'s multiline shortcut —
 the Submit button always shows a `kbd-hint` for it, so the shortcut is
-discoverable rather than a hidden power-user feature.
+discoverable rather than a hidden power-user feature. Calling the standard
+`.focus()` method expands the composer (if collapsed) and focuses its
+field, for an ancestor that wants to drive it programmatically.
 Purely token-styled (no bespoke colors), so it's themeable via the same
 `--ui-*` custom properties as every other value-entry field.
 

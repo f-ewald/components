@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `comment-composer` now supports the standard `.focus()` method: it expands
+  the composer (if collapsed) and focuses its field, for an ancestor that
+  wants to drive it programmatically (e.g. a "reply" link elsewhere on the
+  page) rather than only visually scrolling to a one-line input.
 - The gradient theme's `secondary` button gradient (white -> slate-50) was
   too subtle to read as a gradient at all at typical button sizes — shifted
   one shade darker (slate-50 -> slate-100, hover slate-100 -> slate-200) so
