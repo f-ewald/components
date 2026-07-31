@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- `comment-composer`'s Submit button now always shows a `kbd-hint` for its
+  existing `Cmd`/`Ctrl`+`Enter` shortcut, so it's discoverable instead of a
+  hidden power-user feature.
 - The `"gradient"` theme (`data-theme="gradient"`) now also covers
   `toast-notification`: all four variants (success, error, info, warning)
   get the same glossy top-to-bottom linear-gradient treatment as `ui-button`,

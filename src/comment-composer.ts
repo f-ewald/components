@@ -2,6 +2,7 @@ import { LitElement, css, html } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { tokens } from "./tokens.js";
 import "./form-actions.js";
+import "./kbd-hint.js";
 import "./ui-button.js";
 
 /**
@@ -14,7 +15,9 @@ import "./ui-button.js";
  * Cancel button or `Escape`) discards the draft and collapses without
  * firing `submit`. Clicking away (blur) does neither — the composer stays
  * expanded until the user explicitly submits or cancels. `Cmd`/`Ctrl`+`Enter`
- * submits from the textarea, matching `editable-text`'s multiline shortcut.
+ * submits from the textarea, matching `editable-text`'s multiline shortcut —
+ * the Submit button always shows a `kbd-hint` for it, so the shortcut is
+ * discoverable rather than a hidden power-user feature.
  * Purely token-styled (no bespoke colors), so it's themeable via the same
  * `--ui-*` custom properties as every other value-entry field.
  *
@@ -189,8 +192,8 @@ export class CommentComposer extends LitElement {
                     size="sm"
                     ?disabled=${!canSubmit}
                     @click=${this._submit}
-                    >${this.submitLabel}</ui-button
-                  >
+                    >${this.submitLabel} <kbd-hint keys="Mod+Enter"></kbd-hint
+                  ></ui-button>
                 </form-actions>
               </div>
             `

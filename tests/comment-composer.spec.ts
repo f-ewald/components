@@ -50,4 +50,16 @@ test.describe("comment-composer", () => {
     await expect(submit).toBeEnabled();
     await composer.locator("textarea").press("Escape");
   });
+
+  test("Submit button always shows the Cmd/Ctrl+Enter shortcut as a kbd-hint", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const composer = page.locator("#comment-composer-demo");
+
+    await composer.locator("input").click();
+    await expect(composer.locator("kbd-hint")).toBeVisible();
+    await expect(composer.getByRole("img")).toHaveAccessibleName(/Enter/);
+    await composer.locator("textarea").press("Escape");
+  });
 });
