@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- The gradient theme's `secondary` button gradient (white -> slate-50) was
+  too subtle to read as a gradient at all at typical button sizes — shifted
+  one shade darker (slate-50 -> slate-100, hover slate-100 -> slate-200) so
+  it's visibly a gradient while staying clearly quieter than primary/danger.
 - `comment-composer`'s Submit button now always shows a `kbd-hint` for its
   existing `Cmd`/`Ctrl`+`Enter` shortcut, so it's discoverable instead of a
   hidden power-user feature.

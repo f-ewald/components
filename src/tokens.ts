@@ -192,13 +192,17 @@ export const gradientTokenValues: Record<string, string> = {
   "--ui-button-danger-background-hover": "linear-gradient(180deg, #f87171 0%, #ef4444 100%)", // red-400 -> 500
   "--ui-button-danger-background-active": "linear-gradient(180deg, #dc2626 0%, #ef4444 100%)", // reversed 600 -> 500
   "--ui-button-danger-border": "#b91c1c", // red-700
-  // Secondary stays subtle (white -> slate-50) rather than a saturated hue,
-  // matching its flat "not the primary action" role, with a slightly
-  // stronger border (slate-300 instead of the flat slate-200) so its edge
-  // still reads against the near-white gradient fill.
-  "--ui-button-secondary-background": "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)", // white -> slate-50
-  "--ui-button-secondary-background-hover": "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)", // slate-50 -> 100
-  "--ui-button-secondary-background-active": "linear-gradient(180deg, #f1f5f9 0%, #ffffff 100%)", // reversed 100 -> white
+  // Secondary stays neutral gray rather than a saturated hue, matching its
+  // flat "not the primary action" role, but one shade darker than the
+  // original white -> slate-50 pairing: at a small button size, that pair
+  // read as flat white with no visible gradient at all. slate-50 -> 100
+  // keeps enough contrast to actually look like a gradient while still
+  // being clearly lighter/quieter than primary/danger. Border stays
+  // slate-300 (a step past the flat slate-200) so its edge still reads
+  // against the fill.
+  "--ui-button-secondary-background": "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)", // slate-50 -> 100
+  "--ui-button-secondary-background-hover": "linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%)", // slate-100 -> 200
+  "--ui-button-secondary-background-active": "linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%)", // reversed 100 -> 50
   "--ui-button-secondary-border": "#cbd5e1", // slate-300
   "--ui-button-secondary-border-hover": "#94a3b8", // slate-400
   "--ui-button-highlight": "inset 0 1px 0 rgb(255 255 255 / 0.35)", // glossy top edge
