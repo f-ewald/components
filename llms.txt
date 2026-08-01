@@ -384,6 +384,37 @@ Example:
 </script>
 ```
 
+## <calendar-day>
+
+A single day rendered as an hourly time grid — a Google-Calendar-style
+view distinct from `calendar-month`'s whole-day table. Declarative
+`calendar-entry` children with a time-of-day in `start`/`end` (e.g.
+`start="2026-03-05T09:00"`) render as positioned/sized blocks; entries
+with only a date (no time) render in an all-day band above the grid.
+Overlapping timed entries stack into side-by-side columns; overlapping
+all-day/multi-day entries stack into lanes, same as `calendar-month`.
+Read-only.
+
+Shares its slotted-entry observation, resolution, and hover/focus
+interaction sync with `calendar-week` via `CalendarTimelineBase`.
+
+Import: `import "@f-ewald/components/calendar-day.js";`
+
+Properties: `date` (attribute `date`) : string, default —
+Events: none
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-hover-overlay`, `--ui-info`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+
+Example:
+```html
+<calendar-day date="2026-07-15">
+  <calendar-entry start="2026-07-15" end="2026-07-15" label="Company holiday" color="neutral"></calendar-entry>
+  <calendar-entry start="2026-07-15T09:00" end="2026-07-15T09:30" label="Standup" color="info"></calendar-entry>
+  <calendar-entry start="2026-07-15T09:15" end="2026-07-15T10:00" label="Design review" color="primary" href="#review">
+    <span slot="detail">Walk through the new onboarding flow</span>
+  </calendar-entry>
+</calendar-day>
+```
+
 ## <calendar-entry>
 
 Declarative metadata for one calendar event, consumed by a parent
@@ -449,6 +480,37 @@ Example:
     <span slot="footer">Closing keynote · July 20</span>
   </calendar-entry>
 </calendar-month>
+```
+
+## <calendar-week>
+
+Sunday-through-Saturday week rendered as one shared hourly time grid — the
+seven-day sibling of `calendar-day`. Unlike `calendar-year` composing 12
+`calendar-month` children, this is its own independent 7-column layout
+(not 7 nested `<calendar-day>` elements): a single hour gutter is drawn
+once, and multi-day/all-day entries span the days they cover as one
+continuous bar in a shared all-day band, since lanes for that band are
+assigned once across the whole visible week (unlike `calendar-month`'s
+documented per-instance lane limitation). Timed entries stack into
+side-by-side columns independently per day, same as `calendar-day`.
+Read-only.
+
+Shares its slotted-entry observation, resolution, and hover/focus
+interaction sync with `calendar-day` via `CalendarTimelineBase`.
+
+Import: `import "@f-ewald/components/calendar-week.js";`
+
+Properties: `date` (attribute `date`) : string, default —
+Events: none
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-hover-overlay`, `--ui-info`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+
+Example:
+```html
+<calendar-week date="2026-07-15">
+  <calendar-entry start="2026-07-13" end="2026-07-15" label="Offsite" color="primary" href="#offsite"></calendar-entry>
+  <calendar-entry start="2026-07-14T09:00" end="2026-07-14T09:30" label="Standup" color="info"></calendar-entry>
+  <calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"></calendar-entry>
+</calendar-week>
 ```
 
 ## <calendar-year>

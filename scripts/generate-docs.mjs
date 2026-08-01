@@ -65,8 +65,14 @@ const SLOTS = {
     },
     { name: "footer", description: "Plain-text ending note pinned to the bottom of the shared body." },
   ],
+  "calendar-day": [
+    { name: "(default)", description: "Declarative `calendar-entry` elements to render for this day." },
+  ],
   "calendar-month": [
     { name: "(default)", description: "Declarative `calendar-entry` elements to render for this month." },
+  ],
+  "calendar-week": [
+    { name: "(default)", description: "Declarative `calendar-entry` elements to render for this week." },
   ],
   "calendar-year": [
     {
@@ -519,6 +525,13 @@ See the [changelog](#markdown-view) for details.\`;
   <span slot="detail">Road trip along the California coast with several scenic stops</span>
   <span slot="footer">Return July 19 at 6 PM</span>
 </calendar-entry>`,
+  "calendar-day": `<calendar-day date="2026-07-15">
+  <calendar-entry start="2026-07-15" end="2026-07-15" label="Company holiday" color="neutral"></calendar-entry>
+  <calendar-entry start="2026-07-15T09:00" end="2026-07-15T09:30" label="Standup" color="info"></calendar-entry>
+  <calendar-entry start="2026-07-15T09:15" end="2026-07-15T10:00" label="Design review" color="primary" href="#review">
+    <span slot="detail">Walk through the new onboarding flow</span>
+  </calendar-entry>
+</calendar-day>`,
   "calendar-month": `<calendar-month year="2026" month="7">
   <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success">
     <span slot="title">Vacation</span>
@@ -531,6 +544,11 @@ See the [changelog](#markdown-view) for details.\`;
     <span slot="footer">Closing keynote · July 20</span>
   </calendar-entry>
 </calendar-month>`,
+  "calendar-week": `<calendar-week date="2026-07-15">
+  <calendar-entry start="2026-07-13" end="2026-07-15" label="Offsite" color="primary" href="#offsite"></calendar-entry>
+  <calendar-entry start="2026-07-14T09:00" end="2026-07-14T09:30" label="Standup" color="info"></calendar-entry>
+  <calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"></calendar-entry>
+</calendar-week>`,
   "calendar-year": `<calendar-year year="2026">
   <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite">
     <span slot="detail">New York</span>
@@ -649,7 +667,7 @@ const manifest = JSON.parse(await readFile(path.join(rootDir, "custom-elements.j
 const components = [];
 for (const mod of manifest.modules) {
   for (const decl of mod.declarations ?? []) {
-    if (!decl.customElement) continue;
+    if (!decl.customElement || !decl.tagName) continue;
     const publicFields = (decl.members ?? []).filter(
       (m) =>
         m.kind === "field" &&

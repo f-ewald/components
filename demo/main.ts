@@ -63,6 +63,8 @@ import {
   type PhotoGallerySlideChangeDetail,
   type GalleryItem,
   type GalleryItemVariant,
+  type CalendarDay,
+  type CalendarWeek,
   type CalendarYear,
   type AutocompleteInput,
   type AutocompleteOption,
@@ -1092,6 +1094,20 @@ if (treeLines) {
   ] satisfies TreeNode[];
   treeLines.renderNode = (node) => (node as TreeNode).label;
 }
+
+// calendar-day
+const calendarDaySelect = document.getElementById("calendar-day-select") as HTMLInputElement | null;
+const calendarDayDemo = document.getElementById("calendar-day-demo") as CalendarDay | null;
+calendarDaySelect?.addEventListener("change", () => {
+  if (calendarDayDemo && calendarDaySelect.value) calendarDayDemo.date = calendarDaySelect.value;
+});
+
+// calendar-week
+const calendarWeekSelect = document.getElementById("calendar-week-select") as HTMLInputElement | null;
+const calendarWeekDemo = document.getElementById("calendar-week-demo") as CalendarWeek | null;
+calendarWeekSelect?.addEventListener("change", () => {
+  if (calendarWeekDemo && calendarWeekSelect.value) calendarWeekDemo.date = calendarWeekSelect.value;
+});
 
 // calendar-year
 const calendarYearSelect = document.getElementById("calendar-year-select") as HTMLSelectElement | null;

@@ -88,8 +88,10 @@ export { PaginationNav, type PageChangeDetail } from "./pagination-nav.js";
 export { FormActions } from "./form-actions.js";
 export { TimelineContainer } from "./timeline-container.js";
 export { TimelineEntry } from "./timeline-entry.js";
+export { CalendarDay } from "./calendar-day.js";
 export { CalendarEntry } from "./calendar-entry.js";
 export { CalendarMonth } from "./calendar-month.js";
+export { CalendarWeek } from "./calendar-week.js";
 export { CalendarYear } from "./calendar-year.js";
 export {
   KanbanBoard,

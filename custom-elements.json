@@ -2661,6 +2661,301 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/calendar-day.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single day rendered as an hourly time grid — a Google-Calendar-style\nview distinct from `calendar-month`'s whole-day table. Declarative\n`calendar-entry` children with a time-of-day in `start`/`end` (e.g.\n`start=\"2026-03-05T09:00\"`) render as positioned/sized blocks; entries\nwith only a date (no time) render in an all-day band above the grid.\nOverlapping timed entries stack into side-by-side columns; overlapping\nall-day/multi-day entries stack into lanes, same as `calendar-month`.\nRead-only.\n\nShares its slotted-entry observation, resolution, and hover/focus\ninteraction sync with `calendar-week` via `CalendarTimelineBase`.",
+          "name": "CalendarDay",
+          "slots": [
+            {
+              "description": "Declarative `calendar-entry` elements to render for this day.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "type": {
+                "text": "string"
+              },
+              "description": "The day shown, `\"YYYY-MM-DD\"`.",
+              "attribute": "date",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_renderAllDayLane",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "laned",
+                  "type": {
+                    "text": "LanedEntry[]"
+                  }
+                },
+                {
+                  "name": "lane",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Renders one lane's stacked all-day bars, given the entries assigned to it."
+            },
+            {
+              "kind": "method",
+              "name": "_renderTimedEntry",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "laneCount",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "dayStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "dayEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Renders a positioned/sized block for one timed entry, clamped to this day's bounds."
+            },
+            {
+              "kind": "field",
+              "name": "entryElements",
+              "type": {
+                "text": "CalendarEntry[]"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "entriesVersion",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "protected",
+              "default": "0",
+              "description": "Bumped when entry elements, attributes, or slotted text change to force a re-render.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "entriesObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-renders when declarative `calendar-entry` children are added or removed.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveTimedEntriesFor",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ResolvedTimedEntry[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rangeStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "rangeEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Reads, resolves, and filters slotted entries to those overlapping `[rangeStart, rangeEnd]`.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "entryKey",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                }
+              ],
+              "description": "Current render key shared by an entry's rendered cells/blocks.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setEntryInteraction",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entryKey",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "className",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "active",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Toggles one interaction class on every rendered element belonging to an entry.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "syncEntryInteractions",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Reconciles classes against the links actually hovered or focused after a render.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderEntryLink",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "accessibleText",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Renders a transparent full-cell link without wrapping the visible text.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "date",
+              "type": {
+                "text": "string"
+              },
+              "description": "The day shown, `\"YYYY-MM-DD\"`.",
+              "fieldName": "date"
+            }
+          ],
+          "superclass": {
+            "name": "CalendarTimelineBase",
+            "module": "/src/calendar-timeline-base.js"
+          },
+          "tagName": "calendar-day",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CalendarDay",
+          "declaration": {
+            "name": "CalendarDay",
+            "module": "src/calendar-day.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "calendar-day",
+          "declaration": {
+            "name": "CalendarDay",
+            "module": "src/calendar-day.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/calendar-entry.ts",
       "declarations": [
         {
@@ -3187,6 +3482,505 @@
           "declaration": {
             "name": "CalendarMonth",
             "module": "src/calendar-month.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/calendar-timeline-base.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Shared base for the hour-grid calendar views, `calendar-day` and\n`calendar-week` — not a registered custom element itself. Holds what both\nneed identically: observing declarative `calendar-entry` children for live\nupdates, resolving them into time-aware entries, and syncing hover/focus\ninteraction classes on rendered entry bars/links. Pure date/geometry math\n(parsing, lane assignment) stays in `utils/calendar.ts` per this\ncodebase's existing convention; this class holds only the parts that need\nto be instance state on a `LitElement` (observers, cached query results).\n\nSubclasses must render a default `<slot",
+          "name": "CalendarTimelineBase",
+          "members": [
+            {
+              "kind": "field",
+              "name": "entryElements",
+              "type": {
+                "text": "CalendarEntry[]"
+              },
+              "privacy": "protected",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "entriesVersion",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "protected",
+              "default": "0",
+              "description": "Bumped when entry elements, attributes, or slotted text change to force a re-render."
+            },
+            {
+              "kind": "field",
+              "name": "entriesObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-renders when declarative `calendar-entry` children are added or removed."
+            },
+            {
+              "kind": "method",
+              "name": "resolveTimedEntriesFor",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ResolvedTimedEntry[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rangeStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "rangeEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Reads, resolves, and filters slotted entries to those overlapping `[rangeStart, rangeEnd]`."
+            },
+            {
+              "kind": "method",
+              "name": "entryKey",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                }
+              ],
+              "description": "Current render key shared by an entry's rendered cells/blocks."
+            },
+            {
+              "kind": "method",
+              "name": "setEntryInteraction",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entryKey",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "className",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "active",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Toggles one interaction class on every rendered element belonging to an entry."
+            },
+            {
+              "kind": "method",
+              "name": "syncEntryInteractions",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Reconciles classes against the links actually hovered or focused after a render."
+            },
+            {
+              "kind": "method",
+              "name": "renderEntryLink",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "accessibleText",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Renders a transparent full-cell link without wrapping the visible text."
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CalendarTimelineBase",
+          "declaration": {
+            "name": "CalendarTimelineBase",
+            "module": "src/calendar-timeline-base.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/calendar-week.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Sunday-through-Saturday week rendered as one shared hourly time grid — the\nseven-day sibling of `calendar-day`. Unlike `calendar-year` composing 12\n`calendar-month` children, this is its own independent 7-column layout\n(not 7 nested `<calendar-day>` elements): a single hour gutter is drawn\nonce, and multi-day/all-day entries span the days they cover as one\ncontinuous bar in a shared all-day band, since lanes for that band are\nassigned once across the whole visible week (unlike `calendar-month`'s\ndocumented per-instance lane limitation). Timed entries stack into\nside-by-side columns independently per day, same as `calendar-day`.\nRead-only.\n\nShares its slotted-entry observation, resolution, and hover/focus\ninteraction sync with `calendar-day` via `CalendarTimelineBase`.",
+          "name": "CalendarWeek",
+          "slots": [
+            {
+              "description": "Declarative `calendar-entry` elements to render for this week.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "type": {
+                "text": "string"
+              },
+              "description": "Any date within the displayed week (`\"YYYY-MM-DD\"`) — the week runs Sunday through Saturday.",
+              "attribute": "date",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_renderAllDayEntry",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "weekStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "weekEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Renders one all-day/multi-day bar, spanning the visible-week columns it covers."
+            },
+            {
+              "kind": "method",
+              "name": "_renderTimedEntry",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "laneCount",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "dayStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "dayEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Renders a positioned/sized block for one timed entry, clamped to `day`'s bounds."
+            },
+            {
+              "kind": "method",
+              "name": "_renderDayColumn",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "day",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "timedWeek",
+                  "type": {
+                    "text": "ResolvedTimedEntry[]"
+                  }
+                },
+                {
+                  "name": "todayIso",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Renders one day's hour column: grid lines plus its own independently laned timed entries."
+            },
+            {
+              "kind": "field",
+              "name": "entryElements",
+              "type": {
+                "text": "CalendarEntry[]"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "entriesVersion",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "protected",
+              "default": "0",
+              "description": "Bumped when entry elements, attributes, or slotted text change to force a re-render.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "entriesObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-renders when declarative `calendar-entry` children are added or removed.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveTimedEntriesFor",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ResolvedTimedEntry[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rangeStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "rangeEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Reads, resolves, and filters slotted entries to those overlapping `[rangeStart, rangeEnd]`.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "entryKey",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                }
+              ],
+              "description": "Current render key shared by an entry's rendered cells/blocks.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setEntryInteraction",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entryKey",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "className",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "active",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Toggles one interaction class on every rendered element belonging to an entry.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "syncEntryInteractions",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Reconciles classes against the links actually hovered or focused after a render.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderEntryLink",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "accessibleText",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Renders a transparent full-cell link without wrapping the visible text.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "date",
+              "type": {
+                "text": "string"
+              },
+              "description": "Any date within the displayed week (`\"YYYY-MM-DD\"`) — the week runs Sunday through Saturday.",
+              "fieldName": "date"
+            }
+          ],
+          "superclass": {
+            "name": "CalendarTimelineBase",
+            "module": "/src/calendar-timeline-base.js"
+          },
+          "tagName": "calendar-week",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CalendarWeek",
+          "declaration": {
+            "name": "CalendarWeek",
+            "module": "src/calendar-week.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "calendar-week",
+          "declaration": {
+            "name": "CalendarWeek",
+            "module": "src/calendar-week.ts"
           }
         }
       ]
@@ -8572,6 +9366,14 @@
         },
         {
           "kind": "js",
+          "name": "CalendarDay",
+          "declaration": {
+            "name": "CalendarDay",
+            "module": "./calendar-day.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "CalendarEntry",
           "declaration": {
             "name": "CalendarEntry",
@@ -8584,6 +9386,14 @@
           "declaration": {
             "name": "CalendarMonth",
             "module": "./calendar-month.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CalendarWeek",
+          "declaration": {
+            "name": "CalendarWeek",
+            "module": "./calendar-week.js"
           }
         },
         {
@@ -18090,6 +18900,120 @@
             }
           ],
           "description": "Assigns each entry a 0-based stacking lane via greedy interval\npartitioning (\"meeting rooms II\"): entries are sorted by start date, then\neach is placed in the lowest-numbered lane whose current occupant ends\nstrictly before the entry starts. Because entry ranges are\ninclusive-inclusive, an entry ending on day X and one starting on day X\nboth occupy day X and must not share a lane — hence the strict `<`.\n\nLane assignment is meant to be computed independently per `calendar-month`\n(from only the entries overlapping that month); an entry spanning a month\nboundary may therefore land in a different lane in adjacent months. This\nis an accepted v1 limitation, not a bug."
+        },
+        {
+          "kind": "function",
+          "name": "addDays",
+          "return": {
+            "type": {
+              "text": "Date"
+            }
+          },
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "Date"
+              }
+            },
+            {
+              "name": "days",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Adds `days` (negative to subtract) to `date`, returning a new local `Date`."
+        },
+        {
+          "kind": "function",
+          "name": "startOfWeek",
+          "return": {
+            "type": {
+              "text": "Date"
+            }
+          },
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "The Sunday (local midnight) of the week containing `date`, per `WEEKDAY_ABBR`'s Sunday-first convention."
+        },
+        {
+          "kind": "function",
+          "name": "minutesSinceMidnight",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "Minutes elapsed since local midnight on `date`'s day, for hour-grid vertical positioning."
+        },
+        {
+          "kind": "function",
+          "name": "hasTimeComponent",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "iso",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether `iso` carries a time-of-day component (`\"YYYY-MM-DDTHH:MM\"`) rather than being date-only."
+        },
+        {
+          "kind": "function",
+          "name": "parseIsoDateTime",
+          "return": {
+            "type": {
+              "text": "Date | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "iso",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parses `\"YYYY-MM-DDTHH:MM\"` as a local `Date`, falling back to\n`parseIsoDate` (local midnight) for a plain `\"YYYY-MM-DD\"` string. Returns\n`null` for anything else, including a datetime whose components don't\nround-trip (e.g. an invalid hour)."
+        },
+        {
+          "kind": "function",
+          "name": "resolveTimedEntry",
+          "return": {
+            "type": {
+              "text": "ResolvedTimedEntry | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "data",
+              "type": {
+                "text": "CalendarEntryData"
+              }
+            }
+          ],
+          "description": "Resolves a `CalendarEntryData`'s date/datetime strings for hour-grid\nrendering. Returns `null` when `start` is missing or unparseable. A blank\n`end` defaults to `start`; when `start` has a time but `end` doesn't (or is\nblank), `end` defaults to one hour after `start` rather than clamping to\n`start`'s instant, so a timed entry with no explicit end still renders as\na visible block. `allDay` is true only when neither endpoint carries a\ntime-of-day component — this is a separate, additive resolution path from\n`resolveEntry`/`ResolvedCalendarEntry`, which stay date-only and are used\nunchanged by `calendar-month`/`calendar-year`."
         }
       ],
       "exports": [
@@ -18178,6 +19102,54 @@
           "name": "assignLanes",
           "declaration": {
             "name": "assignLanes",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "addDays",
+          "declaration": {
+            "name": "addDays",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "startOfWeek",
+          "declaration": {
+            "name": "startOfWeek",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "minutesSinceMidnight",
+          "declaration": {
+            "name": "minutesSinceMidnight",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hasTimeComponent",
+          "declaration": {
+            "name": "hasTimeComponent",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseIsoDateTime",
+          "declaration": {
+            "name": "parseIsoDateTime",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveTimedEntry",
+          "declaration": {
+            "name": "resolveTimedEntry",
             "module": "src/utils/calendar.ts"
           }
         }

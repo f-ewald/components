@@ -37,6 +37,26 @@ focus-trap/Escape/layer-stack logic as the other sizes). `button-group` has an `
 boolean (labels hidden via `sr-only` clip, kept as the accessible name via
 `aria-label`/`title` on each segment's radio input).
 
+`calendar-day`/`calendar-week` are the calendar family's first hour-grid
+views, alongside the existing date-only `calendar-month`/`calendar-year`.
+Declarative `calendar-entry` children with a time-of-day in `start`/`end`
+(e.g. `start="2026-07-15T09:00"`) render as positioned/sized blocks;
+entries with only a date render in an all-day band above the grid. Both
+extend `CalendarTimelineBase` (`src/calendar-timeline-base.ts`) — an
+unregistered abstract `LitElement` shared **only** by these two components
+(not retrofitted onto `calendar-month`/`calendar-year`) holding the
+slotted-entry observation/lifecycle and hover/focus interaction sync that
+only makes sense as instance state; pure date/geometry math
+(`parseIsoDateTime`, `resolveTimedEntry`, `minutesSinceMidnight`,
+`startOfWeek`, etc.) stays in `utils/calendar.ts` as additive, separate
+exports from the date-only `parseIsoDate`/`resolveEntry` path — this is the
+package's first use of component inheritance; every other shared-logic case
+uses free functions instead. `calendar-week` is its own independent 7-column
+layout (not 7 nested `<calendar-day>`), so a single hour gutter is drawn
+once and lanes for the all-day band are assigned across the whole visible
+week in one call, giving multi-day bars correct cross-day continuity that
+`calendar-month`'s per-instance lane assignment can't.
+
 ## Layout
 
 - `src/` — component sources, one file per component (e.g. `src/confirm-dialog.ts`).

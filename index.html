@@ -41,7 +41,9 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#auto-scroll">auto-scroll</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#button-group">button-group</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-day">calendar-day</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-month">calendar-month</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-week">calendar-week</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-year">calendar-year</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#card-grid">card-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chat-message">chat-message</a>
@@ -426,6 +428,71 @@ document.querySelector("#button-group-sm").options = el.options;
 document.querySelector("#button-group-sm").value = "list";</code></pre>
         </section>
 
+        <section id="calendar-day" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-calendar-day">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#calendar-day">calendar-day</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            One day as an hourly time grid. Declarative <code>calendar-entry</code> children
+            with a time of day in <code>start</code>/<code>end</code> (e.g.
+            <code>start="2026-07-15T09:00"</code>) render as positioned blocks — overlapping
+            ones stack side by side. Entries with only a date render in the all-day band above
+            the grid.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <label class="mb-4 flex items-center justify-between gap-3 text-sm text-slate-600">
+              Date
+              <input
+                id="calendar-day-select"
+                data-testid="calendar-day-select"
+                type="date"
+                value="2026-07-15"
+                class="rounded border border-slate-300 px-2 py-1"
+              />
+            </label>
+            <calendar-day id="calendar-day-demo" data-testid="calendar-day-demo" date="2026-07-15">
+              <calendar-entry
+                id="cd-entry-holiday"
+                start="2026-07-15"
+                end="2026-07-15"
+                label="Company holiday"
+                color="neutral"
+              ></calendar-entry>
+              <calendar-entry
+                id="cd-entry-standup"
+                start="2026-07-15T09:00"
+                end="2026-07-15T09:30"
+                label="Standup"
+                color="info"
+              ></calendar-entry>
+              <calendar-entry
+                id="cd-entry-review"
+                start="2026-07-15T09:15"
+                end="2026-07-15T10:00"
+                label="Design review"
+                color="primary"
+                href="#review"
+              >
+                <span slot="detail">Walk through the new onboarding flow</span>
+              </calendar-entry>
+              <calendar-entry
+                id="cd-entry-lunch"
+                start="2026-07-15T12:00"
+                end="2026-07-15T13:00"
+                label="Lunch"
+                color="success"
+              ></calendar-entry>
+            </calendar-day>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-day.js";
+
+&lt;calendar-day date="2026-07-15"&gt;
+  &lt;calendar-entry start="2026-07-15" end="2026-07-15" label="Company holiday" color="neutral"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-15T09:00" end="2026-07-15T09:30" label="Standup" color="info"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-15T09:15" end="2026-07-15T10:00" label="Design review" color="primary" href="#review"&gt;
+    &lt;span slot="detail"&gt;Walk through the new onboarding flow&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+&lt;/calendar-day&gt;</code></pre>
+        </section>
+
         <section id="calendar-month" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-calendar-month">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#calendar-month">calendar-month</a></h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -491,6 +558,73 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
     &lt;span slot="footer"&gt;Also hidden for a one-day entry&lt;/span&gt;
   &lt;/calendar-entry&gt;
 &lt;/calendar-month&gt;</code></pre>
+        </section>
+
+        <section id="calendar-week" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-calendar-week">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#calendar-week">calendar-week</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A Sunday-through-Saturday week as one shared hourly time grid — the seven-day
+            sibling of <code>calendar-day</code>. Multi-day/all-day entries span the days they
+            cover as a single continuous bar; timed entries stack side by side independently
+            per day.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <label class="mb-4 flex items-center justify-between gap-3 text-sm text-slate-600">
+              Any date in the week
+              <input
+                id="calendar-week-select"
+                data-testid="calendar-week-select"
+                type="date"
+                value="2026-07-15"
+                class="rounded border border-slate-300 px-2 py-1"
+              />
+            </label>
+            <calendar-week id="calendar-week-demo" data-testid="calendar-week-demo" date="2026-07-15">
+              <calendar-entry
+                id="cw-entry-offsite"
+                start="2026-07-13"
+                end="2026-07-15"
+                label="Offsite"
+                color="primary"
+                href="#offsite"
+              ></calendar-entry>
+              <calendar-entry
+                id="cw-entry-review"
+                start="2026-07-17"
+                end="2026-07-17"
+                label="All-hands"
+                color="neutral"
+              ></calendar-entry>
+              <calendar-entry
+                id="cw-entry-standup"
+                start="2026-07-14T09:00"
+                end="2026-07-14T09:30"
+                label="Standup"
+                color="info"
+              ></calendar-entry>
+              <calendar-entry
+                id="cw-entry-planning"
+                start="2026-07-14T09:15"
+                end="2026-07-14T10:00"
+                label="Sprint planning"
+                color="warning"
+              ></calendar-entry>
+              <calendar-entry
+                id="cw-entry-demo"
+                start="2026-07-16T14:00"
+                end="2026-07-16T15:00"
+                label="Customer demo"
+                color="success"
+              ></calendar-entry>
+            </calendar-week>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-week.js";
+
+&lt;calendar-week date="2026-07-15"&gt;
+  &lt;calendar-entry start="2026-07-13" end="2026-07-15" label="Offsite" color="primary" href="#offsite"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-14T09:00" end="2026-07-14T09:30" label="Standup" color="info"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"&gt;&lt;/calendar-entry&gt;
+&lt;/calendar-week&gt;</code></pre>
         </section>
 
         <section id="calendar-year" class="scroll-mt-8 py-10" data-testid="section-calendar-year">

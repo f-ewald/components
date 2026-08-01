@@ -24,6 +24,7 @@ export interface LanedEntry extends ResolvedCalendarEntry {
 }
 
 const ISO_DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+const ISO_DATETIME_PATTERN = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/;
 
 /** Attributes whose mutations can change a rendered calendar entry. */
 export const CALENDAR_ENTRY_ATTRIBUTES = ["start", "end", "label", "color", "href", "slot"];
@@ -171,4 +172,102 @@ export function assignLanes(entries: ResolvedCalendarEntry[]): {
   }
 
   return { entries: laned, laneCount: laneEnds.length };
+}
+
+/** Adds `days` (negative to subtract) to `date`, returning a new local `Date`. */
+export function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+/** The Sunday (local midnight) of the week containing `date`, per `WEEKDAY_ABBR`'s Sunday-first convention. */
+export function startOfWeek(date: Date): Date {
+  return addDays(date, -date.getDay());
+}
+
+/** Minutes elapsed since local midnight on `date`'s day, for hour-grid vertical positioning. */
+export function minutesSinceMidnight(date: Date): number {
+  return date.getHours() * 60 + date.getMinutes();
+}
+
+/** Whether `iso` carries a time-of-day component (`"YYYY-MM-DDTHH:MM"`) rather than being date-only. */
+export function hasTimeComponent(iso: string): boolean {
+  return ISO_DATETIME_PATTERN.test(iso);
+}
+
+/**
+ * Parses `"YYYY-MM-DDTHH:MM"` as a local `Date`, falling back to
+ * `parseIsoDate` (local midnight) for a plain `"YYYY-MM-DD"` string. Returns
+ * `null` for anything else, including a datetime whose components don't
+ * round-trip (e.g. an invalid hour).
+ */
+export function parseIsoDateTime(iso: string): Date | null {
+  const match = ISO_DATETIME_PATTERN.exec(iso);
+  if (!match) return parseIsoDate(iso);
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const hours = Number(match[4]);
+  const minutes = Number(match[5]);
+  const date = new Date(year, month - 1, day, hours, minutes);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day ||
+    date.getHours() !== hours ||
+    date.getMinutes() !== minutes
+  ) {
+    return null;
+  }
+  return date;
+}
+
+/**
+ * A `CalendarEntryData` resolved for hour-grid (`calendar-day`/`calendar-week`)
+ * rendering. Reuses the `startDate`/`endDate` field names from
+ * `ResolvedCalendarEntry` so it stays structurally compatible with
+ * `assignLanes`/`overlapsRange` — both operate purely on those two `Date`
+ * fields via `.getTime()`, which already generalizes correctly to sub-day
+ * time granularity and multi-day ranges with no changes needed.
+ */
+export interface ResolvedTimedEntry extends CalendarEntryData {
+  startDate: Date;
+  endDate: Date;
+  /** True when neither `start` nor `end` carries a time-of-day component. */
+  allDay: boolean;
+}
+
+/**
+ * Resolves a `CalendarEntryData`'s date/datetime strings for hour-grid
+ * rendering. Returns `null` when `start` is missing or unparseable. A blank
+ * `end` defaults to `start`; when `start` has a time but `end` doesn't (or is
+ * blank), `end` defaults to one hour after `start` rather than clamping to
+ * `start`'s instant, so a timed entry with no explicit end still renders as
+ * a visible block. `allDay` is true only when neither endpoint carries a
+ * time-of-day component — this is a separate, additive resolution path from
+ * `resolveEntry`/`ResolvedCalendarEntry`, which stay date-only and are used
+ * unchanged by `calendar-month`/`calendar-year`.
+ */
+export function resolveTimedEntry(data: CalendarEntryData): ResolvedTimedEntry | null {
+  const startDate = parseIsoDateTime(data.start);
+  if (!startDate) return null;
+
+  const startHasTime = hasTimeComponent(data.start);
+  const endHasTime = hasTimeComponent(data.end);
+  const allDay = !startHasTime && !endHasTime;
+
+  let endDate = data.end ? parseIsoDateTime(data.end) : null;
+  if (!endDate) {
+    endDate = startHasTime ? new Date(startDate.getTime() + 60 * 60 * 1000) : startDate;
+  }
+
+  return {
+    ...data,
+    details: data.details ?? [],
+    startDate,
+    endDate: endDate < startDate ? startDate : endDate,
+    allDay,
+  };
 }
