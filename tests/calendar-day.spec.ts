@@ -121,4 +121,22 @@ test.describe("calendar-day", () => {
     await expect(calendar.locator(".entry-block")).toHaveCount(0);
     await expect(calendar.locator(".all-day-band")).toHaveClass(/empty/);
   });
+
+  test("renders slotted actions beside the day name and lets them drive navigation", async ({ page }) => {
+    await page.goto("/");
+    const calendar = page.locator("#calendar-day-demo");
+    const prev = page.locator('[data-testid="calendar-day-prev"]');
+    const next = page.locator('[data-testid="calendar-day-next"]');
+
+    await expect(prev).toBeVisible();
+    await expect(next).toBeVisible();
+
+    await next.click();
+    await expect(calendar).toHaveJSProperty("date", "2026-07-16");
+    await expect(page.locator("#calendar-day-select")).toHaveValue("2026-07-16");
+
+    await prev.click();
+    await prev.click();
+    await expect(calendar).toHaveJSProperty("date", "2026-07-14");
+  });
 });

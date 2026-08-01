@@ -47,6 +47,7 @@ function dayIndex(date: Date, weekStart: Date): number {
  *
  * @element calendar-week
  * @slot - Declarative `calendar-entry` elements to render for this week.
+ * @slot actions - Optional controls rendered beside the day headers (e.g. week-navigation buttons).
  */
 @customElement("calendar-week")
 export class CalendarWeek extends CalendarTimelineBase {
@@ -70,9 +71,22 @@ export class CalendarWeek extends CalendarTimelineBase {
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
+      .week-header-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
       .week-header {
         display: flex;
-        margin-bottom: 0.5rem;
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .actions {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 0.5rem;
       }
       .hour-gutter-spacer {
         flex: 0 0 3rem;
@@ -212,7 +226,7 @@ export class CalendarWeek extends CalendarTimelineBase {
           transition: none;
         }
       }
-      slot {
+      slot:not([name]) {
         display: none;
       }
     `,
@@ -295,16 +309,19 @@ export class CalendarWeek extends CalendarTimelineBase {
 
     return html`
       <div class="week">
-        <div class="week-header">
-          <div class="hour-gutter-spacer"></div>
-          ${days.map(
-            (day) => html`
-              <div class="day-header ${toIsoDate(day) === todayIso ? "today" : ""}">
-                <div>${WEEKDAY_ABBR[day.getDay()]}</div>
-                <div class="day-number">${day.getDate()}</div>
-              </div>
-            `,
-          )}
+        <div class="week-header-row">
+          <div class="week-header">
+            <div class="hour-gutter-spacer"></div>
+            ${days.map(
+              (day) => html`
+                <div class="day-header ${toIsoDate(day) === todayIso ? "today" : ""}">
+                  <div>${WEEKDAY_ABBR[day.getDay()]}</div>
+                  <div class="day-number">${day.getDate()}</div>
+                </div>
+              `,
+            )}
+          </div>
+          <div class="actions"><slot name="actions"></slot></div>
         </div>
         <div class="all-day-band ${allDay.length === 0 ? "empty" : ""}">
           <div class="hour-gutter-spacer"></div>

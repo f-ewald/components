@@ -36,6 +36,7 @@ function hourLabel(h: number): string {
  *
  * @element calendar-day
  * @slot - Declarative `calendar-entry` elements to render for this day.
+ * @slot actions - Optional controls rendered beside the day name (e.g. day-navigation buttons).
  */
 @customElement("calendar-day")
 export class CalendarDay extends CalendarTimelineBase {
@@ -59,8 +60,16 @@ export class CalendarDay extends CalendarTimelineBase {
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
+      .day-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
       .day-name {
-        margin: 0 0 0.5rem;
+        margin: 0;
+        min-width: 0;
         color: var(--ui-text, #0f172a);
         font-size: var(--ui-font-size-lg, 1rem);
         font-weight: var(--ui-font-weight-semibold, 600);
@@ -68,6 +77,12 @@ export class CalendarDay extends CalendarTimelineBase {
       }
       .day-name.today {
         color: var(--ui-primary, #4f46e5);
+      }
+      .actions {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 0.5rem;
       }
       .all-day-band {
         display: flex;
@@ -192,7 +207,7 @@ export class CalendarDay extends CalendarTimelineBase {
           transition: none;
         }
       }
-      slot {
+      slot:not([name]) {
         display: none;
       }
     `,
@@ -257,9 +272,12 @@ export class CalendarDay extends CalendarTimelineBase {
 
     return html`
       <div class="day">
-        <h4 class="day-name ${isToday ? "today" : ""}">
-          ${monthName(day.getMonth() + 1)} ${day.getDate()}, ${day.getFullYear()}
-        </h4>
+        <div class="day-header">
+          <h4 class="day-name ${isToday ? "today" : ""}">
+            ${monthName(day.getMonth() + 1)} ${day.getDate()}, ${day.getFullYear()}
+          </h4>
+          <div class="actions"><slot name="actions"></slot></div>
+        </div>
         <div class="all-day-band ${allDay.length === 0 ? "empty" : ""}">
           <div class="hour-gutter-spacer"></div>
           <div class="all-day-lanes">

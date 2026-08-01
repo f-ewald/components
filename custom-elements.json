@@ -2671,6 +2671,10 @@
             {
               "description": "Declarative `calendar-entry` elements to render for this day.",
               "name": ""
+            },
+            {
+              "description": "Optional controls rendered beside the day name (e.g. day-navigation buttons).",
+              "name": "actions"
             }
           ],
           "members": [
@@ -3117,6 +3121,10 @@
             {
               "description": "Declarative `calendar-entry` elements to render for this month.",
               "name": ""
+            },
+            {
+              "description": "Optional controls rendered beside the month name (e.g. month-navigation buttons).",
+              "name": "actions"
             }
           ],
           "members": [
@@ -3670,6 +3678,10 @@
             {
               "description": "Declarative `calendar-entry` elements to render for this week.",
               "name": ""
+            },
+            {
+              "description": "Optional controls rendered beside the day headers (e.g. week-navigation buttons).",
+              "name": "actions"
             }
           ],
           "members": [

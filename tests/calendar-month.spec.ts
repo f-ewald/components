@@ -543,4 +543,23 @@ test.describe("calendar-month", () => {
       .evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
     expect(Number.parseFloat(detailLeading) / detailFontSize).toBeCloseTo(1.15, 2);
   });
+
+  test("renders slotted actions beside the month name and lets them drive navigation", async ({ page }) => {
+    await page.goto("/");
+    const calendar = page.locator("#calendar-month-demo");
+    const prev = page.locator('[data-testid="calendar-month-prev"]');
+    const next = page.locator('[data-testid="calendar-month-next"]');
+
+    await expect(prev).toBeVisible();
+    await expect(next).toBeVisible();
+
+    await next.click();
+    await expect(calendar).toHaveJSProperty("year", 2026);
+    await expect(calendar).toHaveJSProperty("month", 8);
+
+    await prev.click();
+    await prev.click();
+    await expect(calendar).toHaveJSProperty("year", 2026);
+    await expect(calendar).toHaveJSProperty("month", 6);
+  });
 });

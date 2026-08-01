@@ -64,6 +64,7 @@ import {
   type GalleryItem,
   type GalleryItemVariant,
   type CalendarDay,
+  type CalendarMonth,
   type CalendarWeek,
   type CalendarYear,
   type AutocompleteInput,
@@ -1101,6 +1102,29 @@ const calendarDayDemo = document.getElementById("calendar-day-demo") as Calendar
 calendarDaySelect?.addEventListener("change", () => {
   if (calendarDayDemo && calendarDaySelect.value) calendarDayDemo.date = calendarDaySelect.value;
 });
+function shiftCalendarDay(days: number): void {
+  if (!calendarDayDemo) return;
+  const [year, month, day] = calendarDayDemo.date.split("-").map(Number);
+  const shifted = new Date(year, month - 1, day + days);
+  const iso = `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, "0")}-${String(shifted.getDate()).padStart(2, "0")}`;
+  calendarDayDemo.date = iso;
+  if (calendarDaySelect) calendarDaySelect.value = iso;
+}
+document.querySelector('[data-testid="calendar-day-prev"]')?.addEventListener("click", () => shiftCalendarDay(-1));
+document.querySelector('[data-testid="calendar-day-next"]')?.addEventListener("click", () => shiftCalendarDay(1));
+
+// calendar-month
+const calendarMonthDemo = document.getElementById("calendar-month-demo") as CalendarMonth | null;
+function shiftCalendarMonth(months: number): void {
+  if (!calendarMonthDemo) return;
+  const zeroBased = calendarMonthDemo.month - 1 + months;
+  const year = calendarMonthDemo.year + Math.floor(zeroBased / 12);
+  const month = ((zeroBased % 12) + 12) % 12;
+  calendarMonthDemo.year = year;
+  calendarMonthDemo.month = month + 1;
+}
+document.querySelector('[data-testid="calendar-month-prev"]')?.addEventListener("click", () => shiftCalendarMonth(-1));
+document.querySelector('[data-testid="calendar-month-next"]')?.addEventListener("click", () => shiftCalendarMonth(1));
 
 // calendar-week
 const calendarWeekSelect = document.getElementById("calendar-week-select") as HTMLInputElement | null;
@@ -1108,6 +1132,16 @@ const calendarWeekDemo = document.getElementById("calendar-week-demo") as Calend
 calendarWeekSelect?.addEventListener("change", () => {
   if (calendarWeekDemo && calendarWeekSelect.value) calendarWeekDemo.date = calendarWeekSelect.value;
 });
+function shiftCalendarWeek(days: number): void {
+  if (!calendarWeekDemo) return;
+  const [year, month, day] = calendarWeekDemo.date.split("-").map(Number);
+  const shifted = new Date(year, month - 1, day + days);
+  const iso = `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, "0")}-${String(shifted.getDate()).padStart(2, "0")}`;
+  calendarWeekDemo.date = iso;
+  if (calendarWeekSelect) calendarWeekSelect.value = iso;
+}
+document.querySelector('[data-testid="calendar-week-prev"]')?.addEventListener("click", () => shiftCalendarWeek(-7));
+document.querySelector('[data-testid="calendar-week-next"]')?.addEventListener("click", () => shiftCalendarWeek(7));
 
 // calendar-year
 const calendarYearSelect = document.getElementById("calendar-year-select") as HTMLSelectElement | null;

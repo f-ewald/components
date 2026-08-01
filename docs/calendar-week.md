@@ -45,6 +45,7 @@ _None._
 | Slot | Description |
 | --- | --- |
 | `(default)` | Declarative `calendar-entry` elements to render for this week. |
+| `actions` | Optional controls rendered beside the day headers (e.g. week-navigation buttons). |
 
 ## CSS custom properties
 

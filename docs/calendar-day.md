@@ -45,6 +45,7 @@ _None._
 | Slot | Description |
 | --- | --- |
 | `(default)` | Declarative `calendar-entry` elements to render for this day. |
+| `actions` | Optional controls rendered beside the day name (e.g. day-navigation buttons). |
 
 ## CSS custom properties
 

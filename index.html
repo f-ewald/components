@@ -435,7 +435,8 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
             with a time of day in <code>start</code>/<code>end</code> (e.g.
             <code>start="2026-07-15T09:00"</code>) render as positioned blocks — overlapping
             ones stack side by side. Entries with only a date render in the all-day band above
-            the grid.
+            the grid. The <code>actions</code> slot renders beside the day name for controls
+            like day-navigation buttons.
           </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
             <label class="mb-4 flex items-center justify-between gap-3 text-sm text-slate-600">
@@ -449,6 +450,22 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
               />
             </label>
             <calendar-day id="calendar-day-demo" data-testid="calendar-day-demo" date="2026-07-15">
+              <ui-button
+                slot="actions"
+                data-testid="calendar-day-prev"
+                variant="secondary"
+                size="sm"
+                aria-label="Previous day"
+                >&larr;</ui-button
+              >
+              <ui-button
+                slot="actions"
+                data-testid="calendar-day-next"
+                variant="secondary"
+                size="sm"
+                aria-label="Next day"
+                >&rarr;</ui-button
+              >
               <calendar-entry
                 id="cd-entry-holiday"
                 start="2026-07-15"
@@ -485,6 +502,8 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-day.js";
 
 &lt;calendar-day date="2026-07-15"&gt;
+  &lt;ui-button slot="actions" variant="secondary" size="sm" aria-label="Previous day"&gt;&amp;larr;&lt;/ui-button&gt;
+  &lt;ui-button slot="actions" variant="secondary" size="sm" aria-label="Next day"&gt;&amp;rarr;&lt;/ui-button&gt;
   &lt;calendar-entry start="2026-07-15" end="2026-07-15" label="Company holiday" color="neutral"&gt;&lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-15T09:00" end="2026-07-15T09:30" label="Standup" color="info"&gt;&lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-15T09:15" end="2026-07-15T10:00" label="Design review" color="primary" href="#review"&gt;
@@ -499,10 +518,27 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
             One month as a top-to-bottom day list. Weekends are highlighted, today is marked,
             and overlapping declarative <code>calendar-entry</code> children stack into aligned
             lanes rather than hiding one another. Named title/detail slots fill one line per
-            visible day, with overflow details hidden automatically.
+            visible day, with overflow details hidden automatically. The <code>actions</code>
+            slot renders beside the month name for controls like month-navigation buttons.
           </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
             <calendar-month id="calendar-month-demo" data-testid="calendar-month-demo" year="2026" month="7">
+              <ui-button
+                slot="actions"
+                data-testid="calendar-month-prev"
+                variant="secondary"
+                size="sm"
+                aria-label="Previous month"
+                >&larr;</ui-button
+              >
+              <ui-button
+                slot="actions"
+                data-testid="calendar-month-next"
+                variant="secondary"
+                size="sm"
+                aria-label="Next month"
+                >&rarr;</ui-button
+              >
               <calendar-entry
                 id="cm-entry-vacation"
                 start="2026-07-10"
@@ -542,6 +578,8 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-month.js";
 
 &lt;calendar-month year="2026" month="7"&gt;
+  &lt;ui-button slot="actions" variant="secondary" size="sm" aria-label="Previous month"&gt;&amp;larr;&lt;/ui-button&gt;
+  &lt;ui-button slot="actions" variant="secondary" size="sm" aria-label="Next month"&gt;&amp;rarr;&lt;/ui-button&gt;
   &lt;calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"&gt;
     &lt;span slot="title"&gt;Vacation&lt;/span&gt;
     &lt;span slot="detail"&gt;Out of office&lt;/span&gt;
@@ -566,7 +604,8 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
             A Sunday-through-Saturday week as one shared hourly time grid — the seven-day
             sibling of <code>calendar-day</code>. Multi-day/all-day entries span the days they
             cover as a single continuous bar; timed entries stack side by side independently
-            per day.
+            per day. The <code>actions</code> slot renders beside the day headers for controls
+            like week-navigation buttons.
           </p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
             <label class="mb-4 flex items-center justify-between gap-3 text-sm text-slate-600">
@@ -580,6 +619,22 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
               />
             </label>
             <calendar-week id="calendar-week-demo" data-testid="calendar-week-demo" date="2026-07-15">
+              <ui-button
+                slot="actions"
+                data-testid="calendar-week-prev"
+                variant="secondary"
+                size="sm"
+                aria-label="Previous week"
+                >&larr;</ui-button
+              >
+              <ui-button
+                slot="actions"
+                data-testid="calendar-week-next"
+                variant="secondary"
+                size="sm"
+                aria-label="Next week"
+                >&rarr;</ui-button
+              >
               <calendar-entry
                 id="cw-entry-offsite"
                 start="2026-07-13"
@@ -621,6 +676,8 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-week.js";
 
 &lt;calendar-week date="2026-07-15"&gt;
+  &lt;ui-button slot="actions" variant="secondary" size="sm" aria-label="Previous week"&gt;&amp;larr;&lt;/ui-button&gt;
+  &lt;ui-button slot="actions" variant="secondary" size="sm" aria-label="Next week"&gt;&amp;rarr;&lt;/ui-button&gt;
   &lt;calendar-entry start="2026-07-13" end="2026-07-15" label="Offsite" color="primary" href="#offsite"&gt;&lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-14T09:00" end="2026-07-14T09:30" label="Standup" color="info"&gt;&lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"&gt;&lt;/calendar-entry&gt;

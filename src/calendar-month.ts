@@ -37,6 +37,7 @@ import {
  *
  * @element calendar-month
  * @slot - Declarative `calendar-entry` elements to render for this month.
+ * @slot actions - Optional controls rendered beside the month name (e.g. month-navigation buttons).
  */
 @customElement("calendar-month")
 export class CalendarMonth extends LitElement {
@@ -71,12 +72,26 @@ export class CalendarMonth extends LitElement {
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
+      .month-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
       .month-name {
-        margin: 0 0 0.5rem;
+        margin: 0;
+        min-width: 0;
         color: var(--ui-text, #0f172a);
         font-size: var(--ui-font-size-lg, 1rem);
         font-weight: var(--ui-font-weight-semibold, 600);
         line-height: var(--ui-line-height-tight, 1.25);
+      }
+      .actions {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 0.5rem;
       }
       table {
         width: 100%;
@@ -256,7 +271,7 @@ export class CalendarMonth extends LitElement {
           transition: none;
         }
       }
-      slot {
+      slot:not([name]) {
         display: none;
       }
     `,
@@ -479,7 +494,10 @@ export class CalendarMonth extends LitElement {
 
     return html`
       <div class="month">
-        <h4 class="month-name">${monthName(this.month)} ${this.year}</h4>
+        <div class="month-header">
+          <h4 class="month-name">${monthName(this.month)} ${this.year}</h4>
+          <div class="actions"><slot name="actions"></slot></div>
+        </div>
         <table>
           <tbody>
             ${repeat(

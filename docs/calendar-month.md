@@ -55,6 +55,7 @@ _None._
 | Slot | Description |
 | --- | --- |
 | `(default)` | Declarative `calendar-entry` elements to render for this month. |
+| `actions` | Optional controls rendered beside the month name (e.g. month-navigation buttons). |
 
 ## CSS custom properties
 

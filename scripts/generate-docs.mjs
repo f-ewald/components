@@ -67,12 +67,24 @@ const SLOTS = {
   ],
   "calendar-day": [
     { name: "(default)", description: "Declarative `calendar-entry` elements to render for this day." },
+    {
+      name: "actions",
+      description: "Optional controls rendered beside the day name (e.g. day-navigation buttons).",
+    },
   ],
   "calendar-month": [
     { name: "(default)", description: "Declarative `calendar-entry` elements to render for this month." },
+    {
+      name: "actions",
+      description: "Optional controls rendered beside the month name (e.g. month-navigation buttons).",
+    },
   ],
   "calendar-week": [
     { name: "(default)", description: "Declarative `calendar-entry` elements to render for this week." },
+    {
+      name: "actions",
+      description: "Optional controls rendered beside the day headers (e.g. week-navigation buttons).",
+    },
   ],
   "calendar-year": [
     {
