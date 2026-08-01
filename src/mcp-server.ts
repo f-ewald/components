@@ -65,7 +65,7 @@ async function listComponents(): Promise<ComponentSummary[]> {
   const components: ComponentSummary[] = [];
   for (const mod of manifest.modules) {
     for (const decl of mod.declarations ?? []) {
-      if (!decl.customElement) continue;
+      if (!decl.customElement || !decl.tagName) continue;
       const summary = (decl.description ?? "").split("\n\n")[0]!.replace(/\n/g, " ").trim();
       components.push({ tag: decl.tagName, summary });
     }
