@@ -55,7 +55,19 @@ uses free functions instead. `calendar-week` is its own independent 7-column
 layout (not 7 nested `<calendar-day>`), so a single hour gutter is drawn
 once and lanes for the all-day band are assigned across the whole visible
 week in one call, giving multi-day bars correct cross-day continuity that
-`calendar-month`'s per-instance lane assignment can't.
+`calendar-month`'s per-instance lane assignment can't. `calendar-day` has an
+opt-in `weekend` highlight (`isWeekend`, same muted-surface treatment as
+`calendar-month`'s row highlight) and a `time-marker` boolean that draws a
+live, minute-ticking current-time line (`.now-line`, red per `--ui-danger`
+to read distinctly from the primary-tinted `.today` column) — both scoped to
+`calendar-day` only, not `calendar-week`/`calendar-month`. `calendar-entry`
+has a fourth named slot, `location`, rendered with a leading `iconMapPin`
+marker as a second line under the title everywhere it's shown (`calendar-day`
+and `calendar-week`'s entry blocks, plus `calendar-month`'s single-day title
+cell and its multi-day shared body, where it consumes a reserved line budget
+the same way `footer` already does) — a single-day `calendar-month` entry's
+title cell can therefore grow taller than a sibling without a location; that
+tradeoff was chosen over inlining location onto the title line.
 
 ## Layout
 

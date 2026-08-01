@@ -8,6 +8,7 @@ export interface CalendarEntryData {
   label: string;
   details?: string[];
   footer?: string;
+  location?: string;
   color: StatusPillColor;
   href?: string;
 }
@@ -94,12 +95,14 @@ function slottedText(el: CalendarEntry, slotName: string): string[] {
 export function readCalendarEntryElement(el: CalendarEntry): CalendarEntryData {
   const title = slottedText(el, "title").find((line) => line.length > 0);
   const footer = slottedText(el, "footer").find((line) => line.length > 0);
+  const location = slottedText(el, "location").find((line) => line.length > 0);
   return {
     start: el.start,
     end: el.end,
     label: title ?? el.label,
     details: slottedText(el, "detail"),
     footer,
+    location,
     color: el.color,
     href: el.href,
   };

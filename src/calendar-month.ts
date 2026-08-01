@@ -2,6 +2,7 @@ import { LitElement, css, html, nothing } from "lit";
 import { customElement, property, queryAssignedElements, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { CalendarEntry } from "./calendar-entry.js";
+import { iconMapPin } from "./icons.js";
 import { tokens } from "./tokens.js";
 import {
   CALENDAR_ENTRY_ATTRIBUTES,
@@ -198,6 +199,28 @@ export class CalendarMonth extends LitElement {
         white-space: nowrap;
         text-overflow: ellipsis;
       }
+      .entry-location {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        box-sizing: border-box;
+        overflow: hidden;
+        color: inherit;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
+        font-weight: var(--ui-font-weight-regular, 400);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        pointer-events: none;
+      }
+      .entry-location svg {
+        flex: 0 0 auto;
+      }
+      .entry-title-cell .entry-location {
+        padding: 0 0.5rem 0.25rem;
+      }
+      .entry-body .entry-location {
+        margin-bottom: 0.25rem;
+      }
       .entry-details {
         display: -webkit-box;
         min-height: 0;
@@ -367,14 +390,14 @@ export class CalendarMonth extends LitElement {
       : nothing;
   }
 
-  /** Joins the event title, details, and visible footer for tooltips and accessible link names. */
+  /** Joins the event title, location, details, and visible footer for tooltips and accessible link names. */
   private _entryBodyText(entry: LanedEntry, showFooter: boolean): string {
-    return [entry.label, ...(entry.details ?? []), showFooter ? entry.footer : undefined]
+    return [entry.label, entry.location, ...(entry.details ?? []), showFooter ? entry.footer : undefined]
       .filter((line): line is string => Boolean(line))
       .join("\n");
   }
 
-  /** Renders the shared details body, with the footer reserved at its bottom edge. */
+  /** Renders the shared details body, with the location pinned at the top and the footer reserved at the bottom. */
   private _renderEntryBody(
     entry: LanedEntry,
     showFooter: boolean,
@@ -391,6 +414,9 @@ export class CalendarMonth extends LitElement {
     return html`
       ${this._renderEntryLink(entry, bodyText)}
       <div class="entry-body" aria-hidden=${entry.href ? "true" : nothing}>
+        ${entry.location
+          ? html`<div class="entry-location">${iconMapPin(14)}${entry.location}</div>`
+          : nothing}
         ${detailLineClamp > 0 && details.length > 0
           ? html`
               <div
@@ -408,7 +434,7 @@ export class CalendarMonth extends LitElement {
     `;
   }
 
-  /** Renders a row-spanning body cell with whole-line detail and footer budgets. */
+  /** Renders a row-spanning body cell with whole-line location, detail, and footer budgets. */
   private _renderEntryBodyCell(
     entry: LanedEntry,
     bodyRows: number,
@@ -417,7 +443,8 @@ export class CalendarMonth extends LitElement {
   ) {
     const segmentClass = reachesEventEnd ? "segment-end" : "segment-middle";
     const footerLineBudget = reachesEventEnd && entry.footer ? 1 : 0;
-    const detailLineClamp = Math.max(0, bodyRows - footerLineBudget);
+    const locationLineBudget = entry.location ? 1 : 0;
+    const detailLineClamp = Math.max(0, bodyRows - footerLineBudget - locationLineBudget);
     const bodyText = this._entryBodyText(entry, reachesEventEnd);
     return html`
       <td
@@ -464,16 +491,22 @@ export class CalendarMonth extends LitElement {
       return this._renderEntryBodyCell(entry, bodyRows, reachesEventEnd);
     }
 
+    const bodyText = [entry.label, entry.location].filter(Boolean).join(" · ");
     return html`
       <td
         class="lane-cell entry-bar entry-title-cell ${entry.color} ${this._segmentClass(entry, date)}"
         data-entry-key=${this._entryKey(entry)}
-        title=${entry.href ? nothing : entry.label}
+        title=${entry.href ? nothing : bodyText}
       >
-        ${this._renderEntryLink(entry, entry.label)}
+        ${this._renderEntryLink(entry, bodyText)}
         <span class="entry-line entry-title" aria-hidden=${entry.href ? "true" : nothing}>
           ${entry.label}
         </span>
+        ${entry.location
+          ? html`<span class="entry-line entry-location" aria-hidden=${entry.href ? "true" : nothing}
+              >${iconMapPin(14)}${entry.location}</span
+            >`
+          : nothing}
       </td>
     `;
   }

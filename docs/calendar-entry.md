@@ -20,6 +20,7 @@ import "@f-ewald/components/calendar-entry.js";
   color="success"
 >
   <span slot="title">Vacation</span>
+  <span slot="location">Beach house</span>
   <span slot="detail">Out of office</span>
   <span slot="detail">Road trip along the California coast with several scenic stops</span>
   <span slot="footer">Return July 19 at 6 PM</span>
@@ -47,6 +48,7 @@ _None._
 | `title` | Plain-text title shown instead of the `label` fallback. |
 | `detail` | Repeatable plain-text details rendered inside the shared body spanning all remaining days. |
 | `footer` | Plain-text ending note pinned to the bottom of the shared body. |
+| `location` | Plain-text location, shown on its own line with a leading marker icon. |
 
 ## CSS custom properties
 

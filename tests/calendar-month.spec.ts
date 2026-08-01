@@ -562,4 +562,20 @@ test.describe("calendar-month", () => {
     await expect(calendar).toHaveJSProperty("year", 2026);
     await expect(calendar).toHaveJSProperty("month", 6);
   });
+
+  test("renders a slotted location with a marker icon on the title cell and the shared body", async ({ page }) => {
+    await page.goto("/");
+    const rows = page.locator("#calendar-month-demo tbody tr");
+    const titleCell = rows.nth(26).locator(".entry-bar.neutral"); // July 27, first visible day
+    const bodyCell = rows.nth(27).locator(".entry-body-cell.neutral"); // July 28, shared body
+
+    const titleLocation = titleCell.locator(".entry-location");
+    await expect(titleLocation).toBeVisible();
+    await expect(titleLocation).toContainText("Downtown bistro");
+    await expect(titleLocation.locator("svg")).toBeVisible();
+
+    const bodyLocation = bodyCell.locator(".entry-location");
+    await expect(bodyLocation).toBeVisible();
+    await expect(bodyLocation).toContainText("Downtown bistro");
+  });
 });

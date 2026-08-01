@@ -1,16 +1,20 @@
 import { css, html, nothing } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { CalendarTimelineBase } from "./calendar-timeline-base.js";
+import { iconMapPin } from "./icons.js";
 import { tokens } from "./tokens.js";
 import {
   assignLanes,
+  isWeekend,
   minutesSinceMidnight,
   monthName,
   parseIsoDate,
   toIsoDate,
   type LanedEntry,
 } from "./utils/calendar.js";
+
+const NOW_MARKER_INTERVAL_MS = 60_000;
 
 const HOUR_HEIGHT_REM = 3;
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
@@ -43,6 +47,13 @@ export class CalendarDay extends CalendarTimelineBase {
   /** The day shown, `"YYYY-MM-DD"`. */
   @property({ reflect: true }) date: string = toIsoDate(new Date());
 
+  /** Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today. */
+  @property({ type: Boolean, reflect: true, attribute: "time-marker" }) timeMarker = false;
+
+  @state() private _now = Date.now();
+
+  private _nowTimer: ReturnType<typeof setInterval> | null = null;
+
   static override styles = [
     tokens,
     css`
@@ -74,6 +85,9 @@ export class CalendarDay extends CalendarTimelineBase {
         font-size: var(--ui-font-size-lg, 1rem);
         font-weight: var(--ui-font-weight-semibold, 600);
         line-height: var(--ui-line-height-tight, 1.25);
+      }
+      .day-name.weekend {
+        color: var(--ui-text-muted, #64748b);
       }
       .day-name.today {
         color: var(--ui-primary, #4f46e5);
@@ -126,8 +140,31 @@ export class CalendarDay extends CalendarTimelineBase {
         flex: 1 1 auto;
         height: ${HOUR_HEIGHT_REM * 24}rem;
       }
+      .day-column.weekend {
+        background: var(--ui-surface-muted, #f8fafc);
+      }
       .day-column.today {
         background: color-mix(in srgb, var(--ui-primary, #4f46e5) 6%, transparent);
+      }
+      .now-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--ui-danger, #dc2626);
+        pointer-events: none;
+        z-index: 2;
+      }
+      .now-line::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -3px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ui-danger, #dc2626);
+        transform: translateY(-50%);
       }
       .hour-line {
         box-sizing: border-box;
@@ -157,6 +194,21 @@ export class CalendarDay extends CalendarTimelineBase {
         white-space: nowrap;
         text-overflow: ellipsis;
         pointer-events: none;
+      }
+      .entry-location {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        overflow: hidden;
+        color: inherit;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
+        font-weight: var(--ui-font-weight-regular, 400);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        pointer-events: none;
+      }
+      .entry-location svg {
+        flex: 0 0 auto;
       }
       .entry-link {
         position: absolute;
@@ -213,23 +265,61 @@ export class CalendarDay extends CalendarTimelineBase {
     `,
   ];
 
+  /** Starts the current-time ticker if `time-marker` is already set on connect. */
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._syncNowTimer();
+  }
+
+  /** Stops the current-time ticker when this element disconnects. */
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    if (this._nowTimer != null) clearInterval(this._nowTimer);
+    this._nowTimer = null;
+  }
+
+  /** Starts/stops the current-time ticker to match the latest `timeMarker` value. */
+  protected override updated(): void {
+    super.updated();
+    this._syncNowTimer();
+  }
+
+  /** Ensures a 60s current-time ticker is running only while `timeMarker` is enabled. */
+  private _syncNowTimer(): void {
+    if (this.timeMarker && this._nowTimer == null) {
+      this._now = Date.now();
+      this._nowTimer = setInterval(() => {
+        this._now = Date.now();
+      }, NOW_MARKER_INTERVAL_MS);
+    } else if (!this.timeMarker && this._nowTimer != null) {
+      clearInterval(this._nowTimer);
+      this._nowTimer = null;
+    }
+  }
+
   /** Renders one lane's stacked all-day bars, given the entries assigned to it. */
   private _renderAllDayLane(laned: LanedEntry[], lane: number) {
     const entries = laned.filter((entry) => entry.lane === lane);
     return html`
       <div class="all-day-lane">
-        ${entries.map(
-          (entry) => html`
+        ${entries.map((entry) => {
+          const bodyText = [entry.label, entry.location].filter(Boolean).join(" · ");
+          return html`
             <div
               class="entry-bar ${entry.color}"
               data-entry-key=${this.entryKey(entry)}
-              title=${entry.href ? nothing : entry.label}
+              title=${entry.href ? nothing : bodyText}
             >
-              ${this.renderEntryLink(entry, entry.label)}
+              ${this.renderEntryLink(entry, bodyText)}
               <span class="entry-title" aria-hidden=${entry.href ? "true" : nothing}>${entry.label}</span>
+              ${entry.location
+                ? html`<span class="entry-location" aria-hidden=${entry.href ? "true" : nothing}
+                    >${iconMapPin(14)}${entry.location}</span
+                  >`
+                : nothing}
             </div>
-          `,
-        )}
+          `;
+        })}
       </div>
     `;
   }
@@ -242,7 +332,7 @@ export class CalendarDay extends CalendarTimelineBase {
     const bottomRem = (minutesSinceMidnight(visibleEnd) / 60) * HOUR_HEIGHT_REM;
     const heightRem = Math.max(bottomRem - topRem, HOUR_HEIGHT_REM / 4);
     const widthPercent = 100 / laneCount;
-    const bodyText = [entry.label, ...(entry.details ?? [])].filter(Boolean).join("\n");
+    const bodyText = [entry.label, ...(entry.details ?? []), entry.location].filter(Boolean).join("\n");
     return html`
       <div
         class="entry-bar entry-block ${entry.color}"
@@ -252,6 +342,11 @@ export class CalendarDay extends CalendarTimelineBase {
       >
         ${this.renderEntryLink(entry, bodyText)}
         <span class="entry-title" aria-hidden=${entry.href ? "true" : nothing}>${entry.label}</span>
+        ${entry.location
+          ? html`<span class="entry-location" aria-hidden=${entry.href ? "true" : nothing}
+              >${iconMapPin(14)}${entry.location}</span
+            >`
+          : nothing}
       </div>
     `;
   }
@@ -263,17 +358,20 @@ export class CalendarDay extends CalendarTimelineBase {
     const dayEnd = new Date(day);
     dayEnd.setHours(23, 59, 59, 999);
     const isToday = toIsoDate(day) === toIsoDate(new Date());
+    const isWeekendDay = isWeekend(day);
 
     const resolved = this.resolveTimedEntriesFor(dayStart, dayEnd);
     const allDay = resolved.filter((entry) => entry.allDay);
     const timed = resolved.filter((entry) => !entry.allDay);
     const { entries: lanedAllDay, laneCount: allDayLaneCount } = assignLanes(allDay);
     const { entries: lanedTimed, laneCount: timedLaneCount } = assignLanes(timed);
+    const nowTopRem =
+      this.timeMarker && isToday ? (minutesSinceMidnight(new Date(this._now)) / 60) * HOUR_HEIGHT_REM : null;
 
     return html`
       <div class="day">
         <div class="day-header">
-          <h4 class="day-name ${isToday ? "today" : ""}">
+          <h4 class="day-name ${isWeekendDay ? "weekend" : ""} ${isToday ? "today" : ""}">
             ${monthName(day.getMonth() + 1)} ${day.getDate()}, ${day.getFullYear()}
           </h4>
           <div class="actions"><slot name="actions"></slot></div>
@@ -292,13 +390,16 @@ export class CalendarDay extends CalendarTimelineBase {
           <div class="hour-gutter">
             ${HOURS.map((h) => html`<div class="hour-label-cell">${hourLabel(h)}</div>`)}
           </div>
-          <div class="day-column ${isToday ? "today" : ""}">
+          <div class="day-column ${isWeekendDay ? "weekend" : ""} ${isToday ? "today" : ""}">
             ${HOURS.map(() => html`<div class="hour-line"></div>`)}
             ${repeat(
               lanedTimed,
               (entry) => this.entryKey(entry),
               (entry) => this._renderTimedEntry(entry, Math.max(timedLaneCount, 1), dayStart, dayEnd),
             )}
+            ${nowTopRem !== null
+              ? html`<div class="now-line" style="top: ${nowTopRem}rem" aria-hidden="true"></div>`
+              : nothing}
           </div>
         </div>
         <slot @slotchange=${this.handleSlotChange}></slot>

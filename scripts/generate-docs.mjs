@@ -64,6 +64,7 @@ const SLOTS = {
       description: "Repeatable plain-text details rendered inside the shared body spanning all remaining days.",
     },
     { name: "footer", description: "Plain-text ending note pinned to the bottom of the shared body." },
+    { name: "location", description: "Plain-text location, shown on its own line with a leading marker icon." },
   ],
   "calendar-day": [
     { name: "(default)", description: "Declarative `calendar-entry` elements to render for this day." },
@@ -533,15 +534,17 @@ See the [changelog](#markdown-view) for details.\`;
   color="success"
 >
   <span slot="title">Vacation</span>
+  <span slot="location">Beach house</span>
   <span slot="detail">Out of office</span>
   <span slot="detail">Road trip along the California coast with several scenic stops</span>
   <span slot="footer">Return July 19 at 6 PM</span>
 </calendar-entry>`,
-  "calendar-day": `<calendar-day date="2026-07-15">
+  "calendar-day": `<calendar-day date="2026-07-15" time-marker>
   <calendar-entry start="2026-07-15" end="2026-07-15" label="Company holiday" color="neutral"></calendar-entry>
   <calendar-entry start="2026-07-15T09:00" end="2026-07-15T09:30" label="Standup" color="info"></calendar-entry>
   <calendar-entry start="2026-07-15T09:15" end="2026-07-15T10:00" label="Design review" color="primary" href="#review">
     <span slot="detail">Walk through the new onboarding flow</span>
+    <span slot="location">Room A</span>
   </calendar-entry>
 </calendar-day>`,
   "calendar-month": `<calendar-month year="2026" month="7">
@@ -555,11 +558,16 @@ See the [changelog](#markdown-view) for details.\`;
     <span slot="detail">Talks and workshops</span>
     <span slot="footer">Closing keynote · July 20</span>
   </calendar-entry>
+  <calendar-entry start="2026-07-27" end="2026-07-28" label="Client lunch" color="neutral">
+    <span slot="location">Downtown bistro</span>
+  </calendar-entry>
 </calendar-month>`,
   "calendar-week": `<calendar-week date="2026-07-15">
   <calendar-entry start="2026-07-13" end="2026-07-15" label="Offsite" color="primary" href="#offsite"></calendar-entry>
   <calendar-entry start="2026-07-14T09:00" end="2026-07-14T09:30" label="Standup" color="info"></calendar-entry>
-  <calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"></calendar-entry>
+  <calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success">
+    <span slot="location">Main conference room</span>
+  </calendar-entry>
 </calendar-week>`,
   "calendar-year": `<calendar-year year="2026">
   <calendar-entry start="2026-01-28" end="2026-02-03" label="Offsite" color="primary" href="#offsite">

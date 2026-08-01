@@ -36,6 +36,9 @@ import "@f-ewald/components/calendar-month.js";
     <span slot="detail">Talks and workshops</span>
     <span slot="footer">Closing keynote · July 20</span>
   </calendar-entry>
+  <calendar-entry start="2026-07-27" end="2026-07-28" label="Client lunch" color="neutral">
+    <span slot="location">Downtown bistro</span>
+  </calendar-entry>
 </calendar-month>
 ```
 

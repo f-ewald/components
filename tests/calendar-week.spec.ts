@@ -153,4 +153,13 @@ test.describe("calendar-week", () => {
     await prev.click();
     await expect(calendar).toHaveJSProperty("date", "2026-07-08");
   });
+
+  test("renders a slotted location with a marker icon on timed entries", async ({ page }) => {
+    await page.goto("/");
+    const location = page.locator("#calendar-week-demo .entry-block.success .entry-location");
+
+    await expect(location).toBeVisible();
+    await expect(location).toContainText("Main conference room");
+    await expect(location.locator("svg")).toBeVisible();
+  });
 });

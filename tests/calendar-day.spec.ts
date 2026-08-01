@@ -75,7 +75,7 @@ test.describe("calendar-day", () => {
     const link = review.locator("a.entry-link");
 
     await expect(link).toHaveAttribute("href", "#review");
-    await expect(link).toHaveAccessibleName("Design review\nWalk through the new onboarding flow");
+    await expect(link).toHaveAccessibleName("Design review\nWalk through the new onboarding flow\nRoom A");
 
     const idleShadow = await review.evaluate((element) => getComputedStyle(element).boxShadow);
     await link.hover();
@@ -138,5 +138,84 @@ test.describe("calendar-day", () => {
     await prev.click();
     await prev.click();
     await expect(calendar).toHaveJSProperty("date", "2026-07-14");
+  });
+
+  test("highlights weekends and clears the class on weekdays", async ({ page }) => {
+    await page.goto("/");
+    const calendar = page.locator("#calendar-day-demo");
+
+    // Default demo date, 2026-07-15, is a Wednesday.
+    await expect(calendar.locator(".day-column")).not.toHaveClass(/weekend/);
+    await expect(calendar.locator(".day-name")).not.toHaveClass(/weekend/);
+
+    await calendar.evaluate((element) => {
+      (element as HTMLElement & { date: string }).date = "2026-07-18"; // Saturday
+    });
+    await expect(calendar.locator(".day-column")).toHaveClass(/weekend/);
+    await expect(calendar.locator(".day-name")).toHaveClass(/weekend/);
+  });
+
+  test("shows the current-time marker only when time-marker is set and the date is today", async ({ page }) => {
+    await page.goto("/");
+    const calendar = page.locator("#calendar-day-demo");
+
+    // Default demo date is fixed, so the marker starts hidden even without touching time-marker.
+    await expect(calendar.locator(".now-line")).toHaveCount(0);
+
+    await calendar.evaluate((element) => {
+      const now = new Date();
+      const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      (element as HTMLElement & { date: string; timeMarker: boolean }).date = iso;
+      (element as HTMLElement & { date: string; timeMarker: boolean }).timeMarker = true;
+    });
+    await expect(calendar.locator(".now-line")).toHaveCount(1);
+
+    await calendar.evaluate((element) => {
+      (element as HTMLElement & { timeMarker: boolean }).timeMarker = false;
+    });
+    await expect(calendar.locator(".now-line")).toHaveCount(0);
+
+    await calendar.evaluate((element) => {
+      const el = element as HTMLElement & { date: string; timeMarker: boolean };
+      el.timeMarker = true;
+      el.date = "2026-07-15"; // not today
+    });
+    await expect(calendar.locator(".now-line")).toHaveCount(0);
+  });
+
+  test("renders a slotted location with a marker icon on timed entries", async ({ page }) => {
+    await page.goto("/");
+    const location = page.locator("#calendar-day-demo .entry-block.primary .entry-location");
+
+    await expect(location).toBeVisible();
+    await expect(location).toContainText("Room A");
+    await expect(location.locator("svg")).toBeVisible();
+  });
+
+  test("multi-day row: lines up N calendar-day elements in ascending date order and scrolls horizontally", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const row = page.locator('[data-testid="calendar-day-row"]');
+    const items = page.locator('[data-testid="calendar-day-row-item"]');
+    const countLabel = page.locator('[data-testid="calendar-day-row-count"]');
+
+    await expect(items).toHaveCount(3);
+    await expect(countLabel).toHaveText("3");
+    await expect(row).toHaveCSS("overflow-x", "auto");
+
+    const dates = await items.evaluateAll((els) => els.map((el) => (el as HTMLElement & { date: string }).date));
+    const sorted = [...dates].sort();
+    expect(dates).toEqual(sorted);
+    expect(new Set(dates).size).toBe(3);
+
+    await page.locator('[data-testid="calendar-day-row-inc"]').click();
+    await expect(items).toHaveCount(4);
+    await expect(countLabel).toHaveText("4");
+
+    await page.locator('[data-testid="calendar-day-row-dec"]').click();
+    await page.locator('[data-testid="calendar-day-row-dec"]').click();
+    await expect(items).toHaveCount(2);
+    await expect(countLabel).toHaveText("2");
   });
 });

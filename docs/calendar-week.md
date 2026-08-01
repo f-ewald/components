@@ -26,7 +26,9 @@ import "@f-ewald/components/calendar-week.js";
 <calendar-week date="2026-07-15">
   <calendar-entry start="2026-07-13" end="2026-07-15" label="Offsite" color="primary" href="#offsite"></calendar-entry>
   <calendar-entry start="2026-07-14T09:00" end="2026-07-14T09:30" label="Standup" color="info"></calendar-entry>
-  <calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"></calendar-entry>
+  <calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success">
+    <span slot="location">Main conference room</span>
+  </calendar-entry>
 </calendar-week>
 ```
 
@@ -57,7 +59,9 @@ _None._
 | `--ui-font` |
 | `--ui-font-size-lg` |
 | `--ui-font-size-sm` |
+| `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
+| `--ui-font-weight-regular` |
 | `--ui-font-weight-semibold` |
 | `--ui-hover-overlay` |
 | `--ui-info` |

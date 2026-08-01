@@ -1,7 +1,7 @@
 # TODO
 
-- [x] Create a "scroll to bottom" component that can overlay everything and points to the bottom. Similarly, I want a "scroll to top" component that scrolls to the top of the page
-- [x] I would like to create a checkbox component that can be used in forms and without forms. It should fire events when checked and unchecked. 
-- [x] I would like to create an auto scrolling component that is able to scroll automatically to the bottom as new content is added to the div. For example, when I use the timeline component with new timeline entries, this component should be able to scroll to the bottom. If there are any questions how to implement this, ask me, or if anything is unclear. 
-- [x] I would like to create a form wrapper component that is able to set the layout for whole forms. So when a form appears on a page this component should be used to wrap each item so that they appear in a consistent layout. 
-- [x] I would like to create a load more component that when clicked loads more content. This is similar to an endless scroller that can load more content from the server. This component should be able to work at the bottom of a page and similar to the scroll to bottom component it should also be able to load more content from the top.
+- [x] Extend the playground to show a calendar with the current day on the next three day. Use the calendar day component for this. The current day should be on the left, the next day should be in the middle and the day after that should be on the right.
+- [x] For the calendar day I would like to add the optional Boolean flag to show a time marker which should be a fine line similar to Google Calendar showing the current time on the day. 
+- [x] Again, also for calendar day, weekends should be highlighted similar to the monthly view.
+- [x] Calendar entries for days weekly view and monthly view should support an optional location slot that is prefixed with a location marker. 
+- [x] In a container it should be possible to line up as many days next to each other as the user wants when the width of each single day exceeds the viewport it should be auto scrollable to the left and right. 

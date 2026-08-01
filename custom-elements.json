@@ -2689,6 +2689,42 @@
               "reflects": true
             },
             {
+              "kind": "field",
+              "name": "timeMarker",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today.",
+              "attribute": "time-marker",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_now",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_nowTimer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_syncNowTimer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Ensures a 60s current-time ticker is running only while `timeMarker` is enabled."
+            },
+            {
               "kind": "method",
               "name": "_renderAllDayLane",
               "privacy": "private",
@@ -2929,6 +2965,15 @@
               },
               "description": "The day shown, `\"YYYY-MM-DD\"`.",
               "fieldName": "date"
+            },
+            {
+              "name": "time-marker",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today.",
+              "fieldName": "timeMarker"
             }
           ],
           "superclass": {
@@ -2978,6 +3023,10 @@
             {
               "description": "Plain-text ending note pinned to the bottom of the shared body.",
               "name": "footer"
+            },
+            {
+              "description": "Plain-text location, shown on its own line with a leading marker icon.",
+              "name": "location"
             }
           ],
           "members": [
@@ -3347,7 +3396,7 @@
                   }
                 }
               ],
-              "description": "Joins the event title, details, and visible footer for tooltips and accessible link names."
+              "description": "Joins the event title, location, details, and visible footer for tooltips and accessible link names."
             },
             {
               "kind": "method",
@@ -3377,7 +3426,7 @@
                   "default": "false"
                 }
               ],
-              "description": "Renders the shared details body, with the footer reserved at its bottom edge."
+              "description": "Renders the shared details body, with the location pinned at the top and the footer reserved at the bottom."
             },
             {
               "kind": "method",
@@ -3407,7 +3456,7 @@
                   "default": "false"
                 }
               ],
-              "description": "Renders a row-spanning body cell with whole-line detail and footer budgets."
+              "description": "Renders a row-spanning body cell with whole-line location, detail, and footer budgets."
             },
             {
               "kind": "method",

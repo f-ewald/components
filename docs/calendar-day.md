@@ -21,11 +21,12 @@ import "@f-ewald/components/calendar-day.js";
 ## Usage
 
 ```html
-<calendar-day date="2026-07-15">
+<calendar-day date="2026-07-15" time-marker>
   <calendar-entry start="2026-07-15" end="2026-07-15" label="Company holiday" color="neutral"></calendar-entry>
   <calendar-entry start="2026-07-15T09:00" end="2026-07-15T09:30" label="Standup" color="info"></calendar-entry>
   <calendar-entry start="2026-07-15T09:15" end="2026-07-15T10:00" label="Design review" color="primary" href="#review">
     <span slot="detail">Walk through the new onboarding flow</span>
+    <span slot="location">Room A</span>
   </calendar-entry>
 </calendar-day>
 ```
@@ -35,6 +36,7 @@ import "@f-ewald/components/calendar-day.js";
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `date` | `date` | `string` | `—` | The day shown, `"YYYY-MM-DD"`. |
+| `timeMarker` | `time-marker` | `boolean` | `false` | Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today. |
 
 ## Events
 
@@ -57,7 +59,9 @@ _None._
 | `--ui-font` |
 | `--ui-font-size-lg` |
 | `--ui-font-size-sm` |
+| `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
+| `--ui-font-weight-regular` |
 | `--ui-font-weight-semibold` |
 | `--ui-hover-overlay` |
 | `--ui-info` |
@@ -66,6 +70,7 @@ _None._
 | `--ui-radius-sm` |
 | `--ui-success` |
 | `--ui-surface` |
+| `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |
 | `--ui-warning` |

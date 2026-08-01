@@ -489,6 +489,7 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
                 href="#review"
               >
                 <span slot="detail">Walk through the new onboarding flow</span>
+                <span slot="location">Room A</span>
               </calendar-entry>
               <calendar-entry
                 id="cd-entry-lunch"
@@ -508,8 +509,50 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
   &lt;calendar-entry start="2026-07-15T09:00" end="2026-07-15T09:30" label="Standup" color="info"&gt;&lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-15T09:15" end="2026-07-15T10:00" label="Design review" color="primary" href="#review"&gt;
     &lt;span slot="detail"&gt;Walk through the new onboarding flow&lt;/span&gt;
+    &lt;span slot="location"&gt;Room A&lt;/span&gt;
   &lt;/calendar-entry&gt;
 &lt;/calendar-day&gt;</code></pre>
+
+          <h4 class="mt-8 text-base font-semibold text-slate-800">Multi-day row</h4>
+          <p class="mt-1 text-sm text-slate-500">
+            Any number of <code>calendar-day</code> elements can be lined up side by side in a
+            flex row with <code>overflow-x: auto</code> — today on the left, ascending dates to
+            the right. Once the row is wider than the viewport it scrolls horizontally instead of
+            wrapping.
+          </p>
+          <div class="mt-4 rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex items-center justify-between gap-3 text-sm text-slate-600">
+              <span>Days shown</span>
+              <div class="flex items-center gap-2">
+                <ui-button
+                  data-testid="calendar-day-row-dec"
+                  variant="secondary"
+                  size="sm"
+                  aria-label="Show fewer days"
+                  >&minus;</ui-button
+                >
+                <span
+                  id="calendar-day-row-count"
+                  data-testid="calendar-day-row-count"
+                  class="w-6 text-center tabular-nums"
+                  >3</span
+                >
+                <ui-button
+                  data-testid="calendar-day-row-inc"
+                  variant="secondary"
+                  size="sm"
+                  aria-label="Show more days"
+                  >&plus;</ui-button
+                >
+              </div>
+            </div>
+            <div id="calendar-day-row" data-testid="calendar-day-row" class="flex gap-4 overflow-x-auto pb-1"></div>
+          </div>
+          <pre class="usage mt-4"><code>&lt;div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.25rem;"&gt;
+  &lt;calendar-day date="2026-08-01" style="flex: 0 0 20rem;" time-marker&gt;...&lt;/calendar-day&gt;
+  &lt;calendar-day date="2026-08-02" style="flex: 0 0 20rem;" time-marker&gt;...&lt;/calendar-day&gt;
+  &lt;calendar-day date="2026-08-03" style="flex: 0 0 20rem;" time-marker&gt;...&lt;/calendar-day&gt;
+&lt;/div&gt;</code></pre>
         </section>
 
         <section id="calendar-month" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-calendar-month">
@@ -573,6 +616,15 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
                 <span slot="detail">Bring insurance card</span>
                 <span slot="footer">Appointment complete</span>
               </calendar-entry>
+              <calendar-entry
+                id="cm-entry-lunch"
+                start="2026-07-27"
+                end="2026-07-28"
+                label="Client lunch"
+                color="neutral"
+              >
+                <span slot="location">Downtown bistro</span>
+              </calendar-entry>
             </calendar-month>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-month.js";
@@ -594,6 +646,9 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
     &lt;span slot="title"&gt;Dentist&lt;/span&gt;
     &lt;span slot="detail"&gt;Hidden because this entry only spans one day&lt;/span&gt;
     &lt;span slot="footer"&gt;Also hidden for a one-day entry&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-27" end="2026-07-28" label="Client lunch" color="neutral"&gt;
+    &lt;span slot="location"&gt;Downtown bistro&lt;/span&gt;
   &lt;/calendar-entry&gt;
 &lt;/calendar-month&gt;</code></pre>
         </section>
@@ -670,7 +725,9 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
                 end="2026-07-16T15:00"
                 label="Customer demo"
                 color="success"
-              ></calendar-entry>
+              >
+                <span slot="location">Main conference room</span>
+              </calendar-entry>
             </calendar-week>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-week.js";
@@ -680,7 +737,9 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
   &lt;ui-button slot="actions" variant="secondary" size="sm" aria-label="Next week"&gt;&amp;rarr;&lt;/ui-button&gt;
   &lt;calendar-entry start="2026-07-13" end="2026-07-15" label="Offsite" color="primary" href="#offsite"&gt;&lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-14T09:00" end="2026-07-14T09:30" label="Standup" color="info"&gt;&lt;/calendar-entry&gt;
-  &lt;calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"&gt;&lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-16T14:00" end="2026-07-16T15:00" label="Customer demo" color="success"&gt;
+    &lt;span slot="location"&gt;Main conference room&lt;/span&gt;
+  &lt;/calendar-entry&gt;
 &lt;/calendar-week&gt;</code></pre>
         </section>
 

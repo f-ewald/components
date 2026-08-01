@@ -73,6 +73,7 @@ import {
   type VideoPlayer,
   type CommentComposer,
 } from "../src/index.js";
+import { addDays, toIsoDate } from "../src/utils/calendar.js";
 
 /**
  * Demo-only fetch shim: distribution-chart fetches its data from
@@ -1112,6 +1113,54 @@ function shiftCalendarDay(days: number): void {
 }
 document.querySelector('[data-testid="calendar-day-prev"]')?.addEventListener("click", () => shiftCalendarDay(-1));
 document.querySelector('[data-testid="calendar-day-next"]')?.addEventListener("click", () => shiftCalendarDay(1));
+
+// calendar-day multi-day row — as many <calendar-day> as the user wants, side by side, auto-scrolling
+// once they overflow the container (today on the left, ascending dates to the right).
+const calendarDayRow = document.getElementById("calendar-day-row") as HTMLDivElement | null;
+const calendarDayRowCountLabel = document.getElementById("calendar-day-row-count") as HTMLSpanElement | null;
+const CALENDAR_DAY_ROW_SAMPLE_ENTRIES = [
+  { label: "Team sync", start: "09:00", end: "09:30", color: "info", location: "Room A" },
+  { label: "Design review", start: "13:00", end: "14:00", color: "primary", location: "" },
+] as const;
+let calendarDayRowCount = 3;
+
+function renderCalendarDayRow(): void {
+  if (!calendarDayRow) return;
+  calendarDayRow.replaceChildren();
+  for (let i = 0; i < calendarDayRowCount; i++) {
+    const iso = toIsoDate(addDays(new Date(), i));
+    const day = document.createElement("calendar-day") as CalendarDay;
+    day.date = iso;
+    day.timeMarker = true;
+    day.style.flex = "0 0 20rem";
+    day.dataset.testid = "calendar-day-row-item";
+    for (const sample of CALENDAR_DAY_ROW_SAMPLE_ENTRIES) {
+      const entry = document.createElement("calendar-entry");
+      entry.setAttribute("start", `${iso}T${sample.start}`);
+      entry.setAttribute("end", `${iso}T${sample.end}`);
+      entry.setAttribute("label", sample.label);
+      entry.setAttribute("color", sample.color);
+      if (sample.location) {
+        const location = document.createElement("span");
+        location.slot = "location";
+        location.textContent = sample.location;
+        entry.appendChild(location);
+      }
+      day.appendChild(entry);
+    }
+    calendarDayRow.appendChild(day);
+  }
+  if (calendarDayRowCountLabel) calendarDayRowCountLabel.textContent = String(calendarDayRowCount);
+}
+document.querySelector('[data-testid="calendar-day-row-dec"]')?.addEventListener("click", () => {
+  calendarDayRowCount = Math.max(1, calendarDayRowCount - 1);
+  renderCalendarDayRow();
+});
+document.querySelector('[data-testid="calendar-day-row-inc"]')?.addEventListener("click", () => {
+  calendarDayRowCount = Math.min(10, calendarDayRowCount + 1);
+  renderCalendarDayRow();
+});
+renderCalendarDayRow();
 
 // calendar-month
 const calendarMonthDemo = document.getElementById("calendar-month-demo") as CalendarMonth | null;

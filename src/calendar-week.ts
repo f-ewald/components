@@ -2,6 +2,7 @@ import { css, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { CalendarTimelineBase } from "./calendar-timeline-base.js";
+import { iconMapPin } from "./icons.js";
 import { tokens } from "./tokens.js";
 import {
   WEEKDAY_ABBR,
@@ -177,6 +178,21 @@ export class CalendarWeek extends CalendarTimelineBase {
         text-overflow: ellipsis;
         pointer-events: none;
       }
+      .entry-location {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        overflow: hidden;
+        color: inherit;
+        font-size: var(--ui-font-size-xs, 0.6875rem);
+        font-weight: var(--ui-font-weight-regular, 400);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        pointer-events: none;
+      }
+      .entry-location svg {
+        flex: 0 0 auto;
+      }
       .entry-link {
         position: absolute;
         z-index: 1;
@@ -238,15 +254,21 @@ export class CalendarWeek extends CalendarTimelineBase {
     const visibleEnd = entry.endDate > weekEnd ? weekEnd : entry.endDate;
     const startCol = dayIndex(visibleStart, weekStart) + 1;
     const endCol = dayIndex(visibleEnd, weekStart) + 2;
+    const bodyText = [entry.label, entry.location].filter(Boolean).join(" · ");
     return html`
       <div
         class="entry-bar ${entry.color}"
         data-entry-key=${this.entryKey(entry)}
-        title=${entry.href ? nothing : entry.label}
+        title=${entry.href ? nothing : bodyText}
         style="grid-column: ${startCol} / ${endCol}; grid-row: ${entry.lane + 1};"
       >
-        ${this.renderEntryLink(entry, entry.label)}
+        ${this.renderEntryLink(entry, bodyText)}
         <span class="entry-title" aria-hidden=${entry.href ? "true" : nothing}>${entry.label}</span>
+        ${entry.location
+          ? html`<span class="entry-location" aria-hidden=${entry.href ? "true" : nothing}
+              >${iconMapPin(14)}${entry.location}</span
+            >`
+          : nothing}
       </div>
     `;
   }
@@ -259,7 +281,7 @@ export class CalendarWeek extends CalendarTimelineBase {
     const bottomRem = (minutesSinceMidnight(visibleEnd) / 60) * HOUR_HEIGHT_REM;
     const heightRem = Math.max(bottomRem - topRem, HOUR_HEIGHT_REM / 4);
     const widthPercent = 100 / laneCount;
-    const bodyText = [entry.label, ...(entry.details ?? [])].filter(Boolean).join("\n");
+    const bodyText = [entry.label, ...(entry.details ?? []), entry.location].filter(Boolean).join("\n");
     return html`
       <div
         class="entry-bar entry-block ${entry.color}"
@@ -269,6 +291,11 @@ export class CalendarWeek extends CalendarTimelineBase {
       >
         ${this.renderEntryLink(entry, bodyText)}
         <span class="entry-title" aria-hidden=${entry.href ? "true" : nothing}>${entry.label}</span>
+        ${entry.location
+          ? html`<span class="entry-location" aria-hidden=${entry.href ? "true" : nothing}
+              >${iconMapPin(14)}${entry.location}</span
+            >`
+          : nothing}
       </div>
     `;
   }
