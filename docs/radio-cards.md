@@ -10,7 +10,11 @@ The selected card's border/radio dot read `--ui-button-accent` (a solid
 stand-in, since `border-color`/`accent-color` can't render a gradient),
 and its background reads the shared `--ui-button-secondary-surface-muted`
 plus `--ui-button-highlight`, so a gradient theme tints it consistently
-with `button-group`/`pagination-nav`'s equivalents.
+with `button-group`/`pagination-nav`'s equivalents. That shared value is
+tuned for small controls, so a card — with far more area — blends it 45%
+toward `--ui-surface` rather than taking a second token: the tint stays
+the same hue and gradient, just lighter on light themes (and
+correspondingly deeper on dark ones) than on a button.
 
 ## Install
 
@@ -66,6 +70,7 @@ _None._
 | `--ui-font-weight-semibold` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
+| `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |

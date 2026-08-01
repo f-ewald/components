@@ -22,7 +22,11 @@ let instanceCount = 0;
  * stand-in, since `border-color`/`accent-color` can't render a gradient),
  * and its background reads the shared `--ui-button-secondary-surface-muted`
  * plus `--ui-button-highlight`, so a gradient theme tints it consistently
- * with `button-group`/`pagination-nav`'s equivalents.
+ * with `button-group`/`pagination-nav`'s equivalents. That shared value is
+ * tuned for small controls, so a card — with far more area — blends it 45%
+ * toward `--ui-surface` rather than taking a second token: the tint stays
+ * the same hue and gradient, just lighter on light themes (and
+ * correspondingly deeper on dark ones) than on a button.
  *
  * @element radio-cards
  * @fires change - A card was selected; detail: { value }.
@@ -61,9 +65,22 @@ export class RadioCards extends LitElement {
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
       }
+      /* Same single muted-surface variable as button-group/pagination-nav,
+         but blended toward the card's own surface: that value is tuned for a
+         small control, and across a card's much larger area it reads too
+         heavy. Mixing with --ui-surface (rather than plain white) keeps the
+         adjustment theme-correct — it lightens on light themes and deepens
+         on dark ones. Written with the background shorthand (not
+         background-image) so it stays valid whether the variable resolves to
+         a gradient or a flat color. */
       .card:has(input:checked) {
         border-color: var(--ui-button-accent, var(--ui-primary, #4f46e5));
-        background: var(--ui-button-secondary-surface-muted, var(--ui-surface-muted, #f8fafc));
+        background:
+          linear-gradient(
+            color-mix(in srgb, var(--ui-surface, #ffffff) 45%, transparent),
+            color-mix(in srgb, var(--ui-surface, #ffffff) 45%, transparent)
+          ),
+          var(--ui-button-secondary-surface-muted, var(--ui-surface-muted, #f8fafc));
         box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .card input {

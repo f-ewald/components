@@ -18,6 +18,12 @@ import { tokens } from "./tokens.js";
  * own visible corner as its content scrolls, rather than floating over the
  * whole page.
  *
+ * The control is styled as a standard secondary button (ui-button's
+ * `secondary` variant: 2rem tall, `--ui-radius-sm` corners, the
+ * `--ui-button-secondary-*` background/border tokens, so a gradient theme
+ * carries over) rather than a pill, layered over an opaque `--ui-surface`
+ * base and an elevation shadow, since it floats above scrolled content.
+ *
  * @element scroll-to-bottom
  * @fires scroll-to-bottom-triggered - The button was clicked, just before
  *   scrolling; detail: `{ target }`.
@@ -56,12 +62,19 @@ export class ScrollToBottom extends LitElement {
         gap: 0.25rem;
         height: 2rem;
         box-sizing: border-box;
-        padding: 0 0.75rem;
+        padding: 0.5rem 1rem;
         color: var(--ui-text, #0f172a);
-        background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
-        border-radius: 999px;
-        box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
+        /* ui-button's secondary variant, over an opaque --ui-surface base: a
+           floating control can't let scrolled content show through the way a
+           secondary button's transparent flat background does. */
+        background:
+          var(--ui-button-secondary-background, none),
+          var(--ui-surface, #ffffff);
+        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
+        border-radius: var(--ui-radius-sm, 0.25rem);
+        box-shadow:
+          var(--ui-button-highlight, 0 0 0 0 transparent),
+          var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
         cursor: pointer;
         font-family: var(
           --ui-font,
@@ -79,11 +92,22 @@ export class ScrollToBottom extends LitElement {
         white-space: nowrap;
       }
       button:hover {
-        background: var(--ui-surface-muted, #f8fafc);
+        background:
+          var(--ui-button-secondary-background-hover, none),
+          var(--ui-surface-muted, #f8fafc);
+        border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
+      }
+      button:active {
+        background:
+          var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none)),
+          var(--ui-surface-muted, #f8fafc);
+        box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }
       button:focus-visible {
         outline: none;
-        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+        box-shadow:
+          var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)),
+          var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }
       @media (prefers-reduced-motion: reduce) {
         :host {

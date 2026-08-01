@@ -13,6 +13,12 @@ auto; position: relative`, so the button stays pinned to that container's
 own visible corner as its content scrolls, rather than floating over the
 whole page.
 
+The control is styled as a standard secondary button (ui-button's
+`secondary` variant: 2rem tall, `--ui-radius-sm` corners, the
+`--ui-button-secondary-*` background/border tokens, so a gradient theme
+carries over) rather than a pill, layered over an opaque `--ui-surface`
+base and an elevation shadow, since it floats above scrolled content.
+
 ## Install
 
 ```js
@@ -57,12 +63,21 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-button-highlight` |
+| `--ui-button-secondary-` |
+| `--ui-button-secondary-background` |
+| `--ui-button-secondary-background-active` |
+| `--ui-button-secondary-background-hover` |
+| `--ui-button-secondary-border` |
+| `--ui-button-secondary-border-hover` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-font-weight-medium` |
 | `--ui-line-height-tight` |
+| `--ui-radius-sm` |
 | `--ui-shadow` |
 | `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
+| `--ui-text-muted` |

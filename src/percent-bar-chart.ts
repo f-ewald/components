@@ -35,6 +35,13 @@ const MAX_BAR_W = 28;
 const COL_GAP = 8;
 
 const PAD = { top: 4, right: 4, bottom: 4, left: 4 };
+/**
+ * Bar corner radius, in SVG user units. Presentation attributes can't take
+ * `var()`, so the shared 4px control radius (0.25rem) is inlined as a
+ * literal here, the same way `price-history-chart`'s bars do it. Overriding
+ * the radius token does not reach these bars.
+ */
+const BAR_RADIUS = 4;
 
 let gradientIdCounter = 0;
 
@@ -164,7 +171,7 @@ export class PercentBarChart extends LitElement {
         <text class="chart-label" x=${PAD.left} y=${cy} font-size="10"
               text-anchor="start" dominant-baseline="middle">${g.label}</text>
         <rect x=${PAD.left + LABEL_W} y=${cy - 5}
-              width=${bw} height="10" rx="5"
+              width=${bw} height="10" rx=${BAR_RADIUS}
               fill="url(#${this._gradId(i)})" />
         <text class="chart-label" x=${PAD.left + LABEL_W + barMaxW + 4} y=${cy} font-size="10"
               text-anchor="start" dominant-baseline="middle">${this._labelFor(g.value)}</text>
@@ -188,7 +195,7 @@ export class PercentBarChart extends LitElement {
       const barTop = PAD.top + VALUE_LABEL_H + (COL_TRACK_H - barH);
       const catLabelY = PAD.top + VALUE_LABEL_H + COL_TRACK_H + CAT_LABEL_H - 4;
       return svg`
-        <rect x=${cx - barW / 2} y=${barTop} width=${barW} height=${barH} rx=${barW / 2}
+        <rect x=${cx - barW / 2} y=${barTop} width=${barW} height=${barH} rx=${BAR_RADIUS}
               fill="url(#${this._gradId(i)})" />
         <text class="chart-label" x=${cx} y=${barTop - 4} font-size="10"
               text-anchor="middle">${this._labelFor(g.value)}</text>

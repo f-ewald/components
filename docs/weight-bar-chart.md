@@ -47,6 +47,7 @@ _None._
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-primary` |
+| `--ui-radius-sm` |
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |

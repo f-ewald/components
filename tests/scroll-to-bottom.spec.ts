@@ -41,11 +41,14 @@ test.describe("scroll-to-bottom", () => {
     await expect(btn).not.toBeVisible();
   });
 
-  test("renders a pill containing its visible label text", async ({ page }) => {
+  test("renders a secondary-styled button containing its visible label text", async ({ page }) => {
     await page.goto("/");
     const button = page.locator("#scroll-bottom-window button");
     await expect(button).toHaveText("Scroll to bottom");
-    await expect(button).toHaveCSS("border-radius", "999px");
+    // Same metrics as ui-button's secondary variant, not a pill.
+    await expect(button).toHaveCSS("border-radius", "4px");
+    await expect(button).toHaveCSS("padding", "8px 16px");
+    await expect(button).toHaveCSS("height", "32px");
   });
 
   test("a target instance is position: absolute (contained); the window instance stays fixed", async ({

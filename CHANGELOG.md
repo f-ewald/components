@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- `scroll-to-top`/`scroll-to-bottom` no longer render as pills: both now use
+  the standard secondary button treatment (2rem tall, `--ui-radius-sm`
+  corners, `0.5rem 1rem` padding, and the `--ui-button-secondary-*`
+  background/border tokens, so the gradient theme reaches them), plus a
+  matching `:active` state. They keep an opaque `--ui-surface` base and their
+  elevation shadow — a floating control can't let scrolled content show
+  through the way a flat secondary button's transparent background does.
+
+- `radio-cards`' selected-card tint no longer reads as heavy under the
+  gradient theme: it still uses the single shared
+  `--ui-button-secondary-surface-muted` value (no second token), but blends
+  it 45% toward `--ui-surface`, since a value tuned for a small control
+  covers far more area on a card. Same hue and gradient, lighter on light
+  themes and correspondingly deeper on dark ones. `radio-pills` and the
+  other consumers of that token are unchanged.
+
+- `weight-bar-chart` and `percent-bar-chart` bars are no longer pills: their
+  tracks and bars now use the shared `--ui-radius-sm` control radius (4px),
+  matching `distribution-chart` and `price-history-chart`, so a bar reads as
+  a rectangle with soft corners rather than a lozenge. `percent-bar-chart`'s
+  vertical columns lose their width-derived `rx` too, so a thin and a wide
+  column now share the same corner treatment.
+
 - `ui-button` gained an `ai` boolean modifier: an animated multi-hue ring
   that sweeps around the button, marking an action as AI-powered. It is
   orthogonal to `variant`/`size`/`pill` and to the flat/gradient themes — a

@@ -90,6 +90,12 @@ literal values are migrated onto them.
 - Use `--ui-radius-sm` (`0.25rem` ≈ 4px) for controls, `--ui-radius`
   (`0.5rem` ≈ 8px) for cards/dialogs/surfaces, and an intentional full
   pill/circle radius only for pill/avatar/marker shapes.
+- Chart bars and their tracks use `--ui-radius-sm` as well — literal `4` on
+  SVG `rx` attributes, which can't take `var()` (`percent-bar-chart`,
+  `price-history-chart`), or the token in CSS (`distribution-chart`,
+  `weight-bar-chart`). A bar is a data mark, not a pill: fully rounded ends
+  round away the value being read at short lengths. Genuine pill controls
+  (e.g. `range-slider`'s track and thumb) keep their full radius.
 - Compact controls must retain a clear hit target and must not reserve layout
   space for optional content that is absent.
 

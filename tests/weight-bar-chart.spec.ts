@@ -23,8 +23,9 @@ test.describe("weight-bar-chart", () => {
     await expect(labels.nth(1)).toHaveText("Commute");
     await expect(labels.nth(2)).toHaveText("Price");
 
-    // Horizontal progress tracks use fully rounded ends.
-    await expect(chart.locator(".track").first()).toHaveCSS("border-top-left-radius", "9999px");
+    // Tracks and bars use the shared control radius, not a pill.
+    await expect(chart.locator(".track").first()).toHaveCSS("border-top-left-radius", "4px");
+    await expect(chart.locator(".bar").first()).toHaveCSS("border-top-right-radius", "4px");
   });
 
   test("keeps its summary legible and removes width transitions for reduced motion", async ({
