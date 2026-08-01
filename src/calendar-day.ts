@@ -50,6 +50,14 @@ export class CalendarDay extends CalendarTimelineBase {
   /** Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today. */
   @property({ type: Boolean, reflect: true, attribute: "time-marker" }) timeMarker = false;
 
+  /**
+   * Minimum width for the day column, as a CSS length (e.g. `"18rem"`).
+   * Unset leaves the host's width fully controlled by its container —
+   * useful as the sizing floor when placing several `calendar-day`
+   * elements in a scrollable row.
+   */
+  @property({ reflect: true, attribute: "min-width" }) minWidth = "";
+
   @state() private _now = Date.now();
 
   private _nowTimer: ReturnType<typeof setInterval> | null = null;
@@ -59,6 +67,7 @@ export class CalendarDay extends CalendarTimelineBase {
     css`
       :host {
         display: block;
+        min-width: var(--calendar-day-min-width, 0);
         font-family: var(
           --ui-font,
           ui-sans-serif,
@@ -278,10 +287,11 @@ export class CalendarDay extends CalendarTimelineBase {
     this._nowTimer = null;
   }
 
-  /** Starts/stops the current-time ticker to match the latest `timeMarker` value. */
+  /** Starts/stops the current-time ticker and re-syncs the min-width host style to match the latest properties. */
   protected override updated(): void {
     super.updated();
     this._syncNowTimer();
+    this._syncMinWidth();
   }
 
   /** Ensures a 60s current-time ticker is running only while `timeMarker` is enabled. */
@@ -294,6 +304,15 @@ export class CalendarDay extends CalendarTimelineBase {
     } else if (!this.timeMarker && this._nowTimer != null) {
       clearInterval(this._nowTimer);
       this._nowTimer = null;
+    }
+  }
+
+  /** Reflects `minWidth` onto the `--calendar-day-min-width` custom property the host's own styles read. */
+  private _syncMinWidth(): void {
+    if (this.minWidth) {
+      this.style.setProperty("--calendar-day-min-width", this.minWidth);
+    } else {
+      this.style.removeProperty("--calendar-day-min-width");
     }
   }
 

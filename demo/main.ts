@@ -1115,14 +1115,17 @@ document.querySelector('[data-testid="calendar-day-prev"]')?.addEventListener("c
 document.querySelector('[data-testid="calendar-day-next"]')?.addEventListener("click", () => shiftCalendarDay(1));
 
 // calendar-day multi-day row — as many <calendar-day> as the user wants, side by side, auto-scrolling
-// once they overflow the container (today on the left, ascending dates to the right).
+// once they overflow the container (today on the left, ascending dates to the right). Each column's
+// floor width comes from calendar-day's own configurable `min-width` property.
 const calendarDayRow = document.getElementById("calendar-day-row") as HTMLDivElement | null;
 const calendarDayRowCountLabel = document.getElementById("calendar-day-row-count") as HTMLSpanElement | null;
+const calendarDayRowWidthLabel = document.getElementById("calendar-day-row-width") as HTMLSpanElement | null;
 const CALENDAR_DAY_ROW_SAMPLE_ENTRIES = [
   { label: "Team sync", start: "09:00", end: "09:30", color: "info", location: "Room A" },
   { label: "Design review", start: "13:00", end: "14:00", color: "primary", location: "" },
 ] as const;
 let calendarDayRowCount = 3;
+let calendarDayRowWidthRem = 20;
 
 function renderCalendarDayRow(): void {
   if (!calendarDayRow) return;
@@ -1132,7 +1135,8 @@ function renderCalendarDayRow(): void {
     const day = document.createElement("calendar-day") as CalendarDay;
     day.date = iso;
     day.timeMarker = true;
-    day.style.flex = "0 0 20rem";
+    day.minWidth = `${calendarDayRowWidthRem}rem`;
+    day.style.flexShrink = "0";
     day.dataset.testid = "calendar-day-row-item";
     for (const sample of CALENDAR_DAY_ROW_SAMPLE_ENTRIES) {
       const entry = document.createElement("calendar-entry");
@@ -1151,6 +1155,7 @@ function renderCalendarDayRow(): void {
     calendarDayRow.appendChild(day);
   }
   if (calendarDayRowCountLabel) calendarDayRowCountLabel.textContent = String(calendarDayRowCount);
+  if (calendarDayRowWidthLabel) calendarDayRowWidthLabel.textContent = `${calendarDayRowWidthRem}rem`;
 }
 document.querySelector('[data-testid="calendar-day-row-dec"]')?.addEventListener("click", () => {
   calendarDayRowCount = Math.max(1, calendarDayRowCount - 1);
@@ -1158,6 +1163,14 @@ document.querySelector('[data-testid="calendar-day-row-dec"]')?.addEventListener
 });
 document.querySelector('[data-testid="calendar-day-row-inc"]')?.addEventListener("click", () => {
   calendarDayRowCount = Math.min(10, calendarDayRowCount + 1);
+  renderCalendarDayRow();
+});
+document.querySelector('[data-testid="calendar-day-row-width-dec"]')?.addEventListener("click", () => {
+  calendarDayRowWidthRem = Math.max(12, calendarDayRowWidthRem - 2);
+  renderCalendarDayRow();
+});
+document.querySelector('[data-testid="calendar-day-row-width-inc"]')?.addEventListener("click", () => {
+  calendarDayRowWidthRem = Math.min(32, calendarDayRowWidthRem + 2);
   renderCalendarDayRow();
 });
 renderCalendarDayRow();

@@ -518,12 +518,13 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
             Any number of <code>calendar-day</code> elements can be lined up side by side in a
             flex row with <code>overflow-x: auto</code> — today on the left, ascending dates to
             the right. Once the row is wider than the viewport it scrolls horizontally instead of
-            wrapping.
+            wrapping. Each column's floor width comes from <code>calendar-day</code>'s own
+            <code>min-width</code> property.
           </p>
           <div class="mt-4 rounded-lg border border-slate-200 p-6">
-            <div class="mb-4 flex items-center justify-between gap-3 text-sm text-slate-600">
-              <span>Days shown</span>
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600">
               <div class="flex items-center gap-2">
+                <span>Days shown</span>
                 <ui-button
                   data-testid="calendar-day-row-dec"
                   variant="secondary"
@@ -545,13 +546,36 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
                   >&plus;</ui-button
                 >
               </div>
+              <div class="flex items-center gap-2">
+                <span>Column min-width</span>
+                <ui-button
+                  data-testid="calendar-day-row-width-dec"
+                  variant="secondary"
+                  size="sm"
+                  aria-label="Narrower columns"
+                  >&minus;</ui-button
+                >
+                <span
+                  id="calendar-day-row-width"
+                  data-testid="calendar-day-row-width"
+                  class="w-12 text-center tabular-nums"
+                  >20rem</span
+                >
+                <ui-button
+                  data-testid="calendar-day-row-width-inc"
+                  variant="secondary"
+                  size="sm"
+                  aria-label="Wider columns"
+                  >&plus;</ui-button
+                >
+              </div>
             </div>
             <div id="calendar-day-row" data-testid="calendar-day-row" class="flex gap-4 overflow-x-auto pb-1"></div>
           </div>
           <pre class="usage mt-4"><code>&lt;div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.25rem;"&gt;
-  &lt;calendar-day date="2026-08-01" style="flex: 0 0 20rem;" time-marker&gt;...&lt;/calendar-day&gt;
-  &lt;calendar-day date="2026-08-02" style="flex: 0 0 20rem;" time-marker&gt;...&lt;/calendar-day&gt;
-  &lt;calendar-day date="2026-08-03" style="flex: 0 0 20rem;" time-marker&gt;...&lt;/calendar-day&gt;
+  &lt;calendar-day date="2026-08-01" min-width="20rem" style="flex-shrink: 0;" time-marker&gt;...&lt;/calendar-day&gt;
+  &lt;calendar-day date="2026-08-02" min-width="20rem" style="flex-shrink: 0;" time-marker&gt;...&lt;/calendar-day&gt;
+  &lt;calendar-day date="2026-08-03" min-width="20rem" style="flex-shrink: 0;" time-marker&gt;...&lt;/calendar-day&gt;
 &lt;/div&gt;</code></pre>
         </section>
 

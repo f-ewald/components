@@ -2701,6 +2701,17 @@
             },
             {
               "kind": "field",
+              "name": "minWidth",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Minimum width for the day column, as a CSS length (e.g. `\"18rem\"`).\nUnset leaves the host's width fully controlled by its container —\nuseful as the sizing floor when placing several `calendar-day`\nelements in a scrollable row.",
+              "attribute": "min-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "_now",
               "privacy": "private"
             },
@@ -2723,6 +2734,17 @@
                 }
               },
               "description": "Ensures a 60s current-time ticker is running only while `timeMarker` is enabled."
+            },
+            {
+              "kind": "method",
+              "name": "_syncMinWidth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Reflects `minWidth` onto the `--calendar-day-min-width` custom property the host's own styles read."
             },
             {
               "kind": "method",
@@ -2974,6 +2996,15 @@
               "default": "false",
               "description": "Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today.",
               "fieldName": "timeMarker"
+            },
+            {
+              "name": "min-width",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Minimum width for the day column, as a CSS length (e.g. `\"18rem\"`).\nUnset leaves the host's width fully controlled by its container —\nuseful as the sizing floor when placing several `calendar-day`\nelements in a scrollable row.",
+              "fieldName": "minWidth"
             }
           ],
           "superclass": {

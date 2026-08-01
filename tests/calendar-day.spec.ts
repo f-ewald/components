@@ -209,6 +209,9 @@ test.describe("calendar-day", () => {
     expect(dates).toEqual(sorted);
     expect(new Set(dates).size).toBe(3);
 
+    await expect(items.first()).toHaveJSProperty("minWidth", "20rem");
+    await expect(items.first()).toHaveCSS("min-width", "320px"); // 20rem at the default 16px root font-size.
+
     await page.locator('[data-testid="calendar-day-row-inc"]').click();
     await expect(items).toHaveCount(4);
     await expect(countLabel).toHaveText("4");
@@ -217,5 +220,46 @@ test.describe("calendar-day", () => {
     await page.locator('[data-testid="calendar-day-row-dec"]').click();
     await expect(items).toHaveCount(2);
     await expect(countLabel).toHaveText("2");
+  });
+
+  test("multi-day row: the column-width control resizes every calendar-day's min-width", async ({ page }) => {
+    await page.goto("/");
+    const items = page.locator('[data-testid="calendar-day-row-item"]');
+    const widthLabel = page.locator('[data-testid="calendar-day-row-width"]');
+
+    await expect(widthLabel).toHaveText("20rem");
+
+    await page.locator('[data-testid="calendar-day-row-width-inc"]').click();
+    await expect(widthLabel).toHaveText("22rem");
+    for (const item of await items.all()) {
+      await expect(item).toHaveJSProperty("minWidth", "22rem");
+      await expect(item).toHaveCSS("min-width", "352px");
+    }
+
+    await page.locator('[data-testid="calendar-day-row-width-dec"]').click();
+    await page.locator('[data-testid="calendar-day-row-width-dec"]').click();
+    await expect(widthLabel).toHaveText("18rem");
+    await expect(items.first()).toHaveCSS("min-width", "288px");
+  });
+
+  test("min-width is an unset-by-default property that maps onto the host's own CSS custom property", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const calendar = page.locator("#calendar-day-demo");
+
+    await expect(calendar).toHaveJSProperty("minWidth", "");
+    await expect(calendar).toHaveCSS("min-width", "0px");
+
+    await calendar.evaluate((element) => {
+      (element as HTMLElement & { minWidth: string }).minWidth = "15rem";
+    });
+    await expect(calendar).toHaveCSS("min-width", "240px");
+    await expect(calendar).toHaveAttribute("min-width", "15rem");
+
+    await calendar.evaluate((element) => {
+      (element as HTMLElement & { minWidth: string }).minWidth = "";
+    });
+    await expect(calendar).toHaveCSS("min-width", "0px");
   });
 });

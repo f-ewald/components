@@ -400,7 +400,7 @@ interaction sync with `calendar-week` via `CalendarTimelineBase`.
 
 Import: `import "@f-ewald/components/calendar-day.js";`
 
-Properties: `date` (attribute `date`) : string, default —; `timeMarker` (attribute `time-marker`) : boolean, default false
+Properties: `date` (attribute `date`) : string, default —; `timeMarker` (attribute `time-marker`) : boolean, default false; `minWidth` (attribute `min-width`) : string, default ""
 Events: none
 CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-hover-overlay`, `--ui-info`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
 

@@ -37,6 +37,7 @@ import "@f-ewald/components/calendar-day.js";
 | --- | --- | --- | --- | --- |
 | `date` | `date` | `string` | `—` | The day shown, `"YYYY-MM-DD"`. |
 | `timeMarker` | `time-marker` | `boolean` | `false` | Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today. |
+| `minWidth` | `min-width` | `string` | `""` | Minimum width for the day column, as a CSS length (e.g. `"18rem"`). Unset leaves the host's width fully controlled by its container — useful as the sizing floor when placing several `calendar-day` elements in a scrollable row. |
 
 ## Events
 
