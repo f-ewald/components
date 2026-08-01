@@ -76,7 +76,8 @@ const ICONS = {
   Sparkles: {
     slug: "sparkles",
     size: 16,
-    usage: "A gradient-theme toggle, or to represent a decorative/enhanced visual style.",
+    usage:
+      "An AI-powered action (pairs with ui-button's `ai` ring), a gradient-theme toggle, or a decorative/enhanced visual style.",
   },
   ShieldExclamation: {
     slug: "shield-exclamation",

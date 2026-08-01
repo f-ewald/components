@@ -3036,7 +3036,13 @@ tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
 
         <section id="ui-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-button">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#ui-button">ui-button</a></h3>
-          <p class="mt-1 text-sm text-slate-500">Button (or link) with an optional icon, in three visual weights.</p>
+          <p class="mt-1 text-sm text-slate-500">
+            Button (or link) with an optional icon, in three visual weights — plus an
+            <code>ai</code> modifier that rings any variant with an animated multi-hue sweep
+            (faster on hover and while busy) without altering its fill. Don't pair
+            <code>ai</code> with <code>pill</code> under the gradient theme: the pill edge and
+            gloss get absorbed into the ring.
+          </p>
           <div class="mt-6 flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 p-6">
             <ui-button id="button-primary" data-testid="button-primary" variant="primary">
               <span slot="icon">+</span>
@@ -3048,6 +3054,13 @@ tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
             <ui-button id="button-link" data-testid="button-link" variant="secondary" href="#ui-button">Edit (as link)</ui-button>
             <ui-button id="button-sm" data-testid="button-sm" variant="secondary" size="sm">Abort</ui-button>
             <ui-button id="button-pill" data-testid="button-pill" variant="primary" pill>Compare (2)</ui-button>
+            <ui-button id="button-ai" data-testid="button-ai" variant="primary" ai>
+              <svg slot="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" width="14" height="14" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+              Ask AI
+            </ui-button>
+            <ui-button id="button-ai-secondary" data-testid="button-ai-secondary" variant="secondary" ai>Summarize</ui-button>
+            <ui-button id="button-ai-busy" data-testid="button-ai-busy" variant="secondary" ai busy>Thinking</ui-button>
+            <ui-button id="button-ai-toggle" data-testid="button-ai-toggle" variant="secondary" size="sm">Toggle AI ring</ui-button>
           </div>
           <form id="button-form" data-testid="button-form" class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 p-6">
             <input name="note" placeholder="Required field" required class="rounded-md border border-slate-300 px-2 py-1 text-sm" />
@@ -3063,7 +3076,14 @@ tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
 &lt;ui-button variant="danger"&gt;Delete&lt;/ui-button&gt;
 &lt;ui-button variant="secondary" size="sm"&gt;Abort&lt;/ui-button&gt;
 &lt;ui-button variant="secondary" href="/properties?edit=42"&gt;Edit&lt;/ui-button&gt;
-&lt;ui-button variant="primary" pill&gt;Compare (2)&lt;/ui-button&gt;</code></pre>
+&lt;ui-button variant="primary" pill&gt;Compare (2)&lt;/ui-button&gt;
+
+&lt;!-- `ai` layers an animated rainbow ring on any variant, flat or gradient.
+     Don't pair it with `pill` under data-theme="gradient". --&gt;
+&lt;ui-button variant="primary" ai&gt;
+  &lt;span slot="icon"&gt;${iconSparkles(14)}&lt;/span&gt;
+  Ask AI
+&lt;/ui-button&gt;</code></pre>
         </section>
 
         <section id="ui-checkbox" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-checkbox">

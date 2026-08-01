@@ -72,7 +72,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
-| `iconSparkles` | 16px | A gradient-theme toggle, or to represent a decorative/enhanced visual style. |
+| `iconSparkles` | 16px | An AI-powered action (pairs with ui-button's `ai` ring), a gradient-theme toggle, or a decorative/enhanced visual style. |
 | `iconSpeakerWave` | 18px | An unmuted volume control, e.g. audio-player/video-player's mute toggle. |
 | `iconSpeakerXMark` | 18px | A muted volume state; pair with iconSpeakerWave for the unmuted state. |
 | `iconSquares2x2` | 18px | A grid or kanban-view toggle, or to represent card/tile layouts. |
@@ -2330,11 +2330,33 @@ background/border read the equivalent `--ui-button-secondary-*` tokens
 transparent/bordered look, so it can be themed into a matching (e.g.
 white-to-gray) gradient too.
 
+`ai` is an orthogonal modifier rather than a fourth variant: it leaves the
+variant's fill (flat or gradient-themed) untouched and only adds an
+animated multi-hue ring *outside* the button box — a crisp masked edge
+plus a blurred bloom behind it that fades out to transparent, so the ring
+melts into the page instead of ending on a hard line. Both layers are
+masked into a donut, so nothing is ever painted over the background or
+label. The ring's four stops are the `--ui-ai-1`…`--ui-ai-4` tokens. It
+sweeps slowly at rest, faster on hover and while `busy`, holds still while
+disabled or under `prefers-reduced-motion`, and drops the bloom for a
+solid `CanvasText` ring in forced-colors mode. The bloom reaches about
+`0.5rem` past the control, so give an AI button that much clearance from
+its neighbors and avoid `overflow: hidden` ancestors that would clip it.
+
+Do not combine `ai` with `pill` under the gradient theme
+(`data-theme="gradient"`). That theme defines a button through a darker
+`--ui-button-border` edge plus a glossy top highlight; a pill's
+fully-rounded silhouette runs flush against the ring around its entire
+outline, so that border and gloss read as the inner edge of the rainbow
+rather than as the button's own shape, and the vertical gradient fill
+stops reading as a gradient at all. Use `ai` with the default
+`--ui-radius-sm` corners there, and keep `ai` + `pill` for the flat theme.
+
 Import: `import "@f-ewald/components/ui-button.js";`
 
-Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `pill` (attribute `pill`) : boolean, default false; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
+Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `pill` (attribute `pill`) : boolean, default false; `ai` (attribute `ai`) : boolean, default false; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-ai-1`, `--ui-ai-2`, `--ui-ai-3`, `--ui-ai-4`, `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2344,6 +2366,7 @@ Example:
 </ui-button>
 <ui-button variant="danger">Delete</ui-button>
 <ui-button variant="secondary" href="/properties?edit=42">Edit</ui-button>
+<ui-button variant="primary" ai>Ask AI</ui-button>
 ```
 
 ## <ui-checkbox>

@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- `ui-button` gained an `ai` boolean modifier: an animated multi-hue ring
+  that sweeps around the button, marking an action as AI-powered. It is
+  orthogonal to `variant`/`size`/`pill` and to the flat/gradient themes — a
+  crisp masked edge plus a blurred bloom that fades out to transparent, both
+  drawn just outside the control, so the variant's own fill, border, and
+  label are untouched. It sweeps slowly at rest, faster on hover and while
+  `busy`, freezes while disabled or under `prefers-reduced-motion`, and drops
+  the bloom for a solid `CanvasText` ring in forced-colors mode. Its four
+  stops are the new `--ui-ai-1`…`--ui-ai-4` tokens (sky-400, indigo-500,
+  fuchsia-500, amber-400), overridable together to retune every AI button.
+  `iconSparkles` is the intended leading icon for one. One documented
+  combination to avoid: `ai` + `pill` under the gradient theme, where the
+  pill's defining border and top gloss get absorbed into the ring.
+
 - `comment-composer` now supports the standard `.focus()` method: it expands
   the composer (if collapsed) and focuses its field, for an ancestor that
   wants to drive it programmatically (e.g. a "reply" link elsewhere on the

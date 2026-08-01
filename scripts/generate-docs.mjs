@@ -394,7 +394,8 @@ const EXAMPLES = {
   New property
 </ui-button>
 <ui-button variant="danger">Delete</ui-button>
-<ui-button variant="secondary" href="/properties?edit=42">Edit</ui-button>`,
+<ui-button variant="secondary" href="/properties?edit=42">Edit</ui-button>
+<ui-button variant="primary" ai>Ask AI</ui-button>`,
   "map-pin": `<map-pin color="#1a73e8" size="30">3</map-pin>
 <map-pin color="#22c55e" size="26" highlighted>🏠</map-pin>`,
   "map-circle": `<map-circle color="#6b7280"></map-circle>

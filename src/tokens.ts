@@ -90,6 +90,17 @@ export const tokenValues: Record<string, string> = {
   "--ui-toast-warning-background": "var(--ui-warning, #d97706)",
   "--ui-toast-highlight": "0 0 0 0 transparent",
   "--ui-toast-text-shadow": "none",
+  // AI accent sweep — the four stops of the animated multi-hue ring
+  // ui-button's `ai` modifier draws around a button (and the only place a
+  // rainbow reads as meaning "this action is AI-powered" rather than a
+  // semantic state). Ordered around the color wheel and looping back to
+  // stop 1, so the sweep is seamless; --ui-ai-2 is --ui-primary's own
+  // indigo, anchoring the ring to the rest of the palette. Overriding these
+  // four retunes every AI button at once.
+  "--ui-ai-1": "#38bdf8", // sky-400
+  "--ui-ai-2": "#6366f1", // indigo-500
+  "--ui-ai-3": "#d946ef", // fuchsia-500
+  "--ui-ai-4": "#fbbf24", // amber-400
   "--ui-on-accent": "#ffffff",
   "--ui-text": "#0f172a", // slate-900
   "--ui-text-muted": "#64748b", // slate-500

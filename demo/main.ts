@@ -19,6 +19,7 @@ import {
   type RadioPills,
   type RangeSlider,
   type ButtonGroup,
+  type UiButton,
   type MapPin,
   type MapCircle,
   type MapboxMap,
@@ -542,6 +543,16 @@ document.getElementById("button-form")?.addEventListener("submit", (e) => {
   e.preventDefault();
   const note = new FormData(e.target as HTMLFormElement).get("note");
   document.getElementById("button-form-result")!.textContent = `Submitted: ${note}`;
+});
+
+// ui-button (`ai` ring toggled on/off, to compare an AI button against the
+// plain one it decorates — the modifier is additive, so every other property
+// stays untouched).
+document.getElementById("button-ai-toggle")?.addEventListener("click", () => {
+  for (const id of ["button-ai", "button-ai-secondary", "button-ai-busy"]) {
+    const button = document.getElementById(id) as UiButton | null;
+    if (button) button.ai = !button.ai;
+  }
 });
 
 // map-pin (highlighted toggle)

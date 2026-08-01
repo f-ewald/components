@@ -38,6 +38,19 @@ defines the details used when creating or reviewing components.
   the active tab's `--ui-primary` line drawn on top of it) rather than
   introducing a new token — the same precedent as `ui-button`'s `secondary`
   variant, which is realized via `--ui-border`/`--ui-text-muted`, not a hue.
+- `--ui-ai-1`…`--ui-ai-4` are the one multi-hue family: the stops of
+  `ui-button[ai]`'s animated ring, where the rainbow itself is the meaning
+  ("this action is AI-powered") rather than a semantic state. They are only
+  ever used together, as a sweep around a control's edge — never as a fill,
+  text, or border color.
+- The AI ring composes with every variant and both themes with one exception:
+  do not pair `ai` with `pill` under the gradient theme. The gradient theme
+  defines a button through a darker border edge plus a glossy top highlight,
+  and a pill's fully-rounded silhouette sits flush against the ring along its
+  whole outline, so that edge and gloss read as part of the rainbow instead
+  of the button, and the fill stops reading as a gradient. Gradient-theme AI
+  buttons keep the default `--ui-radius-sm` corners; `ai` + `pill` is a flat
+  theme combination.
 
 ## Typography
 

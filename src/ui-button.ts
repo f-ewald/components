@@ -37,6 +37,28 @@ export type ButtonVariant = "primary" | "secondary" | "danger";
  * transparent/bordered look, so it can be themed into a matching (e.g.
  * white-to-gray) gradient too.
  *
+ * `ai` is an orthogonal modifier rather than a fourth variant: it leaves the
+ * variant's fill (flat or gradient-themed) untouched and only adds an
+ * animated multi-hue ring *outside* the button box — a crisp masked edge
+ * plus a blurred bloom behind it that fades out to transparent, so the ring
+ * melts into the page instead of ending on a hard line. Both layers are
+ * masked into a donut, so nothing is ever painted over the background or
+ * label. The ring's four stops are the `--ui-ai-1`…`--ui-ai-4` tokens. It
+ * sweeps slowly at rest, faster on hover and while `busy`, holds still while
+ * disabled or under `prefers-reduced-motion`, and drops the bloom for a
+ * solid `CanvasText` ring in forced-colors mode. The bloom reaches about
+ * `0.5rem` past the control, so give an AI button that much clearance from
+ * its neighbors and avoid `overflow: hidden` ancestors that would clip it.
+ *
+ * Do not combine `ai` with `pill` under the gradient theme
+ * (`data-theme="gradient"`). That theme defines a button through a darker
+ * `--ui-button-border` edge plus a glossy top highlight; a pill's
+ * fully-rounded silhouette runs flush against the ring around its entire
+ * outline, so that border and gloss read as the inner edge of the rainbow
+ * rather than as the button's own shape, and the vertical gradient fill
+ * stops reading as a gradient at all. Use `ai` with the default
+ * `--ui-radius-sm` corners there, and keep `ai` + `pill` for the flat theme.
+ *
  * @element ui-button
  * @slot icon - Optional leading icon (e.g. an inline SVG).
  * @slot - Button label.
@@ -142,6 +164,83 @@ export class UiButton extends LitElement {
       .btn.pill {
         border-radius: 999px;
       }
+      .btn.ai {
+        position: relative;
+        --ai-sweep: linear-gradient(
+          90deg,
+          var(--ui-ai-1, #38bdf8),
+          var(--ui-ai-2, #6366f1),
+          var(--ui-ai-3, #d946ef),
+          var(--ui-ai-4, #fbbf24),
+          var(--ui-ai-1, #38bdf8)
+        );
+      }
+      /* Two layers, both masked into a donut (everything except the content
+         box) so the fill underneath — flat, gradient-themed, or transparent
+         secondary — is never painted over: ::before is a blurred bloom that
+         fades out to transparent, ::after the crisp edge on top of it. The
+         gradient tile is 1.5x the box so most of the hue range is visible at
+         once, and one cycle shifts it by exactly one tile, for a seamless
+         loop. */
+      .btn.ai::before,
+      .btn.ai::after {
+        content: "";
+        position: absolute;
+        background: var(--ai-sweep);
+        background-size: 150% 100%;
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        animation: ai-sweep 4s linear infinite;
+        pointer-events: none;
+      }
+      /* The transparent border is headroom: a mask layer is clipped to the
+         border box, so without it the blur's outward spread — the fade —
+         would be cut off square again. */
+      .btn.ai::before {
+        inset: -1rem;
+        border: 0.75rem solid transparent;
+        padding: 0.25rem;
+        border-radius: calc(var(--ui-radius-sm, 0.25rem) + 1rem);
+        background-clip: padding-box;
+        filter: blur(0.3125rem);
+        opacity: 0.6;
+      }
+      .btn.ai::after {
+        inset: -0.125rem;
+        padding: 0.125rem;
+        border-radius: calc(var(--ui-radius-sm, 0.25rem) + 0.125rem);
+      }
+      .btn.ai.pill::before,
+      .btn.ai.pill::after {
+        border-radius: 999px;
+      }
+      .btn.ai:hover::before,
+      .btn.ai:hover::after {
+        animation-duration: 1.5s;
+      }
+      /* A busy AI button keeps sweeping (and speeds up) — the ring reads as
+         "working"; a plainly disabled one holds still. */
+      .btn.ai[aria-busy="true"]::before,
+      .btn.ai[aria-busy="true"]::after {
+        animation-duration: 1.5s;
+      }
+      .btn.ai:disabled:not([aria-busy="true"])::before,
+      .btn.ai:disabled:not([aria-busy="true"])::after,
+      .btn.ai[aria-disabled="true"]:not([aria-busy="true"])::before,
+      .btn.ai[aria-disabled="true"]:not([aria-busy="true"])::after {
+        animation: none;
+      }
+      @keyframes ai-sweep {
+        to {
+          background-position: 300% 0;
+        }
+      }
       .spin {
         display: inline-flex;
         animation: spin 0.8s linear infinite;
@@ -158,8 +257,25 @@ export class UiButton extends LitElement {
         .spin {
           animation: none;
         }
+        .btn.ai::before,
+        .btn.ai::after,
+        .btn.ai:hover::before,
+        .btn.ai:hover::after,
+        .btn.ai[aria-busy="true"]::before,
+        .btn.ai[aria-busy="true"]::after {
+          animation: none;
+        }
       }
       @media (forced-colors: active) {
+        /* Gradients carry no meaning once colors are forced — drop the bloom
+           and keep a solid system-colored ring so the AI affordance survives. */
+        .btn.ai::before {
+          display: none;
+        }
+        .btn.ai::after {
+          background: CanvasText;
+          animation: none;
+        }
         .btn:focus-visible {
           outline: 2px solid CanvasText;
           outline-offset: 2px;
@@ -181,6 +297,8 @@ export class UiButton extends LitElement {
   @property() size: "sm" | "md" = "md";
   /** Renders fully rounded (pill-shaped) corners instead of the default `--ui-radius-sm`. */
   @property({ type: Boolean }) pill = false;
+  /** Draws the animated multi-hue "AI" ring (crisp edge plus a bloom fading out to transparent) around the button, on top of whatever variant/theme it already uses. */
+  @property({ type: Boolean, reflect: true }) ai = false;
   /** Renders an `<a href="...">` instead of a `<button>` when set. */
   @property() href: string | null = null;
   /** Native button `type`. Ignored when `href` is set. */
@@ -203,7 +321,7 @@ export class UiButton extends LitElement {
   }
 
   override render() {
-    const classes = `btn ${this.variant} ${this.size}${this.pill ? " pill" : ""}`;
+    const classes = `btn ${this.variant} ${this.size}${this.pill ? " pill" : ""}${this.ai ? " ai" : ""}`;
     const isDisabled = this.disabled || this.busy;
     if (this.href) {
       return html`

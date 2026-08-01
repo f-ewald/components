@@ -80,4 +80,53 @@ test.describe("ui-button", () => {
     const primaryBtn = page.locator("#button-primary button.btn");
     await expect(primaryBtn).not.toHaveCSS("border-radius", "999px");
   });
+
+  test("ai draws an animated ring without altering the variant's fill", async ({ page }) => {
+    await page.goto("/");
+    const aiBtn = page.locator("#button-ai button.btn");
+    await expect(aiBtn).toHaveClass(/\bai\b/);
+
+    const ring = (selector: string, pseudo: string, property: string) =>
+      page.locator(selector).evaluate(
+        (element, [pseudoElement, prop]) =>
+          getComputedStyle(element, pseudoElement).getPropertyValue(prop),
+        [pseudo, property],
+      );
+
+    // Both layers sweep in lockstep: ::before is the blurred bloom that fades
+    // out to transparent, ::after the crisp edge on top of it.
+    for (const pseudo of ["::before", "::after"]) {
+      expect(await ring("#button-ai button.btn", pseudo, "animation-name")).toBe("ai-sweep");
+      expect(await ring("#button-ai button.btn", pseudo, "animation-duration")).toBe("4s");
+      // Busy keeps sweeping (faster) rather than freezing like a plain disabled button.
+      expect(await ring("#button-ai-busy button.btn", pseudo, "animation-duration")).toBe("1.5s");
+    }
+    expect(await ring("#button-ai button.btn", "::before", "filter")).toContain("blur");
+    expect(await ring("#button-ai button.btn", "::after", "filter")).toBe("none");
+
+    // The ring is purely additive: fill and geometry match the plain equivalents.
+    await expect(aiBtn).toHaveCSS(
+      "background-color",
+      await page.locator("#button-pill button.btn").evaluate((el) => getComputedStyle(el).backgroundColor),
+    );
+    await expect(aiBtn).toHaveCSS("height", "32px");
+
+    // Toggling the property off removes the ring entirely.
+    await page.locator("#button-ai-toggle button").click();
+    await expect(aiBtn).not.toHaveClass(/\bai\b/);
+    expect(await ring("#button-ai button.btn", "::before", "animation-name")).toBe("none");
+    expect(await ring("#button-ai button.btn", "::after", "animation-name")).toBe("none");
+  });
+
+  test("the ai ring holds still under reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const animations = await page
+      .locator("#button-ai button.btn")
+      .evaluate((element) => [
+        getComputedStyle(element, "::before").animationName,
+        getComputedStyle(element, "::after").animationName,
+      ]);
+    expect(animations).toEqual(["none", "none"]);
+  });
 });
