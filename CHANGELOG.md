@@ -2,6 +2,42 @@
 
 ## Unreleased
 
+- New `scroll-dots`: a vertical section navigator for a long scrolled page or
+  a slide deck — one dot per section, the active one drawn as an elongated
+  rounded bar. Controlled like `pagination-nav`: it reads no scroll position,
+  because what counts as the active section differs too much between a snapped
+  deck and an ordinary long page to bake in. The consumer sets `active` and
+  moves the page on `dot-select`. Dots derive their gradient from a single base
+  `color` using the same lighter-on-top maths as `map-circle`/`map-pin`, so a
+  rail beside a map reads as the same family of marks as the pins on it. The
+  active dot's size is deliberately not transitioned — height is a layout
+  property, so it animates on the main thread, where a concurrent animation can
+  starve it into a couple of frames and square off the bar's rounded edges.
+
+- New `fullscreen-button`: toggles fullscreen for the page, or for a given
+  `target` element. It follows the real fullscreen state rather than its own
+  clicks, since Escape and the browser's own chrome both exit without touching
+  it. Styled as a square `ui-button` `secondary` variant over an opaque
+  `--ui-surface` base, the same construction `scroll-to-top` uses, so the
+  gradient theme reaches it.
+
+- `timeline-container` gained `layout: "left" | "alternating"`. The default
+  `left` is unchanged. `alternating` centers the line and gives each entry
+  three columns — label, line, body — with the sides swapping on every second
+  entry, for a presentation timeline rather than an event log. The layout is
+  pushed onto each entry rather than read from the container, since
+  `:host-context()` is Chromium-only; sides then fall out of `nth-child`, the
+  same mechanism the existing first/last line capping already uses.
+
+- `timeline-entry` gained `label`, a free-text alternative to `datetime` for an
+  axis that is not a wall clock (a year, an era, a phase), plus a matching
+  `label` slot for when it needs styling the shadow DOM cannot reach. `label`
+  wins over `datetime`; with neither, that side collapses rather than holding
+  the head row's gap open. An alternating entry fills whatever height it is
+  given, so a consumer sizing entries taller than their content still gets an
+  unbroken line — which relies on a `:host` display declaration, so do not
+  override the host's `display` from outside.
+
 - `scroll-to-top`/`scroll-to-bottom` no longer render as pills: both now use
   the standard secondary button treatment (2rem tall, `--ui-radius-sm`
   corners, `0.5rem 1rem` padding, and the `--ui-button-secondary-*`
