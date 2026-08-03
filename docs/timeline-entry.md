@@ -19,7 +19,10 @@ outside.
 
 `alternating` is set by `timeline-container` and should not be set by hand:
 it switches the entry to three columns — label, line, body — with the sides
-swapping on every second entry.
+swapping on every second entry. The entry fills whatever height it is given,
+so the line spans it rather than only its content — do not override the
+host's `display` from outside, since a light-DOM rule beats the `:host`
+declaration this relies on.
 
 The dot's `color` types the entry using the shared status-pill palette —
 `primary` by default, plus `neutral`, `info`, `success`, `warning`, and

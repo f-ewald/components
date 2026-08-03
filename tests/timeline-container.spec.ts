@@ -72,6 +72,24 @@ test.describe("timeline-container", () => {
     await expect(entries.nth(3).locator(".time")).toBeHidden();
   });
 
+  test("an alternating entry stretches its line over a consumer-set height", async ({ page }) => {
+    await page.goto("/");
+    const entry = page.locator("#timeline-alternating timeline-entry").nth(1);
+
+    // A consumer sizing entries taller than their content — a snapped deck,
+    // say — must not leave the line spanning only the content, which would
+    // break it between consecutive entries.
+    await entry.evaluate((el) => {
+      (el as HTMLElement).style.minHeight = "500px";
+    });
+
+    const host = (await entry.boundingBox())!;
+    const above = (await entry.locator(".line-top").boundingBox())!;
+    const below = (await entry.locator(".line-bottom").boundingBox())!;
+    expect(above.y).toBeCloseTo(host.y, 0);
+    expect(below.y + below.height).toBeCloseTo(host.y + host.height, 0);
+  });
+
   test("switching back to the left layout restores the inline arrangement", async ({ page }) => {
     await page.goto("/");
     const timeline = page.locator("#timeline-alternating");

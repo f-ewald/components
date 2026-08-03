@@ -24,7 +24,10 @@ import type { StatusPillColor } from "./status-pill.js";
  *
  * `alternating` is set by `timeline-container` and should not be set by hand:
  * it switches the entry to three columns — label, line, body — with the sides
- * swapping on every second entry.
+ * swapping on every second entry. The entry fills whatever height it is given,
+ * so the line spans it rather than only its content — do not override the
+ * host's `display` from outside, since a light-DOM rule beats the `:host`
+ * declaration this relies on.
  *
  * The dot's `color` types the entry using the shared status-pill palette —
  * `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
@@ -275,6 +278,14 @@ export class TimelineEntry extends LitElement {
        * auto-sized track grows to its content's minimum width, which would
        * push the middle column - and with it the line and dot - off center.
        */
+      /* A grid host so its single auto row stretches to whatever height the
+         consumer gives the entry. The line is drawn inside that row, so
+         without this it spans only the content and leaves gaps between
+         consecutive entries. Flex does not do this: with a content-sized
+         height there is no free space for flex-grow to distribute. */
+      :host([alternating]) {
+        display: grid;
+      }
       :host([alternating]) .entry {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
