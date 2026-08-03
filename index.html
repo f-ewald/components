@@ -60,6 +60,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-field">form-field</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#frame-box">frame-box</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#fullscreen-button">fullscreen-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kanban-board">kanban-board</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kbd-hint">kbd-hint</a>
@@ -87,6 +88,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#relative-time">relative-time</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#reveal-button">reveal-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#roman-numeral">roman-numeral</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-dots">scroll-dots</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-bottom">scroll-to-bottom</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-top">scroll-to-top</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#slide-panel">slide-panel</a>
@@ -1429,6 +1431,44 @@ select.addEventListener("change", (e) => console.log(e.detail.value));</code></p
 &lt;/frame-box&gt;</code></pre>
         </section>
 
+        <section id="fullscreen-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-fullscreen-button">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#fullscreen-button">fullscreen-button</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Toggles fullscreen for the page, or for a given <code>target</code> element. The icon
+            and label follow the real fullscreen state, so leaving with Escape still flips them
+            back.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <div class="flex items-center gap-6">
+              <div class="flex items-center gap-2">
+                <fullscreen-button id="fullscreen-page" data-testid="fullscreen-page"></fullscreen-button>
+                <span class="text-sm text-slate-500">Whole page</span>
+              </div>
+              <div
+                id="fullscreen-target"
+                data-testid="fullscreen-target"
+                class="flex items-center gap-2 rounded-lg bg-slate-900 p-4 text-white"
+              >
+                <fullscreen-button
+                  id="fullscreen-scoped"
+                  data-testid="fullscreen-scoped"
+                ></fullscreen-button>
+                <span class="text-sm">This panel only</span>
+              </div>
+            </div>
+            <p class="mt-4 text-xs text-slate-500" data-testid="fullscreen-state">Not fullscreen.</p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/fullscreen-button.js";
+
+&lt;fullscreen-button&gt;&lt;/fullscreen-button&gt;
+
+&lt;script type="module"&gt;
+  const button = document.querySelector("fullscreen-button");
+  button.target = document.querySelector("#deck"); // omit for the whole page
+  button.addEventListener("fullscreen-change", (e) =&gt; console.log(e.detail.active));
+&lt;/script&gt;</code></pre>
+        </section>
+
         <section id="icon-button" class="scroll-mt-8 py-10" data-testid="section-icon-button">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#icon-button">icon-button</a></h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -2520,6 +2560,64 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
 &lt;roman-numeral value="2004"&gt;&lt;/roman-numeral&gt;</code></pre>
         </section>
 
+        <section id="scroll-dots" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-scroll-dots">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#scroll-dots">scroll-dots</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A vertical section navigator: one dot per section, the active one an elongated bar.
+            Controlled — it reads no scroll position, so the consumer sets <code>active</code> and
+            moves the page on <code>dot-select</code>. Dots use the same gradient as
+            <code>map-circle</code>, from a single base <code>color</code>.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <div class="flex items-start gap-10">
+              <scroll-dots id="scroll-dots-demo" data-testid="scroll-dots-demo" label="Sections"></scroll-dots>
+              <scroll-dots
+                id="scroll-dots-colored"
+                data-testid="scroll-dots-colored"
+                label="Sections, teal"
+                color="#0d9488"
+              ></scroll-dots>
+              <div class="text-sm text-slate-600">
+                <p class="m-0" data-testid="scroll-dots-active">Active: 1</p>
+                <p class="mt-2 mb-0 text-xs text-slate-500">
+                  The last two dots are <code>muted</code>. Click any dot, or use the buttons.
+                </p>
+                <div class="mt-3 flex gap-2">
+                  <button
+                    id="scroll-dots-prev"
+                    data-testid="scroll-dots-prev"
+                    type="button"
+                    class="rounded-md border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    id="scroll-dots-next"
+                    data-testid="scroll-dots-next"
+                    type="button"
+                    class="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/scroll-dots.js";
+
+&lt;scroll-dots label="Journey stops"&gt;&lt;/scroll-dots&gt;
+
+&lt;script type="module"&gt;
+  const rail = document.querySelector("scroll-dots");
+  rail.items = ["Intro", "Freiburg", "Berkeley", { label: "Credits", muted: true }];
+  rail.active = 0;
+  rail.addEventListener("dot-select", (e) =&gt; {
+    rail.active = e.detail.index;
+    sections[e.detail.index].scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+&lt;/script&gt;</code></pre>
+        </section>
+
         <section id="scroll-to-bottom" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-scroll-to-bottom">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#scroll-to-bottom">scroll-to-bottom</a></h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -2946,6 +3044,61 @@ import "@f-ewald/components/timeline-entry.js";
   &lt;timeline-entry running&gt;
     &lt;span slot="headline"&gt;Deploying&lt;/span&gt;
     Uploading build artifacts…
+  &lt;/timeline-entry&gt;
+&lt;/timeline-container&gt;</code></pre>
+
+          <h4 class="mt-10 text-sm font-semibold text-slate-900">layout="alternating"</h4>
+          <p class="mt-1 text-sm text-slate-500">
+            A centered line with the label on one side and the body on the other, swapping every
+            second entry — for a presentation timeline rather than an event log. Entries use
+            <code>label</code> (or a slotted <code>label</code>) instead of a wall-clock
+            <code>datetime</code>; one here has neither, so that side stays empty.
+          </p>
+          <div class="mt-4 rounded-lg border border-slate-200 p-6">
+            <timeline-container
+              id="timeline-alternating"
+              data-testid="timeline-alternating"
+              layout="alternating"
+            >
+              <timeline-entry data-testid="timeline-alt-1" label="1987">
+                <span slot="headline">Where it started</span>
+                A first stop, with the label on the left.
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-alt-2" label="2004" color="info">
+                <span slot="headline">The question</span>
+                The second entry mirrors the first.
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-alt-3" color="success">
+                <span slot="headline">Setting out</span>
+                <span slot="label" style="font-family: ui-monospace, monospace; font-size: 1.5rem;"
+                  >2006–2008</span
+                >
+                A slotted label, styled from the light DOM.
+              </timeline-entry>
+              <timeline-entry data-testid="timeline-alt-4" color="warning">
+                <span slot="headline">No label at all</span>
+                That side of the line is simply left empty.
+              </timeline-entry>
+            </timeline-container>
+          </div>
+          <div class="mt-4 flex gap-2">
+            <button
+              id="timeline-layout-toggle"
+              data-testid="timeline-layout-toggle"
+              type="button"
+              class="rounded-md border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
+            >
+              Toggle layout
+            </button>
+          </div>
+          <pre class="usage mt-4"><code>&lt;timeline-container layout="alternating"&gt;
+  &lt;timeline-entry label="1987"&gt;
+    &lt;span slot="headline"&gt;Where it started&lt;/span&gt;
+    A first stop, with the label on the left.
+  &lt;/timeline-entry&gt;
+  &lt;timeline-entry label="2004"&gt;
+    &lt;span slot="headline"&gt;The question&lt;/span&gt;
+    The second entry mirrors the first.
   &lt;/timeline-entry&gt;
 &lt;/timeline-container&gt;</code></pre>
         </section>

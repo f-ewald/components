@@ -29,4 +29,58 @@ test.describe("timeline-container", () => {
     await expect(last.locator(".line-top")).toBeVisible();
     await expect(last.locator(".line-bottom")).toBeHidden();
   });
+
+  test("alternating layout centers the line and swaps the sides every second entry", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const timeline = page.locator("#timeline-alternating");
+    await expect(timeline).toHaveAttribute("layout", "alternating");
+
+    const entries = timeline.locator("timeline-entry");
+    await expect(entries.first()).toHaveAttribute("alternating", "");
+
+    const container = (await timeline.boundingBox())!;
+    const center = container.x + container.width / 2;
+
+    // Every dot sits on the same centered line, regardless of which side the
+    // label and body are on.
+    for (let index = 0; index < 4; index += 1) {
+      const dot = (await entries.nth(index).locator(".dot").boundingBox())!;
+      expect(dot.x + dot.width / 2).toBeCloseTo(center, 0);
+    }
+
+    const sideOf = async (index: number, selector: string) => {
+      const box = (await entries.nth(index).locator(selector).boundingBox())!;
+      return box.x + box.width / 2 < center ? "left" : "right";
+    };
+    expect(await sideOf(0, ".meta")).toBe("left");
+    expect(await sideOf(0, ".body")).toBe("right");
+    expect(await sideOf(1, ".meta")).toBe("right");
+    expect(await sideOf(1, ".body")).toBe("left");
+  });
+
+  test("alternating entries take a free-text label, a slotted one, or none", async ({ page }) => {
+    await page.goto("/");
+    const entries = page.locator("#timeline-alternating timeline-entry");
+
+    await expect(entries.nth(0).locator(".meta")).toHaveText("1987");
+    // A slotted label replaces the property, and is styled from the light DOM.
+    await expect(entries.nth(2).locator('[slot="label"]')).toBeVisible();
+    // With neither a label nor a datetime, that side collapses instead of
+    // leaving an empty box holding the head row's gap open.
+    await expect(entries.nth(3).locator(".time")).toBeHidden();
+  });
+
+  test("switching back to the left layout restores the inline arrangement", async ({ page }) => {
+    await page.goto("/");
+    const timeline = page.locator("#timeline-alternating");
+    const first = timeline.locator("timeline-entry").first();
+
+    await page.getByTestId("timeline-layout-toggle").click();
+    await expect(timeline).toHaveAttribute("layout", "left");
+    await expect(first).not.toHaveAttribute("alternating", "");
+    await expect(first.locator(".meta")).toHaveCount(0);
+    await expect(first.locator(".head .time")).toHaveText("1987");
+  });
 });

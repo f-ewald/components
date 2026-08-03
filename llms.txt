@@ -982,6 +982,37 @@ Example:
 </frame-box>
 ```
 
+## <fullscreen-button>
+
+Toggles fullscreen presentation of the page, or of a given `target` element.
+
+The icon and accessible name track the *actual* fullscreen state rather than
+this button's own clicks, because fullscreen can be left without touching it
+— Escape, or the browser's own chrome — which would otherwise leave the
+button showing the wrong affordance.
+
+The control is styled as a square icon-sized `ui-button` `secondary` variant
+(2rem, `--ui-radius-sm` corners, the `--ui-button-secondary-*` background and
+border tokens, so a gradient theme carries over) layered over an opaque
+`--ui-surface` base and an elevation shadow, since it normally floats above
+the content it expands.
+
+Import: `import "@f-ewald/components/fullscreen-button.js";`
+
+Properties: `target` (JS property only) : HTMLElement | null, default null; `enterLabel` (attribute `enter-label`) : string, default "Enter full screen"; `exitLabel` (attribute `exit-label`) : string, default "Exit full screen"
+Events: `fullscreen-change`
+CSS custom properties: `--ui-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-focus-ring`, `--ui-line-height-glyph`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<fullscreen-button></fullscreen-button>
+<script type="module">
+  const button = document.querySelector('fullscreen-button');
+  button.target = document.querySelector('#deck'); // omit for the whole page
+  button.addEventListener('fullscreen-change', (e) => console.log(e.detail.active));
+</script>
+```
+
 ## <gallery-item>
 
 Declarative image metadata consumed by a parent `photo-gallery`.
@@ -1861,6 +1892,44 @@ Example:
 <roman-numeral value="2004"></roman-numeral>
 ```
 
+## <scroll-dots>
+
+Vertical section navigator for a long scrolled page or a slide deck: one dot
+per section, the active one drawn as an elongated rounded bar rather than a
+dot, which is the only cue needed to read position at a glance.
+
+Controlled, like `pagination-nav`: it owns no scroll behavior and never
+reads the scroll position. The consumer sets `active` and moves the page in
+response to `dot-select` — what counts as the active section differs too much
+between a snapped deck and an ordinary long page to bake in.
+
+Positioning is also the consumer's, since a rail is normally fixed into a
+reserved gutter that only the page knows the width of.
+
+The dots use the same lighter-on-top gradient as `map-circle`/`map-pin`,
+derived from a single base `color` — a rail beside a map reads as the same
+family of marks as the pins on it.
+
+Import: `import "@f-ewald/components/scroll-dots.js";`
+
+Properties: `items` (JS property only) : ScrollDotsItem[], default []; `active` (attribute `active`) : number, default 0; `color` (attribute `color`) : string, default ""; `label` (attribute `label`) : string, default ""
+Events: `dot-select`
+CSS custom properties: `--ui-focus-ring`, `--ui-primary`, `--ui-text-muted`
+
+Example:
+```html
+<scroll-dots label="Journey stops"></scroll-dots>
+<script type="module">
+  const rail = document.querySelector('scroll-dots');
+  rail.items = ['Intro', 'Freiburg', 'Berkeley', { label: 'Credits', muted: true }];
+  rail.active = 0;
+  rail.addEventListener('dot-select', (e) => {
+    rail.active = e.detail.index;
+    sections[e.detail.index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>
+```
+
 ## <scroll-to-bottom>
 
 Overlay button that appears once the page (or a given `target` container)
@@ -2157,15 +2226,25 @@ Example:
 
 ## <timeline-container>
 
-Vertical timeline: a single connecting line runs down the left edge and each
-slotted `timeline-entry` places a dot on it. This is a thin layout and
-semantics wrapper — the entries draw the line segments and dots themselves,
-so the container adds no gap between them (a gap would break the line).
-Exposed to assistive technology as a list of events.
+Vertical timeline: a connecting line runs down the entries and each slotted
+`timeline-entry` places a dot on it. This is a thin layout and semantics
+wrapper — the entries draw the line segments and dots themselves, so the
+container adds no gap between them (a gap would break the line). Exposed to
+assistive technology as a list of events.
+
+`layout` chooses where the line runs. `left` (the default) puts it down the
+left edge with each entry's label inline beside its headline. `alternating`
+centers it and gives each entry three columns — label, line, body — with the
+two sides swapping on every second entry, for a presentation timeline rather
+than an event log.
+
+The layout is pushed onto each entry rather than read from here, because a
+shadow-DOM child cannot style itself against an ancestor portably —
+`:host-context()` is Chromium-only.
 
 Import: `import "@f-ewald/components/timeline-container.js";`
 
-Properties: none
+Properties: `layout` (attribute `layout`) : TimelineLayout, default "left"
 Events: none
 CSS custom properties: none
 
@@ -2185,6 +2264,18 @@ Example:
     <chat-message role="user" author="Freddy">Ship it.</chat-message>
   </timeline-entry>
 </timeline-container>
+
+<!-- A presentation timeline: centered line, label and body swapping sides. -->
+<timeline-container layout="alternating">
+  <timeline-entry label="1987">
+    <span slot="headline">Where it started</span>
+    A first stop, with the label on the left.
+  </timeline-entry>
+  <timeline-entry label="2004">
+    <span slot="headline">The question</span>
+    The second entry mirrors the first.
+  </timeline-entry>
+</timeline-container>
 ```
 
 ## <timeline-entry>
@@ -2200,6 +2291,16 @@ exactly at the first and last dots. Only meaningful inside a
 timestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —
 setting both renders the same time twice.
 
+`label` is a free-text alternative for a timeline whose axis is not a wall
+clock — a year, an era, a phase. It wins over `datetime` when both are set.
+Slot `label` instead when it needs its own styling, since a property is
+rendered inside this component's shadow DOM and cannot be reached from
+outside.
+
+`alternating` is set by `timeline-container` and should not be set by hand:
+it switches the entry to three columns — label, line, body — with the sides
+swapping on every second entry.
+
 The dot's `color` types the entry using the shared status-pill palette —
 `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
 `danger`.
@@ -2213,9 +2314,9 @@ effect while `running` is set.
 
 Import: `import "@f-ewald/components/timeline-entry.js";`
 
-Properties: `datetime` (attribute `datetime`) : string | null, default null; `color` (attribute `color`) : StatusPillColor, default "primary"; `compact` (attribute `compact`) : boolean, default false; `running` (attribute `running`) : boolean, default false
+Properties: `datetime` (attribute `datetime`) : string | null, default null; `label` (attribute `label`) : string | null, default null; `alternating` (attribute `alternating`) : boolean, default false; `color` (attribute `color`) : StatusPillColor, default "primary"; `compact` (attribute `compact`) : boolean, default false; `running` (attribute `running`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`, `--ui-warning`
 
 Example:
 ```html

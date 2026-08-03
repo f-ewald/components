@@ -16,6 +16,16 @@ import type { StatusPillColor } from "./status-pill.js";
  * timestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —
  * setting both renders the same time twice.
  *
+ * `label` is a free-text alternative for a timeline whose axis is not a wall
+ * clock — a year, an era, a phase. It wins over `datetime` when both are set.
+ * Slot `label` instead when it needs its own styling, since a property is
+ * rendered inside this component's shadow DOM and cannot be reached from
+ * outside.
+ *
+ * `alternating` is set by `timeline-container` and should not be set by hand:
+ * it switches the entry to three columns — label, line, body — with the sides
+ * swapping on every second entry.
+ *
  * The dot's `color` types the entry using the shared status-pill palette —
  * `primary` by default, plus `neutral`, `info`, `success`, `warning`, and
  * `danger`.
@@ -29,12 +39,23 @@ import type { StatusPillColor } from "./status-pill.js";
  *
  * @element timeline-entry
  * @slot headline - Optional headline/title for the event.
+ * @slot label - Optional replacement for the `label` property, for a label that
+ *   needs its own styling.
  * @slot - The event content; nest any elements here.
  */
 @customElement("timeline-entry")
 export class TimelineEntry extends LitElement {
   /** ISO 8601 or SQLite datetime string, rendered as a relative time. */
   @property() datetime: string | null = null;
+
+  /** Free-text label shown in place of the relative time; wins over `datetime`. */
+  @property() label: string | null = null;
+
+  /**
+   * Three-column alternating presentation. Set by `timeline-container` from its
+   * own `layout`; setting it directly is not supported.
+   */
+  @property({ type: Boolean, reflect: true }) alternating = false;
 
   /**
    * Visual type of the entry's dot, from the shared status-pill palette:
@@ -57,6 +78,9 @@ export class TimelineEntry extends LitElement {
 
   /** Whether the headline slot currently has assigned content. */
   @state() private _hasHeadline = false;
+
+  /** Whether the label slot currently has assigned content. */
+  @state() private _hasLabel = false;
 
   static override styles = [
     tokens,
@@ -242,12 +266,102 @@ export class TimelineEntry extends LitElement {
         font-size: var(--ui-font-size-sm, 0.75rem);
         color: var(--ui-text-muted, #64748b);
       }
+      .time.empty {
+        display: none;
+      }
+
+      /*
+       * Alternating layout. minmax(0, 1fr) rather than a bare 1fr: an
+       * auto-sized track grows to its content's minimum width, which would
+       * push the middle column - and with it the line and dot - off center.
+       */
+      :host([alternating]) .entry {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        column-gap: 1.5rem;
+      }
+      :host([alternating]) .meta,
+      :host([alternating]) .rail,
+      :host([alternating]) .body {
+        grid-row: 1;
+      }
+      :host([alternating]) .meta {
+        grid-column: 1;
+        justify-self: end;
+        text-align: right;
+      }
+      :host([alternating]) .rail {
+        grid-column: 2;
+        align-self: stretch;
+      }
+      :host([alternating]) .body {
+        grid-column: 3;
+        padding: 1.5rem 0;
+      }
+      :host([alternating]:nth-child(even)) .meta {
+        grid-column: 3;
+        justify-self: start;
+        text-align: left;
+      }
+      :host([alternating]:nth-child(even)) .body {
+        grid-column: 1;
+      }
+      /* The dot marks the middle of the entry rather than its headline, and
+         the line runs the entry's full height so consecutive entries join. */
+      :host([alternating]) .dot {
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      :host([alternating]) .spinner {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      :host([alternating]) .line-top {
+        top: 0;
+        height: 50%;
+      }
+      :host([alternating]) .line-bottom {
+        top: 50%;
+        bottom: 0;
+      }
+      :host([alternating]) .time {
+        font-size: var(--ui-font-size-lg, 1rem);
+        font-weight: var(--ui-font-weight-medium, 500);
+        letter-spacing: var(--ui-tracking-wide, 0.04em);
+      }
     `,
   ];
 
   override connectedCallback(): void {
     super.connectedCallback();
     if (!this.hasAttribute("role")) this.setAttribute("role", "listitem");
+  }
+
+  /**
+   * The entry's one time/label element: a slotted label, else the `label`
+   * property, else a relative time. Placed inline beside the headline in the
+   * default layout and in its own column when alternating.
+   */
+  private _renderMeta() {
+    const fallback =
+      this.label !== null && this.label !== ""
+        ? html`${this.label}`
+        : this.datetime
+          ? html`<relative-time datetime=${this.datetime}></relative-time>`
+          : nothing;
+    // Collapsed rather than omitted when there is nothing to show: the slot has
+    // to stay in the tree for its slotchange to report late-assigned content,
+    // but an empty span would otherwise still claim the head row's gap.
+    const empty = fallback === nothing && !this._hasLabel;
+    return html`<span class="time ${empty ? "empty" : ""}">
+      <slot name="label" @slotchange=${this._onLabelSlotChange}>${fallback}</slot>
+    </span>`;
+  }
+
+  /** Tracks whether the label slot has content, so an empty one can collapse. */
+  private _onLabelSlotChange(event: Event): void {
+    this._hasLabel = (event.target as HTMLSlotElement).assignedNodes({ flatten: true }).length > 0;
   }
 
   /** Collapses the headline when nothing is slotted so the time sits alone. */
@@ -258,6 +372,7 @@ export class TimelineEntry extends LitElement {
   override render() {
     return html`
       <div class="entry">
+        ${this.alternating ? html`<div class="meta">${this._renderMeta()}</div>` : nothing}
         <div class="rail" aria-hidden="true">
           <span class="line line-top"></span>
           <span class="line line-bottom"></span>
@@ -277,9 +392,7 @@ export class TimelineEntry extends LitElement {
             <span class="headline ${this._hasHeadline ? "" : "empty"}">
               <slot name="headline" @slotchange=${this._onHeadlineSlotChange}></slot>
             </span>
-            ${this.datetime
-              ? html`<relative-time class="time" datetime=${this.datetime}></relative-time>`
-              : nothing}
+            ${this.alternating ? nothing : this._renderMeta()}
           </div>
           <div class="content"><slot></slot></div>
         </div>

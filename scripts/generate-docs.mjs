@@ -179,6 +179,22 @@ const EXAMPLES = {
   document.querySelector('scroll-to-bottom').target = document.querySelector('#log');
 </script>`,
   "scroll-to-top": `<scroll-to-top></scroll-to-top>`,
+  "scroll-dots": `<scroll-dots label="Journey stops"></scroll-dots>
+<script type="module">
+  const rail = document.querySelector('scroll-dots');
+  rail.items = ['Intro', 'Freiburg', 'Berkeley', { label: 'Credits', muted: true }];
+  rail.active = 0;
+  rail.addEventListener('dot-select', (e) => {
+    rail.active = e.detail.index;
+    sections[e.detail.index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>`,
+  "fullscreen-button": `<fullscreen-button></fullscreen-button>
+<script type="module">
+  const button = document.querySelector('fullscreen-button');
+  button.target = document.querySelector('#deck'); // omit for the whole page
+  button.addEventListener('fullscreen-change', (e) => console.log(e.detail.active));
+</script>`,
   "load-more": `<load-more direction="top" label="Load older"></load-more>
 <load-more></load-more>`,
   "loading-dots": `<loading-dots></loading-dots>
@@ -202,6 +218,18 @@ const EXAMPLES = {
   <timeline-entry datetime="2026-07-23T08:30:00Z">
     <!-- chat-message's own timestamp is left unset: timeline-entry already shows one -->
     <chat-message role="user" author="Freddy">Ship it.</chat-message>
+  </timeline-entry>
+</timeline-container>
+
+<!-- A presentation timeline: centered line, label and body swapping sides. -->
+<timeline-container layout="alternating">
+  <timeline-entry label="1987">
+    <span slot="headline">Where it started</span>
+    A first stop, with the label on the left.
+  </timeline-entry>
+  <timeline-entry label="2004">
+    <span slot="headline">The question</span>
+    The second entry mirrors the first.
   </timeline-entry>
 </timeline-container>`,
   "timeline-entry": `<timeline-entry datetime="2026-07-23T09:00:00Z" color="danger">

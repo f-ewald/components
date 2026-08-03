@@ -7280,6 +7280,118 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/fullscreen-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Toggles fullscreen presentation of the page, or of a given `target` element.\n\nThe icon and accessible name track the *actual* fullscreen state rather than\nthis button's own clicks, because fullscreen can be left without touching it\n— Escape, or the browser's own chrome — which would otherwise leave the\nbutton showing the wrong affordance.\n\nThe control is styled as a square icon-sized `ui-button` `secondary` variant\n(2rem, `--ui-radius-sm` corners, the `--ui-button-secondary-*` background and\nborder tokens, so a gradient theme carries over) layered over an opaque\n`--ui-surface` base and an elevation shadow, since it normally floats above\nthe content it expands.",
+          "name": "FullscreenButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "Element to present fullscreen; `null` (default) presents the whole page."
+            },
+            {
+              "kind": "field",
+              "name": "enterLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Enter full screen\"",
+              "description": "Accessible name while not fullscreen.",
+              "attribute": "enter-label"
+            },
+            {
+              "kind": "field",
+              "name": "exitLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Exit full screen\"",
+              "description": "Accessible name while fullscreen.",
+              "attribute": "exit-label"
+            },
+            {
+              "kind": "field",
+              "name": "_active",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#onChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#toggle",
+              "privacy": "private",
+              "description": "Rejections are swallowed: browsers refuse the request outside a user\ngesture or under a permissions policy, and there is nothing useful to tell\nthe user about it."
+            }
+          ],
+          "events": [
+            {
+              "description": "The fullscreen state changed, from this button or otherwise (`detail: { active }`).",
+              "name": "fullscreen-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "enter-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Enter full screen\"",
+              "description": "Accessible name while not fullscreen.",
+              "fieldName": "enterLabel"
+            },
+            {
+              "name": "exit-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Exit full screen\"",
+              "description": "Accessible name while fullscreen.",
+              "fieldName": "exitLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "fullscreen-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FullscreenButton",
+          "declaration": {
+            "name": "FullscreenButton",
+            "module": "src/fullscreen-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "fullscreen-button",
+          "declaration": {
+            "name": "FullscreenButton",
+            "module": "src/fullscreen-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gallery-item-variant.ts",
       "declarations": [
         {
@@ -8874,10 +8986,58 @@
         },
         {
           "kind": "js",
+          "name": "ScrollDots",
+          "declaration": {
+            "name": "ScrollDots",
+            "module": "./scroll-dots.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DotSelectDetail",
+          "declaration": {
+            "name": "DotSelectDetail",
+            "module": "./scroll-dots.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ScrollDotItem",
+          "declaration": {
+            "name": "ScrollDotItem",
+            "module": "./scroll-dots.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ScrollDotsItem",
+          "declaration": {
+            "name": "ScrollDotsItem",
+            "module": "./scroll-dots.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "ScrollToTop",
           "declaration": {
             "name": "ScrollToTop",
             "module": "./scroll-to-top.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FullscreenButton",
+          "declaration": {
+            "name": "FullscreenButton",
+            "module": "./fullscreen-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FullscreenChangeDetail",
+          "declaration": {
+            "name": "FullscreenChangeDetail",
+            "module": "./fullscreen-button.js"
           }
         },
         {
@@ -9445,6 +9605,14 @@
           "name": "TimelineContainer",
           "declaration": {
             "name": "TimelineContainer",
+            "module": "./timeline-container.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TimelineLayout",
+          "declaration": {
+            "name": "TimelineLayout",
             "module": "./timeline-container.js"
           }
         },
@@ -15459,6 +15627,157 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/scroll-dots.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Vertical section navigator for a long scrolled page or a slide deck: one dot\nper section, the active one drawn as an elongated rounded bar rather than a\ndot, which is the only cue needed to read position at a glance.\n\nControlled, like `pagination-nav`: it owns no scroll behavior and never\nreads the scroll position. The consumer sets `active` and moves the page in\nresponse to `dot-select` — what counts as the active section differs too much\nbetween a snapped deck and an ordinary long page to bake in.\n\nPositioning is also the consumer's, since a rail is normally fixed into a\nreserved gutter that only the page knows the width of.\n\nThe dots use the same lighter-on-top gradient as `map-circle`/`map-pin`,\nderived from a single base `color` — a rail beside a map reads as the same\nfamily of marks as the pins on it.",
+          "name": "ScrollDots",
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "ScrollDotsItem[]"
+              },
+              "default": "[]",
+              "description": "Dots to render, in document order. A bare string is shorthand for `{ label }`."
+            },
+            {
+              "kind": "field",
+              "name": "active",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "0-based index of the active dot. Out-of-range values simply match no dot.",
+              "attribute": "active"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Base color the dot gradient is derived from. Empty uses `--ui-primary`.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible name for the rail, e.g. \"Journey stops\".",
+              "attribute": "label"
+            },
+            {
+              "kind": "method",
+              "name": "_renderDot",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ScrollDotItem"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_select",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "dot-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The user picked a dot (`detail: { index }`)."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "active",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "0-based index of the active dot. Out-of-range values simply match no dot.",
+              "fieldName": "active"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Base color the dot gradient is derived from. Empty uses `--ui-primary`.",
+              "fieldName": "color"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible name for the rail, e.g. \"Journey stops\".",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "scroll-dots",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ScrollDots",
+          "declaration": {
+            "name": "ScrollDots",
+            "module": "src/scroll-dots.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "scroll-dots",
+          "declaration": {
+            "name": "ScrollDots",
+            "module": "src/scroll-dots.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/scroll-to-bottom.ts",
       "declarations": [
         {
@@ -16941,7 +17260,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Vertical timeline: a single connecting line runs down the left edge and each\nslotted `timeline-entry` places a dot on it. This is a thin layout and\nsemantics wrapper — the entries draw the line segments and dots themselves,\nso the container adds no gap between them (a gap would break the line).\nExposed to assistive technology as a list of events.",
+          "description": "Vertical timeline: a connecting line runs down the entries and each slotted\n`timeline-entry` places a dot on it. This is a thin layout and semantics\nwrapper — the entries draw the line segments and dots themselves, so the\ncontainer adds no gap between them (a gap would break the line). Exposed to\nassistive technology as a list of events.\n\n`layout` chooses where the line runs. `left` (the default) puts it down the\nleft edge with each entry's label inline beside its headline. `alternating`\ncenters it and gives each entry three columns — label, line, body — with the\ntwo sides swapping on every second entry, for a presentation timeline rather\nthan an event log.\n\nThe layout is pushed onto each entry rather than read from here, because a\nshadow-DOM child cannot style itself against an ancestor portably —\n`:host-context()` is Chromium-only.",
           "name": "TimelineContainer",
           "slots": [
             {
@@ -16949,7 +17268,41 @@
               "name": ""
             }
           ],
-          "members": [],
+          "members": [
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "TimelineLayout"
+              },
+              "default": "\"left\"",
+              "description": "Arrangement of the entries: a left-edge line, or a centered alternating one.",
+              "attribute": "layout",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "#applyLayout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Mirrors `layout` onto every slotted entry so each can style itself."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "layout",
+              "type": {
+                "text": "TimelineLayout"
+              },
+              "default": "\"left\"",
+              "description": "Arrangement of the entries: a left-edge line, or a centered alternating one.",
+              "fieldName": "layout"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -16983,12 +17336,16 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.\n\n`datetime` is the entry's one timestamp. A nested element that has its own\ntimestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —\nsetting both renders the same time twice.\n\nThe dot's `color` types the entry using the shared status-pill palette —\n`primary` by default, plus `neutral`, `info`, `success`, `warning`, and\n`danger`.\n\nSet `compact` for dense, one-line system-status entries: it tightens the\nvertical spacing and renders the content smaller and muted.\n\nSet `running` to replace the dot with an animated gray ring spinner,\nindicating the entry represents in-progress work; `color` has no visible\neffect while `running` is set.",
+          "description": "One event on a `timeline-container`: a dot on the vertical line, an optional\nheadline, a relative timestamp (\"3 hours ago\"), and freely nested content.\nThe connecting line is drawn here — its segment above the dot is hidden on\nthe first entry and the segment below is hidden on the last, so the line caps\nexactly at the first and last dots. Only meaningful inside a\n`timeline-container`; demonstrated through it.\n\n`datetime` is the entry's one timestamp. A nested element that has its own\ntimestamp prop (e.g. `chat-message`'s `timestamp`) should leave it unset —\nsetting both renders the same time twice.\n\n`label` is a free-text alternative for a timeline whose axis is not a wall\nclock — a year, an era, a phase. It wins over `datetime` when both are set.\nSlot `label` instead when it needs its own styling, since a property is\nrendered inside this component's shadow DOM and cannot be reached from\noutside.\n\n`alternating` is set by `timeline-container` and should not be set by hand:\nit switches the entry to three columns — label, line, body — with the sides\nswapping on every second entry.\n\nThe dot's `color` types the entry using the shared status-pill palette —\n`primary` by default, plus `neutral`, `info`, `success`, `warning`, and\n`danger`.\n\nSet `compact` for dense, one-line system-status entries: it tightens the\nvertical spacing and renders the content smaller and muted.\n\nSet `running` to replace the dot with an animated gray ring spinner,\nindicating the entry represents in-progress work; `color` has no visible\neffect while `running` is set.",
           "name": "TimelineEntry",
           "slots": [
             {
               "description": "Optional headline/title for the event.",
               "name": "headline"
+            },
+            {
+              "description": "Optional replacement for the `label` property, for a label that needs its own styling.",
+              "name": "label"
             },
             {
               "description": "The event content; nest any elements here.",
@@ -17005,6 +17362,27 @@
               "default": "null",
               "description": "ISO 8601 or SQLite datetime string, rendered as a relative time.",
               "attribute": "datetime"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Free-text label shown in place of the relative time; wins over `datetime`.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "alternating",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Three-column alternating presentation. Set by `timeline-container` from its\nown `layout`; setting it directly is not supported.",
+              "attribute": "alternating",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -17049,6 +17427,41 @@
               "description": "Whether the headline slot currently has assigned content."
             },
             {
+              "kind": "field",
+              "name": "_hasLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the label slot currently has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_renderMeta",
+              "privacy": "private",
+              "description": "The entry's one time/label element: a slotted label, else the `label`\nproperty, else a relative time. Placed inline beside the headline in the\ndefault layout and in its own column when alternating."
+            },
+            {
+              "kind": "method",
+              "name": "_onLabelSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the label slot has content, so an empty one can collapse."
+            },
+            {
               "kind": "method",
               "name": "_onHeadlineSlotChange",
               "privacy": "private",
@@ -17077,6 +17490,24 @@
               "default": "null",
               "description": "ISO 8601 or SQLite datetime string, rendered as a relative time.",
               "fieldName": "datetime"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Free-text label shown in place of the relative time; wins over `datetime`.",
+              "fieldName": "label"
+            },
+            {
+              "name": "alternating",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Three-column alternating presentation. Set by `timeline-container` from its\nown `layout`; setting it directly is not supported.",
+              "fieldName": "alternating"
             },
             {
               "name": "color",

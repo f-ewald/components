@@ -21,7 +21,14 @@ export {
   type ToastVariant,
 } from "./toast-notification.js";
 export { ScrollToBottom } from "./scroll-to-bottom.js";
+export {
+  ScrollDots,
+  type DotSelectDetail,
+  type ScrollDotItem,
+  type ScrollDotsItem,
+} from "./scroll-dots.js";
 export { ScrollToTop } from "./scroll-to-top.js";
+export { FullscreenButton, type FullscreenChangeDetail } from "./fullscreen-button.js";
 export { SlidePanel } from "./slide-panel.js";
 export { CopyLinkButton } from "./copy-link-button.js";
 export { RelativeTime } from "./relative-time.js";
@@ -86,7 +93,7 @@ export { ActionBar } from "./action-bar.js";
 export { PageHeader } from "./page-header.js";
 export { PaginationNav, type PageChangeDetail } from "./pagination-nav.js";
 export { FormActions } from "./form-actions.js";
-export { TimelineContainer } from "./timeline-container.js";
+export { TimelineContainer, type TimelineLayout } from "./timeline-container.js";
 export { TimelineEntry } from "./timeline-entry.js";
 export { CalendarDay } from "./calendar-day.js";
 export { CalendarEntry } from "./calendar-entry.js";

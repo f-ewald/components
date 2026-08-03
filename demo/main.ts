@@ -43,6 +43,11 @@ import {
   type AppShell,
   type AppSidebar,
   type PaginationNav,
+  type ScrollDots,
+  type DotSelectDetail,
+  type FullscreenButton,
+  type FullscreenChangeDetail,
+  type TimelineContainer,
   type TileGrid,
   type TreeNode,
   type TreeView,
@@ -1367,6 +1372,76 @@ for (const entry of document.querySelectorAll<HTMLElement>("#timeline-demo timel
     Date.now() - agoSeconds * 1000,
   ).toISOString();
 }
+
+// scroll-dots — controlled: the demo owns `active` and moves it in response to
+// dot-select, exactly as a real page would alongside its own scrolling.
+const scrollDotsItems = [
+  "Introduction",
+  "Freiburg",
+  "Berkeley",
+  "San Francisco",
+  { label: "Credits", muted: true },
+  { label: "Thank you", muted: true },
+];
+const scrollDotsRails = [
+  document.getElementById("scroll-dots-demo") as ScrollDots | null,
+  document.getElementById("scroll-dots-colored") as ScrollDots | null,
+];
+const scrollDotsStatus = document.querySelector<HTMLElement>('[data-testid="scroll-dots-active"]');
+let scrollDotsActive = 0;
+
+function setScrollDotsActive(index: number): void {
+  scrollDotsActive = Math.min(Math.max(index, 0), scrollDotsItems.length - 1);
+  for (const rail of scrollDotsRails) {
+    if (rail) rail.active = scrollDotsActive;
+  }
+  if (scrollDotsStatus) {
+    const item = scrollDotsItems[scrollDotsActive];
+    const label = typeof item === "string" ? item : item.label;
+    scrollDotsStatus.textContent = `Active: ${scrollDotsActive + 1} — ${label}`;
+  }
+}
+
+for (const rail of scrollDotsRails) {
+  if (!rail) continue;
+  rail.items = scrollDotsItems;
+  rail.addEventListener("dot-select", (event) => {
+    setScrollDotsActive((event as CustomEvent<DotSelectDetail>).detail.index);
+  });
+}
+if (scrollDotsRails.some(Boolean)) setScrollDotsActive(0);
+document
+  .getElementById("scroll-dots-prev")
+  ?.addEventListener("click", () => setScrollDotsActive(scrollDotsActive - 1));
+document
+  .getElementById("scroll-dots-next")
+  ?.addEventListener("click", () => setScrollDotsActive(scrollDotsActive + 1));
+
+// fullscreen-button — one instance for the page and one scoped to a panel via
+// `target`, with the shared state line driven by the fullscreen-change event.
+const fullscreenScoped = document.getElementById("fullscreen-scoped") as FullscreenButton | null;
+const fullscreenTarget = document.getElementById("fullscreen-target");
+if (fullscreenScoped && fullscreenTarget) fullscreenScoped.target = fullscreenTarget;
+
+const fullscreenState = document.querySelector<HTMLElement>('[data-testid="fullscreen-state"]');
+for (const id of ["fullscreen-page", "fullscreen-scoped"]) {
+  document.getElementById(id)?.addEventListener("fullscreen-change", (event) => {
+    const { active } = (event as CustomEvent<FullscreenChangeDetail>).detail;
+    if (fullscreenState) {
+      fullscreenState.textContent = active ? "Fullscreen." : "Not fullscreen.";
+    }
+  });
+}
+
+// timeline-container — flip the alternating demo between both layouts so the
+// left-edge and centered arrangements are both reachable by hand.
+const timelineAlternating = document.getElementById(
+  "timeline-alternating",
+) as TimelineContainer | null;
+document.getElementById("timeline-layout-toggle")?.addEventListener("click", () => {
+  if (!timelineAlternating) return;
+  timelineAlternating.layout = timelineAlternating.layout === "alternating" ? "left" : "alternating";
+});
 
 // audio-player — set the sample track's src via Vite's asset pipeline (so
 // it's hashed/copied like photo-gallery's images) and log transport events.
