@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- New `countdown-timer`: a per-second ticking count-down display (e.g.
+  "Retrying in 3 seconds"), the inverse of `live-timer` — same `format`/
+  `prefix`/`suffix` API, but measuring the time remaining until a target
+  `until` instant instead of elapsed time since a `since` instant. Remaining
+  time is clamped to zero rather than going negative.
 - New `scroll-dots`: a vertical section navigator for a long scrolled page or
   a slide deck — one dot per section, the active one drawn as an elongated
   rounded bar. Controlled like `pagination-nav`: it reads no scroll position,

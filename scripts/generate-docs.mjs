@@ -504,6 +504,8 @@ See the [changelog](#markdown-view) for details.\`;
 <editable-text multiline placeholder="Add a description…" label="Description"></editable-text>`,
   "live-timer": `<live-timer since="2026-07-19T12:00:00Z" prefix="Sleeping for "></live-timer>
 <live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "></live-timer>`,
+  "countdown-timer": `<countdown-timer until="2026-07-19T12:00:10Z" prefix="Retrying in "></countdown-timer>
+<countdown-timer until="2026-07-19T12:00:10Z" format="compact" prefix="retrying in "></countdown-timer>`,
   "chat-message": `<chat-message role="user" author="Freddy" timestamp="2026-07-19T12:00:00Z">
   Write notes.md containing a haiku.
 </chat-message>

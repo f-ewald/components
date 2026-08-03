@@ -31,6 +31,7 @@ import {
   type StatusBanner,
   type EditableText,
   type LiveTimer,
+  type CountdownTimer,
   type ChatMessage,
   type UiCheckbox,
   type AutoScroll,
@@ -670,6 +671,15 @@ document.getElementById("timer-start")?.addEventListener("click", () => {
   const now = new Date().toISOString();
   if (timerSeconds) timerSeconds.since = now;
   if (timerCompact) timerCompact.since = now;
+});
+
+// countdown-timer (start both demo countdowns 10s out from "now" on click)
+const countdownSeconds = document.getElementById("countdown-seconds") as CountdownTimer;
+const countdownCompact = document.getElementById("countdown-compact") as CountdownTimer;
+document.getElementById("countdown-start")?.addEventListener("click", () => {
+  const tenSecondsOut = new Date(Date.now() + 10_000).toISOString();
+  if (countdownSeconds) countdownSeconds.until = tenSecondsOut;
+  if (countdownCompact) countdownCompact.until = tenSecondsOut;
 });
 
 // load-more (simulate a fetch with setTimeout, reach the exhausted state)

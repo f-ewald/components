@@ -704,6 +704,25 @@ Example:
 <copy-link-button value="https://example.com/listing/42" label="Copy listing link"></copy-link-button>
 ```
 
+## <countdown-timer>
+
+Per-second ticking count-down timer, e.g. a live "Retrying in 3 seconds"
+indicator while waiting to retry a failed request. Renders nothing while
+`until` is unset or unparseable. Remaining time is clamped to zero — it
+never goes negative once the target instant has passed.
+
+Import: `import "@f-ewald/components/countdown-timer.js";`
+
+Properties: `until` (attribute `until`) : string | null, default null; `format` (attribute `format`) : DurationFormat, default "seconds"; `prefix` (attribute `prefix`) : string, default ""; `suffix` (attribute `suffix`) : string, default ""
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<countdown-timer until="2026-07-19T12:00:10Z" prefix="Retrying in "></countdown-timer>
+<countdown-timer until="2026-07-19T12:00:10Z" format="compact" prefix="retrying in "></countdown-timer>
+```
+
 ## <data-table>
 
 A generic, presentational table shell: renders a `<thead>` from `columns`

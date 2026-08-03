@@ -13,6 +13,7 @@ const metadataOnly = new Set([
   "timeline-entry",
 ]);
 const styleless = new Set([
+  "countdown-timer",
   "distance-value",
   "live-timer",
   "relative-time",

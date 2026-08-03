@@ -59,6 +59,7 @@ export { StatusBanner, type StatusBannerVariant } from "./status-banner.js";
 export { StatusPill, type StatusPillColor } from "./status-pill.js";
 export { EditableText } from "./editable-text.js";
 export { LiveTimer } from "./live-timer.js";
+export { CountdownTimer } from "./countdown-timer.js";
 export { LoadMore } from "./load-more.js";
 export { LoadingSpinner } from "./loading-spinner.js";
 export { LoadingDots } from "./loading-dots.js";

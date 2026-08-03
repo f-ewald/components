@@ -51,6 +51,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#confirm-dialog">confirm-dialog</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#content-divider">content-divider</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#copy-link-button">copy-link-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#countdown-timer">countdown-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distance-value">distance-value</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
@@ -1078,6 +1079,33 @@ document.querySelector("comment-composer")
           <pre class="usage mt-4"><code>import "@f-ewald/components/copy-link-button.js";
 
 &lt;copy-link-button value="https://example.com/listing/42" label="Copy listing link"&gt;&lt;/copy-link-button&gt;</code></pre>
+        </section>
+
+        <section id="countdown-timer" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-countdown-timer">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#countdown-timer">countdown-timer</a></h3>
+          <p class="mt-1 text-sm text-slate-500">Per-second ticking count-down timer.</p>
+          <div class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6 text-sm">
+            <div>
+              Seconds:
+              <countdown-timer id="countdown-seconds" data-testid="countdown-seconds" prefix="Retrying in "></countdown-timer>
+            </div>
+            <div>
+              Compact:
+              <countdown-timer id="countdown-compact" data-testid="countdown-compact" format="compact" prefix="retrying in "></countdown-timer>
+            </div>
+            <button
+              id="countdown-start"
+              data-testid="countdown-start"
+              type="button"
+              class="w-fit rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Start countdowns (10s)
+            </button>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/countdown-timer.js";
+
+&lt;countdown-timer until="2026-07-19T12:00:10Z" prefix="Retrying in "&gt;&lt;/countdown-timer&gt;
+&lt;countdown-timer until="2026-07-19T12:00:10Z" format="compact" prefix="retrying in "&gt;&lt;/countdown-timer&gt;</code></pre>
         </section>
 
         <section id="data-table" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-data-table">

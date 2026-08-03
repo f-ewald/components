@@ -5164,6 +5164,135 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/countdown-timer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Per-second ticking count-down timer, e.g. a live \"Retrying in 3 seconds\"\nindicator while waiting to retry a failed request. Renders nothing while\n`until` is unset or unparseable. Remaining time is clamped to zero — it\nnever goes negative once the target instant has passed.",
+          "name": "CountdownTimer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "until",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO-8601 target instant; remaining time is measured until here.",
+              "attribute": "until"
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "type": {
+                "text": "DurationFormat"
+              },
+              "default": "\"seconds\"",
+              "description": "`\"seconds\"` -> \"1 second\", \"12 seconds\"; `\"compact\"` -> \"12s\", \"3m 12s\", \"1h 03m 12s\".",
+              "attribute": "format"
+            },
+            {
+              "kind": "field",
+              "name": "prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered before the formatted value.",
+              "attribute": "prefix"
+            },
+            {
+              "kind": "field",
+              "name": "suffix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered after the formatted value.",
+              "attribute": "suffix"
+            },
+            {
+              "kind": "field",
+              "name": "_now",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_timer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "until",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "ISO-8601 target instant; remaining time is measured until here.",
+              "fieldName": "until"
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "DurationFormat"
+              },
+              "default": "\"seconds\"",
+              "description": "`\"seconds\"` -> \"1 second\", \"12 seconds\"; `\"compact\"` -> \"12s\", \"3m 12s\", \"1h 03m 12s\".",
+              "fieldName": "format"
+            },
+            {
+              "name": "prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered before the formatted value.",
+              "fieldName": "prefix"
+            },
+            {
+              "name": "suffix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Text rendered after the formatted value.",
+              "fieldName": "suffix"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "countdown-timer",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CountdownTimer",
+          "declaration": {
+            "name": "CountdownTimer",
+            "module": "src/countdown-timer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "countdown-timer",
+          "declaration": {
+            "name": "CountdownTimer",
+            "module": "src/countdown-timer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/data-table.ts",
       "declarations": [
         {
@@ -9326,6 +9455,14 @@
           "declaration": {
             "name": "LiveTimer",
             "module": "./live-timer.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CountdownTimer",
+          "declaration": {
+            "name": "CountdownTimer",
+            "module": "./countdown-timer.js"
           }
         },
         {
