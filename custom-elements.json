@@ -5293,6 +5293,671 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/cron-schedule.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Repeat-schedule picker that reads and writes a standard 5-field cron\nexpression. The collapsed trigger shows a compact English description of\nthe current schedule (\"Every hour\", \"10:17 every Monday\"); clicking it\nopens an anchored panel with the schedule form.\n\nThe panel offers frequency presets (every N minutes, hourly, daily, weekly,\nmonthly, yearly) plus an `Advanced` mode that edits each cron field as a\nlist of terms, so any valid expression — including compound fields that mix\nranges, steps, and single values — is reachable. Edits apply immediately:\neach change updates `value` and fires `change`; closing the panel only\ndismisses it.\n\nAn unparseable `value` (e.g. `@reboot`, which has no five-field form) is\npreserved verbatim and shown as-is on the trigger; the panel then starts\nfrom the default hourly schedule.\n\nThe host is `display: block` with a full-width trigger, matching the other\nvalue-entry fields. To shrink an instance to its content, constrain the\nhost: `cron-schedule { display: inline-block; }`.",
+          "name": "CronSchedule",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "default": "\"0 * * * *\"",
+              "description": "The cron expression, e.g. `\"0 * * * *\"`.",
+              "attribute": "value",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible label for the trigger.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the picker is disabled.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the schedule panel is open.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_mode",
+              "type": {
+                "text": "CronFrequency"
+              },
+              "privacy": "private",
+              "default": "\"hourly\""
+            },
+            {
+              "kind": "field",
+              "name": "#panelId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`cron-schedule-panel-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
+              "name": "#valueIsInternal",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "The compact English description of the current expression.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#teardownPanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onWindowMousedown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onWindowKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#close",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "restoreFocus",
+                  "default": "true"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#expression",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CronExpression"
+                }
+              },
+              "description": "The current expression, falling back to the default when unparseable."
+            },
+            {
+              "kind": "method",
+              "name": "#commit",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "CronExpression"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#patch",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "patch",
+                  "type": {
+                    "text": "Partial<CronExpression>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#single",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                },
+                {
+                  "name": "fallback",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Single value a field selects, or `fallback` when it selects none or many."
+            },
+            {
+              "kind": "method",
+              "name": "#selected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onFrequencyChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "mode",
+                  "type": {
+                    "text": "CronFrequency"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onTimeChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "\"hour\" | \"minute\""
+                  }
+                },
+                {
+                  "name": "raw",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onToggleValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Toggles one value in a checkbox-backed field."
+            },
+            {
+              "kind": "method",
+              "name": "#onTermChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "term",
+                  "type": {
+                    "text": "CronTerm"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onAddTerm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onRemoveTerm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderSelect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "SelectOption[]"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "onChange",
+                  "type": {
+                    "text": "(raw: string) => void"
+                  }
+                },
+                {
+                  "name": "narrow",
+                  "default": "false"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderTime",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderCheckboxGrid",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                },
+                {
+                  "name": "legend",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "gridClass",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "entries",
+                  "type": {
+                    "text": "{ value: number; label: string }[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderMinuteMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderHourlyMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderWeeklyMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderMonthDays",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderMonths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderTermInputs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | typeof nothing"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "term",
+                  "type": {
+                    "text": "CronTerm"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderFieldEditor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#defaultTerm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CronTerm"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "CronFieldName"
+                  }
+                },
+                {
+                  "name": "kind",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderModeBody",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderPanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired with `{ value: string }` whenever the expression changes."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "default": "DEFAULT_EXPRESSION",
+              "description": "The cron expression, e.g. `\"0 * * * *\"`.",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Accessible label for the trigger.",
+              "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the picker is disabled.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the schedule panel is open.",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "cron-schedule",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CronSchedule",
+          "declaration": {
+            "name": "CronSchedule",
+            "module": "src/cron-schedule.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cron-schedule",
+          "declaration": {
+            "name": "CronSchedule",
+            "module": "src/cron-schedule.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/data-table.ts",
       "declarations": [
         {
@@ -10015,6 +10680,174 @@
           "declaration": {
             "name": "CommentComposer",
             "module": "./comment-composer.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CronSchedule",
+          "declaration": {
+            "name": "CronSchedule",
+            "module": "./cron-schedule.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CRON_ALIASES",
+          "declaration": {
+            "name": "CRON_ALIASES",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CRON_FIELD_BOUNDS",
+          "declaration": {
+            "name": "CRON_FIELD_BOUNDS",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CRON_FIELD_LABELS",
+          "declaration": {
+            "name": "CRON_FIELD_LABELS",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CRON_FIELD_NAMES",
+          "declaration": {
+            "name": "CRON_FIELD_NAMES",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MONTH_ABBREVIATIONS",
+          "declaration": {
+            "name": "MONTH_ABBREVIATIONS",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MONTH_NAMES",
+          "declaration": {
+            "name": "MONTH_NAMES",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WEEKDAY_ABBREVIATIONS",
+          "declaration": {
+            "name": "WEEKDAY_ABBREVIATIONS",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WEEKDAY_NAMES",
+          "declaration": {
+            "name": "WEEKDAY_NAMES",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "describeCron",
+          "declaration": {
+            "name": "describeCron",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "detectFrequency",
+          "declaration": {
+            "name": "detectFrequency",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "expandField",
+          "declaration": {
+            "name": "expandField",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fieldFromValues",
+          "declaration": {
+            "name": "fieldFromValues",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatCron",
+          "declaration": {
+            "name": "formatCron",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isEveryValue",
+          "declaration": {
+            "name": "isEveryValue",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseCron",
+          "declaration": {
+            "name": "parseCron",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CronExpression",
+          "declaration": {
+            "name": "CronExpression",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CronField",
+          "declaration": {
+            "name": "CronField",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CronFieldName",
+          "declaration": {
+            "name": "CronFieldName",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CronFrequency",
+          "declaration": {
+            "name": "CronFrequency",
+            "module": "./utils/cron.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CronTerm",
+          "declaration": {
+            "name": "CronTerm",
+            "module": "./utils/cron.js"
           }
         },
         {
@@ -19877,6 +20710,338 @@
           "declaration": {
             "name": "mixHex",
             "module": "src/utils/color.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/cron.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "CRON_FIELD_NAMES",
+          "type": {
+            "text": "[\n  \"minute\",\n  \"hour\",\n  \"dayOfMonth\",\n  \"month\",\n  \"dayOfWeek\",\n]"
+          },
+          "default": "[ \"minute\", \"hour\", \"dayOfMonth\", \"month\", \"dayOfWeek\", ]",
+          "description": "The five cron field names, in expression order."
+        },
+        {
+          "kind": "variable",
+          "name": "CRON_FIELD_BOUNDS",
+          "type": {
+            "text": "Record<CronFieldName, [number, number]>"
+          },
+          "default": "{ minute: [0, 59], hour: [0, 23], dayOfMonth: [1, 31], month: [1, 12], dayOfWeek: [0, 6], }",
+          "description": "Inclusive `[min, max]` value bounds for each cron field."
+        },
+        {
+          "kind": "variable",
+          "name": "CRON_FIELD_LABELS",
+          "type": {
+            "text": "Record<CronFieldName, string>"
+          },
+          "default": "{ minute: \"Minute\", hour: \"Hour\", dayOfMonth: \"Day of month\", month: \"Month\", dayOfWeek: \"Day of week\", }",
+          "description": "Human-readable labels for each cron field."
+        },
+        {
+          "kind": "variable",
+          "name": "WEEKDAY_NAMES",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ \"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", ]",
+          "description": "Full weekday names indexed by cron day-of-week value (0 = Sunday)."
+        },
+        {
+          "kind": "variable",
+          "name": "WEEKDAY_ABBREVIATIONS",
+          "type": {
+            "text": "array"
+          },
+          "default": "[\"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"]",
+          "description": "Three-letter weekday abbreviations indexed by cron value (0 = Sun)."
+        },
+        {
+          "kind": "variable",
+          "name": "MONTH_NAMES",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ \"January\", \"February\", \"March\", \"April\", \"May\", \"June\", \"July\", \"August\", \"September\", \"October\", \"November\", \"December\", ]",
+          "description": "Full month names indexed from 0, so month `n` is `MONTH_NAMES[n - 1]`."
+        },
+        {
+          "kind": "variable",
+          "name": "MONTH_ABBREVIATIONS",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ \"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\", ]",
+          "description": "Three-letter month abbreviations indexed from 0 (`Jan` is month 1)."
+        },
+        {
+          "kind": "variable",
+          "name": "CRON_ALIASES",
+          "type": {
+            "text": "Record<string, string>"
+          },
+          "default": "{ \"@yearly\": \"0 0 1 1 *\", \"@annually\": \"0 0 1 1 *\", \"@monthly\": \"0 0 1 * *\", \"@weekly\": \"0 0 * * 0\", \"@daily\": \"0 0 * * *\", \"@midnight\": \"0 0 * * *\", \"@hourly\": \"0 * * * *\", }",
+          "description": "Supported `@`-shorthands mapped to their five-field equivalents."
+        },
+        {
+          "kind": "function",
+          "name": "parseCron",
+          "return": {
+            "type": {
+              "text": "CronExpression | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "expression",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parses a cron expression, expanding any supported `@`-shorthand first.\nReturns `null` when the input is not a valid supported expression."
+        },
+        {
+          "kind": "function",
+          "name": "formatCron",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "expression",
+              "type": {
+                "text": "CronExpression"
+              }
+            }
+          ],
+          "description": "Serializes an expression canonically: numeric values, `*` for unconstrained fields."
+        },
+        {
+          "kind": "function",
+          "name": "fieldFromValues",
+          "return": {
+            "type": {
+              "text": "CronField"
+            }
+          },
+          "parameters": [
+            {
+              "name": "values",
+              "type": {
+                "text": "number[]"
+              }
+            }
+          ],
+          "description": "Builds a field from an explicit list of values, or `[{ kind: \"all\" }]` when empty."
+        },
+        {
+          "kind": "function",
+          "name": "expandField",
+          "return": {
+            "type": {
+              "text": "number[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "field",
+              "type": {
+                "text": "CronField"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "CronFieldName"
+              }
+            }
+          ],
+          "description": "Every value a field matches, ascending and de-duplicated."
+        },
+        {
+          "kind": "function",
+          "name": "isEveryValue",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "field",
+              "type": {
+                "text": "CronField"
+              }
+            }
+          ],
+          "description": "Whether a field is unconstrained (`*`, possibly among redundant terms)."
+        },
+        {
+          "kind": "function",
+          "name": "detectFrequency",
+          "return": {
+            "type": {
+              "text": "CronFrequency"
+            }
+          },
+          "parameters": [
+            {
+              "name": "expression",
+              "type": {
+                "text": "CronExpression"
+              }
+            }
+          ],
+          "description": "The preset form mode whose controls can reproduce `expression` exactly,\nor `\"advanced\"` when only the per-field editor can."
+        },
+        {
+          "kind": "function",
+          "name": "describeCron",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "expression",
+              "type": {
+                "text": "string | CronExpression"
+              }
+            }
+          ],
+          "description": "A compact English description of an expression, e.g. `\"Every hour\"`,\n`\"10:17 every Monday\"`, `\"09:00 on day 1 of every month\"`. Returns the raw\ninput unchanged when it cannot be parsed."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CRON_FIELD_NAMES",
+          "declaration": {
+            "name": "CRON_FIELD_NAMES",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CRON_FIELD_BOUNDS",
+          "declaration": {
+            "name": "CRON_FIELD_BOUNDS",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CRON_FIELD_LABELS",
+          "declaration": {
+            "name": "CRON_FIELD_LABELS",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WEEKDAY_NAMES",
+          "declaration": {
+            "name": "WEEKDAY_NAMES",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WEEKDAY_ABBREVIATIONS",
+          "declaration": {
+            "name": "WEEKDAY_ABBREVIATIONS",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MONTH_NAMES",
+          "declaration": {
+            "name": "MONTH_NAMES",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MONTH_ABBREVIATIONS",
+          "declaration": {
+            "name": "MONTH_ABBREVIATIONS",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CRON_ALIASES",
+          "declaration": {
+            "name": "CRON_ALIASES",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseCron",
+          "declaration": {
+            "name": "parseCron",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatCron",
+          "declaration": {
+            "name": "formatCron",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fieldFromValues",
+          "declaration": {
+            "name": "fieldFromValues",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "expandField",
+          "declaration": {
+            "name": "expandField",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isEveryValue",
+          "declaration": {
+            "name": "isEveryValue",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "detectFrequency",
+          "declaration": {
+            "name": "detectFrequency",
+            "module": "src/utils/cron.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "describeCron",
+          "declaration": {
+            "name": "describeCron",
+            "module": "src/utils/cron.ts"
           }
         }
       ]

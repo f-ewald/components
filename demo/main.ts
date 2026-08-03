@@ -32,6 +32,7 @@ import {
   type EditableText,
   type LiveTimer,
   type CountdownTimer,
+  type CronSchedule,
   type ChatMessage,
   type UiCheckbox,
   type AutoScroll,
@@ -681,6 +682,16 @@ document.getElementById("countdown-start")?.addEventListener("click", () => {
   if (countdownSeconds) countdownSeconds.until = tenSecondsOut;
   if (countdownCompact) countdownCompact.until = tenSecondsOut;
 });
+
+// cron-schedule (echo every schedule change and its English description)
+const cronOutput = document.getElementById("cron-output");
+for (const id of ["cron-default", "cron-weekly", "cron-advanced", "cron-disabled"]) {
+  const schedule = document.getElementById(id) as CronSchedule | null;
+  schedule?.addEventListener("change", (e) => {
+    const { value } = (e as CustomEvent<{ value: string }>).detail;
+    if (cronOutput) cronOutput.textContent = `${id} → ${value} (${schedule.description})`;
+  });
+}
 
 // load-more (simulate a fetch with setTimeout, reach the exhausted state)
 const loadMoreList = document.getElementById("load-more-list") as HTMLUListElement;

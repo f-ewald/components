@@ -52,6 +52,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#content-divider">content-divider</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#copy-link-button">copy-link-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#countdown-timer">countdown-timer</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#cron-schedule">cron-schedule</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distance-value">distance-value</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
@@ -1106,6 +1107,53 @@ document.querySelector("comment-composer")
 
 &lt;countdown-timer until="2026-07-19T12:00:10Z" prefix="Retrying in "&gt;&lt;/countdown-timer&gt;
 &lt;countdown-timer until="2026-07-19T12:00:10Z" format="compact" prefix="retrying in "&gt;&lt;/countdown-timer&gt;</code></pre>
+        </section>
+
+        <section id="cron-schedule" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-cron-schedule">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#cron-schedule">cron-schedule</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Repeat-schedule picker: the trigger reads as plain English, the panel edits presets or
+            every individual cron field, and <code>value</code> is a standard 5-field cron expression.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 rounded-lg border border-slate-200 p-6 text-sm">
+            <div class="max-w-sm">
+              <cron-schedule id="cron-default" data-testid="cron-default" label="Backup schedule"></cron-schedule>
+            </div>
+            <div class="max-w-sm">
+              <cron-schedule
+                id="cron-weekly"
+                data-testid="cron-weekly"
+                label="Report schedule"
+                value="17 10 * * 1"
+              ></cron-schedule>
+            </div>
+            <div class="max-w-sm">
+              <cron-schedule
+                id="cron-advanced"
+                data-testid="cron-advanced"
+                label="Advanced schedule"
+                value="0 8 1,15 * *"
+              ></cron-schedule>
+            </div>
+            <div class="max-w-sm">
+              <cron-schedule
+                id="cron-disabled"
+                data-testid="cron-disabled"
+                label="Disabled schedule"
+                value="@daily"
+                disabled
+              ></cron-schedule>
+            </div>
+            <p class="text-slate-500">
+              Last change: <code id="cron-output" data-testid="cron-output">—</code>
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/cron-schedule.js";
+
+&lt;cron-schedule label="Backup schedule" value="0 * * * *"&gt;&lt;/cron-schedule&gt;
+
+const schedule = document.querySelector("cron-schedule");
+schedule.addEventListener("change", (e) =&gt; console.log(e.detail.value, schedule.description));</code></pre>
         </section>
 
         <section id="data-table" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-data-table">

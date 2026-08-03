@@ -65,6 +65,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<content-divider>` | [API reference](https://f-ewald.github.io/components/docs/content-divider.html) |
 | `<copy-link-button>` | [API reference](https://f-ewald.github.io/components/docs/copy-link-button.html) |
 | `<countdown-timer>` | [API reference](https://f-ewald.github.io/components/docs/countdown-timer.html) |
+| `<cron-schedule>` | [API reference](https://f-ewald.github.io/components/docs/cron-schedule.html) |
 | `<data-table>` | [API reference](https://f-ewald.github.io/components/docs/data-table.html) |
 | `<distance-value>` | [API reference](https://f-ewald.github.io/components/docs/distance-value.html) |
 | `<distribution-chart>` | [API reference](https://f-ewald.github.io/components/docs/distribution-chart.html) |

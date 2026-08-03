@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- New `cron-schedule`: a repeat-schedule picker that reads and writes a
+  standard 5-field cron expression. The collapsed trigger reads as plain
+  English ("Every hour", "10:17 every Monday") and opens an anchored panel
+  whose frequency presets cover the common cases, with an `Advanced` mode that
+  edits each cron field as a list of terms so any valid expression is
+  reachable. Parsing and the English description are implemented in-repo
+  (`src/utils/cron.ts`, exported alongside the component) rather than pulling
+  in a cron library. Edits apply live: each change updates `value` and fires
+  `change`. `@reboot` and the Quartz-only `L`/`W`/`#` characters are out of
+  scope — they have no five-field representation — so an unparseable value is
+  preserved verbatim and shown as-is instead of being silently rewritten.
 - New `countdown-timer`: a per-second ticking count-down display (e.g.
   "Retrying in 3 seconds"), the inverse of `live-timer` — same `format`/
   `prefix`/`suffix` API, but measuring the time remaining until a target

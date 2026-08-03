@@ -37,6 +37,18 @@ focus-trap/Escape/layer-stack logic as the other sizes). `button-group` has an `
 boolean (labels hidden via `sr-only` clip, kept as the accessible name via
 `aria-label`/`title` on each segment's radio input).
 
+`cron-schedule` is the package's first component whose `value` is a
+domain-specific expression language rather than plain data: a standard 5-field
+cron string, shown on the trigger as compact English and edited through an
+anchored panel that composes `form-select`, `ui-checkbox`, `button-group`,
+`ui-button`, and `icon-button`. Its panel does *not* compose `popover-panel`
+— it reuses only `utils/layer-stack.js` for outside-click/Escape/stacking,
+because `popover-panel` hard-codes a 20rem width and header chrome the form
+doesn't need. Parsing and humanizing live in `src/utils/cron.ts` as pure
+functions (exported from `src/index.ts`); no cron library is a dependency.
+`@reboot` and the Quartz-only `L`/`W`/`#` characters are out of scope, so an
+unparseable `value` is preserved verbatim rather than rewritten.
+
 `calendar-day`/`calendar-week` are the calendar family's first hour-grid
 views, alongside the existing date-only `calendar-month`/`calendar-year`.
 Declarative `calendar-entry` children with a time-of-day in `start`/`end`

@@ -506,6 +506,14 @@ See the [changelog](#markdown-view) for details.\`;
 <live-timer since="2026-07-19T12:00:00Z" format="compact" prefix="running for "></live-timer>`,
   "countdown-timer": `<countdown-timer until="2026-07-19T12:00:10Z" prefix="Retrying in "></countdown-timer>
 <countdown-timer until="2026-07-19T12:00:10Z" format="compact" prefix="retrying in "></countdown-timer>`,
+  "cron-schedule": `<cron-schedule label="Backup schedule" value="0 * * * *"></cron-schedule>
+
+<script type="module">
+  const schedule = document.querySelector("cron-schedule");
+  schedule.addEventListener("change", (e) => {
+    console.log(e.detail.value, schedule.description);
+  });
+</script>`,
   "chat-message": `<chat-message role="user" author="Freddy" timestamp="2026-07-19T12:00:00Z">
   Write notes.md containing a haiku.
 </chat-message>
