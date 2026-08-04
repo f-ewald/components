@@ -44,7 +44,7 @@ test.describe("text-area", () => {
     const control = page.locator("#floating-text-area");
     const textarea = control.locator("textarea");
     const label = control.locator(".floating-label");
-    await expect(label).toHaveCSS("top", "8px");
+    await expect(label).toHaveCSS("top", "4px");
     expect(
       await textarea.evaluate((element) => getComputedStyle(element, "::placeholder").opacity),
     ).toBe("0");

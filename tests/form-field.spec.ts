@@ -23,6 +23,16 @@ test.describe("form-field", () => {
     await expect(wrap.locator(".message")).toHaveCount(0);
   });
 
+  test("plain (non-floating) slotted input gets tokenized padding and font-size", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const input = page.locator("#field-plain-input");
+    await expect(input).toHaveCSS("padding", "8px 12px");
+    await expect(input).toHaveCSS("font-size", "14px");
+    await expect(input).toHaveCSS("border-width", "1px");
+  });
+
   test("composes an arbitrary slotted control (autocomplete-input)", async ({ page }) => {
     await page.goto("/");
     const input = page.locator("#field-autocomplete input");

@@ -68,7 +68,7 @@ export class TextArea extends LitElement {
           "Segoe UI Symbol",
           "Noto Color Emoji"
         );
-        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-size: var(--ui-font-size, 0.875rem);
         line-height: var(--ui-line-height-normal, 1.5);
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
@@ -79,7 +79,7 @@ export class TextArea extends LitElement {
       }
       .floating-label {
         position: absolute;
-        top: 0.5rem;
+        top: 0.25rem;
         left: 0.75rem;
         right: 0.75rem;
         z-index: 1;
@@ -110,7 +110,7 @@ export class TextArea extends LitElement {
       }
       .field-shell.floating textarea {
         min-height: 3rem;
-        padding-top: 1.25rem;
+        padding-top: 1.5rem;
       }
       .field-shell.floating.has-value .floating-label,
       .field-shell.floating:focus-within .floating-label {

@@ -218,7 +218,7 @@ test.describe("autocomplete-input", () => {
     await expect(input).toHaveCSS("padding-left", "12px");
     await expect(input).toHaveCSS("border-radius", "4px");
     await expect(input).toHaveCSS("height", "32px");
-    await expect(input).toHaveCSS("line-height", "15px");
+    await expect(input).toHaveCSS("line-height", "17.5px");
   });
 
   test("clearable empties selected and form state without changing field size", async ({

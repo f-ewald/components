@@ -558,7 +558,7 @@ test.describe("multi-select", () => {
       return { padding: style.padding, fontSize: style.fontSize, fontWeight: style.fontWeight };
     });
     expect(styles.padding).toBe("8px 12px");
-    expect(styles.fontSize).toBe("12px");
+    expect(styles.fontSize).toBe("14px");
     expect(styles.fontWeight).toBe("500");
 
     const chevronBox = await trigger.locator(".chevron svg").boundingBox();

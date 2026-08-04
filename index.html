@@ -1366,6 +1366,15 @@ dropdown.size = "sm";</code></pre>
               </button>
             </div>
 
+            <form-field label="Website">
+              <input
+                id="field-plain-input"
+                data-testid="field-plain-input"
+                type="url"
+                placeholder="https://example.com"
+              />
+            </form-field>
+
             <form-field floating-label label="Email">
               <input
                 id="field-floating-email"
@@ -1419,6 +1428,9 @@ dropdown.size = "sm";</code></pre>
 &lt;/form-field&gt;
 &lt;form-field label="Terms" required error="You must accept to continue"&gt;
   &lt;ui-checkbox label="I agree to the terms"&gt;&lt;/ui-checkbox&gt;
+&lt;/form-field&gt;
+&lt;form-field label="Website"&gt;
+  &lt;input type="url" placeholder="https://example.com" /&gt;
 &lt;/form-field&gt;
 &lt;form-field floating-label label="Email"&gt;
   &lt;input type="email" placeholder="name@example.com" /&gt;

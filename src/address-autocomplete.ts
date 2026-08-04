@@ -68,7 +68,7 @@ export class AddressAutocomplete extends LitElement {
           "Segoe UI Symbol",
           "Noto Color Emoji"
         );
-        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-size: var(--ui-font-size, 0.875rem);
         line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);

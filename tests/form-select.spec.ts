@@ -515,7 +515,7 @@ test.describe("form-select", () => {
     await expect(trigger).toHaveCSS("padding", "8px 12px");
     await expect(trigger).toHaveCSS("border-radius", "4px");
     await expect(trigger).toHaveCSS("height", "32px");
-    await expect(trigger).toHaveCSS("line-height", "15px");
+    await expect(trigger).toHaveCSS("line-height", "17.5px");
 
     await trigger.click();
     await expect(el.locator("li[role='option']").first()).toHaveCSS("padding", "8px 12px");
@@ -524,7 +524,7 @@ test.describe("form-select", () => {
     const searchInput = page.locator("#select-searchable input.search-input");
     await expect(searchInput).toHaveCSS("padding", "8px 0px 8px 12px");
     await expect(page.locator("#select-searchable .search-trigger")).toHaveCSS("height", "32px");
-    await expect(searchInput).toHaveCSS("line-height", "15px");
+    await expect(searchInput).toHaveCSS("line-height", "17.5px");
     await expect(page.locator("#select-searchable .chevron")).toHaveCSS("margin-right", "12px");
   });
 });

@@ -120,7 +120,7 @@ export class FormField extends LitElement {
           font-size 150ms ease;
       }
       .control-label.floating-native.multiline .label-text {
-        top: 0.5rem;
+        top: 0.25rem;
         transform: none;
       }
       .control-label.floating-native.has-value .label-text,
@@ -136,11 +136,19 @@ export class FormField extends LitElement {
         width: 100%;
         min-height: 3rem;
         margin: 0;
-        padding: 1.25rem 0.75rem 0.25rem;
-        border: 0;
-        border-radius: var(--ui-radius-sm, 0.25rem);
-        color: var(--ui-text, #0f172a);
-        background: transparent;
+        /*
+         * !important below survives a host page's own global element reset
+         * (e.g. Tailwind v4's layered preflight): a slotted control is real
+         * light-DOM content, so the host page's own rules for "input"/
+         * "textarea" compete directly against ::slotted() here, and in
+         * practice win over it at equal-or-lower specificity despite living
+         * in a CSS layer, since ::slotted() rules cross a shadow boundary.
+         */
+        padding: 1.25rem 0.75rem 0.25rem !important;
+        border: 0 !important;
+        border-radius: var(--ui-radius-sm, 0.25rem) !important;
+        color: var(--ui-text, #0f172a) !important;
+        background: transparent !important;
         font-family: var(
           --ui-font,
           ui-sans-serif,
@@ -150,16 +158,19 @@ export class FormField extends LitElement {
           "Segoe UI Emoji",
           "Segoe UI Symbol",
           "Noto Color Emoji"
-        );
-        font-size: var(--ui-font-size-sm, 0.75rem);
-        line-height: var(--ui-line-height-tight, 1.25);
+        ) !important;
+        font-size: var(--ui-font-size, 0.875rem) !important;
+        line-height: var(--ui-line-height-tight, 1.25) !important;
       }
       .control-label.floating-native ::slotted(input) {
         height: 3rem;
       }
       .control-label.floating-native ::slotted(textarea) {
-        padding-bottom: 0.5rem;
+        padding-bottom: 0.5rem !important;
         resize: vertical;
+      }
+      .control-label.floating-native.multiline ::slotted(textarea) {
+        padding-top: 1.5rem !important;
       }
       .control-label.floating-native ::slotted(input:focus-visible),
       .control-label.floating-native ::slotted(textarea:focus-visible) {
@@ -168,7 +179,7 @@ export class FormField extends LitElement {
       .control-label.floating-native ::slotted(input:disabled),
       .control-label.floating-native ::slotted(textarea:disabled) {
         cursor: not-allowed;
-        opacity: 0.6;
+        opacity: 0.6 !important;
       }
       .control-label.floating-native:has(:disabled) .label-text {
         cursor: not-allowed;
@@ -176,6 +187,48 @@ export class FormField extends LitElement {
       }
       .control-label.floating-native ::slotted(input:-webkit-autofill) {
         animation: form-field-autofill 0.001s;
+      }
+      .control-label:not(.floating-native) ::slotted(input),
+      .control-label:not(.floating-native) ::slotted(textarea) {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
+        /* See the !important note on the floating-native rule above. */
+        padding: 0.5rem 0.75rem !important;
+        border: 1px solid var(--ui-border, #e2e8f0) !important;
+        border-radius: var(--ui-radius-sm, 0.25rem) !important;
+        color: var(--ui-text, #0f172a) !important;
+        background: var(--ui-surface, #ffffff) !important;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        ) !important;
+        font-size: var(--ui-font-size, 0.875rem) !important;
+        line-height: var(--ui-line-height-normal, 1.5) !important;
+      }
+      .control-label:not(.floating-native) ::slotted(input) {
+        height: 2rem;
+      }
+      .control-label:not(.floating-native) ::slotted(textarea) {
+        resize: vertical;
+      }
+      .control-label:not(.floating-native) ::slotted(input:focus-visible),
+      .control-label:not(.floating-native) ::slotted(textarea:focus-visible) {
+        outline: none;
+        border-color: var(--ui-primary, #4f46e5) !important;
+        box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
+      }
+      .control-label:not(.floating-native) ::slotted(input:disabled),
+      .control-label:not(.floating-native) ::slotted(textarea:disabled) {
+        cursor: not-allowed;
+        opacity: 0.6 !important;
       }
       .required-mark {
         color: var(--ui-danger, #dc2626);
@@ -226,8 +279,23 @@ export class FormField extends LitElement {
         .control-label.floating-native ::slotted(input:disabled),
         .control-label.floating-native ::slotted(textarea:disabled),
         .control-label.floating-native:has(:disabled) .label-text {
-          color: GrayText;
-          opacity: 1;
+          color: GrayText !important;
+          opacity: 1 !important;
+        }
+        .control-label:not(.floating-native) ::slotted(input),
+        .control-label:not(.floating-native) ::slotted(textarea) {
+          border-color: CanvasText !important;
+        }
+        .control-label:not(.floating-native) ::slotted(input:focus-visible),
+        .control-label:not(.floating-native) ::slotted(textarea:focus-visible) {
+          outline: 2px solid CanvasText;
+          outline-offset: 2px;
+          box-shadow: none;
+        }
+        .control-label:not(.floating-native) ::slotted(input:disabled),
+        .control-label:not(.floating-native) ::slotted(textarea:disabled) {
+          color: GrayText !important;
+          opacity: 1 !important;
         }
       }
     `,

@@ -182,7 +182,7 @@ test.describe("address-autocomplete", () => {
     await expect(input).toHaveCSS("padding-left", "12px");
     await expect(input).toHaveCSS("border-radius", "4px");
     await expect(input).toHaveCSS("height", "32px");
-    await expect(input).toHaveCSS("line-height", "15px");
+    await expect(input).toHaveCSS("line-height", "17.5px");
   });
 
   test("clearable empties the picked address, closes suggestions, and keeps its size", async ({
