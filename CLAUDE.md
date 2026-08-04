@@ -71,8 +71,12 @@ week in one call, giving multi-day bars correct cross-day continuity that
 opt-in `weekend` highlight (`isWeekend`, same muted-surface treatment as
 `calendar-month`'s row highlight) and a `time-marker` boolean that draws a
 live, minute-ticking current-time line (`.now-line`, red per `--ui-danger`
-to read distinctly from the primary-tinted `.today` column) — both scoped to
-`calendar-day` only, not `calendar-week`/`calendar-month`. `calendar-entry`
+to read distinctly from the primary-tinted `.today` column) ending in a
+`.now-pill` clock label that overhangs left into the hour gutter — the pill
+hides whichever hour label it would otherwise sit on top of, and its time is
+locale-aware with the `dayPeriod` part stripped so it stays narrow enough for
+the 3rem gutter —
+both scoped to `calendar-day` only, not `calendar-week`/`calendar-month`. `calendar-entry`
 has a fourth named slot, `location`, rendered with a leading `iconMapPin`
 marker as a second line under the title everywhere it's shown (`calendar-day`
 and `calendar-week`'s entry blocks, plus `calendar-month`'s single-day title

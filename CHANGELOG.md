@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `calendar-day`'s `time-marker` now ends its current-time line in a rounded
+  pill in the hour gutter that reads the current clock time (e.g. `6:37`),
+  replacing the small needle dot. The time is locale-aware with the AM/PM
+  marker dropped, so 24-hour locales read `18:37` and the label stays narrow
+  enough for the gutter. Whichever hour label the pill covers is hidden while
+  it does, so the two never read on top of each other.
 - New `cron-schedule`: a repeat-schedule picker that reads and writes a
   standard 5-field cron expression. The collapsed trigger reads as plain
   English ("Every hour", "10:17 every Monday") and opens an anchored panel

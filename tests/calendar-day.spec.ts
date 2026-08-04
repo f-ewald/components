@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Locator } from "@playwright/test";
 
 // The demo renders 2026-07-15 with: an all-day entry (Company holiday),
 // two overlapping timed entries (Standup 09:00-09:30, Design review
@@ -6,6 +6,18 @@ import { test, expect } from "@playwright/test";
 // non-overlapping timed entry (Lunch 12:00-13:00) that still gets halved
 // into the same 2-lane width since lanes are assigned once across the day.
 const HOUR_PX = 48; // HOUR_HEIGHT_REM (3rem) at the default 16px root font-size.
+
+/** Number of still-visible hour labels whose box overlaps the current-time pill. */
+async function visibleLabelsOverlappingPill(calendar: Locator): Promise<number> {
+  return calendar.evaluate((element) => {
+    const root = element.shadowRoot!;
+    const pill = root.querySelector(".now-pill")!.getBoundingClientRect();
+    return Array.from(root.querySelectorAll(".hour-label")).filter((label) => {
+      const box = label.getBoundingClientRect();
+      return getComputedStyle(label).visibility !== "hidden" && box.bottom > pill.top && box.top < pill.bottom;
+    }).length;
+  });
+}
 
 test.describe("calendar-day", () => {
   test("uses semantic dark tokens and removes entry transitions for reduced motion", async ({ page }) => {
@@ -170,6 +182,17 @@ test.describe("calendar-day", () => {
     });
     await expect(calendar.locator(".now-line")).toHaveCount(1);
 
+    // The needle is a pill in the hour gutter reading the current clock time.
+    const pill = calendar.locator(".now-pill");
+    await expect(pill).toBeVisible();
+    await expect(pill).toHaveText(/^\d{1,2}:\d{2}$/);
+    const pillBox = await pill.boundingBox();
+    const columnBox = await calendar.locator(".day-column").boundingBox();
+    expect(pillBox).not.toBeNull();
+    expect(columnBox).not.toBeNull();
+    expect(pillBox!.x + pillBox!.width).toBeLessThanOrEqual(columnBox!.x + 1);
+    expect(pillBox!.x).toBeGreaterThanOrEqual(0);
+
     await calendar.evaluate((element) => {
       (element as HTMLElement & { timeMarker: boolean }).timeMarker = false;
     });
@@ -181,6 +204,32 @@ test.describe("calendar-day", () => {
       el.date = "2026-07-15"; // not today
     });
     await expect(calendar.locator(".now-line")).toHaveCount(0);
+  });
+
+  test("hides the hour label that the current-time pill covers", async ({ page }) => {
+    const tenOClock = new Date();
+    tenOClock.setHours(10, 0, 0, 0);
+    await page.clock.install({ time: tenOClock });
+    await page.goto("/");
+
+    const calendar = page.locator("#calendar-day-demo");
+    await calendar.evaluate((element) => {
+      const now = new Date();
+      const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      (element as HTMLElement & { date: string; timeMarker: boolean }).date = iso;
+      (element as HTMLElement & { date: string; timeMarker: boolean }).timeMarker = true;
+    });
+
+    const covered = calendar.locator(".hour-label.covered");
+    await expect(covered).toHaveCount(1);
+    await expect(covered).toHaveText(/10/);
+    expect(await visibleLabelsOverlappingPill(calendar)).toBe(0);
+
+    // 10:40 clears the 10 AM label again without yet reaching the 11 AM one.
+    await page.clock.fastForward(40 * 60_000);
+    await expect(calendar.locator(".now-pill")).toHaveText(/10:40/);
+    await expect(calendar.locator(".hour-label.covered")).toHaveCount(0);
+    expect(await visibleLabelsOverlappingPill(calendar)).toBe(0);
   });
 
   test("renders a slotted location with a marker icon on timed entries", async ({ page }) => {

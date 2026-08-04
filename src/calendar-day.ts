@@ -25,6 +25,42 @@ function hourLabel(h: number): string {
   return hourLabelFormatter.format(new Date(2000, 0, 1, h));
 }
 
+const nowLabelFormatter = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+
+// Half-heights of the current-time pill and of an hour label, derived from
+// --ui-font-size-sm x --ui-line-height-tight (plus the pill's vertical
+// padding). Used to work out which hour label the pill covers.
+const NOW_PILL_HALF_HEIGHT_REM = (0.75 * 1.25 + 0.25) / 2;
+const HOUR_LABEL_HALF_HEIGHT_REM = (0.75 * 1.25) / 2;
+
+/**
+ * Formats `date` as a locale-aware clock time without any AM/PM marker, e.g.
+ * "6:37" in a 12-hour locale and "18:37" in a 24-hour one. The meridiem is
+ * dropped so the label stays narrow enough for the hour gutter.
+ */
+function nowLabel(date: Date): string {
+  return nowLabelFormatter
+    .formatToParts(date)
+    .filter((part) => part.type !== "dayPeriod")
+    .map((part) => part.value)
+    .join("")
+    .trim();
+}
+
+/**
+ * The hour (0-23) whose gutter label the current-time pill overlaps, given the
+ * pill's offset in rem from the top of the grid, or `null` when the pill
+ * clears every label. Labels sit flush with the top of their own hour cell.
+ */
+function hourLabelCoveredByNow(nowTopRem: number | null): number | null {
+  if (nowTopRem === null) return null;
+  const hour = Math.round((nowTopRem - HOUR_LABEL_HALF_HEIGHT_REM) / HOUR_HEIGHT_REM);
+  if (hour < 0 || hour > 23) return null;
+  const labelCenterRem = hour * HOUR_HEIGHT_REM + HOUR_LABEL_HALF_HEIGHT_REM;
+  const clearance = NOW_PILL_HALF_HEIGHT_REM + HOUR_LABEL_HALF_HEIGHT_REM;
+  return Math.abs(nowTopRem - labelCenterRem) < clearance ? hour : null;
+}
+
 /**
  * A single day rendered as an hourly time grid — a Google-Calendar-style
  * view distinct from `calendar-month`'s whole-day table. Declarative
@@ -47,7 +83,11 @@ export class CalendarDay extends CalendarTimelineBase {
   /** The day shown, `"YYYY-MM-DD"`. */
   @property({ reflect: true }) date: string = toIsoDate(new Date());
 
-  /** Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today. */
+  /**
+   * Shows a fine live line marking the current time, with a rounded pill in
+   * the hour gutter reading the current clock time. The hour label the pill
+   * covers is hidden while it does. Only rendered when `date` is today.
+   */
   @property({ type: Boolean, reflect: true, attribute: "time-marker" }) timeMarker = false;
 
   /**
@@ -141,8 +181,13 @@ export class CalendarDay extends CalendarTimelineBase {
         border-bottom: 1px solid var(--ui-border, #e2e8f0);
         color: var(--ui-text-muted, #64748b);
         font-variant-numeric: tabular-nums;
+        line-height: var(--ui-line-height-tight, 1.25);
         text-align: right;
         white-space: nowrap;
+      }
+      /* Hidden rather than removed so the cell keeps its own separator line. */
+      .hour-label.covered {
+        visibility: hidden;
       }
       .day-column {
         position: relative;
@@ -164,15 +209,22 @@ export class CalendarDay extends CalendarTimelineBase {
         pointer-events: none;
         z-index: 2;
       }
-      .now-line::before {
-        content: "";
+      /* Overhangs left into the hour gutter; nothing between here and .grid
+         clips overflow, and .day-column's z-index stays auto, so the pill
+         paints above the (unpositioned) hour labels it overlaps. */
+      .now-pill {
         position: absolute;
         top: 50%;
-        left: -3px;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
+        right: 100%;
+        border-radius: 9999px;
+        padding: 0.125rem 0.25rem;
         background: var(--ui-danger, #dc2626);
+        color: var(--ui-on-accent, #ffffff);
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        font-weight: var(--ui-font-weight-semibold, 600);
+        line-height: var(--ui-line-height-tight, 1.25);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
         transform: translateY(-50%);
       }
       .hour-line {
@@ -386,6 +438,7 @@ export class CalendarDay extends CalendarTimelineBase {
     const { entries: lanedTimed, laneCount: timedLaneCount } = assignLanes(timed);
     const nowTopRem =
       this.timeMarker && isToday ? (minutesSinceMidnight(new Date(this._now)) / 60) * HOUR_HEIGHT_REM : null;
+    const coveredHour = hourLabelCoveredByNow(nowTopRem);
 
     return html`
       <div class="day">
@@ -407,7 +460,12 @@ export class CalendarDay extends CalendarTimelineBase {
         </div>
         <div class="grid">
           <div class="hour-gutter">
-            ${HOURS.map((h) => html`<div class="hour-label-cell">${hourLabel(h)}</div>`)}
+            ${HOURS.map(
+              (h) =>
+                html`<div class="hour-label-cell">
+                  <span class="hour-label ${h === coveredHour ? "covered" : ""}">${hourLabel(h)}</span>
+                </div>`,
+            )}
           </div>
           <div class="day-column ${isWeekendDay ? "weekend" : ""} ${isToday ? "today" : ""}">
             ${HOURS.map(() => html`<div class="hour-line"></div>`)}
@@ -417,7 +475,9 @@ export class CalendarDay extends CalendarTimelineBase {
               (entry) => this._renderTimedEntry(entry, Math.max(timedLaneCount, 1), dayStart, dayEnd),
             )}
             ${nowTopRem !== null
-              ? html`<div class="now-line" style="top: ${nowTopRem}rem" aria-hidden="true"></div>`
+              ? html`<div class="now-line" style="top: ${nowTopRem}rem" aria-hidden="true">
+                  <span class="now-pill">${nowLabel(new Date(this._now))}</span>
+                </div>`
               : nothing}
           </div>
         </div>

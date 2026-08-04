@@ -114,6 +114,9 @@ literal values are migrated onto them.
   row-driven height. Unsupported controls keep the normal external label.
 - Icons are `14px` inline (next to text) and `18px` standalone; icon-only tap
   targets are `32px`.
+- Icons come from the generated Heroicons catalog (`icons.js`; `docs/icons.md`);
+  add new names through `scripts/generate-icons.mjs` and `npm run icons`, not
+  ad hoc inline SVGs.
 - Control corners use `--ui-radius-sm` (4px); enclosing surfaces use
   `--ui-radius` (8px).
 - Side panels use a `20rem` compact / `25rem` comfortable width; the shared

@@ -2695,7 +2695,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today.",
+              "description": "Shows a fine live line marking the current time, with a rounded pill in\nthe hour gutter reading the current clock time. The hour label the pill\ncovers is hidden while it does. Only rendered when `date` is today.",
               "attribute": "time-marker",
               "reflects": true
             },
@@ -2994,7 +2994,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Shows a fine live line marking the current time, Google-Calendar-style. Only rendered when `date` is today.",
+              "description": "Shows a fine live line marking the current time, with a rounded pill in\nthe hour gutter reading the current clock time. The hour label the pill\ncovers is hidden while it does. Only rendered when `date` is today.",
               "fieldName": "timeMarker"
             },
             {
