@@ -28,10 +28,10 @@ export class UiAdmonition extends LitElement {
       .box {
         display: flex;
         align-items: flex-start;
-        gap: 0.625rem;
+        gap: 0.5rem;
         border-radius: var(--ui-radius, 0.5rem);
         border: 1px solid;
-        padding: 0.875rem 1rem;
+        padding: 0.75rem 1rem;
         box-sizing: border-box;
         font-family: var(
           --ui-font,
@@ -62,41 +62,41 @@ export class UiAdmonition extends LitElement {
         align-items: center;
         flex-wrap: wrap;
         gap: 0.5rem;
-        margin-top: 0.625rem;
+        margin-top: 0.75rem;
       }
       .actions:empty {
         display: none;
       }
       .box.neutral {
-        background: color-mix(in srgb, var(--ui-text-muted, #64748b) 8%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-text-muted, #64748b) 8%, var(--ui-surface, #ffffff));
         border-color: color-mix(in srgb, var(--ui-text-muted, #64748b) 30%, transparent);
       }
       .box.neutral .icon {
         color: var(--ui-text-muted, #64748b);
       }
       .box.info {
-        background: color-mix(in srgb, var(--ui-info, #0ea5e9) 8%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-info, #0ea5e9) 8%, var(--ui-surface, #ffffff));
         border-color: color-mix(in srgb, var(--ui-info, #0ea5e9) 30%, transparent);
       }
       .box.info .icon {
         color: var(--ui-info, #0ea5e9);
       }
       .box.success {
-        background: color-mix(in srgb, var(--ui-success, #16a34a) 8%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-success, #16a34a) 8%, var(--ui-surface, #ffffff));
         border-color: color-mix(in srgb, var(--ui-success, #16a34a) 30%, transparent);
       }
       .box.success .icon {
         color: var(--ui-success, #16a34a);
       }
       .box.warning {
-        background: color-mix(in srgb, var(--ui-warning, #d97706) 8%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-warning, #d97706) 8%, var(--ui-surface, #ffffff));
         border-color: color-mix(in srgb, var(--ui-warning, #d97706) 30%, transparent);
       }
       .box.warning .icon {
         color: var(--ui-warning, #d97706);
       }
       .box.danger {
-        background: color-mix(in srgb, var(--ui-danger, #dc2626) 8%, var(--ui-surface, #fff));
+        background: color-mix(in srgb, var(--ui-danger, #dc2626) 8%, var(--ui-surface, #ffffff));
         border-color: color-mix(in srgb, var(--ui-danger, #dc2626) 30%, transparent);
       }
       .box.danger .icon {
