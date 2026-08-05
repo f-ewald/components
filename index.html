@@ -84,6 +84,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#photo-gallery">photo-gallery</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#price-history-chart">price-history-chart</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#progress-bar">progress-bar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#radio-cards">radio-cards</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#radio-pills">radio-pills</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#range-slider">range-slider</a>
@@ -2503,12 +2504,82 @@ el.history = [
 ];</code></pre>
         </section>
 
+        <section id="progress-bar" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-progress-bar">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#progress-bar">progress-bar</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Determinate horizontal progress indicator for a page-level "step X of Y" bar. An
+            optional <code>label</code> renders as plain text to the right of the bar rather than
+            a percent inside it.
+          </p>
+          <div class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6">
+            <progress-bar
+              id="progress-demo"
+              data-testid="progress-demo"
+              value="3"
+              max="14"
+              label="Question 3 out of 14"
+            ></progress-bar>
+            <button
+              id="progress-advance"
+              data-testid="progress-advance"
+              type="button"
+              class="w-fit rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Advance
+            </button>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Custom fill and track color</p>
+          <div class="mt-2 rounded-lg border border-slate-200 p-6">
+            <progress-bar
+              id="progress-custom"
+              data-testid="progress-custom"
+              value="7"
+              max="10"
+              color="#dc2626"
+              track-color="#fecaca"
+            ></progress-bar>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/progress-bar.js";
+
+&lt;progress-bar value="3" max="14" label="Question 3 out of 14"&gt;&lt;/progress-bar&gt;
+&lt;progress-bar value="7" max="10" color="#dc2626" track-color="#fecaca"&gt;&lt;/progress-bar&gt;</code></pre>
+        </section>
+
         <section id="radio-cards" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-radio-cards">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#radio-cards">radio-cards</a></h3>
           <p class="mt-1 text-sm text-slate-500">Single-select cards with a label and optional description.</p>
           <div class="mt-6 rounded-lg border border-slate-200 p-6">
             <radio-cards id="radio-cards-demo" data-testid="radio-cards-demo"></radio-cards>
             <p class="mt-3 text-sm text-slate-500">Selected: <span id="radio-cards-selected" data-testid="radio-cards-selected"></span></p>
+            <button
+              id="radio-cards-reset"
+              data-testid="radio-cards-reset"
+              type="button"
+              class="mt-3 w-fit rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Clear selection (stale-checked regression check)
+            </button>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">layout="vertical"</p>
+          <div class="mt-2 rounded-lg border border-slate-200 p-6">
+            <radio-cards id="radio-cards-vertical" data-testid="radio-cards-vertical" layout="vertical"></radio-cards>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            layout="horizontal" with hide-input (head-to-head style)
+          </p>
+          <div class="mt-2 rounded-lg border border-slate-200 p-6">
+            <radio-cards
+              id="radio-cards-horizontal"
+              data-testid="radio-cards-horizontal"
+              layout="horizontal"
+              hide-input
+            ></radio-cards>
+          </div>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            layout="mixed" (default) with a fullWidth option
+          </p>
+          <div class="mt-2 rounded-lg border border-slate-200 p-6">
+            <radio-cards id="radio-cards-mixed-full" data-testid="radio-cards-mixed-full" hide-input></radio-cards>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/radio-cards.js";
 
@@ -2518,7 +2589,19 @@ el.options = [
   { value: "detailed", label: "Detailed", description: "Every section and layer" },
 ];
 el.value = "simple";
-el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pre>
+el.addEventListener("change", (e) =&gt; console.log(e.detail.value));
+
+&lt;!-- layout="horizontal" + hide-input: two side-by-side cards with no visible radio dot --&gt;
+&lt;radio-cards layout="horizontal" hide-input&gt;&lt;/radio-cards&gt;
+
+&lt;!-- layout="mixed" (default) + a fullWidth option (e.g. a "tie" choice below two side-by-side cards) --&gt;
+&lt;script type="module"&gt;
+  document.querySelector("#mixed-full").options = [
+    { value: "schools", label: "Schools", description: "School quality" },
+    { value: "nightlife", label: "Nightlife", description: "Bars and restaurants" },
+    { value: "tie", label: "Equally important", fullWidth: true },
+  ];
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="radio-pills" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-radio-pills">

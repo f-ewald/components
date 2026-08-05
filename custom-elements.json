@@ -10076,6 +10076,14 @@
         },
         {
           "kind": "js",
+          "name": "ProgressBar",
+          "declaration": {
+            "name": "ProgressBar",
+            "module": "./progress-bar.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "StatusBanner",
           "declaration": {
             "name": "StatusBanner",
@@ -15832,11 +15840,145 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/progress-bar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A determinate horizontal progress indicator — a page-level \"step 3 of 14\"\nbar. `stat-meter` is the closest existing thing but is an inline\nCPU-gauge-style meter with a leading label and a computed percent value;\n`progress-bar` instead takes a raw `value`/`max` pair and renders an\noptional plain-text `label` to the right of the bar rather than a percent\ninside it.",
+          "name": "ProgressBar",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Current progress. Clamped into [0, max].",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "Value representing a full bar.",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional text rendered to the right of the bar (e.g. \"Question 3 out of 14\").",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Fill color; defaults to the themed accent.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "trackColor",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Track color behind the fill.",
+              "attribute": "track-color"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Current progress. Clamped into [0, max].",
+              "fieldName": "value"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "Value representing a full bar.",
+              "fieldName": "max"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional text rendered to the right of the bar (e.g. \"Question 3 out of 14\").",
+              "fieldName": "label"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Fill color; defaults to the themed accent.",
+              "fieldName": "color"
+            },
+            {
+              "name": "track-color",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Track color behind the fill.",
+              "fieldName": "trackColor"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "progress-bar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ProgressBar",
+          "declaration": {
+            "name": "ProgressBar",
+            "module": "src/progress-bar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "progress-bar",
+          "declaration": {
+            "name": "ProgressBar",
+            "module": "src/progress-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/radio-cards.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Single-select group of full-width cards, each with a label and optional\ndescription — for a handful of meaningfully different choices where the\ndescription matters. For many short, same-shaped options (a color swatch,\na basemap style), use `radio-pills` instead. Wraps native radio inputs for\nkeyboard/a11y and fires `change` rather than relying on form submission.\n\nThe selected card's border/radio dot read `--ui-button-accent` (a solid\nstand-in, since `border-color`/`accent-color` can't render a gradient),\nand its background reads the shared `--ui-button-secondary-surface-muted`\nplus `--ui-button-highlight`, so a gradient theme tints it consistently\nwith `button-group`/`pagination-nav`'s equivalents. That shared value is\ntuned for small controls, so a card — with far more area — blends it 45%\ntoward `--ui-surface` rather than taking a second token: the tint stays\nthe same hue and gradient, just lighter on light themes (and\ncorrespondingly deeper on dark ones) than on a button.",
+          "description": "Single-select group of full-width cards, each with a label and optional\ndescription — for a handful of meaningfully different choices where the\ndescription matters. For many short, same-shaped options (a color swatch,\na basemap style), use `radio-pills` instead. Wraps native radio inputs for\nkeyboard/a11y and fires `change` rather than relying on form submission.\n\nThe selected card's border/radio dot read `--ui-button-accent` (a solid\nstand-in, since `border-color`/`accent-color` can't render a gradient),\nand its background reads the shared `--ui-button-secondary-surface-muted`\nplus `--ui-button-highlight`, so a gradient theme tints it consistently\nwith `button-group`/`pagination-nav`'s equivalents. That shared value is\ntuned for small controls, so a card — with far more area — blends it 45%\ntoward `--ui-surface` rather than taking a second token: the tint stays\nthe same hue and gradient, just lighter on light themes (and\ncorrespondingly deeper on dark ones) than on a button.\n\n`layout` controls how cards flow (\"mixed\" wraps with per-option\n`fullWidth` rows, \"vertical\" stacks one per row, \"horizontal\" stays\nside-by-side at every width). `hideInput` visually hides the radio dot via\nthe same `sr-only` clip pattern as `ui-checkbox` — the native input stays\nin the DOM for keyboard/a11y, and the card's own border/tint carries the\nselected state instead.",
           "name": "RadioCards",
           "members": [
             {
@@ -15867,6 +16009,26 @@
               "default": "false",
               "description": "Disables every native radio in the group.",
               "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "\"vertical\" | \"horizontal\" | \"mixed\""
+              },
+              "default": "\"mixed\"",
+              "description": "How the cards flow.\n- \"mixed\" (default): cards wrap onto as many rows as fit; options marked\n  `fullWidth` take a row of their own.\n- \"vertical\": one full-width card per row, never side by side.\n- \"horizontal\": every card on one row, equal widths, no wrapping.",
+              "attribute": "layout"
+            },
+            {
+              "kind": "field",
+              "name": "hideInput",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Visually hides the radio dot; the card's own border/tint carries the selected state.",
+              "attribute": "hide-input"
             },
             {
               "kind": "field",
@@ -15916,6 +16078,24 @@
               "default": "false",
               "description": "Disables every native radio in the group.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "layout",
+              "type": {
+                "text": "\"vertical\" | \"horizontal\" | \"mixed\""
+              },
+              "default": "\"mixed\"",
+              "description": "How the cards flow.\n- \"mixed\" (default): cards wrap onto as many rows as fit; options marked\n  `fullWidth` take a row of their own.\n- \"vertical\": one full-width card per row, never side by side.\n- \"horizontal\": every card on one row, equal widths, no wrapping.",
+              "fieldName": "layout"
+            },
+            {
+              "name": "hide-input",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Visually hides the radio dot; the card's own border/tint carries the selected state.",
+              "fieldName": "hideInput"
             }
           ],
           "superclass": {

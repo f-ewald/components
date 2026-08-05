@@ -59,4 +59,77 @@ test.describe("radio-cards", () => {
     await expect(input).toHaveCSS("width", "16px");
     await expect(input).toHaveCSS("height", "16px");
   });
+
+  test("clearing value after a click un-checks every card (stale checked-attribute regression)", async ({ page }) => {
+    await page.goto("/");
+    const cards = page.locator("#radio-cards-demo");
+
+    await cards.locator(".card").nth(1).click();
+    await expect(cards.locator(".card").nth(1).locator("input")).toBeChecked();
+
+    await page.locator("#radio-cards-reset").click();
+    await expect(cards.locator("input:checked")).toHaveCount(0);
+    await expect(page.locator("#radio-cards-selected")).toHaveText("");
+  });
+
+  test('layout="vertical" stacks one full-width card per row', async ({ page }) => {
+    await page.goto("/");
+    const options = page.locator("#radio-cards-vertical .options");
+    await expect(options).toHaveCSS("flex-direction", "column");
+
+    const cards = page.locator("#radio-cards-vertical .card");
+    const first = await cards.nth(0).boundingBox();
+    const second = await cards.nth(1).boundingBox();
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(second!.y).toBeGreaterThan(first!.y);
+  });
+
+  test('layout="horizontal" keeps cards side by side and hide-input clips the radio dot', async ({ page }) => {
+    await page.goto("/");
+    const options = page.locator("#radio-cards-horizontal .options");
+    await expect(options).toHaveCSS("flex-wrap", "nowrap");
+
+    const cards = page.locator("#radio-cards-horizontal .card");
+    const first = await cards.nth(0).boundingBox();
+    const second = await cards.nth(1).boundingBox();
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(Math.abs(first!.y - second!.y)).toBeLessThan(2);
+
+    const input = cards.first().locator("input");
+    await expect(input).toHaveCSS("width", "1px");
+    await expect(input).toBeAttached();
+  });
+
+  test('layout="mixed" with a fullWidth option renders it on its own row', async ({ page }) => {
+    await page.goto("/");
+    const cards = page.locator("#radio-cards-mixed-full .card");
+    await expect(cards).toHaveCount(3);
+
+    const first = await cards.nth(0).boundingBox();
+    const tie = await cards.nth(2).boundingBox();
+    expect(first).not.toBeNull();
+    expect(tie).not.toBeNull();
+    expect(tie!.y).toBeGreaterThan(first!.y);
+    expect(tie!.width).toBeGreaterThan(first!.width);
+  });
+
+  test('a fullWidth card in a narrow viewport never overflows its container (box-sizing regression)', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 700 });
+    await page.goto("/");
+    const options = page.locator("#radio-cards-mixed-full .options");
+    const full = page.locator("#radio-cards-mixed-full .card.full");
+
+    const optionsBox = await options.boundingBox();
+    const fullBox = await full.boundingBox();
+    expect(optionsBox).not.toBeNull();
+    expect(fullBox).not.toBeNull();
+    // The card's border-box (padding + border included) must fit exactly inside
+    // its flex container, not overflow by the padding/border amount.
+    expect(fullBox!.width).toBeLessThanOrEqual(optionsBox!.width + 0.5);
+    expect(fullBox!.x + fullBox!.width).toBeLessThanOrEqual(optionsBox!.x + optionsBox!.width + 0.5);
+  });
 });

@@ -28,6 +28,7 @@ import {
   type TabBar,
   type TabChangeDetail,
   type StatMeter,
+  type ProgressBar,
   type StatusBanner,
   type UiAdmonition,
   type EditableText,
@@ -462,6 +463,15 @@ document.getElementById("autocomplete-form")?.addEventListener("submit", (e) => 
   autocompleteSelected.textContent = `Submitted form value: ${formValue}`;
 });
 
+// progress-bar (advance the primary demo bar; wraps back to 0 at max)
+const progressDemo = document.getElementById("progress-demo") as ProgressBar;
+document.getElementById("progress-advance")?.addEventListener("click", () => {
+  if (!progressDemo) return;
+  const next = progressDemo.value >= progressDemo.max ? 0 : progressDemo.value + 1;
+  progressDemo.value = next;
+  progressDemo.label = `Question ${next} out of ${progressDemo.max}`;
+});
+
 // radio-cards
 const radioCardsDemo = document.getElementById("radio-cards-demo") as RadioCards;
 const radioCardsSelected = document.getElementById("radio-cards-selected")!;
@@ -476,6 +486,37 @@ if (radioCardsDemo) {
 radioCardsDemo?.addEventListener("change", (e) => {
   radioCardsSelected.textContent = (e as CustomEvent).detail.value;
 });
+document.getElementById("radio-cards-reset")?.addEventListener("click", () => {
+  if (!radioCardsDemo) return;
+  radioCardsDemo.value = "";
+  radioCardsSelected.textContent = "";
+});
+
+const radioCardsVertical = document.getElementById("radio-cards-vertical") as RadioCards;
+if (radioCardsVertical) {
+  radioCardsVertical.options = [
+    { value: "a", label: "Option A", description: "First choice" },
+    { value: "b", label: "Option B", description: "Second choice" },
+    { value: "c", label: "Option C", description: "Third choice" },
+  ];
+}
+
+const radioCardsHorizontal = document.getElementById("radio-cards-horizontal") as RadioCards;
+if (radioCardsHorizontal) {
+  radioCardsHorizontal.options = [
+    { value: "schools", label: "Schools", description: "School quality" },
+    { value: "nightlife", label: "Nightlife", description: "Bars and restaurants" },
+  ];
+}
+
+const radioCardsMixedFull = document.getElementById("radio-cards-mixed-full") as RadioCards;
+if (radioCardsMixedFull) {
+  radioCardsMixedFull.options = [
+    { value: "schools", label: "Schools", description: "School quality" },
+    { value: "nightlife", label: "Nightlife", description: "Bars and restaurants" },
+    { value: "tie", label: "Equally important", fullWidth: true },
+  ];
+}
 
 // radio-pills
 const radioPillsDemo = document.getElementById("radio-pills-demo") as RadioPills;

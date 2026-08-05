@@ -1,5 +1,6 @@
 import { LitElement, css, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
 import { repeat } from "lit/directives/repeat.js";
 import { tokens } from "./tokens.js";
 
@@ -7,6 +8,8 @@ export interface RadioCardOption {
   value: string;
   label: string;
   description?: string;
+  /** In `layout="mixed"`, forces this card onto its own full-width row. */
+  fullWidth?: boolean;
 }
 
 let instanceCount = 0;
@@ -28,6 +31,13 @@ let instanceCount = 0;
  * the same hue and gradient, just lighter on light themes (and
  * correspondingly deeper on dark ones) than on a button.
  *
+ * `layout` controls how cards flow ("mixed" wraps with per-option
+ * `fullWidth` rows, "vertical" stacks one per row, "horizontal" stays
+ * side-by-side at every width). `hideInput` visually hides the radio dot via
+ * the same `sr-only` clip pattern as `ui-checkbox` — the native input stays
+ * in the DOM for keyboard/a11y, and the card's own border/tint carries the
+ * selected state instead.
+ *
  * @element radio-cards
  * @fires change - A card was selected; detail: { value }.
  */
@@ -42,13 +52,34 @@ export class RadioCards extends LitElement {
       .options {
         display: flex;
         gap: 0.5rem;
+      }
+      .options.mixed {
         flex-wrap: wrap;
       }
-      .card {
+      .options.mixed .card {
         flex: 1 1 11.25rem;
+      }
+      .options.mixed .card.full {
+        flex: 1 0 100%;
+      }
+      .options.vertical {
+        flex-direction: column;
+      }
+      .options.vertical .card {
+        flex: 0 0 auto;
+      }
+      .options.horizontal {
+        flex-wrap: nowrap;
+      }
+      .options.horizontal .card {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+      .card {
         display: flex;
         align-items: flex-start;
         gap: 0.5rem;
+        box-sizing: border-box;
         border: 1px solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 0.75rem;
@@ -113,6 +144,18 @@ export class RadioCards extends LitElement {
       .card:has(input:disabled) input {
         cursor: not-allowed;
       }
+      .card input.sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
       @media (forced-colors: active) {
         .card:has(input:focus-visible) {
           outline: 2px solid CanvasText;
@@ -140,6 +183,16 @@ export class RadioCards extends LitElement {
   @property() value = "";
   /** Disables every native radio in the group. */
   @property({ type: Boolean }) disabled = false;
+  /**
+   * How the cards flow.
+   * - "mixed" (default): cards wrap onto as many rows as fit; options marked
+   *   `fullWidth` take a row of their own.
+   * - "vertical": one full-width card per row, never side by side.
+   * - "horizontal": every card on one row, equal widths, no wrapping.
+   */
+  @property() layout: "vertical" | "horizontal" | "mixed" = "mixed";
+  /** Visually hides the radio dot; the card's own border/tint carries the selected state. */
+  @property({ type: Boolean, attribute: "hide-input" }) hideInput = false;
 
   readonly #name = `radio-cards-${++instanceCount}`;
 
@@ -151,16 +204,17 @@ export class RadioCards extends LitElement {
 
   override render() {
     return html`
-      <div class="options">
+      <div class="options ${this.layout}">
         ${repeat(
           this.options,
           (opt) => opt.value,
           (opt) => html`
-            <label class="card">
+            <label class=${classMap({ card: true, full: this.layout === "mixed" && !!opt.fullWidth })}>
               <input
                 type="radio"
+                class=${classMap({ "sr-only": this.hideInput })}
                 name=${this.#name}
-                ?checked=${this.value === opt.value}
+                .checked=${this.value === opt.value}
                 ?disabled=${this.disabled}
                 @change=${() => this._onChange(opt.value)}
               />

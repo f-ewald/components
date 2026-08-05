@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- New `progress-bar`: a determinate horizontal progress indicator for a
+  page-level "step X of Y" bar (`value`/`max`, an optional plain-text `label`
+  rendered to the right of the bar, and `color`/`track-color` overrides) —
+  distinct from `stat-meter`'s inline CPU-gauge-style meter with a leading
+  label and computed percent.
+- `radio-cards` gains a `layout` property (`"mixed"` default / `"vertical"` /
+  `"horizontal"`), a per-option `fullWidth` flag for `layout="mixed"`, and a
+  `hideInput` property that visually hides the radio dot while keeping the
+  native input for a11y/keyboard. Also fixes two bugs: the selected card
+  bound `checked` as an attribute instead of a property, so a reused instance
+  could render a stale selection once a user had clicked a radio; and `.card`
+  was missing `box-sizing: border-box`, so a `fullWidth` card's `flex-basis:
+  100%` overflowed its container by exactly the padding+border amount at
+  narrow viewport widths (found verifying the quiz redesign at 390px in
+  real-estate-map).
 - New `ui-admonition`: a bordered, rounded inline callout card (icon + text
   + an `actions` slot for a call to action, e.g. a primary `ui-button`) —
   distinct from `status-banner`, which stays the borderless full-width bar

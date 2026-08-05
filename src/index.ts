@@ -55,6 +55,7 @@ export { RangeSlider } from "./range-slider.js";
 export { ButtonGroup, type ButtonGroupOption } from "./button-group.js";
 export { UiButton, type ButtonVariant } from "./ui-button.js";
 export { StatMeter } from "./stat-meter.js";
+export { ProgressBar } from "./progress-bar.js";
 export { StatusBanner, type StatusBannerVariant } from "./status-banner.js";
 export { UiAdmonition, type AdmonitionVariant } from "./ui-admonition.js";
 export { StatusPill, type StatusPillColor } from "./status-pill.js";

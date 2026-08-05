@@ -343,6 +343,8 @@ const EXAMPLES = {
     { date: "2024-02-01", price: 680000, eventType: "Sold" },
   ];
 </script>`,
+  "progress-bar": `<progress-bar value="3" max="14" label="Question 3 out of 14"></progress-bar>
+<progress-bar value="7" max="10" color="#dc2626" track-color="#fecaca"></progress-bar>`,
   "distribution-chart": `<distribution-chart metric="sqft"></distribution-chart>
 <script type="module">
   document.querySelector("distribution-chart").values = [{ label: "", value: 1450 }];

@@ -1799,6 +1799,27 @@ Example:
 </script>
 ```
 
+## <progress-bar>
+
+A determinate horizontal progress indicator — a page-level "step 3 of 14"
+bar. `stat-meter` is the closest existing thing but is an inline
+CPU-gauge-style meter with a leading label and a computed percent value;
+`progress-bar` instead takes a raw `value`/`max` pair and renders an
+optional plain-text `label` to the right of the bar rather than a percent
+inside it.
+
+Import: `import "@f-ewald/components/progress-bar.js";`
+
+Properties: `value` (attribute `value`) : number, default 0; `max` (attribute `max`) : number, default 100; `label` (attribute `label`) : string, default ""; `color` (attribute `color`) : string, default ""; `trackColor` (attribute `track-color`) : string, default ""
+Events: none
+CSS custom properties: `--ui-button-accent`, `--ui-font`, `--ui-font-size-sm`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text-muted`
+
+Example:
+```html
+<progress-bar value="3" max="14" label="Question 3 out of 14"></progress-bar>
+<progress-bar value="7" max="10" color="#dc2626" track-color="#fecaca"></progress-bar>
+```
+
 ## <radio-cards>
 
 Single-select group of full-width cards, each with a label and optional
@@ -1817,9 +1838,16 @@ toward `--ui-surface` rather than taking a second token: the tint stays
 the same hue and gradient, just lighter on light themes (and
 correspondingly deeper on dark ones) than on a button.
 
+`layout` controls how cards flow ("mixed" wraps with per-option
+`fullWidth` rows, "vertical" stacks one per row, "horizontal" stays
+side-by-side at every width). `hideInput` visually hides the radio dot via
+the same `sr-only` clip pattern as `ui-checkbox` — the native input stays
+in the DOM for keyboard/a11y, and the card's own border/tint carries the
+selected state instead.
+
 Import: `import "@f-ewald/components/radio-cards.js";`
 
-Properties: `options` (JS property only) : RadioCardOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
+Properties: `options` (JS property only) : RadioCardOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `layout` (attribute `layout`) : "vertical" | "horizontal" | "mixed", default "mixed"; `hideInput` (attribute `hide-input`) : boolean, default false
 Events: `change`
 CSS custom properties: `--ui-border`, `--ui-button-accent`, `--ui-button-highlight`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 

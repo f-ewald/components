@@ -100,6 +100,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<photo-gallery>` | [API reference](https://f-ewald.github.io/components/docs/photo-gallery.html) |
 | `<popover-panel>` | [API reference](https://f-ewald.github.io/components/docs/popover-panel.html) |
 | `<price-history-chart>` | [API reference](https://f-ewald.github.io/components/docs/price-history-chart.html) |
+| `<progress-bar>` | [API reference](https://f-ewald.github.io/components/docs/progress-bar.html) |
 | `<radio-cards>` | [API reference](https://f-ewald.github.io/components/docs/radio-cards.html) |
 | `<radio-pills>` | [API reference](https://f-ewald.github.io/components/docs/radio-pills.html) |
 | `<range-slider>` | [API reference](https://f-ewald.github.io/components/docs/range-slider.html) |
