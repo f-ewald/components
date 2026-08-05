@@ -21,15 +21,19 @@ let instanceCount = 0;
  * a basemap style), use `radio-pills` instead. Wraps native radio inputs for
  * keyboard/a11y and fires `change` rather than relying on form submission.
  *
- * The selected card's border/radio dot read `--ui-button-accent` (a solid
- * stand-in, since `border-color`/`accent-color` can't render a gradient),
- * and its background reads the shared `--ui-button-secondary-surface-muted`
- * plus `--ui-button-highlight`, so a gradient theme tints it consistently
- * with `button-group`/`pagination-nav`'s equivalents. That shared value is
- * tuned for small controls, so a card — with far more area — blends it 45%
- * toward `--ui-surface` rather than taking a second token: the tint stays
- * the same hue and gradient, just lighter on light themes (and
- * correspondingly deeper on dark ones) than on a button.
+ * An unchecked card is treated as `ui-button`'s secondary variant: it reads
+ * the same `--ui-button-secondary-background`/`-hover` and
+ * `-border`/`-hover` tokens, so a gradient theme applies to a card exactly
+ * like it does to any button. The selected card's border/radio dot instead
+ * read `--ui-button-accent` (a solid stand-in, since `border-color`/
+ * `accent-color` can't render a gradient), and its background reads the
+ * shared `--ui-button-secondary-surface-muted` plus `--ui-button-highlight`,
+ * so a gradient theme tints it consistently with `button-group`/
+ * `pagination-nav`'s equivalents. That shared value is tuned for small
+ * controls, so a card — with far more area — blends it 45% toward
+ * `--ui-surface` rather than taking a second token: the tint stays the same
+ * hue and gradient, just lighter on light themes (and correspondingly
+ * deeper on dark ones) than on a button.
  *
  * `layout` controls how cards flow ("mixed" wraps with per-option
  * `fullWidth` rows, "vertical" stacks one per row, "horizontal" stays
@@ -80,7 +84,8 @@ export class RadioCards extends LitElement {
         align-items: flex-start;
         gap: 0.5rem;
         box-sizing: border-box;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        background: var(--ui-button-secondary-background, none);
+        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 0.75rem;
         cursor: pointer;
@@ -95,6 +100,13 @@ export class RadioCards extends LitElement {
           "Noto Color Emoji"
         );
         font-size: var(--ui-font-size-sm, 0.75rem);
+      }
+      /* Unchecked cards are treated as ui-button's secondary variant (same
+         resting/hover gradient tokens), so a gradient theme applies here the
+         same way it does to every button — a card is not a special case. */
+      .card:hover:not(:has(input:disabled)):not(:has(input:checked)) {
+        background: var(--ui-button-secondary-background-hover, none);
+        border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
       }
       /* Same single muted-surface variable as button-group/pagination-nav,
          but blended toward the card's own surface: that value is tuned for a

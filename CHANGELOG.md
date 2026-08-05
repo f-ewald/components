@@ -17,6 +17,14 @@
   100%` overflowed its container by exactly the padding+border amount at
   narrow viewport widths (found verifying the quiz redesign at 390px in
   real-estate-map).
+- `radio-cards`: an unchecked `.card` had no `background` at all, so it
+  rendered transparent (see-through to whatever's behind it) instead of
+  picking up a gradient theme like every other control. It now reads
+  `--ui-button-secondary-background`/`-hover` and
+  `--ui-button-secondary-border`/`-hover` — the same tokens `ui-button`'s
+  secondary variant uses — so an unchecked card is themed exactly like a
+  secondary button, with matching hover feedback (also new; there was none
+  before).
 - New `ui-admonition`: a bordered, rounded inline callout card (icon + text
   + an `actions` slot for a call to action, e.g. a primary `ui-button`) —
   distinct from `status-banner`, which stays the borderless full-width bar

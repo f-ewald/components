@@ -6,15 +6,19 @@ description matters. For many short, same-shaped options (a color swatch,
 a basemap style), use `radio-pills` instead. Wraps native radio inputs for
 keyboard/a11y and fires `change` rather than relying on form submission.
 
-The selected card's border/radio dot read `--ui-button-accent` (a solid
-stand-in, since `border-color`/`accent-color` can't render a gradient),
-and its background reads the shared `--ui-button-secondary-surface-muted`
-plus `--ui-button-highlight`, so a gradient theme tints it consistently
-with `button-group`/`pagination-nav`'s equivalents. That shared value is
-tuned for small controls, so a card — with far more area — blends it 45%
-toward `--ui-surface` rather than taking a second token: the tint stays
-the same hue and gradient, just lighter on light themes (and
-correspondingly deeper on dark ones) than on a button.
+An unchecked card is treated as `ui-button`'s secondary variant: it reads
+the same `--ui-button-secondary-background`/`-hover` and
+`-border`/`-hover` tokens, so a gradient theme applies to a card exactly
+like it does to any button. The selected card's border/radio dot instead
+read `--ui-button-accent` (a solid stand-in, since `border-color`/
+`accent-color` can't render a gradient), and its background reads the
+shared `--ui-button-secondary-surface-muted` plus `--ui-button-highlight`,
+so a gradient theme tints it consistently with `button-group`/
+`pagination-nav`'s equivalents. That shared value is tuned for small
+controls, so a card — with far more area — blends it 45% toward
+`--ui-surface` rather than taking a second token: the tint stays the same
+hue and gradient, just lighter on light themes (and correspondingly
+deeper on dark ones) than on a button.
 
 `layout` controls how cards flow ("mixed" wraps with per-option
 `fullWidth` rows, "vertical" stacks one per row, "horizontal" stays
@@ -71,6 +75,10 @@ _None._
 | `--ui-border` |
 | `--ui-button-accent` |
 | `--ui-button-highlight` |
+| `--ui-button-secondary-background` |
+| `--ui-button-secondary-background-hover` |
+| `--ui-button-secondary-border` |
+| `--ui-button-secondary-border-hover` |
 | `--ui-button-secondary-surface-muted` |
 | `--ui-focus-ring` |
 | `--ui-font` |
