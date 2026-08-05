@@ -56,6 +56,7 @@ export { ButtonGroup, type ButtonGroupOption } from "./button-group.js";
 export { UiButton, type ButtonVariant } from "./ui-button.js";
 export { StatMeter } from "./stat-meter.js";
 export { StatusBanner, type StatusBannerVariant } from "./status-banner.js";
+export { UiAdmonition, type AdmonitionVariant } from "./ui-admonition.js";
 export { StatusPill, type StatusPillColor } from "./status-pill.js";
 export { EditableText } from "./editable-text.js";
 export { LiveTimer } from "./live-timer.js";

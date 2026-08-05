@@ -29,6 +29,7 @@ import {
   type TabChangeDetail,
   type StatMeter,
   type StatusBanner,
+  type UiAdmonition,
   type EditableText,
   type LiveTimer,
   type CountdownTimer,
@@ -61,6 +62,8 @@ import {
   iconArrowPath,
   iconCheckCircle,
   iconEllipsisVertical,
+  iconExclamationCircle,
+  iconExclamationTriangle,
   iconInfo,
   iconEye,
   iconListBullet,
@@ -646,6 +649,17 @@ const bannerInfo = document.getElementById("banner-info") as StatusBanner | null
 if (bannerInfo) bannerInfo.icon = iconInfo(14);
 document.getElementById("banner-reload")?.addEventListener("click", () => {
   if (bannerInfo) bannerInfo.textContent = "Reloaded.";
+});
+
+// ui-admonition (exercise the icon property and the actions slot's primary ui-button)
+const admonitionInfo = document.getElementById("admonition-info") as UiAdmonition | null;
+if (admonitionInfo) admonitionInfo.icon = iconInfo(18);
+const admonitionWarning = document.getElementById("admonition-warning") as UiAdmonition | null;
+if (admonitionWarning) admonitionWarning.icon = iconExclamationTriangle(18);
+const admonitionDanger = document.getElementById("admonition-danger") as UiAdmonition | null;
+if (admonitionDanger) admonitionDanger.icon = iconExclamationCircle(18);
+document.getElementById("admonition-cta")?.addEventListener("click", () => {
+  if (admonitionInfo) admonitionInfo.textContent = "Thanks — quiz started.";
 });
 
 // stat-meter (randomize CPU/MEM readings; I/O stays unset to show the null state)

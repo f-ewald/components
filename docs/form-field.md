@@ -69,10 +69,12 @@ _None._
 | `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |
+| `--ui-font-size` |
 | `--ui-font-size-sm` |
 | `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
 | `--ui-font-weight-regular` |
+| `--ui-line-height-normal` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius-sm` |

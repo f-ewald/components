@@ -10092,6 +10092,22 @@
         },
         {
           "kind": "js",
+          "name": "UiAdmonition",
+          "declaration": {
+            "name": "UiAdmonition",
+            "module": "./ui-admonition.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AdmonitionVariant",
+          "declaration": {
+            "name": "AdmonitionVariant",
+            "module": "./ui-admonition.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "StatusPill",
           "declaration": {
             "name": "StatusPill",
@@ -19095,6 +19111,84 @@
           "declaration": {
             "name": "TreeView",
             "module": "src/tree-view.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/ui-admonition.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Bordered, rounded callout card for an inline notice with an optional call\nto action — \"take the quiz to personalize your weights\", \"this feature is\nin beta\", etc. Unlike `status-banner` (a borderless, non-rounded\nfull-width bar for a persistent app-level condition), this is meant to sit\ninline within a page's content column, so it always has a visible border\nand radius. Colors follow the same tinted-background + accent-color\nscheme as `status-banner`/`status-pill`.",
+          "name": "UiAdmonition",
+          "slots": [
+            {
+              "description": "The message text.",
+              "name": ""
+            },
+            {
+              "description": "Optional call-to-action controls, e.g. a primary `<ui-button>`.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "AdmonitionVariant"
+              },
+              "default": "\"info\"",
+              "description": "Visual style; also selects the accent color for the icon/border/tint.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "TemplateResult | null"
+              },
+              "default": "null",
+              "description": "Optional leading icon, pre-rendered by the consumer (e.g. `iconInfo(18)`),\nmatching `status-banner`/`nav-item`/`icon-button` — icons are passed in,\nnot named, so the component never has to know the icon catalog."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "AdmonitionVariant"
+              },
+              "default": "\"info\"",
+              "description": "Visual style; also selects the accent color for the icon/border/tint.",
+              "fieldName": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "ui-admonition",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "UiAdmonition",
+          "declaration": {
+            "name": "UiAdmonition",
+            "module": "src/ui-admonition.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ui-admonition",
+          "declaration": {
+            "name": "UiAdmonition",
+            "module": "src/ui-admonition.ts"
           }
         }
       ]

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- New `ui-admonition`: a bordered, rounded inline callout card (icon + text
+  + an `actions` slot for a call to action, e.g. a primary `ui-button`) —
+  distinct from `status-banner`, which stays the borderless full-width bar
+  for a persistent app-level condition. Same tinted-background +
+  accent-color variant scheme as `status-banner`/`status-pill`.
 - `calendar-day`'s `time-marker` now ends its current-time line in a rounded
   pill in the hour gutter that reads the current clock time (e.g. `6:37`),
   replacing the small needle dot. The time is locale-aware with the AM/PM

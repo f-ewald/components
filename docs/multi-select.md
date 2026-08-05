@@ -106,6 +106,7 @@ _None._
 | `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |
+| `--ui-font-size` |
 | `--ui-font-size-sm` |
 | `--ui-font-weight-medium` |
 | `--ui-font-weight-semibold` |

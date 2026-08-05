@@ -498,6 +498,10 @@ See the [changelog](#markdown-view) for details.\`;
   A new version is available.
   <button slot="actions">Reload</button>
 </status-banner>`,
+  "ui-admonition": `<ui-admonition variant="info">
+  These are balanced defaults — take the quiz to personalize them.
+  <ui-button slot="actions" variant="primary">Take the quiz</ui-button>
+</ui-admonition>`,
   "status-pill": `<status-pill label="Running" color="primary" spinner></status-pill>
 <status-pill label="Blocked" color="danger"></status-pill>`,
   "editable-text": `<editable-text value="Write the quarterly report" label="Title"></editable-text>

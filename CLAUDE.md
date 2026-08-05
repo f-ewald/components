@@ -8,6 +8,17 @@ component is individually importable via a subpath export
 (`@f-ewald/components/<tag-name>.js`), so consumers only pay for what they
 use — non-chart components pull in zero `d3` code.
 
+`ui-admonition` (v1.31.0) is a bordered, rounded inline callout card — icon +
+text + an `actions` slot for a call to action, e.g. a primary `ui-button`.
+Deliberately kept distinct from `status-banner` rather than extended with a
+`bordered`/`radius` prop: `status-banner` stays the borderless, non-rounded
+full-width bar for a persistent app-level condition; `ui-admonition` is for
+a notice that sits inline within a page's content column. Same
+tinted-background + accent-color variant scheme as `status-banner`/
+`status-pill`, plus a visible `border` + `--ui-radius` at all times. Named
+with the `ui-` prefix (like `ui-button`/`ui-checkbox`) since "admonition"
+alone isn't a valid custom-element tag name (no hyphen).
+
 `markdown-view` (v1.11.0) added `marked`/`dompurify` as the package's first
 runtime dependencies whose job is parsing/sanitizing arbitrary text rather
 than rendering charts (`d3-array`/`d3-scale`/`d3-shape` were already runtime

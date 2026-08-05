@@ -131,7 +131,7 @@ Import: `import "@f-ewald/components/address-autocomplete.js";`
 
 Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `clearable` (attribute `clearable`) : boolean, default false; `types` (attribute `types`) : string, default "address"; `endpoint` (attribute `endpoint`) : string, default "https://api.mapbox.com/search/geocode/v6/forward"; `accessToken` (attribute `access-token`) : string, default ""; `bbox` (attribute `bbox`) : string, default ""; `proximity` (attribute `proximity`) : string, default ""; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `suggestions` (JS property only) : AddressSuggestion[] | null, default null; `selectedSuggestion` (JS property only) : AddressSuggestion | null, default —
 Events: `address-select`, `input`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -326,7 +326,7 @@ Import: `import "@f-ewald/components/autocomplete-input.js";`
 
 Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `clearable` (attribute `clearable`) : boolean, default false; `endpoint` (attribute `endpoint`) : string, default ""; `queryParam` (attribute `query-param`) : string, default "q"; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `options` (JS property only) : AutocompleteOption[] | null, default null; `selectedOption` (JS property only) : AutocompleteOption | null, default —
 Events: `option-select`, `input`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -956,7 +956,7 @@ Import: `import "@f-ewald/components/form-field.js";`
 
 Properties: `label` (attribute `label`) : string, default ""; `hint` (attribute `hint`) : string, default ""; `error` (attribute `error`) : string, default ""; `required` (attribute `required`) : boolean, default false; `floatingLabel` (attribute `floating-label`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1000,7 +1000,7 @@ Import: `import "@f-ewald/components/form-select.js";`
 
 Properties: `options` (JS property only) : SelectOption[], default []; `value` (attribute `value`) : string, default ""; `label` (attribute `label`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `searchable` (attribute `searchable`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1594,7 +1594,7 @@ Import: `import "@f-ewald/components/multi-select.js";`
 
 Properties: `options` (JS property only) : MultiSelectOption[], default []; `values` (JS property only) : string[], default []; `name` (attribute `name`) : string, default ""; `label` (attribute `label`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default "Select options"; `disabled` (attribute `disabled`) : boolean, default false; `required` (attribute `required`) : boolean, default false; `searchable` (attribute `searchable`) : boolean, default false; `max` (attribute `max`) : number, default 0; `variant` (attribute `variant`) : MultiSelectVariant, default "dropdown"; `visibleRows` (attribute `visible-rows`) : number, default 5; `showChips` (attribute `show-chips`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2237,7 +2237,7 @@ Import: `import "@f-ewald/components/text-area.js";`
 
 Properties: `value` (attribute `value`) : string, default ""; `rows` (attribute `rows`) : number, default 4; `placeholder` (attribute `placeholder`) : string, default ""; `readonly` (attribute `readonly`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false
 Events: `input`, `change`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2474,6 +2474,30 @@ Example:
   tree.renderNode = (node) => node.label;
   tree.addEventListener("node-click", (e) => console.log(e.detail));
 </script>
+```
+
+## <ui-admonition>
+
+Bordered, rounded callout card for an inline notice with an optional call
+to action — "take the quiz to personalize your weights", "this feature is
+in beta", etc. Unlike `status-banner` (a borderless, non-rounded
+full-width bar for a persistent app-level condition), this is meant to sit
+inline within a page's content column, so it always has a visible border
+and radius. Colors follow the same tinted-background + accent-color
+scheme as `status-banner`/`status-pill`.
+
+Import: `import "@f-ewald/components/ui-admonition.js";`
+
+Properties: `variant` (attribute `variant`) : AdmonitionVariant, default "info"; `icon` (JS property only) : TemplateResult | null, default null
+Events: none
+CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-info`, `--ui-line-height-normal`, `--ui-radius`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+
+Example:
+```html
+<ui-admonition variant="info">
+  These are balanced defaults — take the quiz to personalize them.
+  <ui-button slot="actions" variant="primary">Take the quiz</ui-button>
+</ui-admonition>
 ```
 
 ## <ui-button>

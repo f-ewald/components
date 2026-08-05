@@ -73,7 +73,7 @@ _None._
 | `--ui-border` |
 | `--ui-focus-ring` |
 | `--ui-font` |
-| `--ui-font-size-sm` |
+| `--ui-font-size` |
 | `--ui-font-weight-semibold` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |

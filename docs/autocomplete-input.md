@@ -80,6 +80,7 @@ _None._
 | `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |
+| `--ui-font-size` |
 | `--ui-font-size-sm` |
 | `--ui-font-size-xs` |
 | `--ui-font-weight-regular` |

@@ -122,6 +122,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<timeline-entry>` | [API reference](https://f-ewald.github.io/components/docs/timeline-entry.html) |
 | `<toast-notification>` | [API reference](https://f-ewald.github.io/components/docs/toast-notification.html) |
 | `<tree-view>` | [API reference](https://f-ewald.github.io/components/docs/tree-view.html) |
+| `<ui-admonition>` | [API reference](https://f-ewald.github.io/components/docs/ui-admonition.html) |
 | `<ui-button>` | [API reference](https://f-ewald.github.io/components/docs/ui-button.html) |
 | `<ui-checkbox>` | [API reference](https://f-ewald.github.io/components/docs/ui-checkbox.html) |
 | `<user-avatar>` | [API reference](https://f-ewald.github.io/components/docs/user-avatar.html) |

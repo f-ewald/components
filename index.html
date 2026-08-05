@@ -104,6 +104,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#timeline-container">timeline-container</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#toast-notification">toast-notification</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#tree-view">tree-view</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-admonition">ui-admonition</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-button">ui-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-checkbox">ui-checkbox</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#user-avatar">user-avatar</a>
@@ -3273,6 +3274,36 @@ tree.nodes = [
 tree.renderNode = (node) => node.label;
 tree.lines = true; // optional: draw connector guides
 tree.addEventListener("node-click", (e) => console.log(e.detail));</code></pre>
+        </section>
+
+        <section id="ui-admonition" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-admonition">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#ui-admonition">ui-admonition</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Bordered, rounded callout card for an inline notice with an optional call to action.
+            Unlike <code>status-banner</code> (a borderless full-width bar for a persistent
+            app-level condition), this is meant to sit inline within a page's content column.
+          </p>
+          <div class="mt-6 flex flex-col gap-3 rounded-lg border border-slate-200 p-6">
+            <ui-admonition id="admonition-info" data-testid="admonition-info" variant="info"
+              >These are balanced defaults — take the quiz to personalize them.
+              <ui-button slot="actions" id="admonition-cta" data-testid="admonition-cta" variant="primary"
+                >Take the quiz</ui-button
+              >
+            </ui-admonition>
+            <ui-admonition id="admonition-warning" data-testid="admonition-warning" variant="warning"
+              >This feature is in beta and may change.</ui-admonition
+            >
+            <ui-admonition id="admonition-danger" data-testid="admonition-danger" variant="danger"
+              >Deleting this workspace removes all its data.</ui-admonition
+            >
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/ui-admonition.js";
+import "@f-ewald/components/ui-button.js";
+
+&lt;ui-admonition variant="info"&gt;
+  These are balanced defaults — take the quiz to personalize them.
+  &lt;ui-button slot="actions" variant="primary"&gt;Take the quiz&lt;/ui-button&gt;
+&lt;/ui-admonition&gt;</code></pre>
         </section>
 
         <section id="ui-button" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-ui-button">
