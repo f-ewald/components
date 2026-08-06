@@ -28,7 +28,46 @@
         <a href="#schedule" aria-label="Schedule"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg><span style="display: var(--app-sidebar-label, inline)">Schedule</span></a>
       </app-sidebar>
 
-      <page-header slot="topbar" heading="Members"></page-header>
+      <page-header slot="topbar" heading="Members">
+        <div slot="actions" style="display: flex; align-items: center; gap: 0.5rem;">
+          <ui-button
+            id="tpl-fullscreen-report-open"
+            data-testid="tpl-fullscreen-report-open"
+            size="sm"
+            variant="secondary"
+          >
+            Full report
+          </ui-button>
+          <modal-dialog
+            id="tpl-fullscreen-report"
+            data-testid="tpl-fullscreen-report"
+            heading="Members — full report"
+            size="fullscreen"
+          >
+            <div style="padding: 1rem;">
+              <data-table data-tpl-table style="display: block;"></data-table>
+            </div>
+          </modal-dialog>
+
+          <div style="position: relative; display: inline-block;">
+            <icon-button
+              id="tpl-quick-actions-trigger"
+              data-testid="tpl-quick-actions-trigger"
+              label="Quick actions"
+            ></icon-button>
+            <popover-panel
+              id="tpl-quick-actions-popover"
+              data-testid="tpl-quick-actions-popover"
+              heading="Quick actions"
+            >
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; padding: 0.75rem;">
+                <ui-button size="sm" variant="secondary">Export CSV</ui-button>
+                <ui-button size="sm" variant="secondary">Import CSV</ui-button>
+              </div>
+            </popover-panel>
+          </div>
+        </div>
+      </page-header>
 
       <div>
         <action-bar>

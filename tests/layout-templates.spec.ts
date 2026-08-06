@@ -8,6 +8,37 @@ test.describe("layout templates", () => {
     await expect(page.locator("pagination-nav")).toContainText("Page 1 of 6");
   });
 
+  test("list-only's topbar popover opens on click and dismisses on Escape", async ({ page }) => {
+    await page.goto("/demo/layouts/list-only.html");
+    const popover = page.locator('[data-testid="tpl-quick-actions-popover"]');
+    await expect(popover).not.toBeVisible();
+
+    await page.locator('[data-testid="tpl-quick-actions-trigger"]').click();
+    await expect(popover).toBeVisible();
+    await expect(popover).toContainText("Export CSV");
+
+    await page.keyboard.press("Escape");
+    await expect(popover).not.toBeVisible();
+  });
+
+  test("list-only's topbar fullscreen report opens on click and dismisses on Escape", async ({
+    page,
+  }) => {
+    await page.goto("/demo/layouts/list-only.html");
+    const report = page.locator('[data-testid="tpl-fullscreen-report"]');
+    const dialog = report.getByRole("dialog");
+    await expect(dialog).not.toBeVisible();
+
+    await page.locator('[data-testid="tpl-fullscreen-report-open"]').click();
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAccessibleName("Members — full report");
+    await expect(report).toHaveAttribute("size", "fullscreen");
+    await expect(report.locator("data-table")).toContainText("Ada Lovelace");
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).not.toBeVisible();
+  });
+
   test("list + detail opens the detail pane for the selected row", async ({ page }) => {
     await page.goto("/demo/layouts/list-detail.html");
     await page.locator('[data-testid="tpl-table"]').getByText("Ada Lovelace").click();

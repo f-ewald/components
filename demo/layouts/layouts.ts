@@ -1,5 +1,14 @@
 import "../../src/index.js";
-import type { AppShell, DataTable, PaginationNav } from "../../src/index.js";
+import type {
+  AppShell,
+  DataTable,
+  IconButton,
+  ModalDialog,
+  PaginationNav,
+  PopoverPanel,
+  UiButton,
+} from "../../src/index.js";
+import { iconEllipsisVertical } from "../../src/icons.js";
 
 /**
  * Shared wiring for the full-page template demos (list-only, list+detail,
@@ -62,6 +71,33 @@ if (shell && detailBody) {
   showMember();
   shell.addEventListener("detail-close", () => {
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  });
+}
+
+// list-only: dismissible quick-actions popover anchored off the topbar.
+const quickActionsTrigger = document.querySelector<IconButton>("[data-testid='tpl-quick-actions-trigger']");
+const quickActionsPopover = document.querySelector<PopoverPanel>("[data-testid='tpl-quick-actions-popover']");
+if (quickActionsTrigger && quickActionsPopover) {
+  quickActionsTrigger.icon = iconEllipsisVertical(18);
+  quickActionsTrigger.addEventListener("click", () => {
+    quickActionsPopover.open = !quickActionsPopover.open;
+  });
+  quickActionsPopover.addEventListener("panel-close", () => {
+    quickActionsPopover.open = false;
+  });
+}
+
+// list-only: fullscreen report dialog toggled from the topbar.
+const fullscreenReportOpen = document.querySelector<UiButton>(
+  "[data-testid='tpl-fullscreen-report-open']",
+);
+const fullscreenReport = document.querySelector<ModalDialog>("[data-testid='tpl-fullscreen-report']");
+if (fullscreenReportOpen && fullscreenReport) {
+  fullscreenReportOpen.addEventListener("click", () => {
+    fullscreenReport.open = true;
+  });
+  fullscreenReport.addEventListener("panel-close", () => {
+    fullscreenReport.open = false;
   });
 }
 
