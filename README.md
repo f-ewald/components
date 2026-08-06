@@ -60,6 +60,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<calendar-year>` | [API reference](https://f-ewald.github.io/components/docs/calendar-year.html) |
 | `<card-grid>` | [API reference](https://f-ewald.github.io/components/docs/card-grid.html) |
 | `<chat-message>` | [API reference](https://f-ewald.github.io/components/docs/chat-message.html) |
+| `<chevron-panel>` | [API reference](https://f-ewald.github.io/components/docs/chevron-panel.html) |
 | `<comment-composer>` | [API reference](https://f-ewald.github.io/components/docs/comment-composer.html) |
 | `<confirm-dialog>` | [API reference](https://f-ewald.github.io/components/docs/confirm-dialog.html) |
 | `<content-divider>` | [API reference](https://f-ewald.github.io/components/docs/content-divider.html) |

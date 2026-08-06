@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- New `chevron-panel`: a generic disclosure — a clickable header (`slot="headline"`)
+  that expands/collapses a slotted body, with a chevron that rotates to
+  reflect state. Fires `toggle` with `{ open }`. Unlike `chat-message`'s
+  built-in `collapsible` mode (only the body is slotted; the header is built
+  from discrete author/timestamp/summary properties), both halves are
+  slotted here, so any markup goes in either.
 - New `progress-bar`: a determinate horizontal progress indicator for a
   page-level "step X of Y" bar (`value`/`max`, an optional plain-text `label`
   rendered to the right of the bar, and `color`/`track-color` overrides) —

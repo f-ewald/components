@@ -601,6 +601,33 @@ Example:
 </chat-message>
 ```
 
+## <chevron-panel>
+
+A generic disclosure: a clickable header that expands/collapses a body,
+with a chevron that rotates to reflect state. Headline and body are both
+slotted, so any markup can go in either — unlike `chat-message`'s
+built-in collapsible mode, which only slots the body and builds its
+header from discrete properties (author/timestamp/summary).
+
+Import: `import "@f-ewald/components/chevron-panel.js";`
+
+Properties: `open` (attribute `open`) : boolean, default false
+Events: `toggle`
+CSS custom properties: `--ui-focus-ring`, `--ui-font`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<chevron-panel>
+  <strong slot="headline">Why these scores?</strong>
+  <p>Each category blends several weighted inputs.</p>
+</chevron-panel>
+<script type="module">
+  document.querySelector("chevron-panel").addEventListener("toggle", (e) => {
+    console.log(e.detail.open);
+  });
+</script>
+```
+
 ## <comment-composer>
 
 GitHub/Slack-style comment composer: a one-line text field that expands

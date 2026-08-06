@@ -70,6 +70,7 @@ export {
   type ChatMessageRole,
   type ChatMessageVariant,
 } from "./chat-message.js";
+export { ChevronPanel } from "./chevron-panel.js";
 export { UiCheckbox } from "./ui-checkbox.js";
 export { FormField } from "./form-field.js";
 export { FormSelect, type SelectOption } from "./form-select.js";

@@ -57,6 +57,10 @@ const SLOTS = {
     { name: "title", description: "Overrides the plain `heading` text with custom markup." },
     { name: "actions", description: "Extra header controls (e.g. an icon+label link) rendered between the title and the close button." },
   ],
+  "chevron-panel": [
+    { name: "(default)", description: "Body content, shown only while `open`." },
+    { name: "headline", description: "Header content, always visible, clickable to toggle." },
+  ],
   "calendar-entry": [
     { name: "title", description: "Plain-text title shown instead of the `label` fallback." },
     {
@@ -527,6 +531,15 @@ See the [changelog](#markdown-view) for details.\`;
   directory: .
   filename: notes.md
 </chat-message>`,
+  "chevron-panel": `<chevron-panel>
+  <strong slot="headline">Why these scores?</strong>
+  <p>Each category blends several weighted inputs.</p>
+</chevron-panel>
+<script type="module">
+  document.querySelector("chevron-panel").addEventListener("toggle", (e) => {
+    console.log(e.detail.open);
+  });
+</script>`,
   "form-select": `<form-select label="Task state" searchable></form-select>
 <script type="module">
   import { iconArrowPath, iconCheckCircle, iconListBullet } from "@f-ewald/components/icons.js";

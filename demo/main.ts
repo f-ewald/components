@@ -36,6 +36,7 @@ import {
   type CountdownTimer,
   type CronSchedule,
   type ChatMessage,
+  type ChevronPanel,
   type UiCheckbox,
   type AutoScroll,
   type LoadMore,
@@ -789,6 +790,13 @@ for (const id of ["msg-tool", "msg-thinking"]) {
     chatToggleLog.textContent = `${id} collapsed: ${(e as CustomEvent).detail.collapsed}`;
   });
 }
+
+// chevron-panel (log toggle state)
+const chevronDemo = document.getElementById("chevron-demo") as ChevronPanel;
+const chevronToggleLog = document.getElementById("chevron-toggle-log")!;
+chevronDemo?.addEventListener("toggle", (e) => {
+  chevronToggleLog.textContent = `open: ${(e as CustomEvent<{ open: boolean }>).detail.open}`;
+});
 
 // ui-checkbox (log toggles, wire the indeterminate demo, log form submission)
 const checkboxBasic = document.getElementById("checkbox-basic") as UiCheckbox;

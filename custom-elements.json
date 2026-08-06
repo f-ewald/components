@@ -4452,6 +4452,94 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/chevron-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A generic disclosure: a clickable header that expands/collapses a body,\nwith a chevron that rotates to reflect state. Headline and body are both\nslotted, so any markup can go in either — unlike `chat-message`'s\nbuilt-in collapsible mode, which only slots the body and builds its\nheader from discrete properties (author/timestamp/summary).",
+          "name": "ChevronPanel",
+          "slots": [
+            {
+              "description": "Header content, always visible, clickable to toggle.",
+              "name": "headline"
+            },
+            {
+              "description": "Body content, shown only while `open`.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the body is currently expanded.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired with `{ open: boolean }` when the header is clicked."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the body is currently expanded.",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "chevron-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ChevronPanel",
+          "declaration": {
+            "name": "ChevronPanel",
+            "module": "src/chevron-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "chevron-panel",
+          "declaration": {
+            "name": "ChevronPanel",
+            "module": "src/chevron-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/comment-composer.ts",
       "declarations": [
         {
@@ -10200,6 +10288,14 @@
           "declaration": {
             "name": "ChatMessageVariant",
             "module": "./chat-message.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChevronPanel",
+          "declaration": {
+            "name": "ChevronPanel",
+            "module": "./chevron-panel.js"
           }
         },
         {

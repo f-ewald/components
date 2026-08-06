@@ -47,6 +47,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-year">calendar-year</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#card-grid">card-grid</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chat-message">chat-message</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#chevron-panel">chevron-panel</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#comment-composer">comment-composer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#confirm-dialog">confirm-dialog</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#content-divider">content-divider</a>
@@ -971,6 +972,32 @@ content: |
   directory: .
   filename: notes.md
 &lt;/chat-message&gt;</code></pre>
+        </section>
+
+        <section id="chevron-panel" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-chevron-panel">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#chevron-panel">chevron-panel</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A generic disclosure: a clickable header (slotted, so any markup goes in it) that
+            expands/collapses a slotted body, with a chevron that rotates to reflect state.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <chevron-panel id="chevron-demo" data-testid="chevron-demo">
+              <strong slot="headline">Why these scores?</strong>
+              <p>Each category blends several weighted inputs — see the breakdown below.</p>
+            </chevron-panel>
+            <p id="chevron-toggle-log" data-testid="chevron-toggle-log" class="mt-2 text-xs text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/chevron-panel.js";
+
+&lt;chevron-panel&gt;
+  &lt;strong slot="headline"&gt;Why these scores?&lt;/strong&gt;
+  &lt;p&gt;Each category blends several weighted inputs.&lt;/p&gt;
+&lt;/chevron-panel&gt;
+&lt;script type="module"&gt;
+  document.querySelector("chevron-panel").addEventListener("toggle", (e) =&gt; {
+    console.log(e.detail.open);
+  });
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="comment-composer" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-comment-composer">
