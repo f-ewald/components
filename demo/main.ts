@@ -1392,6 +1392,23 @@ if (appShellTable) {
     { id: "m3", name: "Grace Hopper", role: "Editor", status: "Invited" },
   ];
 }
+document.getElementById("app-shell-toggle-sidebar")?.addEventListener("click", () => {
+  if (appShellDemo) appShellDemo.sidebarOpen = !appShellDemo.sidebarOpen;
+});
+const appShellToggleSidebarMode = document.getElementById("app-shell-toggle-sidebar-mode");
+appShellToggleSidebarMode?.addEventListener("click", () => {
+  if (!appShellDemo) return;
+  appShellDemo.sidebarMode = appShellDemo.sidebarMode === "push" ? "overlay" : "push";
+  appShellToggleSidebarMode.textContent =
+    appShellDemo.sidebarMode === "push" ? "Switch to overlay mode" : "Switch to push mode";
+});
+const appShellToggleSidebarWidth = document.getElementById("app-shell-toggle-sidebar-width");
+appShellToggleSidebarWidth?.addEventListener("click", () => {
+  if (!appShellDemo) return;
+  appShellDemo.sidebarWidth = appShellDemo.sidebarWidth === "icon" ? "full" : "icon";
+  appShellToggleSidebarWidth.textContent =
+    appShellDemo.sidebarWidth === "icon" ? "Show full labels" : "Show icon-only";
+});
 document.getElementById("app-shell-toggle-detail")?.addEventListener("click", () => {
   if (appShellDemo) appShellDemo.detailOpen = !appShellDemo.detailOpen;
 });
@@ -1399,6 +1416,14 @@ const appShellPager = document.getElementById("app-shell-pager") as PaginationNa
 appShellPager?.addEventListener("page-change", (event) => {
   const { page } = (event as CustomEvent<{ page: number }>).detail;
   if (appShellPager) appShellPager.currentPage = page;
+});
+
+const appShellDialogDemo = document.getElementById("app-shell-dialog-demo") as ModalDialog | null;
+document.getElementById("app-shell-open-dialog")?.addEventListener("click", () => {
+  if (appShellDialogDemo) appShellDialogDemo.open = true;
+});
+appShellDialogDemo?.addEventListener("panel-close", () => {
+  if (appShellDialogDemo) appShellDialogDemo.open = false;
 });
 
 // app-sidebar — standalone: toggle rail mode and shrink the frame to the rail width.

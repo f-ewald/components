@@ -161,29 +161,50 @@ Example:
 ## <app-shell>
 
 The dashboard page shell: a slot-based CSS-grid backbone that arranges a
-full-height sidebar, a top bar, the main content, an optional right-hand
-detail column, and an optional footer. It owns the responsive behavior so
-consumers don't re-implement it — above the shared 48rem breakpoint the
-sidebar collapses to an icon rail and the detail region is an inline column;
-at or below it the sidebar becomes an off-canvas drawer and the detail region
-an overlay, both dismissed by a scrim or Escape.
+top bar, the main content, an optional right-hand detail column, an
+optional footer, and a sidebar. The top bar always spans the shell's full
+width, in every sidebar state.
+
+The sidebar's visibility, width, and layout mode are three independent
+properties:
+- `sidebar-open` (default closed) — whether it's shown at all.
+- `sidebar-width`: `"full"` (16rem, icons + labels, the default) or
+  `"icon"` (3.5rem rail, icons only — drives the slotted `app-sidebar`'s
+  own `collapsed` attribute).
+- `sidebar-mode`: `"overlay"` (the default) floats the sidebar above the
+  shell's own content with a higher z-index, covering part of the top
+  bar's corner and whatever content sits beneath it, without ever
+  resizing or reflowing `main`/`footer`. `"push"` instead reserves a real
+  grid column beside `main`/`footer` (which resize to make room) — the
+  top bar still spans full width above it either way.
+
+Below the shared 48rem breakpoint the sidebar always behaves as a
+full-width, modal, scrim/Escape-dismissible drawer regardless of
+`sidebar-mode`/`sidebar-width` — those two properties only affect the
+desktop presentation. Above 48rem, an `overlay`-mode sidebar is a
+non-modal panel (no dimming scrim, no Escape-dismiss, since it reads as
+an ordinary always-interactive panel rather than a blocking dialog); a
+`push`-mode sidebar is even more clearly non-modal, since it never
+covers anything.
+
+The right-hand detail column is unaffected by any of the above: it still
+reserves an inline grid column on desktop and becomes a dismissible
+overlay (scrim/Escape) on mobile.
 
 Widths are tunable per instance via `--component-sidebar-width` (16rem),
 `--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`
 (3rem); the detail column reuses the 20rem/25rem panel widths. The main
 content area is white by default — override it with
-`--component-main-background`. Give the shell a height (e.g. `height: 100vh`)
-so the sidebar and main can size and scroll.
+`--component-main-background`. Give the shell a height (e.g. `height:
+100vh`) so the sidebar and main can size and scroll.
 
-The built-in top-bar button toggles the sidebar, and so does pressing `[`
-anywhere on the page (ignored while typing in a text field or with a
-modifier held). Hovering or keyboard-focusing the toggle reveals a tooltip
-naming the action and its `[` shortcut — the shortcut is not shown as
-permanent chrome.
+Hovering or keyboard-focusing the toggle reveals a tooltip naming the
+action and its `[` shortcut — the shortcut is not shown as permanent
+chrome.
 
 Import: `import "@f-ewald/components/app-shell.js";`
 
-Properties: `sidebarCollapsed` (attribute `sidebar-collapsed`) : boolean, default false; `detailOpen` (attribute `detail-open`) : boolean, default false; `detailWidth` (attribute `detail-width`) : "compact" | "comfortable", default "compact"
+Properties: `sidebarOpen` (attribute `sidebar-open`) : boolean, default false; `sidebarMode` (attribute `sidebar-mode`) : "overlay" | "push", default "overlay"; `sidebarWidth` (attribute `sidebar-width`) : "full" | "icon", default "full"; `detailOpen` (attribute `detail-open`) : boolean, default false; `detailWidth` (attribute `detail-width`) : "compact" | "comfortable", default "compact"
 Events: `sidebar-toggle`, `detail-close`
 CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-radius-sm`, `--ui-shadow`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`, `--ui-tooltip`
 
@@ -215,9 +236,10 @@ label), optional `<p>` group headings, and marks the active item with
 `aria-current="page"`. The sidebar styles them, tracks hover/active/focus,
 and — in collapsed "rail" mode — centers the icons and hides the labels.
 
-Rail mode is driven by the `collapsed` attribute (the parent `app-shell`
-toggles it). Labels are hidden by the inherited `--app-sidebar-label` custom
-property, so each label element should read it, e.g.
+Rail mode is driven by the `collapsed` attribute, which callers set
+directly — `app-shell` no longer auto-manages it (its own sidebar is a
+pure overlay, not a rail). Labels are hidden by the inherited
+`--app-sidebar-label` custom property, so each label element should read it, e.g.
 `<span style="display: var(--app-sidebar-label, inline)">Reports</span>`;
 keep an `aria-label` on the item so its accessible name survives collapse.
 The sidebar fills the width and height of its container — `app-shell` owns

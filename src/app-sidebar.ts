@@ -10,9 +10,10 @@ import { tokens } from "./tokens.js";
  * `aria-current="page"`. The sidebar styles them, tracks hover/active/focus,
  * and — in collapsed "rail" mode — centers the icons and hides the labels.
  *
- * Rail mode is driven by the `collapsed` attribute (the parent `app-shell`
- * toggles it). Labels are hidden by the inherited `--app-sidebar-label` custom
- * property, so each label element should read it, e.g.
+ * Rail mode is driven by the `collapsed` attribute, which callers set
+ * directly — `app-shell` no longer auto-manages it (its own sidebar is a
+ * pure overlay, not a rail). Labels are hidden by the inherited
+ * `--app-sidebar-label` custom property, so each label element should read it, e.g.
  * `<span style="display: var(--app-sidebar-label, inline)">Reports</span>`;
  * keep an `aria-label` on the item so its accessible name survives collapse.
  * The sidebar fills the width and height of its container — `app-shell` owns

@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing, type PropertyValues } from "lit";
+import { LitElement, css, html, type PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { iconBars3 } from "./icons.js";
 import "./kbd-hint.js";
@@ -6,37 +6,56 @@ import { tokens } from "./tokens.js";
 
 /** Fired when the built-in toggle changes the sidebar state. */
 export interface SidebarToggleDetail {
-  /** Desktop rail state. */
-  collapsed: boolean;
-  /** Mobile drawer open state. */
-  mobileOpen: boolean;
+  /** Whether the sidebar is now open. */
+  open: boolean;
 }
 
 /**
  * The dashboard page shell: a slot-based CSS-grid backbone that arranges a
- * full-height sidebar, a top bar, the main content, an optional right-hand
- * detail column, and an optional footer. It owns the responsive behavior so
- * consumers don't re-implement it — above the shared 48rem breakpoint the
- * sidebar collapses to an icon rail and the detail region is an inline column;
- * at or below it the sidebar becomes an off-canvas drawer and the detail region
- * an overlay, both dismissed by a scrim or Escape.
+ * top bar, the main content, an optional right-hand detail column, an
+ * optional footer, and a sidebar. The top bar always spans the shell's full
+ * width, in every sidebar state.
+ *
+ * The sidebar's visibility, width, and layout mode are three independent
+ * properties:
+ * - `sidebar-open` (default closed) — whether it's shown at all.
+ * - `sidebar-width`: `"full"` (16rem, icons + labels, the default) or
+ *   `"icon"` (3.5rem rail, icons only — drives the slotted `app-sidebar`'s
+ *   own `collapsed` attribute).
+ * - `sidebar-mode`: `"overlay"` (the default) floats the sidebar above the
+ *   shell's own content with a higher z-index, covering part of the top
+ *   bar's corner and whatever content sits beneath it, without ever
+ *   resizing or reflowing `main`/`footer`. `"push"` instead reserves a real
+ *   grid column beside `main`/`footer` (which resize to make room) — the
+ *   top bar still spans full width above it either way.
+ *
+ * Below the shared 48rem breakpoint the sidebar always behaves as a
+ * full-width, modal, scrim/Escape-dismissible drawer regardless of
+ * `sidebar-mode`/`sidebar-width` — those two properties only affect the
+ * desktop presentation. Above 48rem, an `overlay`-mode sidebar is a
+ * non-modal panel (no dimming scrim, no Escape-dismiss, since it reads as
+ * an ordinary always-interactive panel rather than a blocking dialog); a
+ * `push`-mode sidebar is even more clearly non-modal, since it never
+ * covers anything.
+ *
+ * The right-hand detail column is unaffected by any of the above: it still
+ * reserves an inline grid column on desktop and becomes a dismissible
+ * overlay (scrim/Escape) on mobile.
  *
  * Widths are tunable per instance via `--component-sidebar-width` (16rem),
  * `--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`
  * (3rem); the detail column reuses the 20rem/25rem panel widths. The main
  * content area is white by default — override it with
- * `--component-main-background`. Give the shell a height (e.g. `height: 100vh`)
- * so the sidebar and main can size and scroll.
+ * `--component-main-background`. Give the shell a height (e.g. `height:
+ * 100vh`) so the sidebar and main can size and scroll.
  *
- * The built-in top-bar button toggles the sidebar, and so does pressing `[`
- * anywhere on the page (ignored while typing in a text field or with a
- * modifier held). Hovering or keyboard-focusing the toggle reveals a tooltip
- * naming the action and its `[` shortcut — the shortcut is not shown as
- * permanent chrome.
+ * Hovering or keyboard-focusing the toggle reveals a tooltip naming the
+ * action and its `[` shortcut — the shortcut is not shown as permanent
+ * chrome.
  *
  * @element app-shell
  * @slot - Main content area.
- * @slot sidebar - Full-height navigation (typically `app-sidebar`).
+ * @slot sidebar - Sidebar navigation (typically `app-sidebar`).
  * @slot topbar - Top bar content, right of the built-in toggle.
  * @slot detail - Optional right-hand detail; shown when `detail-open` is set.
  * @slot footer - Optional footer beneath the main content.
@@ -45,9 +64,12 @@ export interface SidebarToggleDetail {
  */
 @customElement("app-shell")
 export class AppShell extends LitElement {
-  /** Collapses the sidebar to an icon rail on desktop. */
-  @property({ type: Boolean, reflect: true, attribute: "sidebar-collapsed" })
-  sidebarCollapsed = false;
+  /** Whether the sidebar is open. Closed by default at every breakpoint. */
+  @property({ type: Boolean, reflect: true, attribute: "sidebar-open" }) sidebarOpen = false;
+  /** `"overlay"` (default) floats the sidebar above content; `"push"` reserves a grid column instead. */
+  @property({ reflect: true, attribute: "sidebar-mode" }) sidebarMode: "overlay" | "push" = "overlay";
+  /** Sidebar width when open: `"full"` (16rem, icons + labels) or `"icon"` (3.5rem rail, icons only). */
+  @property({ reflect: true, attribute: "sidebar-width" }) sidebarWidth: "full" | "icon" = "full";
   /** Shows the right-hand detail region (inline column, or overlay on mobile). */
   @property({ type: Boolean, reflect: true, attribute: "detail-open" }) detailOpen = false;
   /** Detail width: `compact` (20rem) or `comfortable` (25rem). */
@@ -55,8 +77,6 @@ export class AppShell extends LitElement {
 
   /** Whether the viewport is at/below the 48rem breakpoint. */
   @state() private _mobile = false;
-  /** Whether the mobile off-canvas nav drawer is open. */
-  @state() private _mobileNavOpen = false;
   /** Whether the footer slot has assigned content. */
   @state() private _hasFooter = false;
 
@@ -68,21 +88,19 @@ export class AppShell extends LitElement {
         block-size: 100%;
       }
       .shell {
-        --_sidebar-w: var(--component-sidebar-width, 16rem);
+        --_sidebar-w: 0px;
         --_detail-w: 0px;
         display: grid;
         grid-template-columns: var(--_sidebar-w) minmax(0, 1fr) var(--_detail-w);
         grid-template-rows: auto minmax(0, 1fr) auto;
         grid-template-areas:
-          "sidebar topbar topbar"
+          "topbar topbar topbar"
           "sidebar main   detail"
           "sidebar footer footer";
+        position: relative;
         block-size: 100%;
         min-height: 0;
         background: var(--ui-surface, #ffffff);
-      }
-      :host([sidebar-collapsed]) .shell {
-        --_sidebar-w: var(--component-sidebar-rail-width, 3.5rem);
       }
       :host([detail-open]) .shell {
         --_detail-w: 20rem;
@@ -90,12 +108,55 @@ export class AppShell extends LitElement {
       :host([detail-open][detail-width="comfortable"]) .shell {
         --_detail-w: 25rem;
       }
+      /* Push mode reserves a real grid column, sized only while open — the
+         column width doesn't animate (custom properties feeding a grid
+         track don't transition smoothly without @property registration),
+         so push mode's open/close is an instant snap, unlike overlay
+         mode's sliding transform. */
+      :host([sidebar-mode="push"][sidebar-open]) .shell {
+        --_sidebar-w: var(--component-sidebar-width, 16rem);
+      }
+      :host([sidebar-mode="push"][sidebar-open][sidebar-width="icon"]) .shell {
+        --_sidebar-w: var(--component-sidebar-rail-width, 3.5rem);
+      }
       .sidebar {
-        grid-area: sidebar;
-        min-height: 0;
+        /* No grid-area here: an absolutely-positioned grid item's inset
+           properties resolve against its OWN grid area's box, not the
+           whole grid container, once grid-area is set — even with
+           explicit (non-auto) insets. Overlay mode must stay anchored to
+           the whole .shell (to overlap the topbar row), so grid-area is
+           assigned only in push mode below, where the sidebar is a real,
+           in-flow grid item instead of an absolutely-positioned one. */
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: var(--component-sidebar-width, 16rem);
+        z-index: 40;
         overflow: hidden;
         border-right: 1px solid var(--ui-border, #e2e8f0);
         background: var(--ui-surface, #ffffff);
+        transform: translateX(-100%);
+        transition: transform 250ms ease;
+      }
+      :host([sidebar-open]) .sidebar {
+        transform: translateX(0);
+      }
+      :host([sidebar-open]:not([sidebar-mode="push"])) .sidebar {
+        box-shadow: var(
+          --ui-shadow-lg,
+          0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1)
+        );
+      }
+      :host([sidebar-width="icon"]) .sidebar {
+        width: var(--component-sidebar-rail-width, 3.5rem);
+      }
+      :host([sidebar-mode="push"]) .sidebar {
+        grid-area: sidebar;
+        position: static;
+        width: 100%;
+        transform: none;
       }
       .topbar {
         grid-area: topbar;
@@ -106,6 +167,10 @@ export class AppShell extends LitElement {
         padding: 0.5rem 0.75rem;
         border-bottom: 1px solid var(--ui-border, #e2e8f0);
         background: var(--ui-surface, #ffffff);
+        /* Deliberately no z-index here: an explicit z-index on a CSS grid
+           item creates a stacking context, which would trap .nav-toggle
+           below .sidebar once an overlay-mode sidebar opens and covers this
+           corner. See CLAUDE.md before adding one. */
       }
       .nav-toggle {
         display: inline-flex;
@@ -123,6 +188,7 @@ export class AppShell extends LitElement {
       }
       .nav-group {
         position: relative;
+        z-index: 41;
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
@@ -133,7 +199,7 @@ export class AppShell extends LitElement {
         top: 100%;
         left: 0;
         margin-top: 0.25rem;
-        z-index: var(--component-layer-z, 100);
+        z-index: 10;
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
@@ -199,39 +265,28 @@ export class AppShell extends LitElement {
       }
       @media (max-width: 48rem) {
         .shell {
-          grid-template-columns: minmax(0, 1fr);
-          grid-template-rows: auto minmax(0, 1fr) auto;
+          grid-template-columns: minmax(0, 1fr) var(--_detail-w);
           grid-template-areas:
-            "topbar"
-            "main"
-            "footer";
+            "topbar topbar"
+            "main   detail"
+            "footer footer";
         }
-        .sidebar {
-          position: fixed;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          width: var(--component-sidebar-width, 16rem);
-          z-index: var(--component-layer-z, 100);
-          transform: translateX(-100%);
-          transition: transform 250ms ease;
-        }
-        .shell.nav-open .sidebar {
-          transform: translateX(0);
-          box-shadow: var(
-            --ui-shadow-lg,
-            0 20px 25px -5px rgb(0 0 0 / 0.1),
-            0 8px 10px -6px rgb(0 0 0 / 0.1)
-          );
+        /* Mobile is always a full-screen, position:absolute overlay drawer,
+           regardless of sidebar-mode/sidebar-width — those two properties
+           only affect the desktop presentation. */
+        .sidebar,
+        :host([sidebar-mode="push"]) .sidebar {
+          position: absolute;
+          width: 100%;
         }
         .detail {
-          position: fixed;
+          position: absolute;
           top: 0;
           right: 0;
           bottom: 0;
           width: var(--_detail-w, 20rem);
           max-width: calc(100vw - 3rem);
-          z-index: var(--component-layer-z, 100);
+          z-index: 40;
           transform: translateX(110%);
           transition: transform 250ms ease;
         }
@@ -245,9 +300,9 @@ export class AppShell extends LitElement {
         }
         .scrim.show {
           display: block;
-          position: fixed;
+          position: absolute;
           inset: 0;
-          z-index: calc(var(--component-layer-z, 100) - 1);
+          z-index: 39;
           background: var(--ui-overlay, rgb(15 23 42 / 0.45));
           border: none;
         }
@@ -290,10 +345,9 @@ export class AppShell extends LitElement {
     window.removeEventListener("keydown", this._onKeydown);
   }
 
-  /** Tracks the breakpoint and closes the mobile drawer when returning to desktop. */
+  /** Tracks the breakpoint the sidebar's width and modality depend on. */
   private _onMediaChange = (event: MediaQueryListEvent): void => {
     this._mobile = event.matches;
-    if (!event.matches) this._mobileNavOpen = false;
   };
 
   /** Handles the `[` sidebar shortcut and Escape dismissal of mobile overlays. */
@@ -303,9 +357,9 @@ export class AppShell extends LitElement {
       if (this.detailOpen) {
         event.preventDefault();
         this._closeDetail();
-      } else if (this._mobileNavOpen) {
+      } else if (this.sidebarOpen) {
         event.preventDefault();
-        this._mobileNavOpen = false;
+        this.sidebarOpen = false;
       }
       return;
     }
@@ -330,17 +384,15 @@ export class AppShell extends LitElement {
     return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
   }
 
-  /** Toggles the rail (desktop) or the off-canvas drawer (mobile) and announces it. */
+  /** Toggles the sidebar and announces it. */
   private _toggleSidebar(): void {
-    if (this._mobile) {
-      this._mobileNavOpen = !this._mobileNavOpen;
-      if (this._mobileNavOpen) this._previousFocus = document.activeElement as HTMLElement | null;
-    } else {
-      this.sidebarCollapsed = !this.sidebarCollapsed;
+    this.sidebarOpen = !this.sidebarOpen;
+    if (this._mobile && this.sidebarOpen) {
+      this._previousFocus = document.activeElement as HTMLElement | null;
     }
     this.dispatchEvent(
       new CustomEvent<SidebarToggleDetail>("sidebar-toggle", {
-        detail: { collapsed: this.sidebarCollapsed, mobileOpen: this._mobileNavOpen },
+        detail: { open: this.sidebarOpen },
         bubbles: true,
         composed: true,
       }),
@@ -356,13 +408,22 @@ export class AppShell extends LitElement {
   /** Scrim click dismisses whichever overlay is open. */
   private _onScrim(): void {
     if (this.detailOpen) this._closeDetail();
-    if (this._mobileNavOpen) this._mobileNavOpen = false;
+    if (this.sidebarOpen) this.sidebarOpen = false;
+  }
+
+  /** Mirrors `sidebar-width` onto the slotted sidebar's `collapsed` (icon rail) attribute. */
+  private _syncSidebarWidth(): void {
+    const icon = this.sidebarWidth === "icon";
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="sidebar"]');
+    for (const element of slot?.assignedElements() ?? []) {
+      element.toggleAttribute("collapsed", icon);
+    }
   }
 
   protected override updated(changed: PropertyValues): void {
-    if (changed.has("sidebarCollapsed") || changed.has("_mobile")) this._syncSidebar();
-    if (!changed.has("_mobileNavOpen")) return;
-    if (this._mobileNavOpen) {
+    if (changed.has("sidebarWidth")) this._syncSidebarWidth();
+    if (!changed.has("sidebarOpen") || !this._mobile) return;
+    if (this.sidebarOpen) {
       this.shadowRoot?.querySelector<HTMLElement>(".sidebar")?.focus();
       return;
     }
@@ -370,24 +431,18 @@ export class AppShell extends LitElement {
     this._previousFocus = null;
   }
 
-  /**
-   * Mirrors the shell's rail state onto the slotted sidebar so it hides labels
-   * when collapsed on desktop, and always shows them in the mobile drawer.
-   */
-  private _syncSidebar(): void {
-    const rail = this.sidebarCollapsed && !this._mobile;
-    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="sidebar"]');
-    for (const element of slot?.assignedElements() ?? []) {
-      element.toggleAttribute("collapsed", rail);
-    }
-  }
-
   override render() {
-    const scrimActive = this._mobile && (this._mobileNavOpen || this.detailOpen);
+    const scrimActive = this._mobile && (this.sidebarOpen || this.detailOpen);
     return html`
-      <div class="shell ${this._mobileNavOpen ? "nav-open" : ""}">
-        <aside class="sidebar" tabindex="-1" aria-label="Primary">
-          <slot name="sidebar" @slotchange=${this._syncSidebar}></slot>
+      <div class="shell">
+        <aside
+          class="sidebar"
+          tabindex="-1"
+          aria-label="Primary"
+          ?inert=${!this.sidebarOpen}
+          aria-hidden=${String(!this.sidebarOpen)}
+        >
+          <slot name="sidebar" @slotchange=${this._syncSidebarWidth}></slot>
         </aside>
         <header class="topbar">
           <div class="nav-group">
@@ -397,20 +452,14 @@ export class AppShell extends LitElement {
               aria-label="Toggle navigation"
               aria-keyshortcuts="["
               aria-describedby="nav-tip"
-              aria-expanded=${this._mobile ? String(this._mobileNavOpen) : String(!this.sidebarCollapsed)}
+              aria-expanded=${String(this.sidebarOpen)}
               @click=${this._toggleSidebar}
             >
               ${iconBars3(18)}
             </button>
             <span class="nav-tip" id="nav-tip" role="tooltip">
-              <span
-                >${this._mobile
-                  ? "Navigation"
-                  : this.sidebarCollapsed
-                    ? "Expand sidebar"
-                    : "Collapse sidebar"}</span
-              >
-              ${this._mobile ? nothing : html`<kbd-hint keys="["></kbd-hint>`}
+              <span>${this.sidebarOpen ? "Hide navigation" : "Show navigation"}</span>
+              <kbd-hint keys="["></kbd-hint>
             </span>
           </div>
           <div class="topbar-content"><slot name="topbar"></slot></div>

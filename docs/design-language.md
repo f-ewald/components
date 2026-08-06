@@ -193,42 +193,87 @@ backbone, and `app-sidebar`, `action-bar`, `page-header`, `pagination-nav`, and
 
 ### Shell grid and metrics
 
-- `app-shell` owns a CSS grid with `sidebar`, `topbar`, `main` (default slot),
-  `detail`, and `footer` areas plus the responsive behavior. It is the only
-  component that coordinates the sidebar rail and the detail overlay.
+- `app-shell` owns a CSS grid with `topbar`, `sidebar`, `main` (default
+  slot), `detail`, and `footer` areas. The top bar always spans the shell's
+  full width, in every sidebar state — its grid row spans all three columns,
+  while `sidebar`/`main`/`detail` share the row beneath it.
+- The sidebar's three properties are independent: `sidebar-open` (visible or
+  not, closed by default), `sidebar-width` (`full` 16rem vs. `icon` 3.5rem
+  rail), and `sidebar-mode` (`overlay`, the default, vs. `push`). `overlay`
+  positions the sidebar with `position: absolute` against `.shell` (not the
+  viewport, so the component stays correct when embedded well short of the
+  full viewport) at a z-index above the top bar's corner, and its reserved
+  grid column width (`--_sidebar-w`) stays `0px` — opening it never resizes
+  or reflows `main`/`footer`, it visually covers whatever is underneath.
+  `push` instead sets `--_sidebar-w` to the current `sidebar-width` value, so
+  the sidebar becomes a real, in-flow grid item and `main`/`footer` reflow
+  around it, same as the top bar always doing so above it.
+- Below the shared `48rem` breakpoint, `sidebar-mode`/`sidebar-width` are
+  ignored entirely — the sidebar is always a full-screen, modal,
+  scrim/Escape-dismissible drawer, same as the detail column's mobile
+  overlay. Those two properties only affect the desktop presentation.
 - Layout dimensions are documented literal rems, not `--ui-*` tokens (widths and
   spacing are constants in this system). A few are exposed as overridable
-  `--component-*` custom properties for per-instance tuning, mirroring
-  `--component-layer-z`:
-  - sidebar expanded `--component-sidebar-width` = `16rem`;
-  - sidebar rail `--component-sidebar-rail-width` = `3.5rem`;
+  `--component-*` custom properties for per-instance tuning:
+  - sidebar full width `--component-sidebar-width` = `16rem` (also full
+    screen width below the `48rem` breakpoint, regardless of `sidebar-width`);
+  - sidebar icon rail width `--component-sidebar-rail-width` = `3.5rem`;
   - top bar `--component-topbar-height` = `3rem`;
   - detail column reuses the `20rem` / `25rem` panel widths (the `detail-width`
     `compact` / `comfortable` attribute);
   - main content is white (`--component-main-background`, default `--ui-surface`)
     and fluid; constrain reading or form pages with a `max-width` on your own
     wrapper (roughly `40rem`–`48rem`).
-- The shared `48rem` breakpoint remains the only responsive breakpoint. At or
-  below it the sidebar becomes an off-canvas drawer and the detail an overlay,
-  both raised with `--component-layer-z` and dismissed by a scrim or Escape.
+- `push` mode's width change is an instant snap, not an animated slide —
+  `--_sidebar-w` is a plain (unregistered) custom property feeding a grid
+  track, and those don't transition smoothly without `@property` syntax
+  registration. `overlay` mode's slide is a genuine `transform` transition
+  and animates normally.
+- Z-index tiering keeps the shell's own chrome under the shared overlay
+  stack: `.nav-group` (the built-in toggle) is `41`, `.sidebar`/`.detail` are
+  `40`, `.scrim` is `39` — all fixed literals, not `--component-layer-z`,
+  since `app-shell` never calls `activateLayer`/`deactivateLayer` from
+  `utils/layer-stack.ts`. Any real `modal-dialog`/`confirm-dialog`/
+  `popover-panel`/`slide-panel` (all ≥100) must always paint above the
+  shell's own chrome. `.topbar` itself deliberately carries no z-index — an
+  explicit z-index on a CSS grid item creates a stacking context, which would
+  trap the toggle below the sidebar it opens; giving the z-index to the
+  toggle's own wrapper (`.nav-group`) instead avoids that trap. Relatedly,
+  `.sidebar` itself only gets `grid-area: sidebar` in `push` mode — an
+  absolutely-positioned grid item's inset properties resolve against its own
+  grid area's box rather than the whole grid container once `grid-area` is
+  set, even with explicit (non-`auto`) insets, which would anchor `overlay`
+  mode below the top bar's row instead of overlapping it.
 
 ### Sidebar
 
-- Collapsing is a two-mode design: on desktop the sidebar condenses to an icon
-  rail (labels hide, icons stay) via `app-shell`'s `sidebar-collapsed`, which
-  propagates `collapsed` to the slotted `app-sidebar`; below `48rem` it is a
-  drawer with labels shown.
-- The built-in top-bar toggle and the `[` keyboard shortcut (ignored while a
-  text field is focused or a modifier is held) both drive `sidebar-collapsed`.
-  The shortcut is surfaced in the toggle's hover/focus tooltip, not as permanent
-  chrome — reveal shortcuts on interaction rather than displaying them inline.
+- Visibility, width, and layout mode are three independent `app-shell`
+  properties — not a two-mode rail/drawer split. `sidebar-open` (closed by
+  default at every breakpoint) is toggled by the built-in top-bar button or
+  the `[` keyboard shortcut (ignored while a text field is focused or a
+  modifier is held); the shortcut is surfaced in the toggle's hover/focus
+  tooltip, not as permanent chrome. `sidebar-width` and `sidebar-mode` have
+  no built-in toggle — a consumer sets them directly (e.g. from their own
+  settings UI), same as `detail-width`.
+- Below `48rem` the open sidebar is always full width and modal — a scrim
+  dims the rest of the page and Escape dismisses it, same as the detail
+  overlay — regardless of `sidebar-width`/`sidebar-mode`. At or above `48rem`,
+  an `overlay`-mode sidebar is non-modal — no scrim, no Escape-dismiss, since
+  it reads as an ordinary always-interactive panel, not a blocking dialog;
+  only the toggle (or `[`) closes it. A `push`-mode sidebar is even more
+  clearly non-modal, since it never covers anything.
+- `sidebar-width="icon"` drives the slotted `app-sidebar`'s own `collapsed`
+  (rail) attribute to match, in both `overlay` and `push` mode — `app-shell`
+  re-syncs it on every `sidebar-width` change and on `slotchange`. Outside of
+  that, `app-shell` doesn't otherwise manage `collapsed`; a caller can still
+  set it directly on a standalone `app-sidebar`.
 - Nav items are the consumer's `<a>`/`<button>` elements with an icon and a
   label; mark the active one with `aria-current="page"`. Each label reads the
-  inherited `--app-sidebar-label` custom property so rail mode can hide it while
-  its `aria-label` keeps the accessible name.
-- The `header` slot holds the brand: a small logo plus a name. Wrap the name in
-  a `--app-sidebar-label` element so rail mode shows only the logo, centered in
-  line with the nav icons.
+  inherited `--app-sidebar-label` custom property so rail mode can hide it
+  while its `aria-label` keeps the accessible name.
+- The `header` slot holds the brand: a small logo plus a name. Wrap the name
+  in a `--app-sidebar-label` element so rail mode shows only the logo,
+  centered in line with the nav icons.
 
 ### Forms and actions
 

@@ -96,6 +96,41 @@ the same way `footer` already does) — a single-day `calendar-month` entry's
 title cell can therefore grow taller than a sibling without a location; that
 tradeoff was chosen over inlining location onto the title line.
 
+`app-shell`'s sidebar has three independent properties rather than a single
+rail/drawer mode switch: `sidebar-open` (visible or not, closed by default,
+at every breakpoint), `sidebar-width` (`full` 16rem vs. `icon` 3.5rem rail —
+drives the slotted `app-sidebar`'s own `collapsed` attribute to match), and
+`sidebar-mode` (`overlay`, the default, vs. `push`). `overlay` positions the
+sidebar with `position: absolute` against `.shell` (which sets `position:
+relative` to be its containing block, not `position: fixed` against the
+viewport, since the component is meant to be embeddable well short of the
+full viewport) and simply floats on top, covering part of the top bar's
+corner and whatever content sits beneath it, without ever resizing or
+reflowing `main`/`footer`. `push` instead makes the sidebar a real grid
+column (`--_sidebar-w`, sized by `sidebar-width`) beside `main`/`footer`,
+which reflow around it — the top bar's grid row still spans all three
+columns either way, so it never loses full width. Below `48rem`,
+`sidebar-mode`/`sidebar-width` are ignored entirely and the sidebar is
+always a full-screen modal drawer, same as before. `push` mode's width
+change is an instant snap rather than an animated slide, since
+`--_sidebar-w` is a plain custom property feeding a grid track and those
+don't transition smoothly without `@property` registration. `.sidebar`
+only carries `grid-area: sidebar` in `push` mode — an absolutely-positioned
+grid item's inset properties resolve against its own grid area's box
+rather than the whole grid container once `grid-area` is set (even with
+explicit, non-`auto` insets), which would otherwise anchor `overlay` mode
+below the top bar's row instead of overlapping it. `.topbar` deliberately
+carries no `z-index` of its own — an explicit z-index on a CSS grid item
+creates a stacking context, which would trap the built-in `.nav-toggle`
+below `.sidebar` once an overlay-mode sidebar opens over that corner;
+instead `.nav-group` carries `z-index: 41`, one above `.sidebar`'s `40`, so
+the toggle that opened the overlay always stays clickable to close it
+again. All of `.sidebar`/`.detail`/`.scrim`'s z-indices (40/40/39) are
+fixed literals under 100, not `--component-layer-z` — `app-shell` never
+calls `activateLayer`/`deactivateLayer` from `utils/layer-stack.ts`, so any
+real `modal-dialog`/`confirm-dialog`/`popover-panel`/`slide-panel` (all
+≥100) must always paint above the shell's own chrome.
+
 ## Layout
 
 - `src/` — component sources, one file per component (e.g. `src/confirm-dialog.ts`).

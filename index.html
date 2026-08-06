@@ -202,14 +202,24 @@
         <section id="app-shell" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-app-shell">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#app-shell">app-shell</a></h3>
           <p class="mt-1 text-sm text-slate-500">
-            The dashboard page shell: a collapsible sidebar, a top bar with a built-in toggle, the
-            main content, an optional right-hand detail column, and a footer. The built-in ☰ toggle
-            (or pressing <kbd>[</kbd> outside a text field) collapses the sidebar to an icon rail;
-            resize below 48rem to see it become a drawer and the detail an overlay. Give it a height
-            so it can fill and scroll.
+            The dashboard page shell: an always-full-width top bar with a built-in toggle, the main
+            content, an optional right-hand detail column, and a footer. The sidebar is closed by
+            default; the built-in ☰ toggle (or pressing <kbd>[</kbd> outside a text field) shows it.
+            Independently of that, <code>sidebar-mode</code> picks <code>overlay</code> (floats above
+            content, covering the top bar's corner, never resizing <code>main</code>/<code>footer</code>)
+            or <code>push</code> (reserves a real grid column instead, so content reflows around it —
+            the top bar still spans full width either way), and <code>sidebar-width</code> picks
+            <code>full</code> (16rem, icons + labels) or <code>icon</code> (3.5rem rail, icons only).
+            Below 48rem the sidebar always behaves as a full-screen, scrim-dismissible drawer regardless
+            of those two settings. Open the dialog below while the sidebar is open to see it correctly
+            render above both. Give the shell a height so it can fill and scroll.
           </p>
           <div class="mt-6 flex flex-wrap gap-2">
+            <button id="app-shell-toggle-sidebar" data-testid="app-shell-toggle-sidebar" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Toggle sidebar</button>
+            <button id="app-shell-toggle-sidebar-mode" data-testid="app-shell-toggle-sidebar-mode" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Switch to push mode</button>
+            <button id="app-shell-toggle-sidebar-width" data-testid="app-shell-toggle-sidebar-width" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Show icon-only</button>
             <button id="app-shell-toggle-detail" data-testid="app-shell-toggle-detail" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Toggle detail</button>
+            <button id="app-shell-open-dialog" data-testid="app-shell-open-dialog" type="button" class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700">Open dialog</button>
           </div>
           <div class="mt-4 overflow-hidden rounded-lg border border-slate-200" style="height: 32rem">
             <app-shell id="app-shell-demo" data-testid="app-shell-demo" style="height: 100%" detail-width="comfortable">
@@ -231,6 +241,12 @@
                   <ui-button slot="end" variant="primary">Create</ui-button>
                 </action-bar>
                 <data-table id="app-shell-table" data-testid="app-shell-table" class="mt-4 block rounded-lg border border-slate-200"></data-table>
+                <modal-dialog id="app-shell-dialog-demo" data-testid="app-shell-dialog-demo" heading="Above the shell" dismissible>
+                  <div class="p-4 text-sm text-slate-600">
+                    This dialog renders above the sidebar and top bar even while the sidebar overlay
+                    is open — the shell's own chrome stays under z-index 100.
+                  </div>
+                </modal-dialog>
               </div>
               <div slot="detail" class="p-4" data-testid="app-shell-detail">
                 <h4 class="text-sm font-semibold text-slate-900">Selected member</h4>
@@ -242,7 +258,7 @@
           <pre class="usage mt-4"><code>import "@f-ewald/components/app-shell.js";
 import "@f-ewald/components/app-sidebar.js";
 
-&lt;app-shell detail-open style="height: 100vh"&gt;
+&lt;app-shell sidebar-open sidebar-mode="push" sidebar-width="icon" detail-open style="height: 100vh"&gt;
   &lt;app-sidebar slot="sidebar"&gt;…nav items…&lt;/app-sidebar&gt;
   &lt;page-header slot="topbar" heading="Members"&gt;&lt;/page-header&gt;
   &lt;action-bar&gt;…&lt;/action-bar&gt;

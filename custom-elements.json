@@ -993,7 +993,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The dashboard page shell: a slot-based CSS-grid backbone that arranges a\nfull-height sidebar, a top bar, the main content, an optional right-hand\ndetail column, and an optional footer. It owns the responsive behavior so\nconsumers don't re-implement it — above the shared 48rem breakpoint the\nsidebar collapses to an icon rail and the detail region is an inline column;\nat or below it the sidebar becomes an off-canvas drawer and the detail region\nan overlay, both dismissed by a scrim or Escape.\n\nWidths are tunable per instance via `--component-sidebar-width` (16rem),\n`--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`\n(3rem); the detail column reuses the 20rem/25rem panel widths. The main\ncontent area is white by default — override it with\n`--component-main-background`. Give the shell a height (e.g. `height: 100vh`)\nso the sidebar and main can size and scroll.\n\nThe built-in top-bar button toggles the sidebar, and so does pressing `[`\nanywhere on the page (ignored while typing in a text field or with a\nmodifier held). Hovering or keyboard-focusing the toggle reveals a tooltip\nnaming the action and its `[` shortcut — the shortcut is not shown as\npermanent chrome.",
+          "description": "The dashboard page shell: a slot-based CSS-grid backbone that arranges a\ntop bar, the main content, an optional right-hand detail column, an\noptional footer, and a sidebar. The top bar always spans the shell's full\nwidth, in every sidebar state.\n\nThe sidebar's visibility, width, and layout mode are three independent\nproperties:\n- `sidebar-open` (default closed) — whether it's shown at all.\n- `sidebar-width`: `\"full\"` (16rem, icons + labels, the default) or\n  `\"icon\"` (3.5rem rail, icons only — drives the slotted `app-sidebar`'s\n  own `collapsed` attribute).\n- `sidebar-mode`: `\"overlay\"` (the default) floats the sidebar above the\n  shell's own content with a higher z-index, covering part of the top\n  bar's corner and whatever content sits beneath it, without ever\n  resizing or reflowing `main`/`footer`. `\"push\"` instead reserves a real\n  grid column beside `main`/`footer` (which resize to make room) — the\n  top bar still spans full width above it either way.\n\nBelow the shared 48rem breakpoint the sidebar always behaves as a\nfull-width, modal, scrim/Escape-dismissible drawer regardless of\n`sidebar-mode`/`sidebar-width` — those two properties only affect the\ndesktop presentation. Above 48rem, an `overlay`-mode sidebar is a\nnon-modal panel (no dimming scrim, no Escape-dismiss, since it reads as\nan ordinary always-interactive panel rather than a blocking dialog); a\n`push`-mode sidebar is even more clearly non-modal, since it never\ncovers anything.\n\nThe right-hand detail column is unaffected by any of the above: it still\nreserves an inline grid column on desktop and becomes a dismissible\noverlay (scrim/Escape) on mobile.\n\nWidths are tunable per instance via `--component-sidebar-width` (16rem),\n`--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`\n(3rem); the detail column reuses the 20rem/25rem panel widths. The main\ncontent area is white by default — override it with\n`--component-main-background`. Give the shell a height (e.g. `height:\n100vh`) so the sidebar and main can size and scroll.\n\nHovering or keyboard-focusing the toggle reveals a tooltip naming the\naction and its `[` shortcut — the shortcut is not shown as permanent\nchrome.",
           "name": "AppShell",
           "slots": [
             {
@@ -1001,7 +1001,7 @@
               "name": ""
             },
             {
-              "description": "Full-height navigation (typically `app-sidebar`).",
+              "description": "Sidebar navigation (typically `app-sidebar`).",
               "name": "sidebar"
             },
             {
@@ -1020,13 +1020,35 @@
           "members": [
             {
               "kind": "field",
-              "name": "sidebarCollapsed",
+              "name": "sidebarOpen",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Collapses the sidebar to an icon rail on desktop.",
-              "attribute": "sidebar-collapsed",
+              "description": "Whether the sidebar is open. Closed by default at every breakpoint.",
+              "attribute": "sidebar-open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sidebarMode",
+              "type": {
+                "text": "\"overlay\" | \"push\""
+              },
+              "default": "\"overlay\"",
+              "description": "`\"overlay\"` (default) floats the sidebar above content; `\"push\"` reserves a grid column instead.",
+              "attribute": "sidebar-mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sidebarWidth",
+              "type": {
+                "text": "\"full\" | \"icon\""
+              },
+              "default": "\"full\"",
+              "description": "Sidebar width when open: `\"full\"` (16rem, icons + labels) or `\"icon\"` (3.5rem rail, icons only).",
+              "attribute": "sidebar-width",
               "reflects": true
             },
             {
@@ -1062,16 +1084,6 @@
             },
             {
               "kind": "field",
-              "name": "_mobileNavOpen",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "description": "Whether the mobile off-canvas nav drawer is open."
-            },
-            {
-              "kind": "field",
               "name": "_hasFooter",
               "type": {
                 "text": "boolean"
@@ -1102,7 +1114,7 @@
               "kind": "field",
               "name": "_onMediaChange",
               "privacy": "private",
-              "description": "Tracks the breakpoint and closes the mobile drawer when returning to desktop."
+              "description": "Tracks the breakpoint the sidebar's width and modality depend on."
             },
             {
               "kind": "field",
@@ -1138,7 +1150,7 @@
                   "text": "void"
                 }
               },
-              "description": "Toggles the rail (desktop) or the off-canvas drawer (mobile) and announces it."
+              "description": "Toggles the sidebar and announces it."
             },
             {
               "kind": "method",
@@ -1164,14 +1176,14 @@
             },
             {
               "kind": "method",
-              "name": "_syncSidebar",
+              "name": "_syncSidebarWidth",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
-              "description": "Mirrors the shell's rail state onto the slotted sidebar so it hides labels\nwhen collapsed on desktop, and always shows them in the mobile drawer."
+              "description": "Mirrors `sidebar-width` onto the slotted sidebar's `collapsed` (icon rail) attribute."
             },
             {
               "kind": "method",
@@ -1211,13 +1223,31 @@
           ],
           "attributes": [
             {
-              "name": "sidebar-collapsed",
+              "name": "sidebar-open",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Collapses the sidebar to an icon rail on desktop.",
-              "fieldName": "sidebarCollapsed"
+              "description": "Whether the sidebar is open. Closed by default at every breakpoint.",
+              "fieldName": "sidebarOpen"
+            },
+            {
+              "name": "sidebar-mode",
+              "type": {
+                "text": "\"overlay\" | \"push\""
+              },
+              "default": "\"overlay\"",
+              "description": "`\"overlay\"` (default) floats the sidebar above content; `\"push\"` reserves a grid column instead.",
+              "fieldName": "sidebarMode"
+            },
+            {
+              "name": "sidebar-width",
+              "type": {
+                "text": "\"full\" | \"icon\""
+              },
+              "default": "\"full\"",
+              "description": "Sidebar width when open: `\"full\"` (16rem, icons + labels) or `\"icon\"` (3.5rem rail, icons only).",
+              "fieldName": "sidebarWidth"
             },
             {
               "name": "detail-open",
@@ -1271,7 +1301,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Collapsible navigation sidebar for the `app-shell` sidebar slot. It is\ndeliberately presentational and router-agnostic: the consumer supplies the\nnav items as plain `<a>`/`<button>` elements (each an icon followed by a\nlabel), optional `<p>` group headings, and marks the active item with\n`aria-current=\"page\"`. The sidebar styles them, tracks hover/active/focus,\nand — in collapsed \"rail\" mode — centers the icons and hides the labels.\n\nRail mode is driven by the `collapsed` attribute (the parent `app-shell`\ntoggles it). Labels are hidden by the inherited `--app-sidebar-label` custom\nproperty, so each label element should read it, e.g.\n`<span style=\"display: var(--app-sidebar-label, inline)\">Reports</span>`;\nkeep an `aria-label` on the item so its accessible name survives collapse.\nThe sidebar fills the width and height of its container — `app-shell` owns\nthe actual rail/expanded width.",
+          "description": "Collapsible navigation sidebar for the `app-shell` sidebar slot. It is\ndeliberately presentational and router-agnostic: the consumer supplies the\nnav items as plain `<a>`/`<button>` elements (each an icon followed by a\nlabel), optional `<p>` group headings, and marks the active item with\n`aria-current=\"page\"`. The sidebar styles them, tracks hover/active/focus,\nand — in collapsed \"rail\" mode — centers the icons and hides the labels.\n\nRail mode is driven by the `collapsed` attribute, which callers set\ndirectly — `app-shell` no longer auto-manages it (its own sidebar is a\npure overlay, not a rail). Labels are hidden by the inherited\n`--app-sidebar-label` custom property, so each label element should read it, e.g.\n`<span style=\"display: var(--app-sidebar-label, inline)\">Reports</span>`;\nkeep an `aria-label` on the item so its accessible name survives collapse.\nThe sidebar fills the width and height of its container — `app-shell` owns\nthe actual rail/expanded width.",
           "name": "AppSidebar",
           "slots": [
             {
