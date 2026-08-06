@@ -18862,7 +18862,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Fixed-position stack of dismissible notifications, anchored top-right\n(top-full-width on mobile). Every toast shares one fixed width so entries\nnever appear narrower or wider than one another. Not wired to any app state\nyet — callers add toasts imperatively via the `show()` method on a live\nelement reference,\ne.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,\nor via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers\nexported from this file. The first argument is the required bold headline; an\noptional `description` renders a smaller, non-bold second line. Each variant\nleads with a matching status icon (success → check, error → exclamation\ncircle, info → information circle, warning → exclamation triangle). Each toast\nauto-dismisses after `duration` ms and can also be dismissed via its ✕\nbutton. Appears/disappears instantly — no slide/fade transitions.\n\nEach variant's background reads a dedicated `--ui-toast-*-background` hook\n(`success`/`error`/`info`/`warning`), which defaults to the flat\n`--ui-success`/`--ui-danger`/`--ui-info`/`--ui-warning` tokens unchanged —\nso those stay the single source of truth for every other component. A\nconsumer can override just these toast-specific tokens with a\n`linear-gradient(...)` to opt every toast into a gradient look without\ntouching component markup — `gradientTokenValues` in `tokens.ts` ships\nexactly this, wired up via `data-theme=\"gradient\"` (see `tokens.css`'s\n\"Gradient theme\" section), the same mechanism `ui-button` uses.\n`--ui-toast-highlight` (a glossy top-edge box-shadow, layered onto the\nexisting elevation shadow) and `--ui-toast-text-shadow` (legibility\nagainst the gradient's lighter stop) round out the effect, mirroring\n`ui-button`'s `--ui-button-highlight`/`--ui-button-text-shadow`.",
+          "description": "Fixed-position stack of dismissible notifications, anchored top-right\n(top-full-width on mobile). Every toast shares one fixed width so entries\nnever appear narrower or wider than one another. Not wired to any app state\nyet — callers add toasts imperatively via the `show()` method on a live\nelement reference,\ne.g. `document.querySelector('toast-notification')?.show('Offline', { variant: 'error' })`,\nor via the `notifySuccess`/`notifyError`/`notifyInfo` module-level helpers\nexported from this file. The first argument is the required bold headline; an\noptional `description` renders a smaller, non-bold second line. Each variant\nleads with a matching status icon (success → check, error → exclamation\ncircle, info → information circle, warning → exclamation triangle). Each toast\nauto-dismisses after `duration` ms and can also be dismissed via its ✕\nbutton. Appears/disappears instantly — no slide/fade transitions.\n\nA toast with `duration > 0` replaces its ✕ button with a countdown: a\nnumber of seconds remaining inside a ring that fills in clockwise over\n`duration`. Hovering or keyboard-focusing the toast swaps the countdown\nback for the ✕ and pauses the countdown (both the visual ring/number and\nthe underlying auto-dismiss timer) — the toast won't disappear while\nsomeone's reading it or has tabbed to its close button — resuming from\nwhere it left off once the pointer/focus leaves. A `duration: 0` toast has\nno countdown to show, so its ✕ is always visible, exactly as before.\n\nEach variant's background reads a dedicated `--ui-toast-*-background` hook\n(`success`/`error`/`info`/`warning`), which defaults to the flat\n`--ui-success`/`--ui-danger`/`--ui-info`/`--ui-warning` tokens unchanged —\nso those stay the single source of truth for every other component. A\nconsumer can override just these toast-specific tokens with a\n`linear-gradient(...)` to opt every toast into a gradient look without\ntouching component markup — `gradientTokenValues` in `tokens.ts` ships\nexactly this, wired up via `data-theme=\"gradient\"` (see `tokens.css`'s\n\"Gradient theme\" section), the same mechanism `ui-button` uses.\n`--ui-toast-highlight` (a glossy top-edge box-shadow, layered onto the\nexisting elevation shadow) and `--ui-toast-text-shadow` (legibility\nagainst the gradient's lighter stop) round out the effect, mirroring\n`ui-button`'s `--ui-button-highlight`/`--ui-button-text-shadow`.",
           "name": "ToastNotification",
           "members": [
             {
@@ -18888,6 +18888,23 @@
               "name": "_timers",
               "privacy": "private",
               "default": "new Map<number, ReturnType<typeof setTimeout>>()"
+            },
+            {
+              "kind": "field",
+              "name": "_interaction",
+              "privacy": "private",
+              "default": "new Map<number, { hovered: boolean; focusWithin: boolean }>()",
+              "description": "Per-toast hover/focus tracking, so leaving one doesn't resume while the other still applies."
+            },
+            {
+              "kind": "field",
+              "name": "_tickTimer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Ticks while any toast has a running countdown, purely to refresh the displayed seconds."
             },
             {
               "kind": "method",
@@ -18932,6 +18949,197 @@
             },
             {
               "kind": "method",
+              "name": "_scheduleTimer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "ms",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Schedules (or reschedules) the real auto-dismiss timeout for a toast."
+            },
+            {
+              "kind": "method",
+              "name": "_pause",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Freezes a toast's countdown at its current remaining time."
+            },
+            {
+              "kind": "method",
+              "name": "_resume",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Resumes a paused toast's countdown for whatever time was remaining."
+            },
+            {
+              "kind": "method",
+              "name": "_syncTicking",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Starts or stops the shared display-only tick, matching whether any countdown is actually running."
+            },
+            {
+              "kind": "method",
+              "name": "_interactionState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ hovered: boolean; focusWithin: boolean }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Reads (creating if absent) a toast's hover/focus tracking record."
+            },
+            {
+              "kind": "method",
+              "name": "_onMouseEnter",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onMouseLeave",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onFocusIn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onFocusOut",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ],
+              "description": "Rechecks focus-within on a microtask, since focusout fires before the new focus target settles."
+            },
+            {
+              "kind": "method",
+              "name": "_secondsLeft",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "Toast"
+                  }
+                }
+              ],
+              "description": "Whole seconds remaining until auto-dismiss, for the countdown number."
+            },
+            {
+              "kind": "method",
               "name": "_variantIcon",
               "privacy": "private",
               "parameters": [
@@ -18952,6 +19160,19 @@
           },
           "tagName": "toast-notification",
           "customElement": true
+        },
+        {
+          "kind": "variable",
+          "name": "id",
+          "default": "this._nextId++"
+        },
+        {
+          "kind": "variable",
+          "name": "variant"
+        },
+        {
+          "kind": "variable",
+          "name": "duration"
         },
         {
           "kind": "function",

@@ -13,6 +13,10 @@ test.describe("toast-notification", () => {
     await toast.locator(".close").click();
     await expect(toast).toHaveCount(0);
 
+    // Move the cursor away first — it's still sitting where .close was just
+    // clicked, which is exactly where the next toast renders (same fixed
+    // corner), and hovering now pauses the countdown.
+    await page.mouse.move(0, 0);
     await page.evaluate(() => {
       const el = document.querySelector("toast-notification") as HTMLElement & {
         show: (msg: string, opts?: { variant?: string; duration?: number }) => number;
@@ -182,5 +186,90 @@ test.describe("toast-notification", () => {
       await expect(toast).toHaveCSS("background-image", gradient);
       await expect(toast).toHaveCSS("text-shadow", "rgba(0, 0, 0, 0.25) 0px 1px 1px");
     }
+  });
+
+  test("a timed toast shows a countdown ring/number instead of the close button until hovered or focused", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.mouse.move(0, 0);
+    const toastHost = page.locator("toast-notification");
+    await page.evaluate(() => {
+      const el = document.querySelector("toast-notification") as HTMLElement & {
+        show: (msg: string, opts?: { duration?: number }) => number;
+      };
+      el.show("Timed toast", { duration: 5000 });
+    });
+
+    const toast = toastHost.locator(".toast");
+    const countdown = toast.locator(".countdown-number");
+    const closeBtn = toast.locator(".close");
+    await expect(toast).toHaveClass(/has-countdown/);
+    await expect(countdown).toHaveText("5");
+    // Close button is opacity:0 (still present/focusable), not display:none —
+    // Playwright's toBeVisible() doesn't treat opacity:0 as hidden, so assert
+    // on the computed opacity directly.
+    await expect(closeBtn).toHaveCSS("opacity", "0");
+
+    await toast.hover();
+    await expect(closeBtn).toHaveCSS("opacity", "1");
+
+    await page.mouse.move(0, 0);
+    await expect(closeBtn).toHaveCSS("opacity", "0");
+  });
+
+  test("focusing the close button reveals it the same way hover does", async ({ page }) => {
+    await page.goto("/");
+    await page.mouse.move(0, 0);
+    const toastHost = page.locator("toast-notification");
+    await page.evaluate(() => {
+      const el = document.querySelector("toast-notification") as HTMLElement & {
+        show: (msg: string, opts?: { duration?: number }) => number;
+      };
+      el.show("Focus toast", { duration: 5000 });
+    });
+    const closeBtn = toastHost.locator(".toast .close");
+    await expect(closeBtn).toHaveCSS("opacity", "0");
+    await closeBtn.focus();
+    await expect(closeBtn).toHaveCSS("opacity", "1");
+  });
+
+  test("a duration:0 toast never shows a countdown, only the always-visible close button", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      const el = document.querySelector("toast-notification") as HTMLElement & {
+        show: (msg: string, opts?: { duration?: number }) => number;
+      };
+      el.show("Manual only", { duration: 0 });
+    });
+    const toast = page.locator("toast-notification .toast");
+    await expect(toast).not.toHaveClass(/has-countdown/);
+    await expect(toast.locator(".countdown")).toHaveCount(0);
+    await expect(toast.locator(".close")).toBeVisible();
+  });
+
+  test("hovering pauses the real auto-dismiss timer, which resumes for the remaining time once the pointer leaves", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.mouse.move(0, 0);
+    const toastHost = page.locator("toast-notification");
+    await page.evaluate(() => {
+      const el = document.querySelector("toast-notification") as HTMLElement & {
+        show: (msg: string, opts?: { duration?: number }) => number;
+      };
+      el.show("Pausable", { duration: 3000 });
+    });
+    const toast = toastHost.locator(".toast");
+
+    await toast.hover();
+    await page.waitForTimeout(4000); // well past the original 3000ms duration
+    await expect(toast).toBeVisible(); // still here: paused while hovered
+
+    await page.mouse.move(0, 0); // resumes with ~3000ms remaining
+    await expect(toast).toBeVisible();
+    await expect(toast).toHaveCount(0, { timeout: 3500 });
   });
 });

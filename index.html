@@ -3320,7 +3320,11 @@ import "@f-ewald/components/timeline-entry.js";
 
         <section id="toast-notification" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-toast-notification">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#toast-notification">toast-notification</a></h3>
-          <p class="mt-1 text-sm text-slate-500">Fixed-position stack of dismissible notifications.</p>
+          <p class="mt-1 text-sm text-slate-500">
+            Fixed-position stack of dismissible notifications. Each timed toast below shows a
+            clockwise-filling countdown ring in place of its ✕ — hover or Tab to it to swap back to the ✕
+            and pause the countdown; move away or Tab off to resume from where it left off.
+          </p>
           <div class="mt-6 flex gap-3 rounded-lg border border-slate-200 p-6">
             <button
               id="toast-success"
