@@ -45,7 +45,16 @@ export class ChevronPanel extends LitElement {
         padding: 0;
         border: 0;
         background: none;
-        font: inherit;
+        font-family: var(
+          --ui-font,
+          ui-sans-serif,
+          system-ui,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji"
+        );
         color: var(--ui-text, #0f172a);
         text-align: left;
         cursor: pointer;
