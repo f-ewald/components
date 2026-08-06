@@ -137,7 +137,7 @@ export class AppShell extends LitElement {
         border-right: 1px solid var(--ui-border, #e2e8f0);
         background: var(--ui-surface, #ffffff);
         transform: translateX(-100%);
-        transition: transform 250ms ease;
+        transition: transform 150ms ease;
       }
       :host([sidebar-open]) .sidebar {
         transform: translateX(0);
