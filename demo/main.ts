@@ -1412,6 +1412,12 @@ appShellToggleSidebarWidth?.addEventListener("click", () => {
 document.getElementById("app-shell-toggle-detail")?.addEventListener("click", () => {
   if (appShellDemo) appShellDemo.detailOpen = !appShellDemo.detailOpen;
 });
+const appShellToggleNoTopbar = document.getElementById("app-shell-toggle-no-topbar");
+appShellToggleNoTopbar?.addEventListener("click", () => {
+  if (!appShellDemo) return;
+  appShellDemo.noTopbar = !appShellDemo.noTopbar;
+  appShellToggleNoTopbar.textContent = appShellDemo.noTopbar ? "Show built-in topbar" : "Hide built-in topbar";
+});
 const appShellPager = document.getElementById("app-shell-pager") as PaginationNav | null;
 appShellPager?.addEventListener("page-change", (event) => {
   const { page } = (event as CustomEvent<{ page: number }>).detail;

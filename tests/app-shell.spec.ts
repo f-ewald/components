@@ -178,4 +178,22 @@ test.describe("app-shell", () => {
     expect(Math.round(sidebarBox.width)).toBeGreaterThanOrEqual(Math.round(shellBox.width) - 1);
     await expect(shell.locator(".scrim")).toBeVisible();
   });
+
+  test("no-topbar drops the built-in topbar row entirely, but the [ shortcut keeps working", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const shell = page.locator("#app-shell-demo");
+    await expect(shell.locator(".topbar")).toBeVisible();
+
+    await page.locator("#app-shell-toggle-no-topbar").click();
+    await expect(shell).toHaveAttribute("no-topbar", "");
+    await expect(shell.locator(".topbar")).toHaveCount(0);
+    // Content the consumer supplies still renders; only the built-in chrome is gone.
+    await expect(shell.locator("#app-shell-table")).toContainText("Ada Lovelace");
+
+    await expect(shell).not.toHaveAttribute("sidebar-open", "");
+    await page.keyboard.press("[");
+    await expect(shell).toHaveAttribute("sidebar-open", "");
+  });
 });

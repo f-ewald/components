@@ -1,4 +1,4 @@
-import { LitElement, css, html, type PropertyValues } from "lit";
+import { LitElement, css, html, nothing, type PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { iconBars3 } from "./icons.js";
 import "./kbd-hint.js";
@@ -53,6 +53,12 @@ export interface SidebarToggleDetail {
  * action and its `[` shortcut — the shortcut is not shown as permanent
  * chrome.
  *
+ * Consumers with their own external top bar can set `no-topbar` to skip
+ * rendering the built-in topbar row and toggle button entirely (the grid
+ * drops that row rather than leaving dead space). The `[`/Escape shortcuts
+ * stay fully active either way — drive `sidebar-open` from your own UI and
+ * listen for `sidebar-toggle` to stay in sync with keyboard-driven changes.
+ *
  * @element app-shell
  * @slot - Main content area.
  * @slot sidebar - Sidebar navigation (typically `app-sidebar`).
@@ -74,6 +80,8 @@ export class AppShell extends LitElement {
   @property({ type: Boolean, reflect: true, attribute: "detail-open" }) detailOpen = false;
   /** Detail width: `compact` (20rem) or `comfortable` (25rem). */
   @property({ attribute: "detail-width" }) detailWidth: "compact" | "comfortable" = "compact";
+  /** Skips rendering the built-in topbar row and its nav toggle entirely, for consumers with their own external top bar. The `[`/Escape shortcuts stay active regardless — this only affects what's rendered. */
+  @property({ type: Boolean, reflect: true, attribute: "no-topbar" }) noTopbar = false;
 
   /** Whether the viewport is at/below the 48rem breakpoint. */
   @state() private _mobile = false;
@@ -101,6 +109,14 @@ export class AppShell extends LitElement {
         block-size: 100%;
         min-height: 0;
         background: var(--ui-surface, #ffffff);
+      }
+      /* no-topbar drops the topbar row from the grid rather than rendering
+         an empty one — the header element itself is skipped in render(). */
+      :host([no-topbar]) .shell {
+        grid-template-rows: minmax(0, 1fr) auto;
+        grid-template-areas:
+          "sidebar main   detail"
+          "sidebar footer footer";
       }
       :host([detail-open]) .shell {
         --_detail-w: 20rem;
@@ -268,6 +284,12 @@ export class AppShell extends LitElement {
           grid-template-columns: minmax(0, 1fr) var(--_detail-w);
           grid-template-areas:
             "topbar topbar"
+            "main   detail"
+            "footer footer";
+        }
+        :host([no-topbar]) .shell {
+          grid-template-rows: minmax(0, 1fr) auto;
+          grid-template-areas:
             "main   detail"
             "footer footer";
         }
@@ -444,26 +466,30 @@ export class AppShell extends LitElement {
         >
           <slot name="sidebar" @slotchange=${this._syncSidebarWidth}></slot>
         </aside>
-        <header class="topbar">
-          <div class="nav-group">
-            <button
-              class="nav-toggle"
-              type="button"
-              aria-label="Toggle navigation"
-              aria-keyshortcuts="["
-              aria-describedby="nav-tip"
-              aria-expanded=${String(this.sidebarOpen)}
-              @click=${this._toggleSidebar}
-            >
-              ${iconBars3(18)}
-            </button>
-            <span class="nav-tip" id="nav-tip" role="tooltip">
-              <span>${this.sidebarOpen ? "Hide navigation" : "Show navigation"}</span>
-              <kbd-hint keys="["></kbd-hint>
-            </span>
-          </div>
-          <div class="topbar-content"><slot name="topbar"></slot></div>
-        </header>
+        ${this.noTopbar
+          ? nothing
+          : html`
+              <header class="topbar">
+                <div class="nav-group">
+                  <button
+                    class="nav-toggle"
+                    type="button"
+                    aria-label="Toggle navigation"
+                    aria-keyshortcuts="["
+                    aria-describedby="nav-tip"
+                    aria-expanded=${String(this.sidebarOpen)}
+                    @click=${this._toggleSidebar}
+                  >
+                    ${iconBars3(18)}
+                  </button>
+                  <span class="nav-tip" id="nav-tip" role="tooltip">
+                    <span>${this.sidebarOpen ? "Hide navigation" : "Show navigation"}</span>
+                    <kbd-hint keys="["></kbd-hint>
+                  </span>
+                </div>
+                <div class="topbar-content"><slot name="topbar"></slot></div>
+              </header>
+            `}
         <main class="main"><slot></slot></main>
         <aside
           class="detail"

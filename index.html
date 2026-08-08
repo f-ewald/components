@@ -212,13 +212,16 @@
             <code>full</code> (16rem, icons + labels) or <code>icon</code> (3.5rem rail, icons only).
             Below 48rem the sidebar always behaves as a full-screen, scrim-dismissible drawer regardless
             of those two settings. Open the dialog below while the sidebar is open to see it correctly
-            render above both. Give the shell a height so it can fill and scroll.
+            render above both. Give the shell a height so it can fill and scroll. Consumers with their
+            own external top bar can set <code>no-topbar</code> to drop the built-in row entirely — the
+            <kbd>[</kbd>/Escape shortcuts stay active either way.
           </p>
           <div class="mt-6 flex flex-wrap gap-2">
             <button id="app-shell-toggle-sidebar" data-testid="app-shell-toggle-sidebar" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Toggle sidebar</button>
             <button id="app-shell-toggle-sidebar-mode" data-testid="app-shell-toggle-sidebar-mode" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Switch to push mode</button>
             <button id="app-shell-toggle-sidebar-width" data-testid="app-shell-toggle-sidebar-width" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Show icon-only</button>
             <button id="app-shell-toggle-detail" data-testid="app-shell-toggle-detail" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Toggle detail</button>
+            <button id="app-shell-toggle-no-topbar" data-testid="app-shell-toggle-no-topbar" type="button" class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Hide built-in topbar</button>
             <button id="app-shell-open-dialog" data-testid="app-shell-open-dialog" type="button" class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700">Open dialog</button>
           </div>
           <div class="mt-4 overflow-hidden rounded-lg border border-slate-200" style="height: 32rem">
