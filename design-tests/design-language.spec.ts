@@ -377,7 +377,7 @@ test("component icon calls use the approved inline and standalone sizes", () => 
     "src/autocomplete-input.ts": ["iconX(18)"],
     "src/chat-message.ts": ["iconChevronRight(14)"],
     "src/confirm-dialog.ts": ["iconArrowPath(14)"],
-    "src/copy-link-button.ts": ["iconLink(18)"],
+    "src/copy-link-button.ts": ["iconClipboard(18)"],
     "src/dropdown-button.ts": ["iconChevronRight(14)"],
     "src/form-select.ts": ["iconChevronRight(14)"],
     "src/photo-gallery.ts": ["iconChevronLeft(18)", "iconChevronRight(18)"],
