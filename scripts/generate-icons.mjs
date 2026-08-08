@@ -196,6 +196,31 @@ const ICONS = {
     size: 16,
     usage: "\"Exit fullscreen\" actions; pair with iconArrowsPointingOut for entering fullscreen.",
   },
+  GlobeAmericas: {
+    slug: "globe-americas",
+    size: 16,
+    usage: "Terrain/outdoors content, or a Americas-centric globe/region selector.",
+  },
+  GlobeAlt: {
+    slug: "globe-alt",
+    size: 16,
+    usage: "A generic globe/satellite-view toggle, or international/worldwide content.",
+  },
+  Signal: {
+    slug: "signal",
+    size: 16,
+    usage: "Live/real-time data, connectivity strength, or a traffic-conditions toggle.",
+  },
+  Clipboard: {
+    slug: "clipboard",
+    size: 18,
+    usage: "Copy-to-clipboard actions, e.g. copy-link-button.",
+  },
+  MagnifyingGlass: {
+    slug: "magnifying-glass",
+    size: 16,
+    usage: "Search inputs or search-triggering actions.",
+  },
 };
 
 /**

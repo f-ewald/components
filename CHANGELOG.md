@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- New icons: `GlobeAmericas`, `GlobeAlt`, `Signal`, `Clipboard`,
+  `MagnifyingGlass`.
+- `copy-link-button` now renders `iconClipboard` instead of `iconLink` — a
+  chain-link glyph was a mismatch for what is actually a copy-to-clipboard
+  action.
+- `app-shell` gains a `no-topbar` boolean: skips rendering the built-in
+  topbar row and its nav toggle entirely (the grid drops that row rather
+  than leaving dead space), for consumers who already have their own
+  external top bar. The `[`/Escape shortcuts stay fully active regardless —
+  drive `sidebar-open` from your own UI and listen for `sidebar-toggle` to
+  stay in sync with keyboard-driven changes.
 - New `chevron-panel`: a generic disclosure — a clickable header (`slot="headline"`)
   that expands/collapses a slotted body, with a chevron that rotates to
   reflect state. Fires `toggle` with `{ open }`. Unlike `chat-message`'s

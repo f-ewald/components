@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { iconLink } from "./icons.js";
+import { iconClipboard } from "./icons.js";
 import { notifyError, notifySuccess } from "./toast-notification.js";
 import { tokens } from "./tokens.js";
 
@@ -91,7 +91,7 @@ export class CopyLinkButton extends LitElement {
         ?disabled=${this.disabled}
         @click=${this._onClick}
       >
-        ${iconLink(18)}
+        ${iconClipboard(18)}
       </button>
     `;
   }
