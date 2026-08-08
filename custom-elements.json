@@ -993,7 +993,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The dashboard page shell: a slot-based CSS-grid backbone that arranges a\ntop bar, the main content, an optional right-hand detail column, an\noptional footer, and a sidebar. The top bar always spans the shell's full\nwidth, in every sidebar state.\n\nThe sidebar's visibility, width, and layout mode are three independent\nproperties:\n- `sidebar-open` (default closed) — whether it's shown at all.\n- `sidebar-width`: `\"full\"` (16rem, icons + labels, the default) or\n  `\"icon\"` (3.5rem rail, icons only — drives the slotted `app-sidebar`'s\n  own `collapsed` attribute).\n- `sidebar-mode`: `\"overlay\"` (the default) floats the sidebar above the\n  shell's own content with a higher z-index, covering part of the top\n  bar's corner and whatever content sits beneath it, without ever\n  resizing or reflowing `main`/`footer`. `\"push\"` instead reserves a real\n  grid column beside `main`/`footer` (which resize to make room) — the\n  top bar still spans full width above it either way.\n\nBelow the shared 48rem breakpoint the sidebar always behaves as a\nfull-width, modal, scrim/Escape-dismissible drawer regardless of\n`sidebar-mode`/`sidebar-width` — those two properties only affect the\ndesktop presentation. Above 48rem, an `overlay`-mode sidebar is a\nnon-modal panel (no dimming scrim, no Escape-dismiss, since it reads as\nan ordinary always-interactive panel rather than a blocking dialog); a\n`push`-mode sidebar is even more clearly non-modal, since it never\ncovers anything.\n\nThe right-hand detail column is unaffected by any of the above: it still\nreserves an inline grid column on desktop and becomes a dismissible\noverlay (scrim/Escape) on mobile.\n\nWidths are tunable per instance via `--component-sidebar-width` (16rem),\n`--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`\n(3rem); the detail column reuses the 20rem/25rem panel widths. The main\ncontent area is white by default — override it with\n`--component-main-background`. Give the shell a height (e.g. `height:\n100vh`) so the sidebar and main can size and scroll.\n\nHovering or keyboard-focusing the toggle reveals a tooltip naming the\naction and its `[` shortcut — the shortcut is not shown as permanent\nchrome.",
+          "description": "The dashboard page shell: a slot-based CSS-grid backbone that arranges a\ntop bar, the main content, an optional right-hand detail column, an\noptional footer, and a sidebar. The top bar always spans the shell's full\nwidth, in every sidebar state.\n\nThe sidebar's visibility, width, and layout mode are three independent\nproperties:\n- `sidebar-open` (default closed) — whether it's shown at all.\n- `sidebar-width`: `\"full\"` (16rem, icons + labels, the default) or\n  `\"icon\"` (3.5rem rail, icons only — drives the slotted `app-sidebar`'s\n  own `collapsed` attribute).\n- `sidebar-mode`: `\"overlay\"` (the default) floats the sidebar above the\n  shell's own content with a higher z-index, covering part of the top\n  bar's corner and whatever content sits beneath it, without ever\n  resizing or reflowing `main`/`footer`. `\"push\"` instead reserves a real\n  grid column beside `main`/`footer` (which resize to make room) — the\n  top bar still spans full width above it either way.\n\nBelow the shared 48rem breakpoint the sidebar always behaves as a\nfull-width, modal, scrim/Escape-dismissible drawer regardless of\n`sidebar-mode`/`sidebar-width` — those two properties only affect the\ndesktop presentation. Above 48rem, an `overlay`-mode sidebar is a\nnon-modal panel (no dimming scrim, no Escape-dismiss, since it reads as\nan ordinary always-interactive panel rather than a blocking dialog); a\n`push`-mode sidebar is even more clearly non-modal, since it never\ncovers anything.\n\nThe right-hand detail column is unaffected by any of the above: it still\nreserves an inline grid column on desktop and becomes a dismissible\noverlay (scrim/Escape) on mobile.\n\nWidths are tunable per instance via `--component-sidebar-width` (16rem),\n`--component-sidebar-rail-width` (3.5rem), and `--component-topbar-height`\n(3rem); the detail column reuses the 20rem/25rem panel widths. The main\ncontent area is white by default — override it with\n`--component-main-background`. Give the shell a height (e.g. `height:\n100vh`) so the sidebar and main can size and scroll.\n\nHovering or keyboard-focusing the toggle reveals a tooltip naming the\naction and its `[` shortcut — the shortcut is not shown as permanent\nchrome.\n\nConsumers with their own external top bar can set `no-topbar` to skip\nrendering the built-in topbar row and toggle button entirely (the grid\ndrops that row rather than leaving dead space). The `[`/Escape shortcuts\nstay fully active either way — drive `sidebar-open` from your own UI and\nlisten for `sidebar-toggle` to stay in sync with keyboard-driven changes.",
           "name": "AppShell",
           "slots": [
             {
@@ -1071,6 +1071,17 @@
               "default": "\"compact\"",
               "description": "Detail width: `compact` (20rem) or `comfortable` (25rem).",
               "attribute": "detail-width"
+            },
+            {
+              "kind": "field",
+              "name": "noTopbar",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Skips rendering the built-in topbar row and its nav toggle entirely, for consumers with their own external top bar. The `[`/Escape shortcuts stay active regardless — this only affects what's rendered.",
+              "attribute": "no-topbar",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1266,6 +1277,15 @@
               "default": "\"compact\"",
               "description": "Detail width: `compact` (20rem) or `comfortable` (25rem).",
               "fieldName": "detailWidth"
+            },
+            {
+              "name": "no-topbar",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Skips rendering the built-in topbar row and its nav toggle entirely, for consumers with their own external top bar. The `[`/Escape shortcuts stay active regardless — this only affects what's rendered.",
+              "fieldName": "noTopbar"
             }
           ],
           "superclass": {
@@ -8915,7 +8935,7 @@
               "default": "16"
             }
           ],
-          "description": "Copy-link or hyperlink-related actions, e.g. copy-link-button."
+          "description": "Hyperlink-related actions or a linked/associated-item indicator."
         },
         {
           "kind": "function",
@@ -9246,6 +9266,61 @@
             }
           ],
           "description": "\"Exit fullscreen\" actions; pair with iconArrowsPointingOut for entering fullscreen."
+        },
+        {
+          "kind": "function",
+          "name": "iconGlobeAmericas",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ],
+          "description": "Terrain/outdoors content, or a Americas-centric globe/region selector."
+        },
+        {
+          "kind": "function",
+          "name": "iconGlobeAlt",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ],
+          "description": "A generic globe/satellite-view toggle, or international/worldwide content."
+        },
+        {
+          "kind": "function",
+          "name": "iconSignal",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ],
+          "description": "Live/real-time data, connectivity strength, or a traffic-conditions toggle."
+        },
+        {
+          "kind": "function",
+          "name": "iconClipboard",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "Copy-to-clipboard actions, e.g. copy-link-button."
+        },
+        {
+          "kind": "function",
+          "name": "iconMagnifyingGlass",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ],
+          "description": "Search inputs or search-triggering actions."
         }
       ],
       "exports": [
@@ -9726,6 +9801,46 @@
           "name": "iconArrowsPointingIn",
           "declaration": {
             "name": "iconArrowsPointingIn",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconGlobeAmericas",
+          "declaration": {
+            "name": "iconGlobeAmericas",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconGlobeAlt",
+          "declaration": {
+            "name": "iconGlobeAlt",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconSignal",
+          "declaration": {
+            "name": "iconSignal",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconClipboard",
+          "declaration": {
+            "name": "iconClipboard",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconMagnifyingGlass",
+          "declaration": {
+            "name": "iconMagnifyingGlass",
             "module": "src/icons.ts"
           }
         }

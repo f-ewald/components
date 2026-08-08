@@ -31,6 +31,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconChevronLeft` | 16px | "Previous" navigation, e.g. pagination or carousel back controls. |
 | `iconChevronRight` | 16px | "Next" navigation, or a collapsed disclosure/submenu indicator. |
 | `iconChevronUp` | 16px | "Scroll to top", or an expanded/upward disclosure control. |
+| `iconClipboard` | 18px | Copy-to-clipboard actions, e.g. copy-link-button. |
 | `iconClipboardDocumentList` | 18px | Task lists, checklists, or clipboard/notes content. |
 | `iconClock` | 16px | Timestamps, durations, or time-related metadata. |
 | `iconCodeBracketSquare` | 16px | Code snippets, developer tools, or technical/API content. |
@@ -45,12 +46,15 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconEye` | 16px | "Show"/"preview" actions or a visible/reviewed state, e.g. password visibility or a review status. |
 | `iconEyeSlash` | 16px | "Hide" actions or a hidden/masked state; pair with iconEye for the visible state. |
 | `iconFolder` | 18px | Folders, directories, or grouped file content. |
+| `iconGlobeAlt` | 16px | A generic globe/satellite-view toggle, or international/worldwide content. |
+| `iconGlobeAmericas` | 16px | Terrain/outdoors content, or a Americas-centric globe/region selector. |
 | `iconHeart` | 16px | "Like"/"favorite" actions in their unselected state. |
 | `iconHeartSolid` | 16px | "Like"/"favorite" actions in their selected/active state; pair with iconHeart for the unselected state. |
 | `iconHome` | 16px | A primary navigation link to the app's home or dashboard. |
 | `iconInfo` | 20px | Neutral informational messages, e.g. an info toast or status banner. |
-| `iconLink` | 16px | Copy-link or hyperlink-related actions, e.g. copy-link-button. |
+| `iconLink` | 16px | Hyperlink-related actions or a linked/associated-item indicator. |
 | `iconListBullet` | 18px | A list-view toggle, or to represent list-type content. |
+| `iconMagnifyingGlass` | 16px | Search inputs or search-triggering actions. |
 | `iconMap` | 16px | A map-view toggle, or to represent map/geographic content. |
 | `iconMapPin` | 16px | A location, address, or map marker. |
 | `iconMoon` | 16px | A dark-theme toggle, or to represent night/dark mode. |
@@ -63,6 +67,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
+| `iconSignal` | 16px | Live/real-time data, connectivity strength, or a traffic-conditions toggle. |
 | `iconSparkles` | 16px | An AI-powered action (pairs with ui-button's `ai` ring), a gradient-theme toggle, or a decorative/enhanced visual style. |
 | `iconSpeakerWave` | 18px | An unmuted volume control, e.g. audio-player/video-player's mute toggle. |
 | `iconSpeakerXMark` | 18px | A muted volume state; pair with iconSpeakerWave for the unmuted state. |

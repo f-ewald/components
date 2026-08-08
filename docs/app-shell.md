@@ -42,6 +42,12 @@ Hovering or keyboard-focusing the toggle reveals a tooltip naming the
 action and its `[` shortcut — the shortcut is not shown as permanent
 chrome.
 
+Consumers with their own external top bar can set `no-topbar` to skip
+rendering the built-in topbar row and toggle button entirely (the grid
+drops that row rather than leaving dead space). The `[`/Escape shortcuts
+stay fully active either way — drive `sidebar-open` from your own UI and
+listen for `sidebar-toggle` to stay in sync with keyboard-driven changes.
+
 ## Install
 
 ```js
@@ -77,6 +83,7 @@ import "@f-ewald/components/app-shell.js";
 | `sidebarWidth` | `sidebar-width` | `"full" | "icon"` | `"full"` | Sidebar width when open: `"full"` (16rem, icons + labels) or `"icon"` (3.5rem rail, icons only). |
 | `detailOpen` | `detail-open` | `boolean` | `false` | Shows the right-hand detail region (inline column, or overlay on mobile). |
 | `detailWidth` | `detail-width` | `"compact" | "comfortable"` | `"compact"` | Detail width: `compact` (20rem) or `comfortable` (25rem). |
+| `noTopbar` | `no-topbar` | `boolean` | `false` | Skips rendering the built-in topbar row and its nav toggle entirely, for consumers with their own external top bar. The `[`/Escape shortcuts stay active regardless — this only affects what's rendered. |
 
 ## Events
 

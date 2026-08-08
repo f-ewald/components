@@ -40,6 +40,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconChevronLeft` | 16px | "Previous" navigation, e.g. pagination or carousel back controls. |
 | `iconChevronRight` | 16px | "Next" navigation, or a collapsed disclosure/submenu indicator. |
 | `iconChevronUp` | 16px | "Scroll to top", or an expanded/upward disclosure control. |
+| `iconClipboard` | 18px | Copy-to-clipboard actions, e.g. copy-link-button. |
 | `iconClipboardDocumentList` | 18px | Task lists, checklists, or clipboard/notes content. |
 | `iconClock` | 16px | Timestamps, durations, or time-related metadata. |
 | `iconCodeBracketSquare` | 16px | Code snippets, developer tools, or technical/API content. |
@@ -54,12 +55,15 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconEye` | 16px | "Show"/"preview" actions or a visible/reviewed state, e.g. password visibility or a review status. |
 | `iconEyeSlash` | 16px | "Hide" actions or a hidden/masked state; pair with iconEye for the visible state. |
 | `iconFolder` | 18px | Folders, directories, or grouped file content. |
+| `iconGlobeAlt` | 16px | A generic globe/satellite-view toggle, or international/worldwide content. |
+| `iconGlobeAmericas` | 16px | Terrain/outdoors content, or a Americas-centric globe/region selector. |
 | `iconHeart` | 16px | "Like"/"favorite" actions in their unselected state. |
 | `iconHeartSolid` | 16px | "Like"/"favorite" actions in their selected/active state; pair with iconHeart for the unselected state. |
 | `iconHome` | 16px | A primary navigation link to the app's home or dashboard. |
 | `iconInfo` | 20px | Neutral informational messages, e.g. an info toast or status banner. |
-| `iconLink` | 16px | Copy-link or hyperlink-related actions, e.g. copy-link-button. |
+| `iconLink` | 16px | Hyperlink-related actions or a linked/associated-item indicator. |
 | `iconListBullet` | 18px | A list-view toggle, or to represent list-type content. |
+| `iconMagnifyingGlass` | 16px | Search inputs or search-triggering actions. |
 | `iconMap` | 16px | A map-view toggle, or to represent map/geographic content. |
 | `iconMapPin` | 16px | A location, address, or map marker. |
 | `iconMoon` | 16px | A dark-theme toggle, or to represent night/dark mode. |
@@ -72,6 +76,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
+| `iconSignal` | 16px | Live/real-time data, connectivity strength, or a traffic-conditions toggle. |
 | `iconSparkles` | 16px | An AI-powered action (pairs with ui-button's `ai` ring), a gradient-theme toggle, or a decorative/enhanced visual style. |
 | `iconSpeakerWave` | 18px | An unmuted volume control, e.g. audio-player/video-player's mute toggle. |
 | `iconSpeakerXMark` | 18px | A muted volume state; pair with iconSpeakerWave for the unmuted state. |
@@ -202,9 +207,15 @@ Hovering or keyboard-focusing the toggle reveals a tooltip naming the
 action and its `[` shortcut — the shortcut is not shown as permanent
 chrome.
 
+Consumers with their own external top bar can set `no-topbar` to skip
+rendering the built-in topbar row and toggle button entirely (the grid
+drops that row rather than leaving dead space). The `[`/Escape shortcuts
+stay fully active either way — drive `sidebar-open` from your own UI and
+listen for `sidebar-toggle` to stay in sync with keyboard-driven changes.
+
 Import: `import "@f-ewald/components/app-shell.js";`
 
-Properties: `sidebarOpen` (attribute `sidebar-open`) : boolean, default false; `sidebarMode` (attribute `sidebar-mode`) : "overlay" | "push", default "overlay"; `sidebarWidth` (attribute `sidebar-width`) : "full" | "icon", default "full"; `detailOpen` (attribute `detail-open`) : boolean, default false; `detailWidth` (attribute `detail-width`) : "compact" | "comfortable", default "compact"
+Properties: `sidebarOpen` (attribute `sidebar-open`) : boolean, default false; `sidebarMode` (attribute `sidebar-mode`) : "overlay" | "push", default "overlay"; `sidebarWidth` (attribute `sidebar-width`) : "full" | "icon", default "full"; `detailOpen` (attribute `detail-open`) : boolean, default false; `detailWidth` (attribute `detail-width`) : "compact" | "comfortable", default "compact"; `noTopbar` (attribute `no-topbar`) : boolean, default false
 Events: `sidebar-toggle`, `detail-close`
 CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-radius-sm`, `--ui-shadow`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`, `--ui-tooltip`
 

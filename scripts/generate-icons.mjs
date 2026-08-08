@@ -100,7 +100,7 @@ const ICONS = {
     size: 16,
     usage: "Swap, exchange, or compare actions between two items.",
   },
-  Link: { slug: "link", size: 16, usage: "Copy-link or hyperlink-related actions, e.g. copy-link-button." },
+  Link: { slug: "link", size: 16, usage: "Hyperlink-related actions or a linked/associated-item indicator." },
   Heart: { slug: "heart", size: 16, usage: "\"Like\"/\"favorite\" actions in their unselected state." },
   HeartSolid: {
     slug: "heart",
