@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `dropdown-button` gains a `circular` boolean (icon variant only): renders
+  the trigger's hover/focus highlight as a circle instead of the default
+  rounded square, for triggers that wrap an inherently circular element
+  (e.g. an avatar) where the square highlight previously looked mismatched.
+  Menu items (`DropdownOption`) also gain an optional `icon` field, rendered
+  ahead of the label.
 - New icons: `GlobeAmericas`, `GlobeAlt`, `Signal`, `Clipboard`,
   `MagnifyingGlass`.
 - `copy-link-button` now renders `iconClipboard` instead of `iconLink` — a

@@ -9,6 +9,8 @@ let instanceCount = 0;
 export interface DropdownOption {
   value: string;
   label: string;
+  /** Optional leading icon rendered ahead of the label in the menu item. */
+  icon?: TemplateResult | null;
   /** Renders the item in the danger color, for a destructive action (e.g. Delete). */
   danger?: boolean;
 }
@@ -28,7 +30,10 @@ export type DropdownButtonVariant = "text" | "icon" | "text-icon";
  * square, low-emphasis icon target in the style of `icon-button` — the
  * classic "three-dot"/overflow menu, where `label` becomes the accessible
  * name rather than visible text). Set `size="sm"` for a compact trigger one
- * step below the default, matching `ui-button`'s `sm` size.
+ * step below the default, matching `ui-button`'s `sm` size. Set `circular`
+ * on the `icon` variant when the trigger wraps an inherently circular
+ * element (e.g. an avatar) so the hover/focus highlight matches its shape
+ * instead of the default rounded-square icon-button footprint.
  *
  * @element dropdown-button
  * @fires select - Fired with `{ value: string }` when a menu item is picked.
@@ -118,6 +123,12 @@ export class DropdownButton extends LitElement {
         background: var(--ui-surface-muted, #f8fafc);
         color: var(--ui-text, #0f172a);
       }
+      /* circular: for an icon-variant trigger wrapping a round element (e.g.
+         an avatar) — overrides the default rounded-square footprint so the
+         hover/focus highlight matches the wrapped element's own shape. */
+      :host([variant="icon"][circular]) button.trigger {
+        border-radius: 50%;
+      }
       :host([size="sm"]) button.trigger {
         height: 1.5rem;
         font-size: var(--ui-font-size-xs, 0.6875rem);
@@ -158,9 +169,18 @@ export class DropdownButton extends LitElement {
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }
       li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         padding: 0.5rem 0.75rem;
         cursor: pointer;
         color: var(--ui-text, #0f172a);
+      }
+      li .icon {
+        color: var(--ui-text-muted, #64748b);
+      }
+      li.danger .icon {
+        color: var(--ui-danger, #dc2626);
       }
       li.danger {
         color: var(--ui-danger, #dc2626);
@@ -211,6 +231,8 @@ export class DropdownButton extends LitElement {
   @property({ attribute: false }) icon: TemplateResult | null = null;
   /** Size — `sm` reduces the trigger's height/padding/font-size one step below the default. */
   @property({ reflect: true }) size: "sm" | "md" = "md";
+  /** `icon` variant only: renders the trigger's highlight as a circle instead of a rounded square, to match a wrapped circular element (e.g. an avatar). */
+  @property({ type: Boolean, reflect: true }) circular = false;
 
   @state() private _open = false;
   @state() private _activeIndex = -1;
@@ -298,6 +320,7 @@ export class DropdownButton extends LitElement {
                 this.#select(o);
               }}
             >
+              ${o.icon ? html`<span class="icon" aria-hidden="true">${o.icon}</span>` : nothing}
               ${o.label}
             </li>
           `,
