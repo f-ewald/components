@@ -2,13 +2,6 @@
 
 ## Unreleased
 
-- Fixed `app-shell`'s mobile drawer: since the Aug 6 sidebar redesign, the
-  mobile `.sidebar` spanned the literal full viewport width (`width: 100%`),
-  which sits above `.scrim` in stacking order (z-index 40 vs 39) and so fully
-  occluded it — scrim-click-to-dismiss was unreachable on mobile (Escape
-  still worked). `.sidebar` now uses `var(--component-sidebar-width, 16rem)`
-  capped at `calc(100vw - 3rem)`, the same pattern `.detail` already used,
-  restoring a visible/clickable scrim margin.
 - `dropdown-button` gains a `circular` boolean (icon variant only): renders
   the trigger's hover/focus highlight as a circle instead of the default
   rounded square, for triggers that wrap an inherently circular element

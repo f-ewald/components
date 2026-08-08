@@ -74,26 +74,23 @@ test.describe("app-shell", () => {
     await expect(tip).toContainText("[");
   });
 
-  test("a mobile viewport dims the page and the sidebar dismisses via scrim click or Escape", async ({
-    page,
-  }) => {
+  test("a mobile viewport dims the page and the sidebar dismisses via Escape", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 700 });
     await page.goto("/");
     const shell = page.locator("#app-shell-demo");
 
     await shell.locator(".nav-toggle").click();
     await expect(shell).toHaveAttribute("sidebar-open", "");
+    // Mobile's sidebar is always full-width (see the "always renders a
+    // full-screen, dismissible overlay" test below), so it sits above
+    // .scrim in stacking order and there's no exposed area left to click —
+    // .scrim only dims the page here; Escape is the actual dismiss path.
     const scrim = shell.locator(".scrim");
     await expect(scrim).toBeVisible();
 
-    await scrim.click();
-    await expect(shell).not.toHaveAttribute("sidebar-open", "");
-    await expect(scrim).toBeHidden();
-
-    await shell.locator(".nav-toggle").click();
-    await expect(shell).toHaveAttribute("sidebar-open", "");
     await page.keyboard.press("Escape");
     await expect(shell).not.toHaveAttribute("sidebar-open", "");
+    await expect(scrim).toBeHidden();
   });
 
   test("desktop shows the sidebar overlay with no dimming scrim and no Escape-dismiss", async ({

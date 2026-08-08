@@ -293,19 +293,16 @@ export class AppShell extends LitElement {
             "main   detail"
             "footer footer";
         }
-        /* Mobile is always a position:absolute overlay drawer, regardless of
-           sidebar-mode/sidebar-width — those two properties only affect the
-           desktop presentation (so e.g. sidebar-width="icon"'s narrow rail
-           never applies here). Capped by the same calc(100vw - 3rem) margin
-           .detail uses below, so a full-width sidebar-width setting still
-           leaves the .scrim visible and clickable at the edge — a sidebar
-           spanning the literal full viewport would sit above the scrim
-           (z-index 40 vs 39) and make scrim-click-to-dismiss unreachable. */
+        /* Mobile is always a full-screen, position:absolute overlay drawer,
+           regardless of sidebar-mode/sidebar-width — those two properties
+           only affect the desktop presentation. A full-width sidebar sits
+           above .scrim (z-index 40 vs 39), so .scrim's click target is only
+           reachable on desktop, where the sidebar doesn't span the whole
+           shell — Escape is the mobile dismiss path (see app-shell.spec.ts). */
         .sidebar,
         :host([sidebar-mode="push"]) .sidebar {
           position: absolute;
-          width: var(--component-sidebar-width, 16rem);
-          max-width: calc(100vw - 3rem);
+          width: 100%;
         }
         .detail {
           position: absolute;
