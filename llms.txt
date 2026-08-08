@@ -914,11 +914,14 @@ primary-filled button with a label and a rotating chevron), `text-icon`
 square, low-emphasis icon target in the style of `icon-button` — the
 classic "three-dot"/overflow menu, where `label` becomes the accessible
 name rather than visible text). Set `size="sm"` for a compact trigger one
-step below the default, matching `ui-button`'s `sm` size.
+step below the default, matching `ui-button`'s `sm` size. Set `circular`
+on the `icon` variant when the trigger wraps an inherently circular
+element (e.g. an avatar) so the hover/focus highlight matches its shape
+instead of the default rounded-square icon-button footprint.
 
 Import: `import "@f-ewald/components/dropdown-button.js";`
 
-Properties: `label` (attribute `label`) : string, default ""; `options` (JS property only) : DropdownOption[], default []; `disabled` (attribute `disabled`) : boolean, default false; `variant` (attribute `variant`) : DropdownButtonVariant, default "text"; `icon` (JS property only) : TemplateResult | null, default null; `size` (attribute `size`) : "sm" | "md", default "md"
+Properties: `label` (attribute `label`) : string, default ""; `options` (JS property only) : DropdownOption[], default []; `disabled` (attribute `disabled`) : boolean, default false; `variant` (attribute `variant`) : DropdownButtonVariant, default "text"; `icon` (JS property only) : TemplateResult | null, default null; `size` (attribute `size`) : "sm" | "md", default "md"; `circular` (attribute `circular`) : boolean, default false
 Events: `select`
 CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-highlight`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 

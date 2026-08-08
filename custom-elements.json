@@ -6523,7 +6523,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A button that opens an anchored menu of actions — essentially `form-select`\nminus \"current value\" semantics: a menu, not a select. Use for a set of\nmutually exclusive next-step actions (e.g. a failed task's Retry / Close /\nBacklog, or a table row's overflow actions).\n\nThree trigger presentations share one base: `text` (the default — a\nprimary-filled button with a label and a rotating chevron), `text-icon`\n(the same, with `icon` ahead of the label), and `icon` (a borderless,\nsquare, low-emphasis icon target in the style of `icon-button` — the\nclassic \"three-dot\"/overflow menu, where `label` becomes the accessible\nname rather than visible text). Set `size=\"sm\"` for a compact trigger one\nstep below the default, matching `ui-button`'s `sm` size.",
+          "description": "A button that opens an anchored menu of actions — essentially `form-select`\nminus \"current value\" semantics: a menu, not a select. Use for a set of\nmutually exclusive next-step actions (e.g. a failed task's Retry / Close /\nBacklog, or a table row's overflow actions).\n\nThree trigger presentations share one base: `text` (the default — a\nprimary-filled button with a label and a rotating chevron), `text-icon`\n(the same, with `icon` ahead of the label), and `icon` (a borderless,\nsquare, low-emphasis icon target in the style of `icon-button` — the\nclassic \"three-dot\"/overflow menu, where `label` becomes the accessible\nname rather than visible text). Set `size=\"sm\"` for a compact trigger one\nstep below the default, matching `ui-button`'s `sm` size. Set `circular`\non the `icon` variant when the trigger wraps an inherently circular\nelement (e.g. an avatar) so the hover/focus highlight matches its shape\ninstead of the default rounded-square icon-button footprint.",
           "name": "DropdownButton",
           "members": [
             {
@@ -6584,6 +6584,17 @@
               "default": "\"md\"",
               "description": "Size — `sm` reduces the trigger's height/padding/font-size one step below the default.",
               "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "circular",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "`icon` variant only: renders the trigger's highlight as a circle instead of a rounded square, to match a wrapped circular element (e.g. an avatar).",
+              "attribute": "circular",
               "reflects": true
             },
             {
@@ -6741,6 +6752,15 @@
               "default": "\"md\"",
               "description": "Size — `sm` reduces the trigger's height/padding/font-size one step below the default.",
               "fieldName": "size"
+            },
+            {
+              "name": "circular",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "`icon` variant only: renders the trigger's highlight as a circle instead of a rounded square, to match a wrapped circular element (e.g. an avatar).",
+              "fieldName": "circular"
             }
           ],
           "superclass": {
