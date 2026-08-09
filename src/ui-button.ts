@@ -76,7 +76,9 @@ export class UiButton extends LitElement {
       }
       .btn {
         display: inline-flex;
+        width: 100%;
         align-items: center;
+        justify-content: center;
         gap: 0.25rem;
         height: 2rem;
         border-radius: var(--ui-radius-sm, 0.25rem);
