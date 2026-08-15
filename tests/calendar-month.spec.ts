@@ -563,19 +563,59 @@ test.describe("calendar-month", () => {
     await expect(calendar).toHaveJSProperty("month", 6);
   });
 
-  test("renders a slotted location with a marker icon on the title cell and the shared body", async ({ page }) => {
+  test("renders a slotted location with a marker icon on the shared body only, not the multi-day title cell", async ({
+    page,
+  }) => {
     await page.goto("/");
     const rows = page.locator("#calendar-month-demo tbody tr");
     const titleCell = rows.nth(26).locator(".entry-bar.neutral"); // July 27, first visible day
     const bodyCell = rows.nth(27).locator(".entry-body-cell.neutral"); // July 28, shared body
 
-    const titleLocation = titleCell.locator(".entry-location");
-    await expect(titleLocation).toBeVisible();
-    await expect(titleLocation).toContainText("Downtown bistro");
-    await expect(titleLocation.locator("svg")).toBeVisible();
+    // A multi-day entry has room for the location on its shared body row, so
+    // it isn't repeated beside the headline on the title cell.
+    await expect(titleCell.locator(".entry-location")).toHaveCount(0);
 
     const bodyLocation = bodyCell.locator(".entry-location");
     await expect(bodyLocation).toBeVisible();
     await expect(bodyLocation).toContainText("Downtown bistro");
+    await expect(bodyLocation.locator("svg")).toBeVisible();
+  });
+
+  test("renders the title cell's location inline next to the headline, truncated with a hover tooltip", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const titleCell = page.locator("#calendar-month-demo .entry-title-cell", {
+      hasText: "Design review standup",
+    });
+    const title = titleCell.locator(".entry-title");
+    const location = titleCell.locator(".entry-location");
+
+    await expect(title).toHaveText("Design review standup");
+    await expect(location).toContainText("Building 4");
+
+    // Title and location sit on the same line instead of stacking.
+    const [titleBox, locationBox] = await Promise.all([title.boundingBox(), location.boundingBox()]);
+    expect(titleBox).not.toBeNull();
+    expect(locationBox).not.toBeNull();
+    expect(Math.abs(titleBox!.y - locationBox!.y)).toBeLessThan(1);
+
+    // The long location is clipped by the row rather than growing the cell.
+    const locationText = location.locator(".entry-location-text");
+    const overflow = await locationText.evaluate((element) => element.scrollWidth > element.clientWidth);
+    expect(overflow).toBe(true);
+    await expect(locationText).toHaveCSS("text-overflow", "ellipsis");
+
+    // The full label + location remain available via the native hover tooltip.
+    await expect(titleCell).toHaveAttribute("title", /Design review standup.*Building 4/);
+
+    // A location doesn't grow the title cell taller than a sibling without one.
+    const [cellHeight, siblingHeight] = await Promise.all([
+      titleCell.evaluate((element) => element.getBoundingClientRect().height),
+      page
+        .locator("#calendar-month-demo .entry-title-cell", { hasText: "Dentist" })
+        .evaluate((element) => element.getBoundingClientRect().height),
+    ]);
+    expect(Math.abs(cellHeight - siblingHeight)).toBeLessThan(1);
   });
 });

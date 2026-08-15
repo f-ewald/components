@@ -194,7 +194,6 @@ export class CalendarMonth extends LitElement {
       .entry-title {
         box-sizing: border-box;
         font-weight: var(--ui-font-weight-medium, 500);
-        padding: 0.25rem 0.5rem;
         pointer-events: none;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -208,18 +207,36 @@ export class CalendarMonth extends LitElement {
         color: inherit;
         font-size: var(--ui-font-size-xs, 0.6875rem);
         font-weight: var(--ui-font-weight-regular, 400);
-        white-space: nowrap;
-        text-overflow: ellipsis;
         pointer-events: none;
       }
       .entry-location svg {
         flex: 0 0 auto;
       }
-      .entry-title-cell .entry-location {
-        padding: 0 0.5rem 0.25rem;
+      .entry-location-text {
+        overflow: hidden;
+        min-width: 0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .entry-body .entry-location {
         margin-bottom: 0.25rem;
+      }
+      .entry-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.125rem;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 0.25rem 0.5rem;
+      }
+      .entry-title-row .entry-title {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .entry-title-row .entry-location {
+        flex: 0 1 auto;
+        min-width: 0;
+        max-width: 60%;
       }
       .entry-details {
         display: -webkit-box;
@@ -415,7 +432,9 @@ export class CalendarMonth extends LitElement {
       ${this._renderEntryLink(entry, bodyText)}
       <div class="entry-body" aria-hidden=${entry.href ? "true" : nothing}>
         ${entry.location
-          ? html`<div class="entry-location">${iconMapPin(14)}${entry.location}</div>`
+          ? html`<div class="entry-location">
+              ${iconMapPin(14)}<span class="entry-location-text">${entry.location}</span>
+            </div>`
           : nothing}
         ${detailLineClamp > 0 && details.length > 0
           ? html`
@@ -499,14 +518,16 @@ export class CalendarMonth extends LitElement {
         title=${entry.href ? nothing : bodyText}
       >
         ${this._renderEntryLink(entry, bodyText)}
-        <span class="entry-line entry-title" aria-hidden=${entry.href ? "true" : nothing}>
-          ${entry.label}
+        <span class="entry-title-row">
+          <span class="entry-line entry-title" aria-hidden=${entry.href ? "true" : nothing}>
+            ${entry.label}
+          </span>
+          ${entry.location && !isMultiDayEntry
+            ? html`<span class="entry-line entry-location" aria-hidden=${entry.href ? "true" : nothing}
+                >${iconMapPin(14)}<span class="entry-location-text">${entry.location}</span></span
+              >`
+            : nothing}
         </span>
-        ${entry.location
-          ? html`<span class="entry-line entry-location" aria-hidden=${entry.href ? "true" : nothing}
-              >${iconMapPin(14)}${entry.location}</span
-            >`
-          : nothing}
       </td>
     `;
   }

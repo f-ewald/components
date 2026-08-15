@@ -675,6 +675,43 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
               >
                 <span slot="location">Downtown bistro</span>
               </calendar-entry>
+              <calendar-entry
+                id="cm-entry-teamsync"
+                start="2026-07-05"
+                end="2026-07-05"
+                label="Team sync"
+                color="neutral"
+              >
+                <span slot="location">Room 12</span>
+              </calendar-entry>
+              <calendar-entry
+                id="cm-entry-standup"
+                start="2026-07-13"
+                end="2026-07-13"
+                label="Design review standup"
+                color="primary"
+              >
+                <span slot="location">Building 4, 3rd floor conference room near the north elevators</span>
+              </calendar-entry>
+              <calendar-entry
+                id="cm-entry-budget"
+                start="2026-07-12"
+                end="2026-07-12"
+                label="Budget check-in"
+                color="danger"
+              >
+                <span slot="location">Finance office, 2nd floor, ask front desk for a visitor badge</span>
+              </calendar-entry>
+              <calendar-entry
+                id="cm-entry-offsite"
+                start="2026-07-24"
+                end="2026-07-26"
+                label="Team offsite"
+                color="primary"
+              >
+                <span slot="detail">Bring hiking boots</span>
+                <span slot="location">Lakeside retreat center, Cabin building B, room 214</span>
+              </calendar-entry>
             </calendar-month>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/calendar-month.js";
@@ -699,6 +736,19 @@ document.querySelector("#button-group-sm").value = "list";</code></pre>
   &lt;/calendar-entry&gt;
   &lt;calendar-entry start="2026-07-27" end="2026-07-28" label="Client lunch" color="neutral"&gt;
     &lt;span slot="location"&gt;Downtown bistro&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-05" end="2026-07-05" label="Team sync" color="neutral"&gt;
+    &lt;span slot="location"&gt;Room 12&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-13" end="2026-07-13" label="Design review standup" color="primary"&gt;
+    &lt;span slot="location"&gt;Building 4, 3rd floor conference room near the north elevators&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-12" end="2026-07-12" label="Budget check-in" color="danger"&gt;
+    &lt;span slot="location"&gt;Finance office, 2nd floor, ask front desk for a visitor badge&lt;/span&gt;
+  &lt;/calendar-entry&gt;
+  &lt;calendar-entry start="2026-07-24" end="2026-07-26" label="Team offsite" color="primary"&gt;
+    &lt;span slot="detail"&gt;Bring hiking boots&lt;/span&gt;
+    &lt;span slot="location"&gt;Lakeside retreat center, Cabin building B, room 214&lt;/span&gt;
   &lt;/calendar-entry&gt;
 &lt;/calendar-month&gt;</code></pre>
         </section>
