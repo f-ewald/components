@@ -69,6 +69,7 @@ _None._
 | `--ui-line-height-tight` |
 | `--ui-on-accent` |
 | `--ui-primary` |
+| `--ui-radius-pill` |
 | `--ui-radius-sm` |
 | `--ui-success` |
 | `--ui-surface` |

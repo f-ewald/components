@@ -14,7 +14,12 @@ Import patterns:
 Theming: components use `var(--ui-*, <fallback>)` custom properties, so they
 render correctly with zero external CSS. Override any `--ui-*` property on
 `:root` (or an ancestor) to retheme, or import the optional
-`@f-ewald/components/tokens.css` stylesheet as a starting point.
+`@f-ewald/components/tokens.css` stylesheet as a starting point. That
+stylesheet also ships four named themes, selected with a `data-theme`
+attribute on `<html>` (mutually exclusive): `"dark"`/`"light"` force one of
+the two flat palettes over the OS preference, `"gradient"` glosses buttons and
+toasts, and `"metro"` squares every tokenized corner and replaces drop shadows
+with hairline rings over a blue accent.
 
 ## Icons
 
@@ -435,7 +440,7 @@ Import: `import "@f-ewald/components/calendar-day.js";`
 
 Properties: `date` (attribute `date`) : string, default —; `timeMarker` (attribute `time-marker`) : boolean, default false; `minWidth` (attribute `min-width`) : string, default ""
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-hover-overlay`, `--ui-info`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-hover-overlay`, `--ui-info`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
 
 Example:
 ```html
@@ -891,7 +896,7 @@ Import: `import "@f-ewald/components/distribution-chart.js";`
 
 Properties: `metric` (attribute `metric`) : string, default ""; `values` (JS property only) : DistributionValue[], default []; `markerColors` (JS property only) : string[], default ["#4f46e5", "#d97706", "#0d9488", "#e11d48"]; `fontSize` (attribute `font-size`) : number, default 10
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-primary`, `--ui-radius-circle`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text-muted`
 
 Example:
 ```html
@@ -923,7 +928,7 @@ Import: `import "@f-ewald/components/dropdown-button.js";`
 
 Properties: `label` (attribute `label`) : string, default ""; `options` (JS property only) : DropdownOption[], default []; `disabled` (attribute `disabled`) : boolean, default false; `variant` (attribute `variant`) : DropdownButtonVariant, default "text"; `icon` (JS property only) : TemplateResult | null, default null; `size` (attribute `size`) : "sm" | "md", default "md"; `circular` (attribute `circular`) : boolean, default false
 Events: `select`
-CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-highlight`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-highlight`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-circle`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1063,7 +1068,7 @@ Import: `import "@f-ewald/components/form-select.js";`
 
 Properties: `options` (JS property only) : SelectOption[], default []; `value` (attribute `value`) : string, default ""; `label` (attribute `label`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `searchable` (attribute `searchable`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1232,7 +1237,7 @@ Import: `import "@f-ewald/components/kanban-board.js";`
 
 Properties: `columns` (JS property only) : KanbanColumnData[], default []; `label` (attribute `label`) : string, default "Board"; `manual` (attribute `manual`) : boolean, default false; `reorderable` (attribute `reorderable`) : boolean, default true
 Events: `card-move`, `card-open`
-CSS custom properties: `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-normal`, `--ui-primary`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-normal`, `--ui-primary`, `--ui-radius-pill`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1299,7 +1304,7 @@ Import: `import "@f-ewald/components/kanban-column.js";`
 
 Properties: `heading` (attribute `heading`) : string, default ""; `count` (attribute `count`) : number, default 0; `dragover` (attribute `dragover`) : boolean, default false; `empty` (attribute `empty`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-glyph`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-glyph`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1337,7 +1342,7 @@ Import: `import "@f-ewald/components/link-card.js";`
 
 Properties: `heading` (attribute `heading`) : string, default ""; `description` (attribute `description`) : string, default ""; `href` (attribute `href`) : string, default ""; `logo` (attribute `logo`) : string, default ""; `status` (attribute `status`) : LinkCardStatus, default ""
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-radius`, `--ui-shadow`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-radius`, `--ui-radius-pill`, `--ui-shadow`, `--ui-success`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1402,7 +1407,7 @@ Import: `import "@f-ewald/components/loading-dots.js";`
 
 Properties: `size` (attribute `size`) : "sm" | "md" | "lg", default "md"; `label` (attribute `label`) : string, default "Loading"
 Events: none
-CSS custom properties: `--ui-line-height-glyph`, `--ui-primary`
+CSS custom properties: `--ui-line-height-glyph`, `--ui-primary`, `--ui-radius-pill`
 
 Example:
 ```html
@@ -1657,7 +1662,7 @@ Import: `import "@f-ewald/components/multi-select.js";`
 
 Properties: `options` (JS property only) : MultiSelectOption[], default []; `values` (JS property only) : string[], default []; `name` (attribute `name`) : string, default ""; `label` (attribute `label`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default "Select options"; `disabled` (attribute `disabled`) : boolean, default false; `required` (attribute `required`) : boolean, default false; `searchable` (attribute `searchable`) : boolean, default false; `max` (attribute `max`) : number, default 0; `variant` (attribute `variant`) : MultiSelectVariant, default "dropdown"; `visibleRows` (attribute `visible-rows`) : number, default 5; `showChips` (attribute `show-chips`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1781,7 +1786,7 @@ Import: `import "@f-ewald/components/photo-gallery.js";`
 
 Properties: `currentIndex` (attribute `current-index`) : number, default 0; `delay` (attribute `delay`) : number, default 0; `showControls` (attribute `show-controls`) : boolean, default true; `showCounter` (attribute `show-counter`) : boolean, default false; `showIndicators` (attribute `show-indicators`) : boolean, default false; `showAutoplayControl` (attribute `show-autoplay-control`) : boolean, default true; `paused` (attribute `paused`) : boolean, default false; `aspectRatio` (attribute `aspect-ratio`) : string, default "16 / 9"; `objectFit` (attribute `object-fit`) : PhotoGalleryObjectFit, default "cover"
 Events: `slide-change`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1950,7 +1955,7 @@ Import: `import "@f-ewald/components/radio-pills.js";`
 
 Properties: `options` (JS property only) : RadioPillOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-button-accent`, `--ui-button-highlight`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-button-accent`, `--ui-button-highlight`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-pill`, `--ui-surface-muted`, `--ui-text`
 
 Example:
 ```html
@@ -1981,7 +1986,7 @@ Import: `import "@f-ewald/components/range-slider.js";`
 
 Properties: `min` (attribute `min`) : number, default 0; `max` (attribute `max`) : number, default 100; `step` (attribute `step`) : number, default 1; `value` (attribute `value`) : number, default 0; `disabled` (attribute `disabled`) : boolean, default false; `name` (attribute `name`) : string, default ""
 Events: `input`, `change`
-CSS custom properties: `--ui-button-accent`, `--ui-button-background`, `--ui-button-highlight`, `--ui-focus-ring`, `--ui-primary`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`
+CSS custom properties: `--ui-button-accent`, `--ui-button-background`, `--ui-button-highlight`, `--ui-focus-ring`, `--ui-primary`, `--ui-radius-circle`, `--ui-radius-pill`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2068,7 +2073,7 @@ Import: `import "@f-ewald/components/scroll-dots.js";`
 
 Properties: `items` (JS property only) : ScrollDotsItem[], default []; `active` (attribute `active`) : number, default 0; `color` (attribute `color`) : string, default ""; `label` (attribute `label`) : string, default ""
 Events: `dot-select`
-CSS custom properties: `--ui-focus-ring`, `--ui-primary`, `--ui-text-muted`
+CSS custom properties: `--ui-focus-ring`, `--ui-primary`, `--ui-radius-pill`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2170,7 +2175,7 @@ Import: `import "@f-ewald/components/slide-panel.js";`
 
 Properties: `open` (attribute `open`) : boolean, default false; `heading` (attribute `heading`) : string, default ""
 Events: `panel-close`
-CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-lg`, `--ui-font-weight-semibold`, `--ui-line-height-tight`, `--ui-radius`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2217,7 +2222,7 @@ Import: `import "@f-ewald/components/stat-meter.js";`
 
 Properties: `label` (attribute `label`) : string, default ""; `percent` (attribute `percent`) : number | null, default null; `color` (attribute `color`) : string, default ""; `trackColor` (attribute `track-color`) : string, default ""
 Events: none
-CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`
+CSS custom properties: `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-radius-pill`, `--ui-success`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`
 
 Example:
 ```html
@@ -2263,7 +2268,7 @@ Import: `import "@f-ewald/components/status-pill.js";`
 
 Properties: `label` (attribute `label`) : string, default ""; `color` (attribute `color`) : StatusPillColor, default "neutral"; `spinner` (attribute `spinner`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-info`, `--ui-primary`, `--ui-success`, `--ui-text-muted`, `--ui-warning`
+CSS custom properties: `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-info`, `--ui-primary`, `--ui-radius-pill`, `--ui-success`, `--ui-text-muted`, `--ui-warning`
 
 Example:
 ```html
@@ -2473,7 +2478,7 @@ Import: `import "@f-ewald/components/timeline-entry.js";`
 
 Properties: `datetime` (attribute `datetime`) : string | null, default null; `label` (attribute `label`) : string | null, default null; `alternating` (attribute `alternating`) : boolean, default false; `color` (attribute `color`) : StatusPillColor, default "primary"; `compact` (attribute `compact`) : boolean, default false; `running` (attribute `running`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`, `--ui-warning`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-info`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-pill`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`, `--ui-warning`
 
 Example:
 ```html
@@ -2663,7 +2668,7 @@ Import: `import "@f-ewald/components/ui-button.js";`
 
 Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `pill` (attribute `pill`) : boolean, default false; `ai` (attribute `ai`) : boolean, default false; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-ai-1`, `--ui-ai-2`, `--ui-ai-3`, `--ui-ai-4`, `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-ai-1`, `--ui-ai-2`, `--ui-ai-3`, `--ui-ai-4`, `--ui-border`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2718,7 +2723,7 @@ Import: `import "@f-ewald/components/user-avatar.js";`
 
 Properties: `src` (attribute `src`) : string | null, default null; `name` (attribute `name`) : string | null, default null; `size` (attribute `size`) : string | number, default 32
 Events: none
-CSS custom properties: `--ui-font`, `--ui-font-weight-semibold`, `--ui-on-accent`, `--ui-primary`
+CSS custom properties: `--ui-font`, `--ui-font-weight-semibold`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-circle`
 
 Example:
 ```html

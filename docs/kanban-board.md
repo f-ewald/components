@@ -92,5 +92,6 @@ _None._
 | `--ui-font-weight-medium` |
 | `--ui-line-height-normal` |
 | `--ui-primary` |
+| `--ui-radius-pill` |
 | `--ui-text` |
 | `--ui-text-muted` |

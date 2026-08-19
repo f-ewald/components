@@ -30,7 +30,7 @@ export const transportRangeStyles = css`
   }
   input[type="range"]::-webkit-slider-runnable-track {
     height: 0.25rem;
-    border-radius: 9999px;
+    border-radius: var(--ui-radius-pill, 9999px);
     /* A hard-stop gradient two-tone fill trick — see range-slider.ts for why
        this reads --ui-button-accent rather than --ui-button-background. */
     background: linear-gradient(
@@ -43,12 +43,12 @@ export const transportRangeStyles = css`
   }
   input[type="range"]::-moz-range-track {
     height: 0.25rem;
-    border-radius: 9999px;
+    border-radius: var(--ui-radius-pill, 9999px);
     background: var(--ui-surface-muted, #f8fafc);
   }
   input[type="range"]::-moz-range-progress {
     height: 0.25rem;
-    border-radius: 9999px;
+    border-radius: var(--ui-radius-pill, 9999px);
     background: var(--ui-button-accent, var(--ui-primary, #4f46e5));
   }
   input[type="range"]::-webkit-slider-thumb {
@@ -59,7 +59,7 @@ export const transportRangeStyles = css`
     /* WebKit centers the thumb on the input's full 1rem box, not the
        thinner custom track — nudge it up to align, as in range-slider.ts. */
     transform: translateY(-0.25rem);
-    border-radius: 50%;
+    border-radius: var(--ui-radius-circle, 50%);
     background: var(--ui-button-background, var(--ui-primary, #4f46e5));
     border: 2px solid var(--ui-surface, #ffffff);
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent);
@@ -67,7 +67,7 @@ export const transportRangeStyles = css`
   input[type="range"]::-moz-range-thumb {
     width: 0.75rem;
     height: 0.75rem;
-    border-radius: 50%;
+    border-radius: var(--ui-radius-circle, 50%);
     background: var(--ui-button-background, var(--ui-primary, #4f46e5));
     border: 2px solid var(--ui-surface, #ffffff);
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent);

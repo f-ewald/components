@@ -89,6 +89,7 @@ _None._
 | `--ui-on-accent` |
 | `--ui-primary` |
 | `--ui-primary-hover` |
+| `--ui-radius-circle` |
 | `--ui-radius-sm` |
 | `--ui-shadow` |
 | `--ui-surface` |

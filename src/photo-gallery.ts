@@ -202,7 +202,7 @@ export class PhotoGallery extends LitElement {
         padding: 0;
         color: var(--ui-on-accent, #ffffff);
         background: var(--ui-overlay, rgb(15 23 42 / 0.45));
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         pointer-events: auto;
       }
       .arrow-button:hover {
@@ -240,7 +240,7 @@ export class PhotoGallery extends LitElement {
         height: 2rem;
         padding: 0;
         background: transparent;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
       }
       .indicator::before {
         position: absolute;
@@ -249,7 +249,7 @@ export class PhotoGallery extends LitElement {
         width: 0.625rem;
         height: 0.625rem;
         background: var(--ui-border, #e2e8f0);
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         content: "";
         transform: translate(-50%, -50%);
       }

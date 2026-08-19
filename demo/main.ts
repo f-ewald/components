@@ -87,6 +87,7 @@ import {
   type CommentComposer,
 } from "../src/index.js";
 import { addDays, toIsoDate } from "../src/utils/calendar.js";
+import { gradientTokenValues, metroTokenValues } from "../src/tokens.js";
 
 /**
  * Demo-only fetch shim: distribution-chart fetches its data from
@@ -1329,27 +1330,57 @@ const observer = new IntersectionObserver(
 );
 for (const section of sections) observer.observe(section);
 
-// Playground-only "button style" picker — live-previews the ui-button
-// gradient-theming hook (--ui-button-background/-hover/-border and the
-// --ui-button-danger-* equivalents; see src/ui-button.ts) by toggling the
-// data-button-style attribute demo/demo.css keys its gradient overrides off
-// of. Persisted across reloads so a chosen style survives navigation. Uses
-// form-select (this package's own styled dropdown) rather than a bare
-// <select> so it matches the other playground-chrome fields.
-const BUTTON_STYLE_KEY = "button-style";
-const buttonStylePicker = document.getElementById("button-style-picker") as FormSelect | null;
-if (buttonStylePicker) {
-  buttonStylePicker.options = [
-    { value: "flat", label: "Flat (default)" },
+// Playground-only theme picker — live-previews the shipped `data-theme`
+// mechanism against the real token maps in src/tokens.ts, the same ones
+// generate-tokens-css.mjs reads, so the preview can't drift from what
+// dist/tokens.css ships. The values have to come from somewhere: the
+// playground imports component *sources*, never the built package, so it never
+// loads dist/tokens.css and the [data-theme] rules in it aren't present here.
+//
+// This replaced a separate "button style" picker that toggled a demo-only
+// data-button-style attribute against a hand-mirrored copy of the gradient
+// theme in demo/demo.css. That copy had drifted into a different tuning
+// entirely (indigo-500->700 rather than the shipped ->600, white->slate-200
+// secondaries rather than slate-50->100), so the playground was advertising a
+// gradient no consumer could actually get.
+//
+// The values are applied as inline custom properties, which outrank every
+// stylesheet — so switching back to Default has to remove each one rather than
+// just dropping the attribute. The attribute is still set alongside them, so
+// anything keying off [data-theme] behaves as it would in a real consumer.
+const THEME_KEY = "theme";
+const THEMES: Record<string, Record<string, string>> = {
+  default: {},
+  gradient: gradientTokenValues,
+  metro: metroTokenValues,
+};
+
+const applyTheme = (name: string) => {
+  const { style, dataset } = document.documentElement;
+  for (const values of Object.values(THEMES)) {
+    for (const property of Object.keys(values)) style.removeProperty(property);
+  }
+  for (const [property, value] of Object.entries(THEMES[name] ?? {})) {
+    style.setProperty(property, value);
+  }
+  if (name === "default") delete dataset.theme;
+  else dataset.theme = name;
+};
+
+const themePicker = document.getElementById("theme-picker") as FormSelect | null;
+if (themePicker) {
+  themePicker.options = [
+    { value: "default", label: "Default" },
     { value: "gradient", label: "Gradient" },
+    { value: "metro", label: "Metro" },
   ];
-  const stored = localStorage.getItem(BUTTON_STYLE_KEY) ?? "flat";
-  buttonStylePicker.value = stored;
-  document.documentElement.dataset.buttonStyle = stored;
-  buttonStylePicker.addEventListener("change", (e) => {
+  const storedTheme = localStorage.getItem(THEME_KEY) ?? "default";
+  themePicker.value = storedTheme;
+  applyTheme(storedTheme);
+  themePicker.addEventListener("change", (e) => {
     const { value } = (e as CustomEvent<{ value: string }>).detail;
-    document.documentElement.dataset.buttonStyle = value;
-    localStorage.setItem(BUTTON_STYLE_KEY, value);
+    applyTheme(value);
+    localStorage.setItem(THEME_KEY, value);
   });
 }
 

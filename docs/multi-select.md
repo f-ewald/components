@@ -113,6 +113,7 @@ _None._
 | `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius` |
+| `--ui-radius-pill` |
 | `--ui-radius-sm` |
 | `--ui-shadow` |
 | `--ui-surface` |

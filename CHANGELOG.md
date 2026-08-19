@@ -2,6 +2,50 @@
 
 ## Unreleased
 
+- New `--ui-radius-pill` (`9999px`) and `--ui-radius-circle` (`50%`) tokens.
+  Deliberate pill and circle shapes — `status-pill`, `user-avatar`,
+  `loading-dots`, `scroll-dots`, `radio-pills`, `range-slider`'s track/thumb,
+  `ui-button[pill]`, `multi-select`'s chips, and 12 more components — hardcoded
+  `9999px`/`999px`/`50%`, which silently opted them out of every theme. All 33
+  usages now read the tokens, and the inconsistent `999px`/`9999px` pair is
+  normalized. A design-language contract test rejects new hardcoded values.
+  Default rendering is unchanged.
+
+- Added a `"metro"` theme (`data-theme="metro"` on `<html>`, alongside the
+  existing `"light"`/`"dark"`/`"gradient"` values): square corners, hairline
+  rings in place of drop shadows, and a blue accent, for a flat,
+  dense-bookmarking-site look. It is the first theme to override shape rather
+  than only color — `--ui-radius`/`--ui-radius-sm` go to `0`, as do the new
+  `--ui-radius-pill`/`--ui-radius-circle`, so every corner in the design system
+  squares. The one residual is `price-history-chart`'s SVG `rx` presentation
+  attribute, which cannot take a `var()`. The shadow tokens
+  become a hard 1px ring rather than `none`, so `slide-panel` — the only
+  overlay without a border of its own — keeps a visible edge.
+- `gradientTokenValues` and the new `metroTokenValues` are now exported from
+  the package root, alongside the existing `tokenValues`/`darkTokenValues`;
+  `gradientTokenValues` had been omitted.
+- `tokens.css` generation now derives each light-palette theme's `[data-theme]`
+  block and its `prefers-color-scheme: dark` exclusion from one list, so the
+  two can no longer drift. A missing exclusion was silent but not harmless: the
+  media query's selector outranks a bare `[data-theme]`, so the theme would
+  render as a half-dark hybrid under an OS dark preference. Covered by a new
+  design-language contract test.
+- The playground gains a Theme picker, driven by the token maps in
+  `src/tokens.ts` directly rather than by a hand-mirrored copy in `demo.css`.
+  It replaces the separate "Button style" picker, which toggled a demo-only
+  `data-button-style` attribute: gradient is a `data-theme` value like any
+  other, so the playground now exercises the shipped mechanism instead of a
+  parallel one. The mirror it removed had drifted into a different tuning
+  altogether (indigo-500→700 rather than the shipped →600, white→slate-200
+  secondaries rather than slate-50→100), so the gradient shown in the
+  playground was one no consumer could actually get.
+- Fixed the `"gradient"` theme leaving `--ui-button-secondary-surface-muted`
+  flat. `button-group`'s unchecked segments, `pagination-nav`'s prev/next
+  buttons, and `radio-cards`/`radio-pills`' checked background read that token
+  rather than `--ui-button-secondary-background`, so they stayed matte while
+  every actual secondary button turned glossy. It now tracks the secondary
+  hover gradient.
+
 - `dropdown-button` gains a `circular` boolean (icon variant only): renders
   the trigger's hover/focus highlight as a circle instead of the default
   rounded square, for triggers that wrap an inherently circular element

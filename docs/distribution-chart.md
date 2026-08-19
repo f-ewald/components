@@ -51,6 +51,7 @@ _None._
 | `--ui-font-size-sm` |
 | `--ui-font-size-xs` |
 | `--ui-primary` |
+| `--ui-radius-circle` |
 | `--ui-radius-sm` |
 | `--ui-surface-muted` |
 | `--ui-text-muted` |

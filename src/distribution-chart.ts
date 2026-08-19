@@ -130,7 +130,7 @@ export class DistributionChart extends LitElement {
         display: inline-block;
         width: 0.5rem;
         height: 0.5rem;
-        border-radius: 50%;
+        border-radius: var(--ui-radius-circle, 50%);
         flex: 0 0 auto;
       }
       @media (prefers-reduced-motion: reduce) {

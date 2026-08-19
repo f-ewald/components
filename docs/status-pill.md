@@ -42,6 +42,7 @@ _None._
 | `--ui-font-weight-medium` |
 | `--ui-info` |
 | `--ui-primary` |
+| `--ui-radius-pill` |
 | `--ui-success` |
 | `--ui-text-muted` |
 | `--ui-warning` |

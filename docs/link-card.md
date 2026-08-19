@@ -57,6 +57,7 @@ _None._
 | `--ui-line-height-normal` |
 | `--ui-line-height-tight` |
 | `--ui-radius` |
+| `--ui-radius-pill` |
 | `--ui-shadow` |
 | `--ui-success` |
 | `--ui-surface` |

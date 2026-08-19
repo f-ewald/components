@@ -78,7 +78,7 @@ export class ScrollDots extends LitElement {
         height: 0.625rem;
         padding: 0;
         border: none;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         /* Same lighter-on-top token gradient as map-circle/timeline-entry's
            dot; the base color is swapped via the private --_dot var. */
         background: linear-gradient(

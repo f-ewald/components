@@ -42,3 +42,4 @@ _None._
 | `--ui-font-weight-semibold` |
 | `--ui-on-accent` |
 | `--ui-primary` |
+| `--ui-radius-circle` |

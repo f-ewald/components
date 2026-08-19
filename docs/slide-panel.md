@@ -52,6 +52,7 @@ import "@f-ewald/components/slide-panel.js";
 | `--ui-font-weight-semibold` |
 | `--ui-line-height-tight` |
 | `--ui-radius` |
+| `--ui-radius-pill` |
 | `--ui-radius-sm` |
 | `--ui-shadow-lg` |
 | `--ui-surface` |

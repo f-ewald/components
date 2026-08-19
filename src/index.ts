@@ -158,5 +158,11 @@ export {
   type CronFrequency,
   type CronTerm,
 } from "./utils/cron.js";
-export { tokens, tokenValues, darkTokenValues } from "./tokens.js";
+export {
+  tokens,
+  tokenValues,
+  darkTokenValues,
+  gradientTokenValues,
+  metroTokenValues,
+} from "./tokens.js";
 export * from "./icons.js";

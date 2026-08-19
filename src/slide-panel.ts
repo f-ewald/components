@@ -135,7 +135,7 @@ export class SlidePanel extends LitElement {
           width: 2.25rem;
           height: 0.25rem;
           background: var(--ui-border, #e2e8f0);
-          border-radius: 9999px;
+          border-radius: var(--ui-radius-pill, 9999px);
           margin: 0.5rem auto 0;
           flex: 0 0 auto;
         }

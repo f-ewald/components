@@ -77,6 +77,7 @@ import "@f-ewald/components/photo-gallery.js";
 | `--ui-overlay` |
 | `--ui-primary` |
 | `--ui-radius` |
+| `--ui-radius-pill` |
 | `--ui-radius-sm` |
 | `--ui-surface` |
 | `--ui-surface-muted` |

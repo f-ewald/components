@@ -178,11 +178,35 @@ set. Don't reintroduce that pattern.)
 Setting `data-theme="gradient"` on `<html>` layers a glossy gradient look
 onto `ui-button` (primary, danger, and secondary variants) and
 `toast-notification` (all four variants: success, error, info, warning) on
-top of the flat light palette — see `gradientTokenValues` in
+top of the flat light palette, plus the secondary muted surface shared by
+`button-group`, `pagination-nav`, `radio-cards`, and `radio-pills` — see
+`gradientTokenValues` in
 [`src/tokens.ts`](./src/tokens.ts). Every other token stays at its light-mode
 value. It takes precedence over the
 OS dark preference (like `data-theme="light"` does), since the gradient's
 color stops are hardcoded for a light surface.
+
+### Metro theme
+
+Setting `data-theme="metro"` on `<html>` flattens the light palette: square
+corners, hairline separators in place of drop shadows, and a blue accent — see
+`metroTokenValues` in [`src/tokens.ts`](./src/tokens.ts). Like
+`data-theme="gradient"`, it is built on the light palette and so takes
+precedence over the OS dark preference.
+
+This is the one theme that overrides **shape** rather than only color. It
+squares every corner in the design system, including the deliberate pill and
+circle shapes — chips, avatars, dots, slider thumbs — which read
+`--ui-radius-pill`/`--ui-radius-circle` for exactly that reason. Two notes:
+
+- If you add a component, route any pill or circle through those tokens rather
+  than a literal `9999px`/`50%`; a literal silently opts that shape out of every
+  theme. A design-language contract test enforces this.
+- One residual is out of reach: `price-history-chart` rounds its bars with an
+  SVG `rx` presentation attribute, which cannot take a `var()`.
+- `--ui-shadow`/`--ui-shadow-lg` become a hard 1px ring rather than `none`.
+  Removing them outright would leave `slide-panel` — the only overlay with no
+  border of its own — as an invisible white-on-white edge.
 
 The full token set is defined in [`src/tokens.ts`](./src/tokens.ts).
 Typography, spacing, control, icon, radius, panel, chart, and accessibility

@@ -82,7 +82,7 @@ export class KanbanColumn extends LitElement {
         box-sizing: border-box;
         background: var(--ui-surface, #ffffff);
         border: 1px solid var(--ui-border, #e2e8f0);
-        border-radius: 999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         font-size: var(--ui-font-size-xs, 0.6875rem);
         font-weight: var(--ui-font-weight-medium, 500);
         line-height: var(--ui-line-height-glyph, 1);

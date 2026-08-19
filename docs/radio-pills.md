@@ -64,5 +64,6 @@ _None._
 | `--ui-font-size-sm` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |
+| `--ui-radius-pill` |
 | `--ui-surface-muted` |
 | `--ui-text` |

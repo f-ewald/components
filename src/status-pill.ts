@@ -23,7 +23,7 @@ export class StatusPill extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         padding: 0.25rem 0.5rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: var(--ui-font-weight-medium, 500);

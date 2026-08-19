@@ -115,6 +115,13 @@ export const tokenValues: Record<string, string> = {
   // Shape / depth
   "--ui-radius": "0.5rem", // rounded-lg
   "--ui-radius-sm": "0.25rem", // rounded
+  // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot.
+  // Tokenized rather than hardcoded so a theme that squares the design system
+  // (metro) can reach them too; a literal 9999px/50% silently opts that shape
+  // out of every theme. Use these only where the shape is the point, not as a
+  // heavier --ui-radius.
+  "--ui-radius-pill": "9999px",
+  "--ui-radius-circle": "50%",
   "--ui-shadow":
     "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", // shadow-md
   "--ui-shadow-lg":
@@ -216,6 +223,13 @@ export const gradientTokenValues: Record<string, string> = {
   "--ui-button-secondary-background-active": "linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%)", // reversed 100 -> 50
   "--ui-button-secondary-border": "#cbd5e1", // slate-300
   "--ui-button-secondary-border-hover": "#94a3b8", // slate-400
+  // button-group's unchecked segments, pagination-nav's prev/next buttons, and
+  // radio-cards/radio-pills' checked background read this rather than
+  // --ui-button-secondary-background (see tokens above). Left flat they were
+  // the one "secondary" surface that stayed matte while every actual secondary
+  // button turned glossy, so it tracks the hover gradient rather than a
+  // separate literal that could drift out of step with it.
+  "--ui-button-secondary-surface-muted": "var(--ui-button-secondary-background-hover)",
   "--ui-button-highlight": "inset 0 1px 0 rgb(255 255 255 / 0.35)", // glossy top edge
   "--ui-button-text-shadow": "0 1px 1px rgb(0 0 0 / 0.25)", // legibility on primary/danger
   "--ui-button-accent": "#4338ca", // indigo-700, matches --ui-button-border
@@ -228,6 +242,47 @@ export const gradientTokenValues: Record<string, string> = {
   "--ui-toast-warning-background": "linear-gradient(180deg, #f59e0b 0%, #d97706 100%)", // amber-500 -> 600
   "--ui-toast-highlight": "inset 0 1px 0 rgb(255 255 255 / 0.35)", // glossy top edge, same as --ui-button-highlight
   "--ui-toast-text-shadow": "0 1px 1px rgb(0 0 0 / 0.25)", // legibility, same as --ui-button-text-shadow
+};
+
+/**
+ * "Metro" theme overrides, applied via `data-theme="metro"` on `<html>` (see
+ * `generate-tokens-css.mjs`) — forces `color-scheme: light` like the `"light"`
+ * and `"gradient"` overrides, and strips the roundness and depth off the flat
+ * light palette to leave hard-edged surfaces over a blue accent, after the
+ * dense square-cornered look of the early social bookmarking sites.
+ *
+ * This is the first theme to override shape rather than only color, so the
+ * "shape/type tokens are theme-independent" rule `darkTokenValues` notes above
+ * holds for every theme except this one (see `docs/design-language.md`).
+ * Squaring the design system means squaring the deliberate pill and circle
+ * shapes too — chips, avatars, dots, slider thumbs — which is why those read
+ * `--ui-radius-pill`/`--ui-radius-circle` rather than hardcoding `9999px`/`50%`
+ * (a literal would silently opt that shape out of the theme).
+ *
+ * One residual is genuinely out of reach: `price-history-chart` rounds its bars
+ * with an SVG `rx` presentation attribute, which cannot take a `var()`, so
+ * those stay slightly rounded under metro.
+ *
+ * The shadows flatten to a hairline ring rather than to `none`. Dropping them
+ * outright would leave `slide-panel` — the only overlay with no border of its
+ * own — as an invisible white-on-white edge; every other consumer of
+ * `--ui-shadow*` either pairs it with `1px solid var(--ui-border)` or applies
+ * it on hover/active over an already-bordered control. A hard 1px ring keeps
+ * that separation while removing the blur and the faked depth.
+ */
+export const metroTokenValues: Record<string, string> = {
+  "--ui-primary": "#3274d0", // the del.icio.us blue; no Tailwind equivalent
+  "--ui-primary-hover": "#2559a8",
+  "--ui-focus-ring": "0 0 0 2px #3274d0", // solid and crisp, not the default 3px translucent ring
+  "--ui-radius": "0",
+  "--ui-radius-sm": "0",
+  "--ui-radius-pill": "0",
+  "--ui-radius-circle": "0",
+  // Hairline rings (slate-900 at low alpha) rather than blurred drop shadows:
+  // separation without depth. -lg is a touch stronger, matching the default
+  // pair's relative weighting.
+  "--ui-shadow": "0 0 0 1px rgb(15 23 42 / 0.12)",
+  "--ui-shadow-lg": "0 0 0 1px rgb(15 23 42 / 0.18)",
 };
 
 /**

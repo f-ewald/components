@@ -77,6 +77,7 @@ _None._
 | `--ui-font-weight-semibold` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |
+| `--ui-radius-pill` |
 | `--ui-radius-sm` |
 | `--ui-shadow` |
 | `--ui-surface` |

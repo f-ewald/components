@@ -74,7 +74,7 @@ export class LinkCard extends LitElement {
         right: 1.25rem;
         width: 0.5rem;
         height: 0.5rem;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         background: var(--ui-text-muted, #64748b);
       }
       .status--up {

@@ -164,7 +164,7 @@ export class UiButton extends LitElement {
         font-size: var(--ui-font-size-xs, 0.6875rem);
       }
       .btn.pill {
-        border-radius: 999px;
+        border-radius: var(--ui-radius-pill, 9999px);
       }
       .btn.ai {
         position: relative;
@@ -220,7 +220,7 @@ export class UiButton extends LitElement {
       }
       .btn.ai.pill::before,
       .btn.ai.pill::after {
-        border-radius: 999px;
+        border-radius: var(--ui-radius-pill, 9999px);
       }
       .btn.ai:hover::before,
       .btn.ai:hover::after {

@@ -1223,7 +1223,12 @@ Import patterns:
 Theming: components use \`var(--ui-*, <fallback>)\` custom properties, so they
 render correctly with zero external CSS. Override any \`--ui-*\` property on
 \`:root\` (or an ancestor) to retheme, or import the optional
-\`@f-ewald/components/tokens.css\` stylesheet as a starting point.
+\`@f-ewald/components/tokens.css\` stylesheet as a starting point. That
+stylesheet also ships four named themes, selected with a \`data-theme\`
+attribute on \`<html>\` (mutually exclusive): \`"dark"\`/\`"light"\` force one of
+the two flat palettes over the OS preference, \`"gradient"\` glosses buttons and
+toasts, and \`"metro"\` squares every tokenized corner and replaces drop shadows
+with hairline rings over a blue accent.
 
 ## Icons
 

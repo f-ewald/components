@@ -62,4 +62,5 @@ _None._
 | --- |
 | `--ui-focus-ring` |
 | `--ui-primary` |
+| `--ui-radius-pill` |
 | `--ui-text-muted` |

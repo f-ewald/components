@@ -43,7 +43,7 @@ export class RangeSlider extends LitElement {
       /* Track */
       input[type="range"]::-webkit-slider-runnable-track {
         height: 0.375rem;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         /* A hard-stop background gradient used as a two-tone fill trick —
            its color-stops can't themselves hold a gradient value, so this
            reads --ui-button-accent (a solid stand-in), not
@@ -58,12 +58,12 @@ export class RangeSlider extends LitElement {
       }
       input[type="range"]::-moz-range-track {
         height: 0.375rem;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         background: var(--ui-surface-muted, #f8fafc);
       }
       input[type="range"]::-moz-range-progress {
         height: 0.375rem;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         background: var(--ui-button-accent, var(--ui-primary, #4f46e5));
       }
       /* Thumb */
@@ -76,7 +76,7 @@ export class RangeSlider extends LitElement {
            thinner custom track — nudge it up to align with the track.
            A transform offset (not margin) so it isn't a spacing-grid value. */
         transform: translateY(-0.3125rem);
-        border-radius: 50%;
+        border-radius: var(--ui-radius-circle, 50%);
         background: var(--ui-button-background, var(--ui-primary, #4f46e5));
         border: 2px solid var(--ui-surface, #ffffff);
         box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent);
@@ -84,7 +84,7 @@ export class RangeSlider extends LitElement {
       input[type="range"]::-moz-range-thumb {
         width: 1rem;
         height: 1rem;
-        border-radius: 50%;
+        border-radius: var(--ui-radius-circle, 50%);
         background: var(--ui-button-background, var(--ui-primary, #4f46e5));
         border: 2px solid var(--ui-surface, #ffffff);
         box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), var(--ui-button-highlight, 0 0 0 0 transparent);

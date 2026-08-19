@@ -127,7 +127,7 @@ export class DropdownButton extends LitElement {
          an avatar) — overrides the default rounded-square footprint so the
          hover/focus highlight matches the wrapped element's own shape. */
       :host([variant="icon"][circular]) button.trigger {
-        border-radius: 50%;
+        border-radius: var(--ui-radius-circle, 50%);
       }
       :host([size="sm"]) button.trigger {
         height: 1.5rem;

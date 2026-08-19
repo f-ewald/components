@@ -51,6 +51,7 @@ _None._
 | `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius` |
+| `--ui-radius-pill` |
 | `--ui-radius-sm` |
 | `--ui-surface` |
 | `--ui-surface-muted` |

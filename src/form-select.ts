@@ -195,7 +195,7 @@ export class FormSelect extends LitElement {
       ul.options::-webkit-scrollbar-thumb {
         background: var(--ui-border, #e2e8f0);
         border: 0.25rem solid transparent;
-        border-radius: 999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         background-clip: padding-box;
       }
       li {

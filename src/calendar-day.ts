@@ -216,7 +216,7 @@ export class CalendarDay extends CalendarTimelineBase {
         position: absolute;
         top: 50%;
         right: 100%;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         padding: 0.125rem 0.25rem;
         background: var(--ui-danger, #dc2626);
         color: var(--ui-on-accent, #ffffff);

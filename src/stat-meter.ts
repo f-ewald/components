@@ -42,7 +42,7 @@ export class StatMeter extends LitElement {
         display: block;
         width: 4rem;
         height: 0.375rem;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         background: var(--track-color, var(--ui-surface-muted, #f8fafc));
         overflow: hidden;
       }

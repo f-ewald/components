@@ -57,6 +57,8 @@ _None._
 | `--ui-button-highlight` |
 | `--ui-focus-ring` |
 | `--ui-primary` |
+| `--ui-radius-circle` |
+| `--ui-radius-pill` |
 | `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text-muted` |

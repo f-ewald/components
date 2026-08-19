@@ -75,10 +75,10 @@ test.describe("ui-button", () => {
     await page.goto("/");
     const pillBtn = page.locator("#button-pill button.btn");
     await expect(pillBtn).toHaveClass(/\bpill\b/);
-    await expect(pillBtn).toHaveCSS("border-radius", "999px");
+    await expect(pillBtn).toHaveCSS("border-radius", "9999px");
 
     const primaryBtn = page.locator("#button-primary button.btn");
-    await expect(primaryBtn).not.toHaveCSS("border-radius", "999px");
+    await expect(primaryBtn).not.toHaveCSS("border-radius", "9999px");
   });
 
   test("ai draws an animated ring without altering the variant's fill", async ({ page }) => {

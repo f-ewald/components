@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+/*
+ * Playground chrome (section wrappers, code blocks, nav) is built from
+ * Tailwind utilities, whose radii are fixed and so don't follow the active
+ * theme — under a squaring theme like metro the components went sharp while
+ * the demo's own boxes stayed rounded, which reads as the theme being broken.
+ * Mapping Tailwind's radius scale onto the design tokens keeps the chrome in
+ * step. Demo-only: a consuming app styles its own chrome.
+ */
+@theme {
+  --radius-md: var(--ui-radius-sm, 0.25rem);
+  --radius-lg: var(--ui-radius, 0.5rem);
+}
+
+/* Native controls in the demo's example markup carry the browser's own default
+   corner radius, which doesn't follow the theme either. */
+input,
+select,
+textarea {
+  border-radius: var(--ui-radius-sm, 0.25rem);
+}
+
 body {
   @apply bg-white text-slate-900 antialiased;
 }
@@ -11,100 +32,3 @@ pre.usage {
 .demo-nav a.active {
   @apply bg-indigo-50 text-indigo-700;
 }
-
-/*
- * Playground-only "button style" picker (see index.html/main.ts) — lets a
- * developer live-preview the ui-button gradient-theming hook
- * (--ui-button-background/-hover/-active/-border/-highlight/-text-shadow,
- * --ui-button-danger-*) added in src/ui-button.ts, plus the matching
- * --ui-toast-* hooks toast-notification.ts reads, without needing a real
- * consuming app. Not part of the shipped design system: real theming happens
- * purely through those --ui-* custom properties, this is just a convenience
- * switch for this demo.
- */
-:root[data-button-style="gradient"] {
-  /* Named light/dark stops (rather than only inlining them in the
-     linear-gradient() below) so the border can derive from the dark stop via
-     color-mix() instead of a separately hand-picked hex that could drift out
-     of sync if the gradient is ever retuned. */
-  --ui-button-gradient-light: #6366f1;
-  --ui-button-gradient-dark: #4338ca;
-  --ui-button-background: linear-gradient(
-    to bottom,
-    var(--ui-button-gradient-light),
-    var(--ui-button-gradient-dark)
-  );
-  --ui-button-background-hover: linear-gradient(to bottom, #818cf8, #4f46e5);
-  /* Inverted (dark-to-light) stops for a pressed/"indented" look. */
-  --ui-button-background-active: linear-gradient(
-    to bottom,
-    var(--ui-button-gradient-dark),
-    var(--ui-button-gradient-light)
-  );
-  --ui-button-border: color-mix(in srgb, var(--ui-button-gradient-dark) 75%, black);
-
-  --ui-button-danger-gradient-light: #f87171;
-  --ui-button-danger-gradient-dark: #b91c1c;
-  --ui-button-danger-background: linear-gradient(
-    to bottom,
-    var(--ui-button-danger-gradient-light),
-    var(--ui-button-danger-gradient-dark)
-  );
-  --ui-button-danger-background-hover: linear-gradient(to bottom, #fca5a5, #dc2626);
-  --ui-button-danger-background-active: linear-gradient(
-    to bottom,
-    var(--ui-button-danger-gradient-dark),
-    var(--ui-button-danger-gradient-light)
-  );
-  --ui-button-danger-border: color-mix(in srgb, var(--ui-button-danger-gradient-dark) 75%, black);
-
-  /* Secondary/Cancel: white-to-gray, consistent with primary/danger's
-     lighter-to-darker direction and coordinated with --ui-border's slate
-     scale. */
-  --ui-button-secondary-gradient-light: #ffffff;
-  --ui-button-secondary-gradient-dark: #e2e8f0;
-  --ui-button-secondary-background: linear-gradient(
-    to bottom,
-    var(--ui-button-secondary-gradient-light),
-    var(--ui-button-secondary-gradient-dark)
-  );
-  --ui-button-secondary-background-hover: linear-gradient(to bottom, #f8fafc, #cbd5e1);
-  --ui-button-secondary-background-active: linear-gradient(
-    to bottom,
-    var(--ui-button-secondary-gradient-dark),
-    var(--ui-button-secondary-gradient-light)
-  );
-  --ui-button-secondary-border: color-mix(in srgb, var(--ui-button-secondary-gradient-dark) 75%, black);
-  --ui-button-secondary-border-hover: color-mix(in srgb, #cbd5e1 75%, black);
-  /* button-group's unchecked segments, pagination-nav's prev/next buttons,
-     and radio-cards/radio-pills' checked background are "secondary" too,
-     but need their own muted-surface token (see tokens.ts) — same gradient
-     value for consistency. */
-  --ui-button-secondary-surface-muted: var(--ui-button-secondary-background-hover);
-
-  /* Glossy top highlight — shared by primary/danger/secondary, cleared on
-     :active in src/ui-button.ts for the pressed/"indented" look. */
-  --ui-button-highlight: inset 0 1px 0 rgb(255 255 255 / 0.35);
-  /* Label legibility against the lighter end of the gradient: the danger
-     gradient's light stop (#f87171) measures ~2.8:1 contrast against white
-     text (below the 4.5:1 WCAG AA text threshold), and the primary
-     gradient's light stop (#6366f1) is a hair under it at ~4.5:1. */
-  --ui-button-text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
-  /* Solid stand-in for spots that can't render a gradient at all (native
-     accent-color, and range-slider's hard-stop track fill) — coordinated
-     with the gradient above by reusing its dark stop. Applies to
-     button-group, confirm-dialog, dropdown-button, radio-cards, radio-pills,
-     range-slider, and reveal-button (see src/*.ts for each). */
-  --ui-button-accent: var(--ui-button-gradient-dark);
-
-  /* toast-notification's per-variant gradient backgrounds + shared glossy
-     highlight/legibility text-shadow (see src/toast-notification.ts and the
-     matching gradientTokenValues entries in src/tokens.ts). */
-  --ui-toast-success-background: linear-gradient(to bottom, #22c55e, #16a34a);
-  --ui-toast-error-background: linear-gradient(to bottom, #ef4444, #dc2626);
-  --ui-toast-info-background: linear-gradient(to bottom, #38bdf8, #0ea5e9);
-  --ui-toast-warning-background: linear-gradient(to bottom, #f59e0b, #d97706);
-  --ui-toast-highlight: inset 0 1px 0 rgb(255 255 255 / 0.35);
-  --ui-toast-text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
-}
-

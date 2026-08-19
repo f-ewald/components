@@ -132,7 +132,7 @@ export class TimelineEntry extends LitElement {
         width: 0.75rem;
         height: 0.75rem;
         transform: translateX(-50%);
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         /* Same lighter-on-top token gradient as map-circle/user-avatar; the
            base color is swapped per the color property via the private
            --_dot var. */
@@ -167,7 +167,7 @@ export class TimelineEntry extends LitElement {
         display: block;
         width: 0.75rem;
         height: 0.75rem;
-        border-radius: 9999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         /* Opaque backing so the connecting line is masked exactly like it is
            behind the solid .dot, instead of showing through the ring's
            hollow center and corners. */

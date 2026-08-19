@@ -21,7 +21,7 @@ export class UserAvatar extends LitElement {
         display: inline-flex;
       }
       .avatar {
-        border-radius: 50%;
+        border-radius: var(--ui-radius-circle, 50%);
         /* Match map-circle's 30% white/black vertical depth without tinting images. */
         background: linear-gradient(
           to bottom,
@@ -50,7 +50,7 @@ export class UserAvatar extends LitElement {
       img {
         width: 100%;
         height: 100%;
-        border-radius: 50%;
+        border-radius: var(--ui-radius-circle, 50%);
         object-fit: cover;
       }
     `,

@@ -131,6 +131,7 @@ _None._
 | `--ui-on-accent` |
 | `--ui-primary` |
 | `--ui-primary-hover` |
+| `--ui-radius-pill` |
 | `--ui-radius-sm` |
 | `--ui-text` |
 | `--ui-text-muted` |

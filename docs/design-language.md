@@ -21,6 +21,17 @@ defines the details used when creating or reviewing components.
   radii, shadows, and focus rings. `tokens.ts` (`tokenValues`) is the single
   source of truth; every `var(--ui-*, …)` usage must repeat that token's exact
   fallback, and any newly introduced `--ui-*` usage must add/carry one too.
+- Themes are single-valued and mutually exclusive, selected by `data-theme` on
+  `<html>`: `dark` and `light` force one of the two flat palettes, `gradient`
+  glosses buttons and toasts, and `metro` squares corners and flattens shadows
+  over a blue accent. `dark` aside, each is layered on the light palette and
+  must be excluded from `tokens.css`'s `prefers-color-scheme: dark` media query
+  — that selector outranks a bare `[data-theme]`, so a missing exclusion yields
+  a half-dark hybrid rather than an outright failure. Adding a theme therefore
+  means adding it to `lightThemes` in `generate-tokens-css.mjs`, which derives
+  both the block and the exclusion from that one list.
+- Colors are the normal subject of a theme; `metro` is the sole precedent for
+  overriding shape, and type metrics are never themed.
 - Semantic states use `primary`, `info`, `success`, `warning`, and `danger`.
 - Foregrounds on solid semantic fills use `--ui-on-accent`.
 - Elevated dark tooltips use `--ui-tooltip`; modal backdrops use
@@ -88,14 +99,20 @@ literal values are migrated onto them.
   aspect ratios, animation timing, proportional calculations derived from a
   public size, `0.125rem` optical alignment nudges, and domain geometry.
 - Use `--ui-radius-sm` (`0.25rem` ≈ 4px) for controls, `--ui-radius`
-  (`0.5rem` ≈ 8px) for cards/dialogs/surfaces, and an intentional full
-  pill/circle radius only for pill/avatar/marker shapes.
+  (`0.5rem` ≈ 8px) for cards/dialogs/surfaces, and `--ui-radius-pill`
+  (`9999px`) / `--ui-radius-circle` (`50%`) for intentional pill and circle
+  shapes — a chip, an avatar, a slider thumb, a dot. Those four rem/px values
+  are the light palette's, not constants: `data-theme="metro"` sets all four to
+  `0`. Always read the token, never inline its current value — a hardcoded
+  `0.25rem` or `9999px` silently opts that corner out of the theme, which a
+  contract test now rejects.
 - Chart bars and their tracks use `--ui-radius-sm` as well — literal `4` on
   SVG `rx` attributes, which can't take `var()` (`percent-bar-chart`,
   `price-history-chart`), or the token in CSS (`distribution-chart`,
   `weight-bar-chart`). A bar is a data mark, not a pill: fully rounded ends
   round away the value being read at short lengths. Genuine pill controls
-  (e.g. `range-slider`'s track and thumb) keep their full radius.
+  (e.g. `range-slider`'s track and thumb) keep their full radius, via
+  `--ui-radius-pill`/`--ui-radius-circle`.
 - Compact controls must retain a clear hit target and must not reserve layout
   space for optional content that is absent.
 
@@ -118,7 +135,7 @@ literal values are migrated onto them.
   add new names through `scripts/generate-icons.mjs` and `npm run icons`, not
   ad hoc inline SVGs.
 - Control corners use `--ui-radius-sm` (4px); enclosing surfaces use
-  `--ui-radius` (8px).
+  `--ui-radius` (8px). Both are theme-overridable — see the radius rule above.
 - Side panels use a `20rem` compact / `25rem` comfortable width; the shared
   responsive breakpoint is `48rem`.
 - Radio inputs render at `1rem`.

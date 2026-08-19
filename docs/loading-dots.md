@@ -43,3 +43,4 @@ _None._
 | --- |
 | `--ui-line-height-glyph` |
 | `--ui-primary` |
+| `--ui-radius-pill` |

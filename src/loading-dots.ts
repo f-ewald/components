@@ -30,7 +30,7 @@ export class LoadingDots extends LitElement {
       .dot {
         width: 0.5rem;
         height: 0.5rem;
-        border-radius: 999px;
+        border-radius: var(--ui-radius-pill, 9999px);
         background: var(--ui-primary, #4f46e5);
         animation: loading-dots-bounce 1.4s ease-in-out infinite;
       }

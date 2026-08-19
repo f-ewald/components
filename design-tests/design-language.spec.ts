@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -506,4 +506,62 @@ test("layout components use the documented shell and pager metrics", () => {
 
   expectRuleDeclaration("src/pagination-nav.ts", "button", "width", "2rem");
   expectRuleDeclaration("src/pagination-nav.ts", "button", "height", "2rem");
+});
+
+test("every light-palette theme is excluded from the dark media query", async () => {
+  // A theme layered on the light palette needs both a [data-theme] block and a
+  // :not() clause on the dark media query. Miss the clause and the media
+  // query's :root:not(...):not(...) selector (0,3,0) outranks the theme's own
+  // :root[data-theme="x"] (0,2,0), so under an OS dark preference the dark
+  // palette wins on every token the theme shares with it — the theme silently
+  // renders as a half-dark hybrid rather than failing outright. Driven through
+  // synthetic themes so this checks the generator's logic rather than today's
+  // theme list, and so it needs no build (dist/ is gitignored, and CI runs the
+  // suites before any build).
+  const { buildTokensCss } = await import(path.join(root, "scripts/tokens-css.mjs"));
+  const lightThemes: [string, Record<string, string>][] = [
+    ["light", {}],
+    ["alpha", { "--ui-primary": "#111111" }],
+    ["beta", { "--ui-radius": "0" }],
+  ];
+  const css = buildTokensCss({
+    tokenValues: { "--ui-primary": "#000000" },
+    darkTokenValues: { "--ui-primary": "#ffffff" },
+    lightThemes,
+  });
+
+  const darkSelector = css.match(/@media \(prefers-color-scheme: dark\) \{\n([^\n]+)\{/)?.[1];
+  expect(darkSelector, "dark media query selector").toBeTruthy();
+  for (const [name] of lightThemes) {
+    expect(darkSelector, `${name} excluded from dark media query`).toContain(
+      `:not([data-theme="${name}"])`,
+    );
+    expect(css, `${name} theme block`).toContain(`:root[data-theme="${name}"] {`);
+  }
+});
+
+test("pill and circle radii are tokenized, not hardcoded", () => {
+  // A literal 9999px/50% silently opts that shape out of every theme — it is
+  // exactly what left metro's square-corner theme with round chips, avatars and
+  // dots. Deliberate pill/circle shapes are still allowed, but must go through
+  // --ui-radius-pill/--ui-radius-circle so a theme can reach them.
+  const offenders: string[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!entry.name.endsWith(".ts")) continue;
+      for (const value of cssDeclarationValues(readFileSync(full, "utf8"), "border-radius")) {
+        if (/^\d+px$/.test(value) && value !== "0px") {
+          offenders.push(`${path.relative(root, full)}: ${value}`);
+        }
+        if (value.endsWith("%")) offenders.push(`${path.relative(root, full)}: ${value}`);
+      }
+    }
+  };
+  walk(path.join(root, "src"));
+  expect(offenders, "use --ui-radius-pill / --ui-radius-circle instead").toEqual([]);
 });

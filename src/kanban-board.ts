@@ -159,7 +159,7 @@ export class KanbanBoard extends LitElement {
       .drop-indicator {
         height: 0.125rem;
         background: var(--ui-primary, #4f46e5);
-        border-radius: 999px;
+        border-radius: var(--ui-radius-pill, 9999px);
       }
       .detail {
         display: flex;
