@@ -18,9 +18,18 @@ import { tokens } from "./tokens.js";
  * — for a row that pairs a checkbox with an icon/swatch and needs the whole
  * row, icon included, to stay one click target.
  *
+ * The label is the default slot, with the `label` property as its fallback.
+ * Slot it instead of setting the property when it needs its own markup or
+ * styling — a link, an emphasized word — since a property renders inside this
+ * component's shadow DOM and cannot be reached from outside. Either way the
+ * label sits inside the native `<label>`, so it stays clickable and still
+ * names the checkbox for assistive technology.
+ *
  * @element ui-checkbox
  * @fires change - The checkbox was toggled by the user, in either direction;
  *   detail: `{ checked }`. Programmatic `checked` assignments do not fire it.
+ * @slot - The label, overriding the `label` property; for a label that needs
+ *   its own markup or styling.
  */
 @customElement("ui-checkbox")
 export class UiCheckbox extends LitElement {
@@ -114,7 +123,7 @@ export class UiCheckbox extends LitElement {
   @property({ type: Boolean }) required = false;
   /** Form field name; submitted as `name=on` only while checked. */
   @property() name = "";
-  /** Visible label text rendered next to the box. */
+  /** Visible label text rendered next to the box; overridden by the default slot. */
   @property() label = "";
   /** Pre-rendered icon template displayed between the box and the label, e.g. `iconPencil(14)` from this package's icon set. */
   @property({ attribute: false }) icon: TemplateResult | null = null;
@@ -218,7 +227,7 @@ export class UiCheckbox extends LitElement {
             >`
           : nothing}
         <span
-          >${this.label}${this.required
+          ><slot>${this.label}</slot>${this.required
             ? html`<span class="required-mark" aria-hidden="true"> *</span><span class="sr-only">
                   (required)</span
                 >`

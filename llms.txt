@@ -2697,6 +2697,13 @@ renders between the box and the label, inside the same clickable `<label>`
 — for a row that pairs a checkbox with an icon/swatch and needs the whole
 row, icon included, to stay one click target.
 
+The label is the default slot, with the `label` property as its fallback.
+Slot it instead of setting the property when it needs its own markup or
+styling — a link, an emphasized word — since a property renders inside this
+component's shadow DOM and cannot be reached from outside. Either way the
+label sits inside the native `<label>`, so it stays clickable and still
+names the checkbox for assistive technology.
+
 Import: `import "@f-ewald/components/ui-checkbox.js";`
 
 Properties: `checked` (attribute `checked`) : boolean, default false; `indeterminate` (attribute `indeterminate`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `required` (attribute `required`) : boolean, default false; `name` (attribute `name`) : string, default ""; `label` (attribute `label`) : string, default ""; `icon` (JS property only) : TemplateResult | null, default null; `iconSize` (attribute `iconSize`) : number, default 14
@@ -2707,6 +2714,8 @@ Example:
 ```html
 <ui-checkbox label="Subscribe to updates"></ui-checkbox>
 <ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>
+<!-- Slot the label when it needs its own markup; it overrides the property -->
+<ui-checkbox name="beta">Enable <strong>beta</strong> features</ui-checkbox>
 <!-- .icon is set programmatically (a pre-rendered TemplateResult), not an attribute -->
 <ui-checkbox label="Show list view"></ui-checkbox>
 ```

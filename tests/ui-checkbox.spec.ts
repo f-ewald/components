@@ -71,6 +71,43 @@ test.describe("ui-checkbox", () => {
     await expect(input).not.toBeChecked();
   });
 
+  test("slotted label renders, stays clickable, and names the checkbox", async ({ page }) => {
+    await page.goto("/");
+    const box = page.locator("#checkbox-slotted");
+    const input = box.locator("input");
+
+    // The slotted markup is projected into the shadow <label>, so it both
+    // names the control and stays part of its click target.
+    await expect(input).toHaveAccessibleName("Enable beta features");
+    await box.getByText("beta").click();
+    await expect(input).toBeChecked();
+    await expect(page.locator("#checkbox-slotted-log")).toHaveText("checked: true");
+  });
+
+  test("slotted label wins over the label property", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(async () => {
+      const box = document.createElement("ui-checkbox") as HTMLElement & {
+        label: string;
+        updateComplete: Promise<unknown>;
+      };
+      box.id = "checkbox-precedence";
+      box.label = "From property";
+      box.textContent = "From slot";
+      document.body.append(box);
+      await box.updateComplete;
+    });
+    const input = page.locator("#checkbox-precedence input");
+
+    await expect(input).toHaveAccessibleName("From slot");
+    // The property is only the slot's fallback: with the slot filled the
+    // fallback stays unrendered, so it never shows alongside the slotted label.
+    const fallbackRendered = await page
+      .locator("#checkbox-precedence")
+      .evaluate((el) => el.shadowRoot!.querySelector("slot")!.assignedNodes().length === 0);
+    expect(fallbackRendered).toBe(false);
+  });
+
   test(":focus-visible ring appears via keyboard", async ({ page }) => {
     await page.goto("/");
     const input = page.locator("#checkbox-basic input");

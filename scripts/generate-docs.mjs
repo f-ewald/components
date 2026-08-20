@@ -46,6 +46,13 @@ const SLOTS = {
     { name: "(default)", description: "Button label." },
     { name: "icon", description: "Optional leading icon (e.g. an inline SVG)." },
   ],
+  "ui-checkbox": [
+    {
+      name: "(default)",
+      description:
+        "The label, overriding the `label` property; for a label that needs its own markup or styling.",
+    },
+  ],
   "map-pin": [
     { name: "(default)", description: "Badge content shown centered on the pin's circular head — a rank number, an emoji, a small icon." },
   ],
@@ -116,6 +123,8 @@ const PLAYGROUND_ANCHORS = {
 const EXAMPLES = {
   "ui-checkbox": `<ui-checkbox label="Subscribe to updates"></ui-checkbox>
 <ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>
+<!-- Slot the label when it needs its own markup; it overrides the property -->
+<ui-checkbox name="beta">Enable <strong>beta</strong> features</ui-checkbox>
 <!-- .icon is set programmatically (a pre-rendered TemplateResult), not an attribute -->
 <ui-checkbox label="Show list view"></ui-checkbox>`,
   "audio-player": `<audio-player src="/episode-12.mp3" label="Episode 12"></audio-player>

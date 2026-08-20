@@ -20130,8 +20130,14 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A form-associated boolean checkbox, usable standalone or inside a native\n`<form>`. Submits `name=on` when checked (matching native\n`<input type=\"checkbox\">` semantics) and participates fully in form\n`reset()`, ancestor `<fieldset disabled>`, and `required` validity.\n\nRenders a native `<input type=\"checkbox\">` wrapped in a `<label>`, styled\nvia `:has()` on the wrapping label (matching `radio-pills`/`radio-cards`)\nrather than styling the native input directly; the checkbox itself renders\nat `1rem`, matching the existing radio-input convention. An optional\npre-rendered `icon` (matching `form-select`'s per-option icon convention)\nrenders between the box and the label, inside the same clickable `<label>`\n— for a row that pairs a checkbox with an icon/swatch and needs the whole\nrow, icon included, to stay one click target.",
+          "description": "A form-associated boolean checkbox, usable standalone or inside a native\n`<form>`. Submits `name=on` when checked (matching native\n`<input type=\"checkbox\">` semantics) and participates fully in form\n`reset()`, ancestor `<fieldset disabled>`, and `required` validity.\n\nRenders a native `<input type=\"checkbox\">` wrapped in a `<label>`, styled\nvia `:has()` on the wrapping label (matching `radio-pills`/`radio-cards`)\nrather than styling the native input directly; the checkbox itself renders\nat `1rem`, matching the existing radio-input convention. An optional\npre-rendered `icon` (matching `form-select`'s per-option icon convention)\nrenders between the box and the label, inside the same clickable `<label>`\n— for a row that pairs a checkbox with an icon/swatch and needs the whole\nrow, icon included, to stay one click target.\n\nThe label is the default slot, with the `label` property as its fallback.\nSlot it instead of setting the property when it needs its own markup or\nstyling — a link, an emphasized word — since a property renders inside this\ncomponent's shadow DOM and cannot be reached from outside. Either way the\nlabel sits inside the native `<label>`, so it stays clickable and still\nnames the checkbox for assistive technology.",
           "name": "UiCheckbox",
+          "slots": [
+            {
+              "description": "The label, overriding the `label` property; for a label that needs its own markup or styling.",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -20199,7 +20205,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "Visible label text rendered next to the box.",
+              "description": "Visible label text rendered next to the box; overridden by the default slot.",
               "attribute": "label"
             },
             {
@@ -20414,7 +20420,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "Visible label text rendered next to the box.",
+              "description": "Visible label text rendered next to the box; overridden by the default slot.",
               "fieldName": "label"
             },
             {

@@ -3551,6 +3551,9 @@ import "@f-ewald/components/ui-button.js";
 
             <ui-checkbox id="checkbox-icon" data-testid="checkbox-icon" label="Show list view"></ui-checkbox>
 
+            <ui-checkbox id="checkbox-slotted" data-testid="checkbox-slotted">Enable <strong>beta</strong> features</ui-checkbox>
+            <p id="checkbox-slotted-log" data-testid="checkbox-slotted-log" class="text-xs text-slate-500"></p>
+
             <div class="flex items-center gap-3">
               <ui-checkbox id="checkbox-indeterminate" data-testid="checkbox-indeterminate" label="Select all"></ui-checkbox>
               <button
@@ -3575,6 +3578,8 @@ import "@f-ewald/components/ui-button.js";
 
 &lt;ui-checkbox label="Subscribe to updates"&gt;&lt;/ui-checkbox&gt;
 &lt;ui-checkbox name="terms" label="I agree to the terms" required&gt;&lt;/ui-checkbox&gt;
+&lt;!-- Slot the label when it needs its own markup; it overrides the property --&gt;
+&lt;ui-checkbox name="beta"&gt;Enable &lt;strong&gt;beta&lt;/strong&gt; features&lt;/ui-checkbox&gt;
 &lt;!-- .icon is set programmatically (a pre-rendered TemplateResult), not an attribute --&gt;
 &lt;ui-checkbox label="Show list view"&gt;&lt;/ui-checkbox&gt;</code></pre>
         </section>

@@ -809,6 +809,12 @@ checkboxBasic?.addEventListener("change", (e) => {
 const checkboxIcon = document.getElementById("checkbox-icon") as UiCheckbox;
 if (checkboxIcon) checkboxIcon.icon = iconListBullet(14);
 
+const checkboxSlotted = document.getElementById("checkbox-slotted") as UiCheckbox;
+const checkboxSlottedLog = document.getElementById("checkbox-slotted-log")!;
+checkboxSlotted?.addEventListener("change", (e) => {
+  checkboxSlottedLog.textContent = `checked: ${(e as CustomEvent<{ checked: boolean }>).detail.checked}`;
+});
+
 const checkboxIndeterminate = document.getElementById("checkbox-indeterminate") as UiCheckbox;
 if (checkboxIndeterminate) checkboxIndeterminate.indeterminate = true;
 document.getElementById("checkbox-indeterminate-toggle")?.addEventListener("click", () => {
