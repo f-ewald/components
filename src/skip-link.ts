@@ -1,5 +1,5 @@
-import { LitElement, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, css, html, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { tokens } from "./tokens.js";
 
 /**
@@ -8,8 +8,13 @@ import { tokens } from "./tokens.js";
  * visually hidden (but in the focus order) until it receives keyboard focus,
  * then pins itself to the top-left of the viewport as a solid, high-contrast
  * block so a keyboard or screen-reader user can jump straight past repeated
- * page chrome to the main content. It needs no JavaScript beyond the element
- * upgrade — the anchor's native in-page navigation does the rest.
+ * page chrome to the main content.
+ *
+ * Activating it moves focus into the target as well as scrolling to it: a
+ * plain fragment link only moves focus when the target is already focusable,
+ * so this applies `tabindex="-1"` to the target on demand rather than making
+ * every consumer remember to. Native navigation is never prevented, so the
+ * hash still updates.
  *
  * Place it as the very first focusable element on the page, before the app
  * chrome, and point `href` at the `id` of the main content region.
@@ -28,9 +33,16 @@ export class SkipLink extends LitElement {
       /* Hidden at rest with the shared .sr-only clip technique — never
          display:none / visibility:hidden, which would pull the link out of
          the focus order and defeat the entire purpose. Clipped, it stays
-         focusable, so Tab reaches it and reveals it. */
+         focusable, so Tab reaches it and reveals it.
+
+         Pinned with position: fixed, not absolute. An absolutely positioned
+         link resolves its insets against the nearest positioned ancestor, so
+         dropping the component inside any position: relative container — which
+         app-shell's own .shell is — would park the revealed link at that
+         container's corner instead of the viewport's, and an overflow: hidden
+         ancestor would clip it away entirely. */
       .link {
-        position: absolute;
+        position: fixed;
         width: 1px;
         height: 1px;
         margin: -1px;
@@ -115,8 +127,41 @@ export class SkipLink extends LitElement {
   /** Fallback link wording used when nothing is slotted. */
   @property() label = "Skip to main content";
 
+  /** Whether the default slot holds real wording, as opposed to the whitespace ordinary formatting leaves behind. */
+  @state() private _hasSlotted = false;
+
+  /**
+   * Moves focus to the fragment target, in addition to the native scroll.
+   *
+   * A plain in-page anchor only moves focus when its target is already
+   * focusable, so pointing a skip link at an ordinary `<main id="main">`
+   * scrolls the page but strands the keyboard user's focus back at the top —
+   * the classic way a skip link silently does nothing. Rather than requiring
+   * every consumer to remember `tabindex="-1"`, this applies it to the target
+   * on demand. Navigation is never prevented, so the hash still updates.
+   */
+  #focusTarget(): void {
+    const id = this.href.startsWith("#") ? this.href.slice(1) : "";
+    if (!id) return;
+    const root = this.getRootNode() as Document | ShadowRoot;
+    const target = root.getElementById?.(id) ?? document.getElementById(id);
+    if (!target) return;
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus();
+  }
+
+  /** Tracks whether the slot holds substantive wording, so whitespace can't strip the link's accessible name. */
+  #onSlotChange(event: Event): void {
+    const slot = event.target as HTMLSlotElement;
+    this._hasSlotted = slot
+      .assignedNodes({ flatten: true })
+      .some((node) => node.nodeType === Node.ELEMENT_NODE || (node.textContent ?? "").trim().length > 0);
+  }
+
   override render() {
-    return html`<a class="link" href=${this.href}><slot>${this.label}</slot></a>`;
+    return html`<a class="link" href=${this.href} @click=${this.#focusTarget}
+      ><slot @slotchange=${this.#onSlotChange}></slot>${this._hasSlotted ? nothing : this.label}</a
+    >`;
   }
 }
 

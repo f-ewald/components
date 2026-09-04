@@ -20,6 +20,21 @@ const siteOnly = args[0] === "--site";
 /** Slots aren't auto-detected by the analyzer without JSDoc @slot tags, so
  * they're curated here — the set is small and stable. */
 const SLOTS = {
+  "skip-link": [
+    { name: "(default)", description: "Optional custom link wording, overriding `label`." },
+  ],
+  "spec-list": [
+    {
+      name: "(default)",
+      description:
+        "Optional `<dt>`/`<dd>` pairs for values that need custom markup; when present, they replace the `items` path.",
+    },
+  ],
+  "empty-state": [
+    { name: "icon", description: "Optional leading glyph. The consumer supplies it (e.g. an inline SVG icon)." },
+    { name: "(default)", description: "Optional rich body content, an alternative to `description`." },
+    { name: "actions", description: "Optional call to action, e.g. a `ui-button`." },
+  ],
   "card-grid": [
     { name: "(default)", description: "`link-card` elements (or other card-shaped content)." },
   ],
@@ -162,11 +177,13 @@ const EXAMPLES = {
   ];
 </script>
 
-<!-- Or slot your own groups when a value needs a link, a status-pill, or other
-     markup. \`dividers\` defaults to true; turn it off via the property, since a
+<!-- Or slot your own pairs when a value needs a link, a status-pill, or other
+     markup; slotted \`dt\`/\`dd\` pick up the component's own key/value styling.
+     \`dividers\` defaults to true; turn it off via the property, since a
      \`dividers="false"\` attribute still parses as a truthy boolean. -->
 <spec-list layout="stacked" id="sheet">
-  <div><dt>Homepage</dt><dd><a href="https://example.com">example.com</a></dd></div>
+  <dt>Homepage</dt>
+  <dd><a href="https://example.com">example.com</a></dd>
 </spec-list>`,
   "empty-state": `<empty-state heading="No results found" description="Try adjusting your search or filters.">
   <span slot="icon">...</span>

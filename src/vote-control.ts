@@ -244,7 +244,12 @@ export class VoteControl extends LitElement {
 
   override render() {
     const showMeter = this.target > 0;
-    const progress = showMeter ? Math.min(100, Math.max(0, (this.value / this.target) * 100)) : 0;
+    // The meter's ARIA value is clamped to its own min/max: a score can go
+    // negative or overshoot the target, but exposing that raw number would
+    // contradict the clamped fill and break the valuemin <= valuenow <=
+    // valuemax relationship. The real score stays in aria-valuetext.
+    const clamped = showMeter ? Math.min(this.target, Math.max(0, this.value)) : 0;
+    const progress = showMeter ? (clamped / this.target) * 100 : 0;
     return html`
       <div class="control" role="group" aria-label=${this.label}>
         <div class="buttons">
@@ -276,9 +281,11 @@ export class VoteControl extends LitElement {
                 <span
                   class="track"
                   role="progressbar"
-                  aria-valuenow=${this.value}
+                  aria-label="Progress toward promotion"
+                  aria-valuenow=${clamped}
                   aria-valuemin="0"
                   aria-valuemax=${this.target}
+                  aria-valuetext="${this.value} of ${this.target}"
                 >
                   <span class="fill" style=${`width: ${progress}%`}></span>
                 </span>

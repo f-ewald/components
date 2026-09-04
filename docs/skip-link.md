@@ -5,8 +5,13 @@ accessibility-utility component. It renders a real `<a>` that stays
 visually hidden (but in the focus order) until it receives keyboard focus,
 then pins itself to the top-left of the viewport as a solid, high-contrast
 block so a keyboard or screen-reader user can jump straight past repeated
-page chrome to the main content. It needs no JavaScript beyond the element
-upgrade — the anchor's native in-page navigation does the rest.
+page chrome to the main content.
+
+Activating it moves focus into the target as well as scrolling to it: a
+plain fragment link only moves focus when the target is already focusable,
+so this applies `tabindex="-1"` to the target on demand rather than making
+every consumer remember to. Native navigation is never prevented, so the
+hash still updates.
 
 Place it as the very first focusable element on the page, before the app
 chrome, and point `href` at the `id` of the main content region.
@@ -37,7 +42,9 @@ _None._
 
 ## Slots
 
-_None._
+| Slot | Description |
+| --- | --- |
+| `(default)` | Optional custom link wording, overriding `label`. |
 
 ## CSS custom properties
 

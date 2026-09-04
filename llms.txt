@@ -1023,7 +1023,7 @@ completely when absent, reserving no layout space.
 
 Import: `import "@f-ewald/components/empty-state.js";`
 
-Properties: `heading` (attribute `heading`) : string, default ""; `description` (attribute `description`) : string, default ""; `size` (attribute `size`) : "sm" | "md", default "md"
+Properties: `heading` (attribute `heading`) : string, default ""; `description` (attribute `description`) : string, default ""; `size` (attribute `size`) : "sm" | "md", default "md"; `headingLevel` (attribute `heading-level`) : number, default 2
 Events: none
 CSS custom properties: `--ui-font`, `--ui-font-size`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-text`, `--ui-text-muted`
 
@@ -2234,8 +2234,13 @@ accessibility-utility component. It renders a real `<a>` that stays
 visually hidden (but in the focus order) until it receives keyboard focus,
 then pins itself to the top-left of the viewport as a solid, high-contrast
 block so a keyboard or screen-reader user can jump straight past repeated
-page chrome to the main content. It needs no JavaScript beyond the element
-upgrade — the anchor's native in-page navigation does the rest.
+page chrome to the main content.
+
+Activating it moves focus into the target as well as scrolling to it: a
+plain fragment link only moves focus when the target is already focusable,
+so this applies `tabindex="-1"` to the target on demand rather than making
+every consumer remember to. Native navigation is never prevented, so the
+hash still updates.
 
 Place it as the very first focusable element on the page, before the app
 chrome, and point `href` at the `id` of the main content region.
@@ -2277,15 +2282,19 @@ Example:
 ## <spec-list>
 
 A key/value specification sheet — the "spec sheet" block on a product page:
-an uppercase, muted, wide-tracked key column against a value column,
-separated by hairline rules. It describes ONE record's attributes, which is
+a muted, wide-tracked key column against a value column, separated by
+hairline rules (and uppercased under themes that set
+`--ui-label-transform`). It describes ONE record's attributes, which is
 what sets it apart from `data-table` (many records, many columns, sorting);
 `spec-list` is not tabular and renders a real `<dl>`/`<dt>`/`<dd>` structure.
 
-Feed it the `items` array for the plain data path, or slot your own
-`<div><dt>…</dt><dd>…</dd></div>` groups when a value needs a link, a
-`status-pill`, or other markup. Slotted content takes precedence over
-`items`; with neither, nothing is rendered.
+Feed it the `items` array for the plain data path, or slot bare `<dt>`/`<dd>`
+pairs when a value needs a link, a `status-pill`, or other markup — slotted
+pairs inherit the component's own key/value styling, so no page CSS is
+needed. A `<div>` wrapping a pair is also accepted as a full-width grouping
+row, but `::slotted()` cannot reach inside it, so those `dt`/`dd` stay the
+consumer's to style. Slotted content takes precedence over `items`; with
+neither, nothing is rendered.
 
 Import: `import "@f-ewald/components/spec-list.js";`
 
@@ -2304,11 +2313,13 @@ Example:
   ];
 </script>
 
-<!-- Or slot your own groups when a value needs a link, a status-pill, or other
-     markup. `dividers` defaults to true; turn it off via the property, since a
+<!-- Or slot your own pairs when a value needs a link, a status-pill, or other
+     markup; slotted `dt`/`dd` pick up the component's own key/value styling.
+     `dividers` defaults to true; turn it off via the property, since a
      `dividers="false"` attribute still parses as a truthy boolean. -->
 <spec-list layout="stacked" id="sheet">
-  <div><dt>Homepage</dt><dd><a href="https://example.com">example.com</a></dd></div>
+  <dt>Homepage</dt>
+  <dd><a href="https://example.com">example.com</a></dd>
 </spec-list>
 ```
 

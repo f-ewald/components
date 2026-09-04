@@ -56,6 +56,10 @@ export class BreadcrumbNav extends LitElement {
    * When greater than zero and the trail has more items than this, collapse the
    * middle of the trail behind an overflow button (the first and current crumbs
    * always stay visible). `0` (the default) never collapses.
+   *
+   * A collapsed trail always occupies three positions — first crumb, overflow
+   * button, current page — so values below `3` are raised to `3`. Collapsing a
+   * shorter trail would spend a button to hide one crumb, or none at all.
    */
   @property({ type: Number, attribute: "max-visible" }) maxVisible = 0;
 
@@ -165,6 +169,49 @@ export class BreadcrumbNav extends LitElement {
     this.expanded = !this.expanded;
   }
 
+  /** The crumbs, defended against a non-array value assigned at runtime by a JS or HTML consumer. */
+  private _crumbs(): BreadcrumbItem[] {
+    return Array.isArray(this.items) ? this.items : [];
+  }
+
+  /**
+   * How many crumbs may show before the middle collapses, or `0` for never.
+   * Floored at 3, since a collapsed trail always renders first + overflow +
+   * current.
+   */
+  private _limit(): number {
+    const limit = Math.trunc(this.maxVisible);
+    return limit > 0 ? Math.max(3, limit) : 0;
+  }
+
+  /** Whether the trail is long enough for the overflow button to earn its place. */
+  private _collapsible(): boolean {
+    const limit = this._limit();
+    return limit > 0 && this._crumbs().length > limit;
+  }
+
+  override willUpdate(): void {
+    const root = this.renderRoot as ShadowRoot | null;
+    this._overflowHadFocus = root?.activeElement?.classList.contains("overflow") ?? false;
+    // A trail that stops being collapsible (its items shrank, or max-visible
+    // grew) must not keep a reflected expanded attribute describing a
+    // disclosure that no longer exists.
+    if (this.expanded && !this._collapsible()) this.expanded = false;
+  }
+
+  override updated(): void {
+    // The overflow button is the only focusable node that can vanish mid-update.
+    // Without this, replacing items while it holds focus drops focus to
+    // document.body and strands a keyboard user at the top of the page.
+    if (!this._overflowHadFocus) return;
+    this._overflowHadFocus = false;
+    if (this.renderRoot.querySelector(".overflow")) return;
+    this.renderRoot.querySelector<HTMLElement>("nav")?.focus();
+  }
+
+  /** Whether the overflow button held focus when the current update began. */
+  private _overflowHadFocus = false;
+
   /** Dispatches `breadcrumb-navigate` without preventing native navigation. */
   private _onNavigate(item: BreadcrumbItem, index: number): void {
     this.dispatchEvent(
@@ -197,6 +244,7 @@ export class BreadcrumbNav extends LitElement {
       type="button"
       class="overflow"
       aria-expanded=${this.expanded ? "true" : "false"}
+      aria-controls="trail"
       aria-label=${label}
       @click=${this._toggle}
     >
@@ -205,12 +253,12 @@ export class BreadcrumbNav extends LitElement {
   }
 
   override render() {
-    const items = this.items ?? [];
-    if (items.length === 0) {
-      return html`<nav aria-label="Breadcrumb"></nav>`;
-    }
+    const items = this._crumbs();
+    // An empty trail renders nothing at all rather than an empty landmark: a
+    // named but contentless nav is pure noise in the accessibility tree.
+    if (items.length === 0) return nothing;
     const lastIndex = items.length - 1;
-    const collapsible = this.maxVisible > 0 && items.length > this.maxVisible;
+    const collapsible = this._collapsible();
 
     const nodes: TemplateResult[] = [];
     if (collapsible) {
@@ -227,8 +275,8 @@ export class BreadcrumbNav extends LitElement {
     }
 
     return html`
-      <nav aria-label="Breadcrumb">
-        <ol class="trail">
+      <nav aria-label="Breadcrumb" tabindex="-1">
+        <ol class="trail" id="trail">
           ${nodes.map(
             (node, i) => html`
               <li class="crumb-item">

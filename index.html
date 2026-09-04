@@ -3116,8 +3116,9 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
         <section id="spec-list" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-spec-list">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#spec-list">spec-list</a></h3>
           <p class="mt-1 text-sm text-slate-500">
-            A key/value specification sheet — one record's attributes as an uppercase, muted,
-            wide-tracked key column against a value column, separated by hairline rules. Feed it
+            A key/value specification sheet — one record's attributes as a muted, wide-tracked
+            key column against a value column, separated by hairline rules (uppercased under
+            themes that set <code>--ui-label-transform</code>). Feed it
             <code>items</code>, or slot your own <code>&lt;dt&gt;/&lt;dd&gt;</code> groups when a
             value needs a link or other markup. Distinct from <code>data-table</code>, which is
             tabular.
@@ -3130,18 +3131,14 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
             <div>
               <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">Slotted, no dividers, stacked</p>
               <p class="mb-2 text-xs text-slate-400">
-                <code>::slotted()</code> can't reach the inner <code>dt</code>/<code>dd</code>, so a
-                slotted sheet styles its own key/value text — here with page classes.
+                Slot bare <code>dt</code>/<code>dd</code> pairs and they inherit the component's own
+                key/value styling — no page CSS needed.
               </p>
               <spec-list id="spec-list-slotted" data-testid="spec-list-slotted" layout="stacked">
-                <div>
-                  <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Homepage</dt>
-                  <dd class="text-sm text-slate-900"><a class="text-indigo-600 hover:underline" href="https://example.com">example.com</a></dd>
-                </div>
-                <div>
-                  <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Status</dt>
-                  <dd class="text-sm text-slate-900"><status-pill color="success" label="Active"></status-pill></dd>
-                </div>
+                <dt>Homepage</dt>
+                <dd><a href="https://example.com">example.com</a></dd>
+                <dt>Status</dt>
+                <dd><status-pill color="success" label="Active"></status-pill></dd>
               </spec-list>
             </div>
           </div>
@@ -3156,11 +3153,13 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
   ];
 &lt;/script&gt;
 
-&lt;!-- Or slot your own markup when a value needs a link or a pill.
+&lt;!-- Or slot your own markup when a value needs a link or a pill. Slotted
+     `dt`/`dd` pairs pick up the component's own styling.
      `dividers` defaults to true; turn it off via the property, since a
      `dividers="false"` attribute still parses as a truthy boolean. --&gt;
 &lt;spec-list layout="stacked" id="sheet"&gt;
-  &lt;div&gt;&lt;dt&gt;Homepage&lt;/dt&gt;&lt;dd&gt;&lt;a href="https://example.com"&gt;example.com&lt;/a&gt;&lt;/dd&gt;&lt;/div&gt;
+  &lt;dt&gt;Homepage&lt;/dt&gt;
+  &lt;dd&gt;&lt;a href="https://example.com"&gt;example.com&lt;/a&gt;&lt;/dd&gt;
 &lt;/spec-list&gt;
 &lt;script type="module"&gt;
   document.getElementById("sheet").dividers = false;

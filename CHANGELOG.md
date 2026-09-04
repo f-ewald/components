@@ -322,6 +322,57 @@
   `autocomplete-input`, `address-autocomplete`, and `text-area`. Empty labels
   rest inside the field and move to a smaller top-left position on focus or
   content; unsupported controls retain the external-label layout.
+- Post-release review fixes for the components added alongside the
+  `blueprint` theme:
+  - `skip-link` now moves focus into its fragment target, not just the scroll
+    position. A plain in-page anchor only moves focus when the target is
+    already focusable, so pointing one at an ordinary `<main id="main">`
+    scrolled the page but stranded the keyboard user at the top — the exact
+    failure the component exists to prevent. It now applies `tabindex="-1"`
+    to the target on activation and focuses it, without preventing native
+    navigation.
+  - `skip-link` pins with `position: fixed` rather than `absolute`. Absolute
+    positioning resolves against the nearest positioned ancestor, so placing
+    the link inside any `position: relative` container (`app-shell`'s own
+    `.shell`, for one) parked the revealed link at that container's corner
+    instead of the viewport's, and an `overflow: hidden` ancestor clipped it
+    away entirely.
+  - `skip-link` keeps its `label` as the accessible name when the default slot
+    holds only whitespace. Native slot fallback is suppressed by *any*
+    assigned node, so ordinary indented markup produced an unnamed link.
+  - The `blueprint` `--ui-border` darkened from `#a2a29f` to `#898883`. The
+    old value was 2.56:1 against white and 2.25:1 against the muted surface,
+    below the 3:1 WCAG 1.4.11 minimum for a boundary that identifies a
+    control — and 1.5px of extra weight does not buy an exemption. The new
+    value is 3.55:1 and 3.12:1.
+  - `spec-list`'s `<dl>` is now itself the two-column grid, so slotted
+    `<dt>`/`<dd>` are direct slottables the component can style. Previously
+    they sat inside a wrapper `::slotted()` could not reach, so a slotted
+    sheet fell back to UA defaults — 16px black keys, the `<dd>` 40px
+    `margin-inline-start`, and no `min-width: 0`, which overflowed a 20rem
+    component to 1072px. A `<div>`-wrapped pair still works as a full-width
+    grouping row, but that form styles its own key/value text. The key's
+    gutter moved from `column-gap` to `padding-right` so dividers draw as one
+    unbroken rule.
+  - `spec-list` seeds its slot detection from the light DOM before the first
+    render, so an element given both `items` and slotted markup no longer
+    renders both paths on its first update, and tolerates a non-array or
+    null-containing `items` assigned at runtime instead of throwing.
+  - `breadcrumb-nav` floors `max-visible` at 3 when collapsing. Lower values
+    produced "Show 0 hidden" and even "Show -1 hidden" chrome, and a
+    fractional value rendered two `aria-current="page"` nodes. It also renders
+    nothing for an empty or non-array trail, gained `aria-controls` on the
+    overflow button, and moves focus to the `<nav>` when the overflow button
+    it was on disappears.
+  - `empty-state` ignores whitespace-only slot content, which previously
+    reserved 8px of layout, and gained a `heading-level` property
+    (`aria-level` on the rendered `h2`, clamped to 1-6) so it can sit at the
+    right depth in the surrounding document outline.
+  - `vote-control`'s progressbar clamps `aria-valuenow` into the
+    `0`-`target` range it advertises and gained an `aria-label` and an
+    `aria-valuetext`.
+  - The generated API docs no longer report `_None._` for a component whose
+    only slot is the default one.
 
 ## 1.19.0
 

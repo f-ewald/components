@@ -26,6 +26,15 @@ export class EmptyState extends LitElement {
   /** `sm` for a small panel/sidebar, `md` (default) for a full page region. `md` matches the pre-`size` look exactly. */
   @property({ reflect: true }) size: "sm" | "md" = "md";
 
+  /**
+   * Heading rank the `heading` is exposed as, 1-6. An `empty-state` fills a
+   * page, a panel, or a sidebar, so no single rank is right everywhere; set
+   * this to whatever the surrounding outline needs. Applied via `aria-level`
+   * on the rendered `h2`, which overrides the element's native rank for
+   * assistive technology.
+   */
+  @property({ type: Number, attribute: "heading-level" }) headingLevel = 2;
+
   /** Whether the icon slot currently has assigned content. */
   @state() private _hasIcon = false;
 
@@ -114,22 +123,39 @@ export class EmptyState extends LitElement {
     `,
   ];
 
+  /**
+   * Whether a slot holds real content. Whitespace-only text nodes don't count:
+   * ordinary indented markup puts a newline between every child, which would
+   * otherwise mark every slot as filled and reserve space for rows that are
+   * visually empty.
+   */
+  private static _slotHasContent(event: Event): boolean {
+    const slot = event.target as HTMLSlotElement;
+    return slot
+      .assignedNodes({ flatten: true })
+      .some((node) => node.nodeType === Node.ELEMENT_NODE || (node.textContent ?? "").trim().length > 0);
+  }
+
   /** Tracks whether the icon slot has content so its row can collapse when empty. */
   private _onIconSlotChange(event: Event): void {
-    const slot = event.target as HTMLSlotElement;
-    this._hasIcon = slot.assignedNodes({ flatten: true }).length > 0;
+    this._hasIcon = EmptyState._slotHasContent(event);
   }
 
   /** Tracks whether the default body slot has content so its row can collapse when empty. */
   private _onBodySlotChange(event: Event): void {
-    const slot = event.target as HTMLSlotElement;
-    this._hasBody = slot.assignedNodes({ flatten: true }).length > 0;
+    this._hasBody = EmptyState._slotHasContent(event);
   }
 
   /** Tracks whether the actions slot has content so its row can collapse when empty. */
   private _onActionsSlotChange(event: Event): void {
-    const slot = event.target as HTMLSlotElement;
-    this._hasActions = slot.assignedNodes({ flatten: true }).length > 0;
+    this._hasActions = EmptyState._slotHasContent(event);
+  }
+
+  /** Clamps `headingLevel` into the valid 1-6 heading range, falling back to 2 for a non-numeric value. */
+  #level(): number {
+    const level = Math.trunc(Number(this.headingLevel));
+    if (!Number.isFinite(level)) return 2;
+    return Math.min(6, Math.max(1, level));
   }
 
   override render() {
@@ -138,7 +164,9 @@ export class EmptyState extends LitElement {
         <span class="icon ${this._hasIcon ? "" : "empty"}">
           <slot name="icon" @slotchange=${this._onIconSlotChange}></slot>
         </span>
-        ${this.heading ? html`<h2 class="heading">${this.heading}</h2>` : nothing}
+        ${this.heading
+          ? html`<h2 class="heading" aria-level=${this.#level()}>${this.heading}</h2>`
+          : nothing}
         ${this.description ? html`<p class="description">${this.description}</p>` : nothing}
         <div class="body ${this._hasBody ? "" : "empty"}">
           <slot @slotchange=${this._onBodySlotChange}></slot>

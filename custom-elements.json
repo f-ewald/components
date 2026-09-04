@@ -2580,7 +2580,7 @@
                 "text": "number"
               },
               "default": "0",
-              "description": "When greater than zero and the trail has more items than this, collapse the\nmiddle of the trail behind an overflow button (the first and current crumbs\nalways stay visible). `0` (the default) never collapses.",
+              "description": "When greater than zero and the trail has more items than this, collapse the\nmiddle of the trail behind an overflow button (the first and current crumbs\nalways stay visible). `0` (the default) never collapses.\n\nA collapsed trail always occupies three positions — first crumb, overflow\nbutton, current page — so values below `3` are raised to `3`. Collapsing a\nshorter trail would spend a button to hide one crumb, or none at all.",
               "attribute": "max-visible"
             },
             {
@@ -2604,6 +2604,49 @@
                 }
               },
               "description": "Toggles a collapsed trail between collapsed and expanded."
+            },
+            {
+              "kind": "method",
+              "name": "_crumbs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "BreadcrumbItem[]"
+                }
+              },
+              "description": "The crumbs, defended against a non-array value assigned at runtime by a JS or HTML consumer."
+            },
+            {
+              "kind": "method",
+              "name": "_limit",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "How many crumbs may show before the middle collapses, or `0` for never.\nFloored at 3, since a collapsed trail always renders first + overflow +\ncurrent."
+            },
+            {
+              "kind": "method",
+              "name": "_collapsible",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether the trail is long enough for the overflow button to earn its place."
+            },
+            {
+              "kind": "field",
+              "name": "_overflowHadFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the overflow button held focus when the current update began."
             },
             {
               "kind": "method",
@@ -2704,7 +2747,7 @@
                 "text": "number"
               },
               "default": "0",
-              "description": "When greater than zero and the trail has more items than this, collapse the\nmiddle of the trail behind an overflow button (the first and current crumbs\nalways stay visible). `0` (the default) never collapses.",
+              "description": "When greater than zero and the trail has more items than this, collapse the\nmiddle of the trail behind an overflow button (the first and current crumbs\nalways stay visible). `0` (the default) never collapses.\n\nA collapsed trail always occupies three positions — first crumb, overflow\nbutton, current page — so values below `3` are raised to `3`. Collapsing a\nshorter trail would spend a button to hide one crumb, or none at all.",
               "fieldName": "maxVisible"
             },
             {
@@ -7268,6 +7311,16 @@
             },
             {
               "kind": "field",
+              "name": "headingLevel",
+              "type": {
+                "text": "number"
+              },
+              "default": "2",
+              "description": "Heading rank the `heading` is exposed as, 1-6. An `empty-state` fills a\npage, a panel, or a sidebar, so no single rank is right everywhere; set\nthis to whatever the surrounding outline needs. Applied via `aria-level`\non the rendered `h2`, which overrides the element's native rank for\nassistive technology.",
+              "attribute": "heading-level"
+            },
+            {
+              "kind": "field",
               "name": "_hasIcon",
               "type": {
                 "text": "boolean"
@@ -7295,6 +7348,26 @@
               "privacy": "private",
               "default": "false",
               "description": "Whether the actions slot currently has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_slotHasContent",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Whether a slot holds real content. Whitespace-only text nodes don't count:\nordinary indented markup puts a newline between every child, which would\notherwise mark every slot as filled and reserve space for rows that are\nvisually empty."
             },
             {
               "kind": "method",
@@ -7352,6 +7425,17 @@
                 }
               ],
               "description": "Tracks whether the actions slot has content so its row can collapse when empty."
+            },
+            {
+              "kind": "method",
+              "name": "#level",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "Clamps `headingLevel` into the valid 1-6 heading range, falling back to 2 for a non-numeric value."
             }
           ],
           "attributes": [
@@ -7381,6 +7465,15 @@
               "default": "\"md\"",
               "description": "`sm` for a small panel/sidebar, `md` (default) for a full page region. `md` matches the pre-`size` look exactly.",
               "fieldName": "size"
+            },
+            {
+              "name": "heading-level",
+              "type": {
+                "text": "number"
+              },
+              "default": "2",
+              "description": "Heading rank the `heading` is exposed as, 1-6. An `empty-state` fills a\npage, a panel, or a sidebar, so no single rank is right everywhere; set\nthis to whatever the surrounding outline needs. Applied via `aria-level`\non the rendered `h2`, which overrides the element's native rank for\nassistive technology.",
+              "fieldName": "headingLevel"
             }
           ],
           "superclass": {
@@ -18000,7 +18093,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "\"Skip to main content\" bypass link — the package's first pure\naccessibility-utility component. It renders a real `<a>` that stays\nvisually hidden (but in the focus order) until it receives keyboard focus,\nthen pins itself to the top-left of the viewport as a solid, high-contrast\nblock so a keyboard or screen-reader user can jump straight past repeated\npage chrome to the main content. It needs no JavaScript beyond the element\nupgrade — the anchor's native in-page navigation does the rest.\n\nPlace it as the very first focusable element on the page, before the app\nchrome, and point `href` at the `id` of the main content region.",
+          "description": "\"Skip to main content\" bypass link — the package's first pure\naccessibility-utility component. It renders a real `<a>` that stays\nvisually hidden (but in the focus order) until it receives keyboard focus,\nthen pins itself to the top-left of the viewport as a solid, high-contrast\nblock so a keyboard or screen-reader user can jump straight past repeated\npage chrome to the main content.\n\nActivating it moves focus into the target as well as scrolling to it: a\nplain fragment link only moves focus when the target is already focusable,\nso this applies `tabindex=\"-1\"` to the target on demand rather than making\nevery consumer remember to. Native navigation is never prevented, so the\nhash still updates.\n\nPlace it as the very first focusable element on the page, before the app\nchrome, and point `href` at the `id` of the main content region.",
           "name": "SkipLink",
           "slots": [
             {
@@ -18028,6 +18121,46 @@
               "default": "\"Skip to main content\"",
               "description": "Fallback link wording used when nothing is slotted.",
               "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "_hasSlotted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the default slot holds real wording, as opposed to the whitespace ordinary formatting leaves behind."
+            },
+            {
+              "kind": "method",
+              "name": "#focusTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Moves focus to the fragment target, in addition to the native scroll.\n\nA plain in-page anchor only moves focus when its target is already\nfocusable, so pointing a skip link at an ordinary `<main id=\"main\">`\nscrolls the page but strands the keyboard user's focus back at the top —\nthe classic way a skip link silently does nothing. Rather than requiring\nevery consumer to remember `tabindex=\"-1\"`, this applies it to the target\non demand. Navigation is never prevented, so the hash still updates."
+            },
+            {
+              "kind": "method",
+              "name": "#onSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the slot holds substantive wording, so whitespace can't strip the link's accessible name."
             }
           ],
           "attributes": [
@@ -18188,11 +18321,11 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A key/value specification sheet — the \"spec sheet\" block on a product page:\nan uppercase, muted, wide-tracked key column against a value column,\nseparated by hairline rules. It describes ONE record's attributes, which is\nwhat sets it apart from `data-table` (many records, many columns, sorting);\n`spec-list` is not tabular and renders a real `<dl>`/`<dt>`/`<dd>` structure.\n\nFeed it the `items` array for the plain data path, or slot your own\n`<div><dt>…</dt><dd>…</dd></div>` groups when a value needs a link, a\n`status-pill`, or other markup. Slotted content takes precedence over\n`items`; with neither, nothing is rendered.",
+          "description": "A key/value specification sheet — the \"spec sheet\" block on a product page:\na muted, wide-tracked key column against a value column, separated by\nhairline rules (and uppercased under themes that set\n`--ui-label-transform`). It describes ONE record's attributes, which is\nwhat sets it apart from `data-table` (many records, many columns, sorting);\n`spec-list` is not tabular and renders a real `<dl>`/`<dt>`/`<dd>` structure.\n\nFeed it the `items` array for the plain data path, or slot bare `<dt>`/`<dd>`\npairs when a value needs a link, a `status-pill`, or other markup — slotted\npairs inherit the component's own key/value styling, so no page CSS is\nneeded. A `<div>` wrapping a pair is also accepted as a full-width grouping\nrow, but `::slotted()` cannot reach inside it, so those `dt`/`dd` stay the\nconsumer's to style. Slotted content takes precedence over `items`; with\nneither, nothing is rendered.",
           "name": "SpecList",
           "slots": [
             {
-              "description": "Optional `<div><dt>…</dt><dd>…</dd></div>` groups for values that need custom markup; when present, they replace the `items` path.",
+              "description": "Optional `<dt>`/`<dd>` pairs for values that need custom markup; when present, they replace the `items` path.",
               "name": ""
             }
           ],
@@ -18251,6 +18384,26 @@
             },
             {
               "kind": "method",
+              "name": "_isContent",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "description": "Whether a slot node is real content, ignoring the whitespace ordinary indented markup leaves between children."
+            },
+            {
+              "kind": "method",
               "name": "_onSlotChange",
               "privacy": "private",
               "return": {
@@ -18267,6 +18420,17 @@
                 }
               ],
               "description": "Tracks whether the default slot has content so slotted markup can take precedence over `items`."
+            },
+            {
+              "kind": "method",
+              "name": "_rows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SpecListItem[]"
+                }
+              },
+              "description": "The rows, defended against a non-array value assigned at runtime by a JS or HTML consumer."
             }
           ],
           "attributes": [
@@ -20217,7 +20381,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Ink over paper. --ui-text-muted is the same ink at ~65% over white rather // than a neutral gray, so the quiet text stays in the same warm family // instead of turning blue-gray beside the accent. \"--ui-text\": \"#17160f\", \"--ui-text-muted\": \"#686763\", \"--ui-surface\": \"#ffffff\", \"--ui-surface-muted\": \"#f0f0f0\", // ~40% ink over white: a rule that is unmistakably drawn at 1.5px without // going fully black, which at this width would turn every bordered surface // into a hard box. \"--ui-border\": \"#a2a29f\", \"--ui-tooltip\": \"#17160f\", \"--ui-overlay\": \"rgb(23 22 15 / 0.45)\", // The \"just changed\" flash tints toward the accent instead of amber, which // is the one warm hue this palette has no room for. \"--ui-highlight\": \"#dcdcff\", \"--ui-primary\": \"#0000ff\", \"--ui-primary-hover\": \"#0000cc\", \"--ui-info\": \"#0000ff\", \"--ui-info-hover\": \"#0000cc\", \"--ui-on-accent\": \"#ffffff\", // Solid and crisp at the reference's own 2px, not the default translucent // 3px halo — a blurred ring is the one soft edge this theme has nowhere to // put. \"--ui-focus-ring\": \"0 0 0 2px #0000ff\", // Ink CTA that lights up blue on hover, and inverts its two stops while // pressed. The border is ink at every state so the button keeps a defining // edge even once the fill goes blue. \"--ui-button-background\": \"#17160f\", \"--ui-button-background-hover\": \"#0000ff\", \"--ui-button-background-active\": \"#0000cc\", \"--ui-button-border\": \"#17160f\", \"--ui-button-danger-border\": \"#b91c1c\", // Secondary is the reference's ghost button: no fill, ink border, a paper // wash on hover and an accent border to echo the primary's hover. \"--ui-button-secondary-border\": \"#17160f\", \"--ui-button-secondary-border-hover\": \"#0000ff\", \"--ui-button-secondary-background-hover\": \"#f0f0f0\", \"--ui-button-secondary-surface-muted\": \"#f0f0f0\", // Non-button accents that can only take a plain color (a native input's // accent-color, range-slider's track/thumb) follow --ui-primary, not the // ink button fill — those are selection marks, not calls to action. \"--ui-button-accent\": \"#0000ff\", \"--ui-radius\": \"0\", \"--ui-radius-sm\": \"0\", \"--ui-radius-pill\": \"0\", \"--ui-radius-circle\": \"0\", \"--ui-shadow\": \"0 0 0 1.5px rgb(23 22 15 / 0.24)\", \"--ui-shadow-lg\": \"0 0 0 1.5px #17160f\", \"--ui-border-width\": \"1.5px\", \"--ui-label-transform\": \"uppercase\", \"--ui-numeric\": \"tabular-nums\", \"--ui-font\": '\"Space Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', }",
+          "default": "{ // Ink over paper. --ui-text-muted is the same ink at ~65% over white rather // than a neutral gray, so the quiet text stays in the same warm family // instead of turning blue-gray beside the accent. \"--ui-text\": \"#17160f\", \"--ui-text-muted\": \"#686763\", \"--ui-surface\": \"#ffffff\", \"--ui-surface-muted\": \"#f0f0f0\", // ~55% ink over white. Darker than it looks like it needs to be, because a // border is often the only thing bounding a white-on-white control, and // WCAG 1.4.11 wants 3:1 against both adjacent surfaces for that: this is // 3.55:1 on white and 3.12:1 on the muted surface. The lighter ~40% ink // (#a2a29f) reads better but only reaches 2.56:1, and 1.5px of extra weight // does not buy an exemption. Still short of fully black, which at this width // would turn every bordered surface into a hard box. \"--ui-border\": \"#898883\", \"--ui-tooltip\": \"#17160f\", \"--ui-overlay\": \"rgb(23 22 15 / 0.45)\", // The \"just changed\" flash tints toward the accent instead of amber, which // is the one warm hue this palette has no room for. \"--ui-highlight\": \"#dcdcff\", \"--ui-primary\": \"#0000ff\", \"--ui-primary-hover\": \"#0000cc\", \"--ui-info\": \"#0000ff\", \"--ui-info-hover\": \"#0000cc\", \"--ui-on-accent\": \"#ffffff\", // Solid and crisp at the reference's own 2px, not the default translucent // 3px halo — a blurred ring is the one soft edge this theme has nowhere to // put. \"--ui-focus-ring\": \"0 0 0 2px #0000ff\", // Ink CTA that lights up blue on hover, and inverts its two stops while // pressed. The border is ink at every state so the button keeps a defining // edge even once the fill goes blue. \"--ui-button-background\": \"#17160f\", \"--ui-button-background-hover\": \"#0000ff\", \"--ui-button-background-active\": \"#0000cc\", \"--ui-button-border\": \"#17160f\", \"--ui-button-danger-border\": \"#b91c1c\", // Secondary is the reference's ghost button: no fill, ink border, a paper // wash on hover and an accent border to echo the primary's hover. \"--ui-button-secondary-border\": \"#17160f\", \"--ui-button-secondary-border-hover\": \"#0000ff\", \"--ui-button-secondary-background-hover\": \"#f0f0f0\", \"--ui-button-secondary-surface-muted\": \"#f0f0f0\", // Non-button accents that can only take a plain color (a native input's // accent-color, range-slider's track/thumb) follow --ui-primary, not the // ink button fill — those are selection marks, not calls to action. \"--ui-button-accent\": \"#0000ff\", \"--ui-radius\": \"0\", \"--ui-radius-sm\": \"0\", \"--ui-radius-pill\": \"0\", \"--ui-radius-circle\": \"0\", \"--ui-shadow\": \"0 0 0 1.5px rgb(23 22 15 / 0.24)\", \"--ui-shadow-lg\": \"0 0 0 1.5px #17160f\", \"--ui-border-width\": \"1.5px\", \"--ui-label-transform\": \"uppercase\", \"--ui-numeric\": \"tabular-nums\", \"--ui-font\": '\"Space Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', }",
           "description": "\"Blueprint\" theme overrides, applied via `data-theme=\"blueprint\"` on `<html>`\n(see `generate-tokens-css.mjs`) — forces `color-scheme: light` like every\nother non-dark theme, and restyles the light palette as a technical catalog\n/ spec sheet: warm near-black ink on white paper, one pure-blue accent,\nsquare corners, and structure carried entirely by hairline rules instead of\nshadows.\n\nIt is the widest theme in the system, and the reason three token axes exist\nthat no earlier theme needed:\n\n- `--ui-font` is retargeted to a monospace stack. `darkTokenValues` notes\n  that shape and type tokens are theme-independent; `metro` already broke\n  that for shape, and this breaks it for the type *family* only. Type\n  *metrics* (size, weight, line height) remain unthemed in every theme —\n  they encode hierarchy, which is not a stylistic choice. \"Space Mono\"\n  leads the stack purely so a consumer who loads that webfont gets the\n  reference face automatically; with no external CSS at all it falls\n  straight through to the same system mono stack `--ui-font-mono` uses, so\n  the theme still renders correctly on its own.\n- `--ui-border-width` goes to `1.5px`. Every border in this theme is doing\n  the work a shadow does elsewhere, and at 1px those rules read as a faint\n  table rather than as drawn structure.\n- `--ui-label-transform` goes to `uppercase`, which is what makes chrome\n  micro-labels read as signage/spec-sheet keys. Only labels that name a\n  region or column carry this — never user content.\n- `--ui-numeric` goes to `tabular-nums`, so figures line up in a column and\n  do not jitter as they change.\n\nButtons are deliberately NOT the accent color. `--ui-primary` stays pure\nblue because it drives accents everywhere else (active tab underlines,\nselected states, links, the certification-style tints), but the primary\nbutton fill is overridden to ink through the `--ui-button-*` hooks and only\nturns blue on hover — a black-on-white CTA that lights up is the\ncatalog-print look, and a large pure-blue fill next to blue accents would\nflatten the two roles into one. That split is exactly what those hooks\nexist for (see `gradientTokenValues` above for the same technique).\n\nSemantic `danger`/`success`/`warning` keep their default hues: they encode\nmeaning rather than style, and the reference's blue-only restraint is an\neditorial choice a component library cannot make on a consumer's behalf.\n`--ui-info` is the exception — it is \"neutral notice\", which in this theme\nis precisely the accent, and the default sky blue would otherwise sit a few\ndegrees off the pure blue beside it and read as a mistake.\n\nShadows flatten to a hard ink ring rather than to `none`, for the same\nreason `metro` does it: `slide-panel` has no border of its own and would\notherwise lose its edge entirely."
         },
         {

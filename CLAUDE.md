@@ -101,12 +101,18 @@ were added together with the `blueprint` theme, whose reference aesthetic they
 come from — but all five are theme-neutral and read correctly under every
 theme. `spec-list` is a real `<dl>` for *one* record's attributes, deliberately
 distinct from `data-table` (many records); its default slot wins over `items`
-when populated, and because `::slotted()` cannot reach descendant
-`<dt>`/`<dd>`, a slotted sheet gets grid layout and dividers from the component
-but styles its own key/value text. `breadcrumb-nav` exists to fill
+when populated, and the `<dl>` itself is the grid so that slotted `<dt>`/`<dd>`
+are direct slottables that `::slotted()` can style — a `<div>`-wrapped pair is
+still accepted as a full-width grouping row, but `::slotted()` can't reach
+inside it, so that form styles its own key/value text. `breadcrumb-nav` exists to fill
 `page-header`'s previously unpopulated `breadcrumb` slot; it fires
 `breadcrumb-navigate` *in addition to* native anchor navigation rather than
-preventing it. `skip-link` is the package's first pure a11y utility: its
+preventing it. `skip-link` is the package's first pure a11y utility: it pins
+with `position: fixed` (an absolutely positioned link would resolve its insets
+against any positioned ancestor, e.g. `app-shell`'s `.shell`) and, on
+activation, applies `tabindex="-1"` to its fragment target and focuses it,
+because a plain anchor scrolls to an ordinary `<main>` without moving focus at
+all. Its
 `z-index: 50` is a deliberate literal in the gap between `app-shell`'s chrome
 (40/40/39) and the shared layer stack's base of 100, so it paints over the
 shell but can never float above an open dialog — that would be an escape hatch

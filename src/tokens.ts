@@ -372,10 +372,14 @@ export const blueprintTokenValues: Record<string, string> = {
   "--ui-text-muted": "#686763",
   "--ui-surface": "#ffffff",
   "--ui-surface-muted": "#f0f0f0",
-  // ~40% ink over white: a rule that is unmistakably drawn at 1.5px without
-  // going fully black, which at this width would turn every bordered surface
-  // into a hard box.
-  "--ui-border": "#a2a29f",
+  // ~55% ink over white. Darker than it looks like it needs to be, because a
+  // border is often the only thing bounding a white-on-white control, and
+  // WCAG 1.4.11 wants 3:1 against both adjacent surfaces for that: this is
+  // 3.55:1 on white and 3.12:1 on the muted surface. The lighter ~40% ink
+  // (#a2a29f) reads better but only reaches 2.56:1, and 1.5px of extra weight
+  // does not buy an exemption. Still short of fully black, which at this width
+  // would turn every bordered surface into a hard box.
+  "--ui-border": "#898883",
   "--ui-tooltip": "#17160f",
   "--ui-overlay": "rgb(23 22 15 / 0.45)",
   // The "just changed" flash tints toward the accent instead of amber, which

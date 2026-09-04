@@ -41,7 +41,7 @@ import "@f-ewald/components/breadcrumb-nav.js";
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `items` | `items` | `BreadcrumbItem[]` | `[]` | The crumbs, root first. The last entry is the current page and is rendered as non-interactive text with `aria-current="page"`. |
-| `maxVisible` | `max-visible` | `number` | `0` | When greater than zero and the trail has more items than this, collapse the middle of the trail behind an overflow button (the first and current crumbs always stay visible). `0` (the default) never collapses. |
+| `maxVisible` | `max-visible` | `number` | `0` | When greater than zero and the trail has more items than this, collapse the middle of the trail behind an overflow button (the first and current crumbs always stay visible). `0` (the default) never collapses.  A collapsed trail always occupies three positions — first crumb, overflow button, current page — so values below `3` are raised to `3`. Collapsing a shorter trail would spend a button to hide one crumb, or none at all. |
 | `expanded` | `expanded` | `boolean` | `false` | Whether a collapsed trail is currently expanded to show its hidden crumbs. |
 
 ## Events

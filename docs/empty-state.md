@@ -30,6 +30,7 @@ import "@f-ewald/components/empty-state.js";
 | `heading` | `heading` | `string` | `""` | The primary line. |
 | `description` | `description` | `string` | `""` | The supporting line under the heading. Omitted entirely when empty. |
 | `size` | `size` | `"sm" | "md"` | `"md"` | `sm` for a small panel/sidebar, `md` (default) for a full page region. `md` matches the pre-`size` look exactly. |
+| `headingLevel` | `heading-level` | `number` | `2` | Heading rank the `heading` is exposed as, 1-6. An `empty-state` fills a page, a panel, or a sidebar, so no single rank is right everywhere; set this to whatever the surrounding outline needs. Applied via `aria-level` on the rendered `h2`, which overrides the element's native rank for assistive technology. |
 
 ## Events
 
@@ -37,7 +38,11 @@ _None._
 
 ## Slots
 
-_None._
+| Slot | Description |
+| --- | --- |
+| `icon` | Optional leading glyph. The consumer supplies it (e.g. an inline SVG icon). |
+| `(default)` | Optional rich body content, an alternative to `description`. |
+| `actions` | Optional call to action, e.g. a `ui-button`. |
 
 ## CSS custom properties
 
