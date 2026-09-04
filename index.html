@@ -36,6 +36,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#audio-player">audio-player</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#auto-scroll">auto-scroll</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#breadcrumb-nav">breadcrumb-nav</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#button-group">button-group</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-day">calendar-day</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-month">calendar-month</a>
@@ -55,6 +56,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#empty-state">empty-state</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-actions">form-actions</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-field">form-field</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
@@ -91,7 +93,9 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-dots">scroll-dots</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-bottom">scroll-to-bottom</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-top">scroll-to-top</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#skip-link">skip-link</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#slide-panel">slide-panel</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#spec-list">spec-list</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#split-hero">split-hero</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#stat-meter">stat-meter</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#status-banner">status-banner</a>
@@ -107,6 +111,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#ui-checkbox">ui-checkbox</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#user-avatar">user-avatar</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#video-player">video-player</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#vote-control">vote-control</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#weight-bar-chart">weight-bar-chart</a>
           <p class="mt-4 px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Templates</p>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="demo/layouts/list-only.html">list-only</a>
@@ -414,6 +419,51 @@ import "@f-ewald/components/app-sidebar.js";
 
   // API mode: omit `options` and set `endpoint` instead — it's queried as
   // `${endpoint}?${queryParam}=<text>` and must respond with [{key, value}].
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="breadcrumb-nav" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-breadcrumb-nav">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#breadcrumb-nav">breadcrumb-nav</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A breadcrumb trail: a labelled <code>nav</code> wrapping an ordered list with chevron
+            separators. The last crumb is the current page — plain text with
+            <code>aria-current="page"</code>, never a link. Set <code>max-visible</code> to collapse
+            a long trail's middle behind an overflow button that always keeps the first and current
+            crumbs visible. Drops straight into <code>page-header</code>'s <code>breadcrumb</code> slot.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <breadcrumb-nav id="breadcrumb-nav-demo" data-testid="breadcrumb-nav-demo"></breadcrumb-nav>
+            <p id="breadcrumb-nav-log" data-testid="breadcrumb-nav-log" class="mt-3 text-sm text-slate-500">No crumb activated yet.</p>
+          </div>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <p class="mb-4 text-sm text-slate-500">
+              A long trail with <code>max-visible="3"</code> — the middle collapses behind the
+              overflow button until it's expanded.
+            </p>
+            <breadcrumb-nav id="breadcrumb-nav-collapsed" data-testid="breadcrumb-nav-collapsed" max-visible="3"></breadcrumb-nav>
+          </div>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <p class="mb-4 text-sm text-slate-500">
+              Nested in <code>page-header</code>'s <code>breadcrumb</code> slot, its intended composition.
+            </p>
+            <page-header id="breadcrumb-nav-in-header" data-testid="breadcrumb-nav-in-header" heading="Members" description="Everyone with access to this workspace.">
+              <breadcrumb-nav slot="breadcrumb" id="breadcrumb-nav-header-trail" data-testid="breadcrumb-nav-header-trail"></breadcrumb-nav>
+              <ui-button slot="actions" variant="primary">Invite</ui-button>
+            </page-header>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/breadcrumb-nav.js";
+
+&lt;breadcrumb-nav&gt;&lt;/breadcrumb-nav&gt;
+&lt;script type="module"&gt;
+  const trail = document.querySelector("breadcrumb-nav");
+  trail.items = [
+    { label: "Home", href: "/" },
+    { label: "Settings", href: "/settings" },
+    { label: "Members" },
+  ];
+  trail.addEventListener("breadcrumb-navigate", (e) =&gt; {
+    console.log(e.detail.item.label, e.detail.index);
+  });
 &lt;/script&gt;</code></pre>
         </section>
 
@@ -1407,6 +1457,48 @@ dropdown.size = "sm";</code></pre>
 
 &lt;editable-text value="Write the quarterly report" label="Title"&gt;&lt;/editable-text&gt;
 &lt;editable-text multiline placeholder="Add a description…" label="Description"&gt;&lt;/editable-text&gt;</code></pre>
+        </section>
+
+        <section id="empty-state" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-empty-state">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#empty-state">empty-state</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A centered placeholder for an empty list, an empty panel, or a zero-result
+            search. Optional leading <code>icon</code> slot, a heading and supporting
+            line, and an <code>actions</code> slot for a call to action. Every optional
+            part collapses when absent. <code>size="sm"</code> fits a small panel or
+            sidebar; <code>md</code> is the full-page default.
+          </p>
+          <div class="mt-6 grid gap-6 md:grid-cols-2">
+            <div class="rounded-lg border border-slate-200 p-6">
+              <empty-state
+                id="empty-state-demo"
+                data-testid="empty-state-demo"
+                heading="No results found"
+                description="Try adjusting your search or filters to find what you're looking for."
+              >
+                <span slot="icon" aria-hidden="true">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                </span>
+                <ui-button slot="actions" variant="primary">Clear filters</ui-button>
+              </empty-state>
+            </div>
+            <div class="rounded-lg border border-slate-200 p-6">
+              <empty-state
+                id="empty-state-compact"
+                data-testid="empty-state-compact"
+                size="sm"
+                heading="No pinned items"
+              ></empty-state>
+            </div>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/empty-state.js";
+
+&lt;empty-state heading="No results found" description="Try adjusting your search."&gt;
+  &lt;span slot="icon"&gt;...&lt;/span&gt;
+  &lt;ui-button slot="actions" variant="primary"&gt;Clear filters&lt;/ui-button&gt;
+&lt;/empty-state&gt;
+
+&lt;empty-state size="sm" heading="No pinned items"&gt;&lt;/empty-state&gt;</code></pre>
         </section>
 
         <section id="form-actions" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-form-actions">
@@ -2976,6 +3068,28 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
 &lt;scroll-to-top&gt;&lt;/scroll-to-top&gt;</code></pre>
         </section>
 
+        <section id="skip-link" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-skip-link">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#skip-link">skip-link</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            The classic "Skip to main content" accessibility affordance — a real
+            <code>&lt;a&gt;</code> that stays visually hidden until it receives keyboard
+            focus, then pins itself to the top-left as a solid high-contrast block. It
+            only appears on keyboard focus: press <kbd>Tab</kbd> after clicking into the
+            box below to reveal it. Works with no JavaScript beyond the element upgrade.
+          </p>
+          <div class="mt-6 rounded-lg border border-slate-200 p-6">
+            <skip-link id="skip-link-demo" data-testid="skip-link-demo" href="#skip-link-target"></skip-link>
+            <skip-link href="#skip-link-target" label="Jump to results"></skip-link>
+            <p id="skip-link-target" class="m-0 text-sm text-slate-600">
+              Main content target. Tab into this area and the skip links above appear at the top-left of the viewport.
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/skip-link.js";
+
+&lt;skip-link href="#main"&gt;&lt;/skip-link&gt;
+&lt;skip-link href="#results" label="Jump to results"&gt;&lt;/skip-link&gt;</code></pre>
+        </section>
+
         <section id="slide-panel" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-slide-panel">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#slide-panel">slide-panel</a></h3>
           <p class="mt-1 text-sm text-slate-500">Sliding panel shell with header chrome and a close button.</p>
@@ -2997,6 +3111,60 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
 &lt;slide-panel open heading="Property details"&gt;
   Panel body content goes here.
 &lt;/slide-panel&gt;</code></pre>
+        </section>
+
+        <section id="spec-list" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-spec-list">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#spec-list">spec-list</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A key/value specification sheet — one record's attributes as an uppercase, muted,
+            wide-tracked key column against a value column, separated by hairline rules. Feed it
+            <code>items</code>, or slot your own <code>&lt;dt&gt;/&lt;dd&gt;</code> groups when a
+            value needs a link or other markup. Distinct from <code>data-table</code>, which is
+            tabular.
+          </p>
+          <div class="mt-6 grid gap-6 rounded-lg border border-slate-200 p-6 md:grid-cols-2">
+            <div>
+              <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">Data-driven</p>
+              <spec-list id="spec-list-demo" data-testid="spec-list-demo" caption="Specifications"></spec-list>
+            </div>
+            <div>
+              <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">Slotted, no dividers, stacked</p>
+              <p class="mb-2 text-xs text-slate-400">
+                <code>::slotted()</code> can't reach the inner <code>dt</code>/<code>dd</code>, so a
+                slotted sheet styles its own key/value text — here with page classes.
+              </p>
+              <spec-list id="spec-list-slotted" data-testid="spec-list-slotted" layout="stacked">
+                <div>
+                  <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Homepage</dt>
+                  <dd class="text-sm text-slate-900"><a class="text-indigo-600 hover:underline" href="https://example.com">example.com</a></dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Status</dt>
+                  <dd class="text-sm text-slate-900"><status-pill color="success" label="Active"></status-pill></dd>
+                </div>
+              </spec-list>
+            </div>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/spec-list.js";
+
+&lt;spec-list caption="Specifications"&gt;&lt;/spec-list&gt;
+&lt;script type="module"&gt;
+  document.querySelector("spec-list").items = [
+    { label: "Material", value: "Anodized aluminum" },
+    { label: "Weight", value: "1.2 kg" },
+    { label: "Warranty", value: "2 years" },
+  ];
+&lt;/script&gt;
+
+&lt;!-- Or slot your own markup when a value needs a link or a pill.
+     `dividers` defaults to true; turn it off via the property, since a
+     `dividers="false"` attribute still parses as a truthy boolean. --&gt;
+&lt;spec-list layout="stacked" id="sheet"&gt;
+  &lt;div&gt;&lt;dt&gt;Homepage&lt;/dt&gt;&lt;dd&gt;&lt;a href="https://example.com"&gt;example.com&lt;/a&gt;&lt;/dd&gt;&lt;/div&gt;
+&lt;/spec-list&gt;
+&lt;script type="module"&gt;
+  document.getElementById("sheet").dividers = false;
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="split-hero" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-split-hero">
@@ -3624,6 +3792,47 @@ import "@f-ewald/components/ui-button.js";
           <pre class="usage mt-4"><code>import "@f-ewald/components/video-player.js";
 
 &lt;video-player src="/clip.mp4" poster="/clip-poster.jpg" label="Episode 12"&gt;&lt;/video-player&gt;</code></pre>
+        </section>
+
+        <section id="vote-control" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-vote-control">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#vote-control">vote-control</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Up/down vote widget with a live score readout — the "vote an entry toward a promotion
+            threshold" pattern. One member casts a single vote that can be switched or withdrawn at
+            any time; an optional <code>target</code> renders a thin progress meter toward the
+            threshold. <code>vote</code> reflects the pressed button, and <code>vote-change</code>
+            fires with <code>{ vote, value }</code>.
+          </p>
+          <div class="mt-6 flex flex-wrap items-start gap-6 rounded-lg border border-slate-200 p-6">
+            <vote-control
+              id="vote-control-demo"
+              data-testid="vote-control-demo"
+              value="7"
+              target="10"
+              label="Vote for this entry"
+            ></vote-control>
+            <vote-control
+              id="vote-control-horizontal"
+              data-testid="vote-control-horizontal"
+              orientation="horizontal"
+              value="42"
+              target="50"
+              label="Vote for this entry"
+            ></vote-control>
+            <vote-control
+              id="vote-control-disabled"
+              data-testid="vote-control-disabled"
+              value="3"
+              disabled
+              label="Voting closed"
+            ></vote-control>
+          </div>
+          <p class="mt-3 text-sm text-slate-500">Last event: <span id="vote-control-log" data-testid="vote-control-log"></span></p>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/vote-control.js";
+
+&lt;vote-control value="7" target="10" label="Vote for this entry"&gt;&lt;/vote-control&gt;
+&lt;vote-control orientation="horizontal" value="42" target="50"&gt;&lt;/vote-control&gt;
+&lt;vote-control value="3" disabled&gt;&lt;/vote-control&gt;</code></pre>
         </section>
 
         <section id="weight-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-weight-bar-chart">

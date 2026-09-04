@@ -67,6 +67,7 @@ import "@f-ewald/components/photo-gallery.js";
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size` |

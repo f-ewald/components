@@ -85,7 +85,7 @@ export class RadioCards extends LitElement {
         gap: 0.5rem;
         box-sizing: border-box;
         background: var(--ui-button-secondary-background, none);
-        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
+        border: var(--ui-border-width, 1px) solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 0.75rem;
         cursor: pointer;

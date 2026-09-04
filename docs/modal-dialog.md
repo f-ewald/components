@@ -51,6 +51,7 @@ import "@f-ewald/components/modal-dialog.js";
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-size-lg` |

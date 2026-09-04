@@ -50,7 +50,7 @@ export class TabBar extends LitElement {
       .tablist {
         display: flex;
         gap: 1rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .tab {
         appearance: none;

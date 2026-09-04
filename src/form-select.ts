@@ -88,7 +88,7 @@ export class FormSelect extends LitElement {
         line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 0.75rem;
         cursor: pointer;
@@ -115,7 +115,7 @@ export class FormSelect extends LitElement {
         box-sizing: border-box;
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         cursor: text;
       }
@@ -185,7 +185,7 @@ export class FormSelect extends LitElement {
         white-space: nowrap;
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }

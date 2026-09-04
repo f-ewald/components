@@ -37,6 +37,7 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-border-width` |
 | `--ui-font-mono` |
 | `--ui-font-size-xs` |
 | `--ui-line-height-glyph` |

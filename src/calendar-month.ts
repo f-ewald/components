@@ -101,7 +101,7 @@ export class CalendarMonth extends LitElement {
       }
       .day-row td {
         padding: 0.25rem 0.5rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .day-row.weekend {
         background: var(--ui-surface-muted, #f8fafc);
@@ -277,6 +277,9 @@ export class CalendarMonth extends LitElement {
         flex: 0 0 auto;
         min-height: 1.15em;
         margin-top: auto;
+        /* Literal 1px, not --ui-border-width: this rule is drawn in the
+           entry's own color and divides one data mark's content, so it is
+           part of the entry geometry rather than the theme's chrome. */
         border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
         padding-top: 0.25rem;
         font-size: var(--ui-font-size-xs, 0.6875rem);

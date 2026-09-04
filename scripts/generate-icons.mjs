@@ -53,6 +53,11 @@ const ICONS = {
     size: 16,
     usage: "An overflow (\"kebab\") menu trigger, e.g. dropdown-button's icon variant.",
   },
+  EllipsisHorizontal: {
+    slug: "ellipsis-horizontal",
+    size: 16,
+    usage: "Collapsed items in an inline sequence, e.g. breadcrumb-nav's truncated middle.",
+  },
   Plus: { slug: "plus", size: 16, usage: "\"Add new\" actions, e.g. creating a new item or row." },
   ListBullet: { slug: "list-bullet", usage: "A list-view toggle, or to represent list-type content." },
   CurrencyDollar: {

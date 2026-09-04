@@ -115,6 +115,19 @@ export const tokenValues: Record<string, string> = {
   // Shape / depth
   "--ui-radius": "0.5rem", // rounded-lg
   "--ui-radius-sm": "0.25rem", // rounded
+  // The width of a themeable surface/control border. Spacing is deliberately
+  // untokenized, but a border is chrome rather than layout: the `blueprint`
+  // theme's whole structure is carried by hairline rules instead of shadows,
+  // and it needs those rules one step heavier than the default. Defaults to
+  // the literal 1px every component used before, so nothing renders
+  // differently until a theme overrides it. Only genuine surface/control
+  // borders read this — forced-colors `CanvasText` borders and purely
+  // decorative literals (a slider thumb's white ring, a tab's 2px underline)
+  // keep their own widths, since those aren't the theme's structural rules.
+  // Anything with a fixed height/width and a themeable border must also set
+  // `box-sizing: border-box`, or a heavier border grows it past the shared
+  // 2rem control target.
+  "--ui-border-width": "1px",
   // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot.
   // Tokenized rather than hardcoded so a theme that squares the design system
   // (metro) can reach them too; a literal 9999px/50% silently opts that shape
@@ -152,6 +165,23 @@ export const tokenValues: Record<string, string> = {
   // Letter spacing / tracking — default and the single widened step.
   "--ui-tracking-normal": "0",
   "--ui-tracking-wide": "0.04em",
+
+  // Casing of chrome micro-labels — the small, wide-tracked labels that name a
+  // region rather than carry content (a `frame-box` legend, an `app-sidebar`
+  // section heading, a `stat-meter` caption). Defaults to `none`, today's
+  // sentence case, so nothing changes until a theme sets it; the `blueprint`
+  // theme sets `uppercase`, where signage-style labels are the point. Never
+  // apply this to user-supplied content — shouting someone's data is not a
+  // theme's decision, and `text-transform` is a presentational lie that
+  // survives copy/paste as the original casing anyway.
+  "--ui-label-transform": "none",
+
+  // Numeral rendering for figures that change in place or stack into a column
+  // — a score, a page number, a running clock. Defaults to `normal`
+  // (proportional, as before); `tabular-nums` stops digits from jittering
+  // horizontally as they tick, which the `blueprint` theme's spec-sheet
+  // aesthetic wants everywhere.
+  "--ui-numeric": "normal",
 };
 
 /**
@@ -283,6 +313,116 @@ export const metroTokenValues: Record<string, string> = {
   // pair's relative weighting.
   "--ui-shadow": "0 0 0 1px rgb(15 23 42 / 0.12)",
   "--ui-shadow-lg": "0 0 0 1px rgb(15 23 42 / 0.18)",
+};
+
+/**
+ * "Blueprint" theme overrides, applied via `data-theme="blueprint"` on `<html>`
+ * (see `generate-tokens-css.mjs`) — forces `color-scheme: light` like every
+ * other non-dark theme, and restyles the light palette as a technical catalog
+ * / spec sheet: warm near-black ink on white paper, one pure-blue accent,
+ * square corners, and structure carried entirely by hairline rules instead of
+ * shadows.
+ *
+ * It is the widest theme in the system, and the reason three token axes exist
+ * that no earlier theme needed:
+ *
+ * - `--ui-font` is retargeted to a monospace stack. `darkTokenValues` notes
+ *   that shape and type tokens are theme-independent; `metro` already broke
+ *   that for shape, and this breaks it for the type *family* only. Type
+ *   *metrics* (size, weight, line height) remain unthemed in every theme —
+ *   they encode hierarchy, which is not a stylistic choice. "Space Mono"
+ *   leads the stack purely so a consumer who loads that webfont gets the
+ *   reference face automatically; with no external CSS at all it falls
+ *   straight through to the same system mono stack `--ui-font-mono` uses, so
+ *   the theme still renders correctly on its own.
+ * - `--ui-border-width` goes to `1.5px`. Every border in this theme is doing
+ *   the work a shadow does elsewhere, and at 1px those rules read as a faint
+ *   table rather than as drawn structure.
+ * - `--ui-label-transform` goes to `uppercase`, which is what makes chrome
+ *   micro-labels read as signage/spec-sheet keys. Only labels that name a
+ *   region or column carry this — never user content.
+ * - `--ui-numeric` goes to `tabular-nums`, so figures line up in a column and
+ *   do not jitter as they change.
+ *
+ * Buttons are deliberately NOT the accent color. `--ui-primary` stays pure
+ * blue because it drives accents everywhere else (active tab underlines,
+ * selected states, links, the certification-style tints), but the primary
+ * button fill is overridden to ink through the `--ui-button-*` hooks and only
+ * turns blue on hover — a black-on-white CTA that lights up is the
+ * catalog-print look, and a large pure-blue fill next to blue accents would
+ * flatten the two roles into one. That split is exactly what those hooks
+ * exist for (see `gradientTokenValues` above for the same technique).
+ *
+ * Semantic `danger`/`success`/`warning` keep their default hues: they encode
+ * meaning rather than style, and the reference's blue-only restraint is an
+ * editorial choice a component library cannot make on a consumer's behalf.
+ * `--ui-info` is the exception — it is "neutral notice", which in this theme
+ * is precisely the accent, and the default sky blue would otherwise sit a few
+ * degrees off the pure blue beside it and read as a mistake.
+ *
+ * Shadows flatten to a hard ink ring rather than to `none`, for the same
+ * reason `metro` does it: `slide-panel` has no border of its own and would
+ * otherwise lose its edge entirely.
+ */
+export const blueprintTokenValues: Record<string, string> = {
+  // Ink over paper. --ui-text-muted is the same ink at ~65% over white rather
+  // than a neutral gray, so the quiet text stays in the same warm family
+  // instead of turning blue-gray beside the accent.
+  "--ui-text": "#17160f",
+  "--ui-text-muted": "#686763",
+  "--ui-surface": "#ffffff",
+  "--ui-surface-muted": "#f0f0f0",
+  // ~40% ink over white: a rule that is unmistakably drawn at 1.5px without
+  // going fully black, which at this width would turn every bordered surface
+  // into a hard box.
+  "--ui-border": "#a2a29f",
+  "--ui-tooltip": "#17160f",
+  "--ui-overlay": "rgb(23 22 15 / 0.45)",
+  // The "just changed" flash tints toward the accent instead of amber, which
+  // is the one warm hue this palette has no room for.
+  "--ui-highlight": "#dcdcff",
+
+  "--ui-primary": "#0000ff",
+  "--ui-primary-hover": "#0000cc",
+  "--ui-info": "#0000ff",
+  "--ui-info-hover": "#0000cc",
+  "--ui-on-accent": "#ffffff",
+  // Solid and crisp at the reference's own 2px, not the default translucent
+  // 3px halo — a blurred ring is the one soft edge this theme has nowhere to
+  // put.
+  "--ui-focus-ring": "0 0 0 2px #0000ff",
+
+  // Ink CTA that lights up blue on hover, and inverts its two stops while
+  // pressed. The border is ink at every state so the button keeps a defining
+  // edge even once the fill goes blue.
+  "--ui-button-background": "#17160f",
+  "--ui-button-background-hover": "#0000ff",
+  "--ui-button-background-active": "#0000cc",
+  "--ui-button-border": "#17160f",
+  "--ui-button-danger-border": "#b91c1c",
+  // Secondary is the reference's ghost button: no fill, ink border, a paper
+  // wash on hover and an accent border to echo the primary's hover.
+  "--ui-button-secondary-border": "#17160f",
+  "--ui-button-secondary-border-hover": "#0000ff",
+  "--ui-button-secondary-background-hover": "#f0f0f0",
+  "--ui-button-secondary-surface-muted": "#f0f0f0",
+  // Non-button accents that can only take a plain color (a native input's
+  // accent-color, range-slider's track/thumb) follow --ui-primary, not the
+  // ink button fill — those are selection marks, not calls to action.
+  "--ui-button-accent": "#0000ff",
+
+  "--ui-radius": "0",
+  "--ui-radius-sm": "0",
+  "--ui-radius-pill": "0",
+  "--ui-radius-circle": "0",
+  "--ui-shadow": "0 0 0 1.5px rgb(23 22 15 / 0.24)",
+  "--ui-shadow-lg": "0 0 0 1.5px #17160f",
+
+  "--ui-border-width": "1.5px",
+  "--ui-label-transform": "uppercase",
+  "--ui-numeric": "tabular-nums",
+  "--ui-font":
+    '"Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
 };
 
 /**

@@ -32,3 +32,58 @@ pre.usage {
 .demo-nav a.active {
   @apply bg-indigo-50 text-indigo-700;
 }
+
+/*
+ * Blueprint page texture — demo-only, and deliberately NOT a component or a
+ * token. The faint dot grid and the film grain are backdrops the *page* paints
+ * behind everything; a component library has no business reaching outside its
+ * own shadow roots to do that, and no `--ui-*` token could express it without
+ * inventing a "page background" concept the other four themes have no use for.
+ * A consumer who wants the full look copies these two rules; the theme itself
+ * renders correctly without them.
+ *
+ * The demo's own chrome is Tailwind-driven and so doesn't follow the theme's
+ * type or color, the same problem the @theme radius mapping above solves —
+ * here the body picks up the ink/paper pair and the mono face so the page
+ * around the components doesn't read as a different design.
+ */
+:root[data-theme="blueprint"] body {
+  color: var(--ui-text, #0f172a);
+  background-color: var(--ui-surface, #ffffff);
+  /* The grid is its own tone, well below the hairline borders the components
+     draw — otherwise the page reads as a table rather than as paper. */
+  background-image: radial-gradient(
+    circle,
+    rgb(0 0 255 / 0.12) 1px,
+    transparent 1.5px
+  );
+  background-size: 1rem 1rem;
+  background-position: -1px -1px;
+  font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+}
+
+/* Grain sits above the grid and below the content, multiplied into the paper.
+   `position: fixed` so it doesn't scroll or grow the page, and
+   `pointer-events: none` so it never intercepts a click. */
+:root[data-theme="blueprint"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.28;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* Both layers are static, so there is nothing to disable for reduced motion.
+   Forced-colors is different: the grid and grain are decoration that would
+   fight a user's own high-contrast palette, so drop them entirely. */
+@media (forced-colors: active) {
+  :root[data-theme="blueprint"] body {
+    background-image: none;
+  }
+  :root[data-theme="blueprint"] body::before {
+    display: none;
+  }
+}

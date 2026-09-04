@@ -54,6 +54,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-button-highlight` |
 | `--ui-button-secondary-` |
 | `--ui-button-secondary-background` |

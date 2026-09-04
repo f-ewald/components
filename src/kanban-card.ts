@@ -41,7 +41,7 @@ export class KanbanCard extends LitElement {
         box-sizing: border-box;
         padding: 0.5rem 0.75rem;
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
         cursor: grab;
         text-align: left;

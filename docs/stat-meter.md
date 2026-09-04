@@ -45,6 +45,7 @@ _None._
 | `--ui-font-size-sm` |
 | `--ui-font-weight-medium` |
 | `--ui-font-weight-semibold` |
+| `--ui-label-transform` |
 | `--ui-radius-pill` |
 | `--ui-success` |
 | `--ui-surface-muted` |

@@ -138,6 +138,41 @@ const EXAMPLES = {
   poster="/clip-poster.jpg"
   label="Episode 12"
 ></video-player>`,
+  "vote-control": `<vote-control value="7" target="10" label="Vote for this entry"></vote-control>
+<vote-control orientation="horizontal" value="42" target="50"></vote-control>
+<vote-control value="3" disabled></vote-control>`,
+  "skip-link": `<skip-link href="#main"></skip-link>
+<skip-link href="#results" label="Jump to results"></skip-link>`,
+  "breadcrumb-nav": `<breadcrumb-nav></breadcrumb-nav>
+<script type="module">
+  const trail = document.querySelector("breadcrumb-nav");
+  trail.items = [
+    { label: "Home", href: "/" },
+    { label: "Settings", href: "/settings" },
+    { label: "Members" },
+  ];
+  trail.addEventListener("breadcrumb-navigate", (e) => console.log(e.detail.item.label, e.detail.index));
+</script>`,
+  "spec-list": `<spec-list caption="Specifications"></spec-list>
+<script type="module">
+  document.querySelector("spec-list").items = [
+    { label: "Material", value: "Anodized aluminum" },
+    { label: "Weight", value: "1.2 kg" },
+    { label: "Warranty", value: "2 years" },
+  ];
+</script>
+
+<!-- Or slot your own groups when a value needs a link, a status-pill, or other
+     markup. \`dividers\` defaults to true; turn it off via the property, since a
+     \`dividers="false"\` attribute still parses as a truthy boolean. -->
+<spec-list layout="stacked" id="sheet">
+  <div><dt>Homepage</dt><dd><a href="https://example.com">example.com</a></dd></div>
+</spec-list>`,
+  "empty-state": `<empty-state heading="No results found" description="Try adjusting your search or filters.">
+  <span slot="icon">...</span>
+  <ui-button slot="actions" variant="primary">Clear filters</ui-button>
+</empty-state>
+<empty-state size="sm" heading="No pinned items"></empty-state>`,
   "comment-composer": `<comment-composer placeholder="Add a comment…"></comment-composer>
 <script type="module">
   document.querySelector("comment-composer").addEventListener("submit", (e) => {
@@ -1233,11 +1268,14 @@ Theming: components use \`var(--ui-*, <fallback>)\` custom properties, so they
 render correctly with zero external CSS. Override any \`--ui-*\` property on
 \`:root\` (or an ancestor) to retheme, or import the optional
 \`@f-ewald/components/tokens.css\` stylesheet as a starting point. That
-stylesheet also ships four named themes, selected with a \`data-theme\`
+stylesheet also ships five named themes, selected with a \`data-theme\`
 attribute on \`<html>\` (mutually exclusive): \`"dark"\`/\`"light"\` force one of
 the two flat palettes over the OS preference, \`"gradient"\` glosses buttons and
-toasts, and \`"metro"\` squares every tokenized corner and replaces drop shadows
-with hairline rings over a blue accent.
+toasts, \`"metro"\` squares every tokenized corner and replaces drop shadows
+with hairline rings over a blue accent, and \`"blueprint"\` restyles the palette
+as a monospace spec sheet — ink on paper, one pure-blue accent, square corners,
+uppercase micro-labels, tabular figures, and 1.5px hairline rules in place of
+shadows.
 
 ## Icons
 

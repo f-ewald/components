@@ -2,6 +2,51 @@
 
 ## Unreleased
 
+- Added a `"blueprint"` theme (`data-theme="blueprint"` on `<html>`, alongside
+  `"light"`/`"dark"`/`"gradient"`/`"metro"`): a technical spec-sheet look —
+  warm ink on paper, one pure `#0000ff` accent, square corners, hard hairline
+  rings in place of shadows, uppercase micro-labels, tabular figures, and a
+  monospace type family. It is the first theme to override the *type family*
+  and *border width*, which needed three new tokens, each defaulting to
+  today's exact behavior so no existing rendering changes:
+  - `--ui-border-width` (`1px`) — now carried by the 68 surface-border
+    declarations across 40 components. Forced-colors `CanvasText` borders,
+    decorative edges whose width *is* the effect (`range-slider`'s thumb ring,
+    `tab-bar`'s underline), and data-mark geometry stay literal.
+  - `--ui-label-transform` (`none`) — applied only to chrome micro-labels that
+    are currently sentence-case (`data-table` headers, `stat-meter`,
+    `cron-schedule`). Labels already uppercase by design keep a literal value:
+    the token *adds* caps, it never removes them.
+  - `--ui-numeric` (`normal`) — applied only where numerals are currently
+    proportional. The nine existing literal `tabular-nums` sites stay literal,
+    since the token's default would regress them.
+  Primary buttons are ink rather than blue under this theme (via the
+  `--ui-button-*` hooks): `--ui-primary` already drives accents everywhere
+  else, and a large blue fill beside blue accents would flatten the two roles.
+  `--ui-font` leads with Space Mono so a consumer loading that webfont gets the
+  reference face, then falls through to the system mono stack — the playground
+  deliberately adds no Google Fonts link. The blueprint dot-grid and film-grain
+  page texture is demo-only (`demo/demo.css`), not part of the package.
+- `blueprintTokenValues` is exported from the package root, alongside
+  `tokenValues`/`darkTokenValues`/`gradientTokenValues`/`metroTokenValues`.
+- Five new components, drawn from the same reference design language but
+  theme-neutral under all five themes:
+  - `spec-list` — a key/value spec sheet for one record's attributes as a real
+    `<dl>`. Data-driven via `items`, or slot `<dt>`/`<dd>` groups when a value
+    needs a link or a pill. Distinct from `data-table`, which is tabular.
+  - `breadcrumb-nav` — a labelled breadcrumb trail with chevron separators and
+    the current page as `aria-current="page"` text. `max-visible` collapses a
+    long trail's middle behind an overflow button. Fills `page-header`'s
+    previously unpopulated `breadcrumb` slot.
+  - `vote-control` — up/down voting with a live score readout, an optional
+    progress meter toward a `target` threshold, and `aria-pressed` buttons.
+  - `empty-state` — a centered placeholder for an empty list or a zero-result
+    search: optional `icon`, heading, description, and an `actions` slot.
+  - `skip-link` — the package's first pure accessibility utility: a
+    "Skip to main content" bypass link, clipped until keyboard focus.
+- New `iconEllipsisHorizontal`, generated from `heroicons` for
+  `breadcrumb-nav`'s overflow button.
+
 - New `--ui-radius-pill` (`9999px`) and `--ui-radius-circle` (`50%`) tokens.
   Deliberate pill and circle shapes — `status-pill`, `user-avatar`,
   `loading-dots`, `scroll-dots`, `radio-pills`, `range-slider`'s track/thumb,

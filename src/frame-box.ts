@@ -23,7 +23,7 @@ export class FrameBox extends LitElement {
       .frame {
         min-width: 0;
         margin: 0;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
         padding: 0.75rem;
       }

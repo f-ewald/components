@@ -97,7 +97,7 @@ export class UiButton extends LitElement {
           "Noto Color Emoji"
         );
         cursor: pointer;
-        border: 1px solid transparent;
+        border: var(--ui-border-width, 1px) solid transparent;
         text-decoration: none;
         box-sizing: border-box;
       }

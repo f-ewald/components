@@ -43,6 +43,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-focus-ring` |
 | `--ui-primary` |
 | `--ui-radius-sm` |

@@ -64,12 +64,14 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-focus-ring` |
 | `--ui-font` |
 | `--ui-font-mono` |
 | `--ui-font-size-sm` |
 | `--ui-font-size-xs` |
 | `--ui-font-weight-medium` |
+| `--ui-label-transform` |
 | `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius` |

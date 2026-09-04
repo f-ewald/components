@@ -62,8 +62,11 @@ export class PaginationNav extends LitElement {
         height: 2rem;
         padding: 0;
         background: var(--ui-button-secondary-background, none);
-        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
+        border: var(--ui-border-width, 1px) solid
+          var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         border-radius: var(--ui-radius-sm, 0.25rem);
+        /* The border is themeable, so it has to stay inside the 2rem target. */
+        box-sizing: border-box;
         color: var(--ui-text, #0f172a);
         cursor: pointer;
         box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
@@ -92,6 +95,7 @@ export class PaginationNav extends LitElement {
         font-weight: var(--ui-font-weight-medium, 500);
         line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text-muted, #64748b);
+        font-variant-numeric: var(--ui-numeric, normal);
         min-width: 6rem;
         text-align: center;
       }

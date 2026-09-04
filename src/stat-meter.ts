@@ -35,6 +35,7 @@ export class StatMeter extends LitElement {
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: var(--ui-font-weight-semibold, 600);
         letter-spacing: var(--ui-tracking-wide, 0.04em);
+        text-transform: var(--ui-label-transform, none);
         color: var(--ui-text-muted, #64748b);
       }
 

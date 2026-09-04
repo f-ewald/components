@@ -50,6 +50,7 @@ export class ProgressBar extends LitElement {
         flex: 0 0 auto;
         font-size: var(--ui-font-size-sm, 0.75rem);
         color: var(--ui-text-muted, #64748b);
+        font-variant-numeric: var(--ui-numeric, normal);
         white-space: nowrap;
       }
       @media (prefers-reduced-motion: reduce) {

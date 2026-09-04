@@ -52,6 +52,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<audio-player>` | [API reference](https://f-ewald.github.io/components/docs/audio-player.html) |
 | `<auto-scroll>` | [API reference](https://f-ewald.github.io/components/docs/auto-scroll.html) |
 | `<autocomplete-input>` | [API reference](https://f-ewald.github.io/components/docs/autocomplete-input.html) |
+| `<breadcrumb-nav>` | [API reference](https://f-ewald.github.io/components/docs/breadcrumb-nav.html) |
 | `<button-group>` | [API reference](https://f-ewald.github.io/components/docs/button-group.html) |
 | `<calendar-day>` | [API reference](https://f-ewald.github.io/components/docs/calendar-day.html) |
 | `<calendar-entry>` | [API reference](https://f-ewald.github.io/components/docs/calendar-entry.html) |
@@ -72,6 +73,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<distribution-chart>` | [API reference](https://f-ewald.github.io/components/docs/distribution-chart.html) |
 | `<dropdown-button>` | [API reference](https://f-ewald.github.io/components/docs/dropdown-button.html) |
 | `<editable-text>` | [API reference](https://f-ewald.github.io/components/docs/editable-text.html) |
+| `<empty-state>` | [API reference](https://f-ewald.github.io/components/docs/empty-state.html) |
 | `<form-actions>` | [API reference](https://f-ewald.github.io/components/docs/form-actions.html) |
 | `<form-field>` | [API reference](https://f-ewald.github.io/components/docs/form-field.html) |
 | `<form-select>` | [API reference](https://f-ewald.github.io/components/docs/form-select.html) |
@@ -111,7 +113,9 @@ import "@f-ewald/components/roman-numeral.js";
 | `<scroll-dots>` | [API reference](https://f-ewald.github.io/components/docs/scroll-dots.html) |
 | `<scroll-to-bottom>` | [API reference](https://f-ewald.github.io/components/docs/scroll-to-bottom.html) |
 | `<scroll-to-top>` | [API reference](https://f-ewald.github.io/components/docs/scroll-to-top.html) |
+| `<skip-link>` | [API reference](https://f-ewald.github.io/components/docs/skip-link.html) |
 | `<slide-panel>` | [API reference](https://f-ewald.github.io/components/docs/slide-panel.html) |
+| `<spec-list>` | [API reference](https://f-ewald.github.io/components/docs/spec-list.html) |
 | `<split-hero>` | [API reference](https://f-ewald.github.io/components/docs/split-hero.html) |
 | `<stat-meter>` | [API reference](https://f-ewald.github.io/components/docs/stat-meter.html) |
 | `<status-banner>` | [API reference](https://f-ewald.github.io/components/docs/status-banner.html) |
@@ -129,6 +133,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<ui-checkbox>` | [API reference](https://f-ewald.github.io/components/docs/ui-checkbox.html) |
 | `<user-avatar>` | [API reference](https://f-ewald.github.io/components/docs/user-avatar.html) |
 | `<video-player>` | [API reference](https://f-ewald.github.io/components/docs/video-player.html) |
+| `<vote-control>` | [API reference](https://f-ewald.github.io/components/docs/vote-control.html) |
 | `<weight-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/weight-bar-chart.html) |
 
 Each doc lists the component's attributes/properties, events, slots, and the
@@ -207,6 +212,49 @@ circle shapes — chips, avatars, dots, slider thumbs — which read
 - `--ui-shadow`/`--ui-shadow-lg` become a hard 1px ring rather than `none`.
   Removing them outright would leave `slide-panel` — the only overlay with no
   border of its own — as an invisible white-on-white edge.
+
+### Blueprint theme
+
+Setting `data-theme="blueprint"` on `<html>` restyles the light palette as a
+technical catalog / spec sheet: warm near-black ink on white paper, one pure
+blue accent, square corners, monospace type, and structure carried entirely by
+1.5px hairline rules instead of shadows — see `blueprintTokenValues` in
+[`src/tokens.ts`](./src/tokens.ts). Like `gradient` and `metro`, it is built on
+the light palette and so takes precedence over the OS dark preference.
+
+It is the widest theme in the system, and the only one to reach three axes
+beyond color and shape:
+
+- `--ui-border-width` goes to `1.5px`. Every border here does the work a shadow
+  does elsewhere, and at 1px those rules read as a faint table rather than as
+  drawn structure.
+- `--ui-label-transform` goes to `uppercase`, so chrome micro-labels — spec
+  keys, table headers, group labels — read as signage. It never applies to
+  user content.
+- `--ui-numeric` goes to `tabular-nums`, so figures line up in a column.
+- `--ui-font` is retargeted to a monospace stack led by `"Space Mono"`. Load
+  that webfont yourself for the exact reference face; with no external CSS at
+  all it falls through to the same system mono stack `--ui-font-mono` uses, so
+  the theme still renders correctly on its own.
+
+Type *metrics* — size, weight, line height, tracking — are not themed here or
+anywhere else; they encode hierarchy rather than style.
+
+Two deliberate departures from the look it is modelled on:
+
+- Primary buttons are **ink**, not the accent, and only turn blue on hover.
+  `--ui-primary` stays pure blue because it drives accents everywhere else
+  (active tab underlines, selected states, links); a large blue button beside
+  blue accents would flatten the two roles into one.
+- `danger`/`success`/`warning` keep their usual red/green/amber. They encode
+  meaning rather than style, and a blue-only palette is an editorial choice a
+  component library cannot make on your behalf. `--ui-info` is the exception —
+  "neutral notice" *is* the accent in this theme.
+
+The faint dot grid and film grain in the playground are page-level backdrops,
+not part of the theme: a component library has no business painting outside its
+own shadow roots. Copy the two rules from
+[`demo/demo.css`](./demo/demo.css) if you want them.
 
 The full token set is defined in [`src/tokens.ts`](./src/tokens.ts).
 Typography, spacing, control, icon, radius, panel, chart, and accessibility

@@ -129,7 +129,7 @@ export class CronSchedule extends LitElement {
         line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 0.75rem;
         cursor: pointer;
@@ -196,7 +196,7 @@ export class CronSchedule extends LitElement {
         padding: 0.75rem;
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
         box-shadow: var(--ui-shadow-lg, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1));
       }
@@ -224,6 +224,7 @@ export class CronSchedule extends LitElement {
         color: var(--ui-text-muted, #64748b);
         font-size: var(--ui-font-size-xs, 0.6875rem);
         font-weight: var(--ui-font-weight-medium, 500);
+        text-transform: var(--ui-label-transform, none);
         letter-spacing: var(--ui-tracking-wide, 0.04em);
         text-transform: uppercase;
       }
@@ -258,7 +259,7 @@ export class CronSchedule extends LitElement {
         flex-direction: column;
         gap: 0.25rem;
         padding: 0.5rem;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
       }
       .field-editor + .field-editor {
@@ -277,7 +278,7 @@ export class CronSchedule extends LitElement {
         padding: 0.25rem 0;
       }
       .term-row + .term-row {
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .term-row button-group {
         flex: 1 1 auto;
@@ -288,7 +289,7 @@ export class CronSchedule extends LitElement {
         align-items: center;
         gap: 0.5rem;
         padding-top: 0.5rem;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .readout code {
         flex: 1 1 auto;

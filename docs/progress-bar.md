@@ -45,6 +45,7 @@ _None._
 | `--ui-button-accent` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
+| `--ui-numeric` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
 | `--ui-surface-muted` |

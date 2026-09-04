@@ -35,7 +35,7 @@ export class RevealButton extends LitElement {
         box-sizing: border-box;
         background: var(--ui-button-background, var(--ui-primary, #4f46e5));
         color: var(--ui-on-accent, #ffffff);
-        border: 1px solid var(--ui-button-border, transparent);
+        border: var(--ui-border-width, 1px) solid var(--ui-button-border, transparent);
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 1rem;
         cursor: pointer;

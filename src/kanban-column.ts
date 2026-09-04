@@ -50,7 +50,7 @@ export class KanbanColumn extends LitElement {
         min-height: 0;
         max-height: 100%;
         background: var(--ui-surface-muted, #f8fafc);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
         transition: border-color 150ms ease;
       }
@@ -60,7 +60,7 @@ export class KanbanColumn extends LitElement {
         justify-content: space-between;
         gap: 0.5rem;
         padding: 0.75rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         flex: 0 0 auto;
       }
       .heading {
@@ -81,7 +81,7 @@ export class KanbanColumn extends LitElement {
         padding: 0 0.25rem;
         box-sizing: border-box;
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-pill, 9999px);
         font-size: var(--ui-font-size-xs, 0.6875rem);
         font-weight: var(--ui-font-weight-medium, 500);

@@ -133,7 +133,8 @@ export class KbdHint extends LitElement {
         padding: 0 0.25rem;
         color: currentColor;
         background: color-mix(in srgb, currentColor 14%, transparent);
-        border: 1px solid color-mix(in srgb, currentColor 38%, transparent);
+        border: var(--ui-border-width, 1px) solid
+          color-mix(in srgb, currentColor 38%, transparent);
         border-radius: var(--ui-radius-sm, 0.25rem);
         font-family: var(
           --ui-font-mono,

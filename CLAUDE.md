@@ -96,6 +96,25 @@ the same way `footer` already does) — a single-day `calendar-month` entry's
 title cell can therefore grow taller than a sibling without a location; that
 tradeoff was chosen over inlining location onto the title line.
 
+`vote-control`, `spec-list`, `breadcrumb-nav`, `skip-link`, and `empty-state`
+were added together with the `blueprint` theme, whose reference aesthetic they
+come from — but all five are theme-neutral and read correctly under every
+theme. `spec-list` is a real `<dl>` for *one* record's attributes, deliberately
+distinct from `data-table` (many records); its default slot wins over `items`
+when populated, and because `::slotted()` cannot reach descendant
+`<dt>`/`<dd>`, a slotted sheet gets grid layout and dividers from the component
+but styles its own key/value text. `breadcrumb-nav` exists to fill
+`page-header`'s previously unpopulated `breadcrumb` slot; it fires
+`breadcrumb-navigate` *in addition to* native anchor navigation rather than
+preventing it. `skip-link` is the package's first pure a11y utility: its
+`z-index: 50` is a deliberate literal in the gap between `app-shell`'s chrome
+(40/40/39) and the shared layer stack's base of 100, so it paints over the
+shell but can never float above an open dialog — that would be an escape hatch
+out of a modal's focus trap. Its visible padding lives in the `:focus` rule,
+not the resting `.link` rule, because `box-sizing: border-box` would otherwise
+floor the clipped 1×1 box at its own padding box and leave an invisible hit
+target over the page.
+
 `app-shell`'s sidebar has three independent properties rather than a single
 rail/drawer mode switch: `sidebar-open` (visible or not, closed by default,
 at every breakpoint), `sidebar-width` (`full` 16rem vs. `icon` 3.5rem rail —
@@ -182,6 +201,11 @@ real `modal-dialog`/`confirm-dialog`/`popover-panel`/`slide-panel` (all
   external CSS; `tokens.ts` is the single source of truth for what those
   fallback values are. Any new `--ui-*` usage must carry the exact fallback
   from `tokenValues`.
+- Five themes ship, selected by `data-theme` on `<html>`: `light`, `dark`,
+  `gradient`, `metro`, and `blueprint` (a monospace ink-on-paper spec sheet
+  ruled by 1.5px hairlines, with one pure-blue accent). A new theme is a
+  `*TokenValues` map in `tokens.ts` plus an entry in `lightThemes` in
+  `generate-tokens-css.mjs` and in the playground picker in `demo/main.ts`.
 - Type is tokenized: sizes (`--ui-font-size`, `-sm`, `-xs`, `-lg` = `1rem`),
   weights (`--ui-font-weight-regular|medium|semibold|bold` = 400/500/600/700),
   line heights (`--ui-line-height-glyph|tight|normal` = 1/1.25/1.5), and
@@ -190,9 +214,17 @@ real `modal-dialog`/`confirm-dialog`/`popover-panel`/`slide-panel` (all
   editable-text and inline formatters. SVG presentation attributes and
   `line-height: 0` icon resets are exempt (see the design contract).
 - Spacing is *not* tokenized—`padding`, `margin`, and `gap` use literal
-  `0.25rem` steps only. Exceptions are 1px borders, SVG/canvas geometry,
+  `0.25rem` steps only. Exceptions are SVG/canvas geometry,
   percentages, timing, proportional math, `0.125rem` optical alignment, and
   domain geometry. Convert layout pixels to rems.
+- Borders *are* tokenized: `var(--ui-border-width, 1px) solid
+  var(--ui-border, #e2e8f0)`. Forced-colors `CanvasText` borders, data-mark
+  rules, and decorative edges whose width is the effect stay literal. Anything
+  with a fixed size and a themeable border also needs `box-sizing: border-box`.
+- Chrome micro-labels carry `text-transform: var(--ui-label-transform, none)`
+  and in-place numeric readouts carry
+  `font-variant-numeric: var(--ui-numeric, normal)`, so a theme can set caps
+  and tabular figures. Never apply either to user content.
 - Interactive controls use a 2rem target; text controls follow the canonical
   field/button/pill padding roles. Inline icons are 14px, standalone action
   icons are 18px, side/floating panels are 20rem, centered/dialog panels are

@@ -196,7 +196,7 @@ export class FormField extends LitElement {
         margin: 0;
         /* See the !important note on the floating-native rule above. */
         padding: 0.5rem 0.75rem !important;
-        border: 1px solid var(--ui-border, #e2e8f0) !important;
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0) !important;
         border-radius: var(--ui-radius-sm, 0.25rem) !important;
         color: var(--ui-text, #0f172a) !important;
         background: var(--ui-surface, #ffffff) !important;

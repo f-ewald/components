@@ -47,7 +47,7 @@ export class TileGrid extends LitElement {
         gap: 0.75rem;
       }
       .tile {
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
         padding: 0.75rem;
         color: var(--ui-text, #0f172a);

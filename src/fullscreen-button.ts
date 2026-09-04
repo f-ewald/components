@@ -75,7 +75,7 @@ export class FullscreenButton extends LitElement {
         background:
           var(--ui-button-secondary-background, none),
           var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
+        border: var(--ui-border-width, 1px) solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow:
           var(--ui-button-highlight, 0 0 0 0 transparent),

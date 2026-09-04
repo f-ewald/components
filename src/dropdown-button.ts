@@ -79,8 +79,10 @@ export class DropdownButton extends LitElement {
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: var(--ui-font-weight-medium, 500);
         line-height: var(--ui-line-height-tight, 1.25);
-        border: 1px solid transparent;
+        border: var(--ui-border-width, 1px) solid transparent;
         border-radius: var(--ui-radius-sm, 0.25rem);
+        /* The border is themeable, so it has to stay inside the 2rem target. */
+        box-sizing: border-box;
         cursor: pointer;
       }
       button.trigger:disabled {
@@ -164,7 +166,7 @@ export class DropdownButton extends LitElement {
         list-style: none;
         white-space: nowrap;
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }

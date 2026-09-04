@@ -2556,6 +2556,196 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/breadcrumb-nav.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A breadcrumb trail: a `<nav aria-label=\"Breadcrumb\">` wrapping an ordered\nlist, with chevron separators and the current page rendered as plain,\nnon-interactive text. Designed to drop into `page-header`'s `breadcrumb`\nslot, but usable on its own anywhere a trail is needed.\n\nThe last `items` entry is always treated as the current page: it renders as\ntext with `aria-current=\"page\"` even if it carries an `href`. Middle entries\nwithout an `href` render as plain text too; only middle entries with an\n`href` are real anchors.\n\nWhen `max-visible` is greater than zero and the trail is longer than that,\nthe middle collapses behind an overflow button that always keeps the first\nand current crumbs visible; activating it toggles `expanded` to reveal the\nhidden crumbs in place.",
+          "name": "BreadcrumbNav",
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "BreadcrumbItem[]"
+              },
+              "default": "[]",
+              "description": "The crumbs, root first. The last entry is the current page and is rendered\nas non-interactive text with `aria-current=\"page\"`.",
+              "attribute": "items"
+            },
+            {
+              "kind": "field",
+              "name": "maxVisible",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "When greater than zero and the trail has more items than this, collapse the\nmiddle of the trail behind an overflow button (the first and current crumbs\nalways stay visible). `0` (the default) never collapses.",
+              "attribute": "max-visible"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a collapsed trail is currently expanded to show its hidden crumbs.",
+              "attribute": "expanded",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_toggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Toggles a collapsed trail between collapsed and expanded."
+            },
+            {
+              "kind": "method",
+              "name": "_onNavigate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "BreadcrumbItem"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Dispatches `breadcrumb-navigate` without preventing native navigation."
+            },
+            {
+              "kind": "method",
+              "name": "_crumbNode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "BreadcrumbItem"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "lastIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_overflowNode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "hiddenCount",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "breadcrumb-navigate",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A crumb link was activated; `detail` is `{ item: BreadcrumbItem; index: number }`. This is an additional notification hook only — the anchor's native navigation is never prevented, so crumbs stay real, middle-clickable, right-clickable links."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "items",
+              "type": {
+                "text": "BreadcrumbItem[]"
+              },
+              "default": "[]",
+              "description": "The crumbs, root first. The last entry is the current page and is rendered\nas non-interactive text with `aria-current=\"page\"`.",
+              "fieldName": "items"
+            },
+            {
+              "name": "max-visible",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "When greater than zero and the trail has more items than this, collapse the\nmiddle of the trail behind an overflow button (the first and current crumbs\nalways stay visible). `0` (the default) never collapses.",
+              "fieldName": "maxVisible"
+            },
+            {
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether a collapsed trail is currently expanded to show its hidden crumbs.",
+              "fieldName": "expanded"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "breadcrumb-nav",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "BreadcrumbNav",
+          "declaration": {
+            "name": "BreadcrumbNav",
+            "module": "src/breadcrumb-nav.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "breadcrumb-nav",
+          "declaration": {
+            "name": "BreadcrumbNav",
+            "module": "src/breadcrumb-nav.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/button-group.ts",
       "declarations": [
         {
@@ -7024,6 +7214,204 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/empty-state.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A centered placeholder for an empty list, an empty panel, or a zero-result\nsearch: an optional leading glyph, a heading, a supporting line (or richer\nslotted body), and an optional call-to-action row. Purely presentational —\nit carries no interactive state of its own and no ARIA `role`; it is a\nregion of content, not a live status. Every optional part collapses\ncompletely when absent, reserving no layout space.",
+          "name": "EmptyState",
+          "slots": [
+            {
+              "description": "Optional leading glyph. The consumer supplies it (e.g. an inline SVG icon).",
+              "name": "icon"
+            },
+            {
+              "description": "Optional rich body content, an alternative to `description`.",
+              "name": ""
+            },
+            {
+              "description": "Optional call to action, e.g. a `ui-button`.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The primary line.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The supporting line under the heading. Omitted entirely when empty.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "`sm` for a small panel/sidebar, `md` (default) for a full page region. `md` matches the pre-`size` look exactly.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_hasIcon",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the icon slot currently has assigned content."
+            },
+            {
+              "kind": "field",
+              "name": "_hasBody",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the default (body) slot currently has assigned content."
+            },
+            {
+              "kind": "field",
+              "name": "_hasActions",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the actions slot currently has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_onIconSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the icon slot has content so its row can collapse when empty."
+            },
+            {
+              "kind": "method",
+              "name": "_onBodySlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the default body slot has content so its row can collapse when empty."
+            },
+            {
+              "kind": "method",
+              "name": "_onActionsSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the actions slot has content so its row can collapse when empty."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The primary line.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The supporting line under the heading. Omitted entirely when empty.",
+              "fieldName": "description"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "\"sm\" | \"md\""
+              },
+              "default": "\"md\"",
+              "description": "`sm` for a small panel/sidebar, `md` (default) for a full page region. `md` matches the pre-`size` look exactly.",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "empty-state",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "EmptyState",
+          "declaration": {
+            "name": "EmptyState",
+            "module": "src/empty-state.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "empty-state",
+          "declaration": {
+            "name": "EmptyState",
+            "module": "src/empty-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/form-actions.ts",
       "declarations": [
         {
@@ -8750,6 +9138,17 @@
         },
         {
           "kind": "function",
+          "name": "iconEllipsisHorizontal",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "16"
+            }
+          ],
+          "description": "Collapsed items in an inline sequence, e.g. breadcrumb-nav's truncated middle."
+        },
+        {
+          "kind": "function",
           "name": "iconPlus",
           "parameters": [
             {
@@ -9434,6 +9833,14 @@
         },
         {
           "kind": "js",
+          "name": "iconEllipsisHorizontal",
+          "declaration": {
+            "name": "iconEllipsisHorizontal",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "iconPlus",
           "declaration": {
             "name": "iconPlus",
@@ -10089,6 +10496,14 @@
         },
         {
           "kind": "js",
+          "name": "SkipLink",
+          "declaration": {
+            "name": "SkipLink",
+            "module": "./skip-link.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "SlidePanel",
           "declaration": {
             "name": "SlidePanel",
@@ -10289,6 +10704,30 @@
         },
         {
           "kind": "js",
+          "name": "BreadcrumbNav",
+          "declaration": {
+            "name": "BreadcrumbNav",
+            "module": "./breadcrumb-nav.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BreadcrumbItem",
+          "declaration": {
+            "name": "BreadcrumbItem",
+            "module": "./breadcrumb-nav.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BreadcrumbNavigateDetail",
+          "declaration": {
+            "name": "BreadcrumbNavigateDetail",
+            "module": "./breadcrumb-nav.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "ButtonGroup",
           "declaration": {
             "name": "ButtonGroup",
@@ -10389,6 +10828,14 @@
           "declaration": {
             "name": "EditableText",
             "module": "./editable-text.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "EmptyState",
+          "declaration": {
+            "name": "EmptyState",
+            "module": "./empty-state.js"
           }
         },
         {
@@ -10857,6 +11304,22 @@
         },
         {
           "kind": "js",
+          "name": "SpecList",
+          "declaration": {
+            "name": "SpecList",
+            "module": "./spec-list.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SpecListItem",
+          "declaration": {
+            "name": "SpecListItem",
+            "module": "./spec-list.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "SplitHero",
           "declaration": {
             "name": "SplitHero",
@@ -10957,6 +11420,14 @@
           "declaration": {
             "name": "VideoPlayer",
             "module": "./video-player.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "VoteControl",
+          "declaration": {
+            "name": "VoteControl",
+            "module": "./vote-control.js"
           }
         },
         {
@@ -11172,6 +11643,14 @@
           "name": "metroTokenValues",
           "declaration": {
             "name": "metroTokenValues",
+            "module": "./tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "blueprintTokenValues",
+          "declaration": {
+            "name": "blueprintTokenValues",
             "module": "./tokens.js"
           }
         },
@@ -17517,6 +17996,89 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/skip-link.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "\"Skip to main content\" bypass link — the package's first pure\naccessibility-utility component. It renders a real `<a>` that stays\nvisually hidden (but in the focus order) until it receives keyboard focus,\nthen pins itself to the top-left of the viewport as a solid, high-contrast\nblock so a keyboard or screen-reader user can jump straight past repeated\npage chrome to the main content. It needs no JavaScript beyond the element\nupgrade — the anchor's native in-page navigation does the rest.\n\nPlace it as the very first focusable element on the page, before the app\nchrome, and point `href` at the `id` of the main content region.",
+          "name": "SkipLink",
+          "slots": [
+            {
+              "description": "Optional custom link wording, overriding `label`.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#main\"",
+              "description": "The in-page target the link jumps to (the `id` of the main content region).",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Skip to main content\"",
+              "description": "Fallback link wording used when nothing is slotted.",
+              "attribute": "label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"#main\"",
+              "description": "The in-page target the link jumps to (the `id` of the main content region).",
+              "fieldName": "href"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Skip to main content\"",
+              "description": "Fallback link wording used when nothing is slotted.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "skip-link",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SkipLink",
+          "declaration": {
+            "name": "SkipLink",
+            "module": "src/skip-link.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "skip-link",
+          "declaration": {
+            "name": "SkipLink",
+            "module": "src/skip-link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/slide-panel.ts",
       "declarations": [
         {
@@ -17616,6 +18178,158 @@
           "declaration": {
             "name": "SlidePanel",
             "module": "src/slide-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/spec-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A key/value specification sheet — the \"spec sheet\" block on a product page:\nan uppercase, muted, wide-tracked key column against a value column,\nseparated by hairline rules. It describes ONE record's attributes, which is\nwhat sets it apart from `data-table` (many records, many columns, sorting);\n`spec-list` is not tabular and renders a real `<dl>`/`<dt>`/`<dd>` structure.\n\nFeed it the `items` array for the plain data path, or slot your own\n`<div><dt>…</dt><dd>…</dd></div>` groups when a value needs a link, a\n`status-pill`, or other markup. Slotted content takes precedence over\n`items`; with neither, nothing is rendered.",
+          "name": "SpecList",
+          "slots": [
+            {
+              "description": "Optional `<div><dt>…</dt><dd>…</dd></div>` groups for values that need custom markup; when present, they replace the `items` path.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "SpecListItem[]"
+              },
+              "default": "[]",
+              "description": "The key/value rows for the data-driven path. Ignored when the default slot has content.",
+              "attribute": "items"
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "\"auto\" | \"stacked\""
+              },
+              "default": "\"auto\"",
+              "description": "`auto` is the two-column grid that collapses to stacked below `48rem`;\n`stacked` forces the stacked form at every width.",
+              "attribute": "layout",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "dividers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether to draw a hairline rule between rows; `false` for a dense inline listing.",
+              "attribute": "dividers",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional accessible caption rendered above the list; no element or reserved space when empty.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "_hasSlotted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the default slot currently has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_onSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the default slot has content so slotted markup can take precedence over `items`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "items",
+              "type": {
+                "text": "SpecListItem[]"
+              },
+              "default": "[]",
+              "description": "The key/value rows for the data-driven path. Ignored when the default slot has content.",
+              "fieldName": "items"
+            },
+            {
+              "name": "layout",
+              "type": {
+                "text": "\"auto\" | \"stacked\""
+              },
+              "default": "\"auto\"",
+              "description": "`auto` is the two-column grid that collapses to stacked below `48rem`;\n`stacked` forces the stacked form at every width.",
+              "fieldName": "layout"
+            },
+            {
+              "name": "dividers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether to draw a hairline rule between rows; `false` for a dense inline listing.",
+              "fieldName": "dividers"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional accessible caption rendered above the list; no element or reserved space when empty.",
+              "fieldName": "caption"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "spec-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SpecList",
+          "declaration": {
+            "name": "SpecList",
+            "module": "src/spec-list.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "spec-list",
+          "declaration": {
+            "name": "SpecList",
+            "module": "src/spec-list.ts"
           }
         }
       ]
@@ -19467,7 +20181,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 // Button-specific background/border hooks: default to the flat --ui-primary // / --ui-danger tokens above unchanged, so those stay the single source of // truth for every other component. Overriding just these lets a theme opt // ui-button into a gradient (or any other) background without touching // component markup; --ui-button-border/--ui-button-danger-border default // to transparent (today's look) and are meant to be paired with a shade // darker than the gradient's dark stop when one is set. The `-active` // variants default to whatever `-background` already resolved to (so a // solid override still applies while pressed) — a gradient theme should // set them to the same stops in reverse, for a pressed/\"indented\" look. \"--ui-button-background\": \"var(--ui-primary, #4f46e5)\", \"--ui-button-background-hover\": \"var(--ui-primary-hover, #4338ca)\", \"--ui-button-background-active\": \"var(--ui-button-background, var(--ui-primary, #4f46e5))\", \"--ui-button-border\": \"transparent\", // The bordered, transparent-background secondary variant's equivalents — // shared with confirm-dialog's Cancel button, which is the same visual // pattern. Defaults reproduce today's literal secondary styling exactly // (no background at any state, border colors matching --ui-border / // --ui-text-muted), so a theme only needs to override these to make // secondary/Cancel buttons match a primary/danger gradient theme. \"--ui-button-secondary-background\": \"none\", \"--ui-button-secondary-background-hover\": \"none\", \"--ui-button-secondary-background-active\": \"var(--ui-button-secondary-background, none)\", \"--ui-button-secondary-border\": \"var(--ui-border, #e2e8f0)\", \"--ui-button-secondary-border-hover\": \"var(--ui-text-muted, #64748b)\", // A muted-gray surface used wherever something already paints // --ui-surface-muted as a state indicator in flat mode — button-group's // unchecked-segment hover, pagination-nav's button hover, and // radio-cards/radio-pills' checked background — which is a genuinely // different default than secondary's borderless flat hover, so it can't // reuse --ui-button-secondary-background-hover's \"none\" default. \"--ui-button-secondary-surface-muted\": \"var(--ui-surface-muted, #f8fafc)\", // Shared by both primary/danger — a purely cosmetic gloss/legibility pair, // not color-specific, so one token covers both variants. `-highlight` is a // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for // a glossy top edge, defaulting to a fully transparent (so invisible) // shadow rather than the keyword `none` — some usages combine it with // another literal shadow in a comma-separated list, where a bare `none` // item is invalid CSS and would zero out the *whole* declaration. // `-text-shadow` is a full text-shadow value for label legibility against // a gradient's lighter stop, always used standalone, so it keeps `none`. \"--ui-button-highlight\": \"0 0 0 0 transparent\", \"--ui-button-text-shadow\": \"none\", // A solid stand-in for the same accent, for spots that can't render a // background gradient at all — a native <input>'s accent-color only // accepts a plain color, and a hard-stop background gradient (e.g. // range-slider's filled track) can't nest another gradient inside its own // color-stop list. Consumers that theme the buttons into a gradient should // set this to the gradient's dark stop, so these non-button accents (radio // selection indicators, the range-slider track/thumb) stay visually // coordinated with it even though they can't literally paint a gradient. \"--ui-button-accent\": \"var(--ui-primary, #4f46e5)\", \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-button-danger-background\": \"var(--ui-danger, #dc2626)\", \"--ui-button-danger-background-hover\": \"var(--ui-danger-hover, #b91c1c)\", \"--ui-button-danger-background-active\": \"var(--ui-button-danger-background, var(--ui-danger, #dc2626))\", \"--ui-button-danger-border\": \"transparent\", \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 // toast-notification's per-variant background hooks: default to the flat // --ui-success/--ui-danger/--ui-info/--ui-warning tokens unchanged, so // those stay the single source of truth for every other component — // the same pattern as --ui-button-background/--ui-button-danger-background // above. `-highlight`/`-text-shadow` are the same glossy-top-edge / // legibility-shadow pair as --ui-button-highlight/--ui-button-text-shadow, // kept as separate tokens so a theme can gloss toasts and buttons // independently. \"--ui-toast-success-background\": \"var(--ui-success, #16a34a)\", \"--ui-toast-error-background\": \"var(--ui-danger, #dc2626)\", \"--ui-toast-info-background\": \"var(--ui-info, #0ea5e9)\", \"--ui-toast-warning-background\": \"var(--ui-warning, #d97706)\", \"--ui-toast-highlight\": \"0 0 0 0 transparent\", \"--ui-toast-text-shadow\": \"none\", // AI accent sweep — the four stops of the animated multi-hue ring // ui-button's `ai` modifier draws around a button (and the only place a // rainbow reads as meaning \"this action is AI-powered\" rather than a // semantic state). Ordered around the color wheel and looping back to // stop 1, so the sweep is seamless; --ui-ai-2 is --ui-primary's own // indigo, anchoring the ring to the rest of the palette. Overriding these // four retunes every AI button at once. \"--ui-ai-1\": \"#38bdf8\", // sky-400 \"--ui-ai-2\": \"#6366f1\", // indigo-500 \"--ui-ai-3\": \"#d946ef\", // fuchsia-500 \"--ui-ai-4\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot. // Tokenized rather than hardcoded so a theme that squares the design system // (metro) can reach them too; a literal 9999px/50% silently opts that shape // out of every theme. Use these only where the shape is the point, not as a // heavier --ui-radius. \"--ui-radius-pill\": \"9999px\", \"--ui-radius-circle\": \"50%\", \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 // Button-specific background/border hooks: default to the flat --ui-primary // / --ui-danger tokens above unchanged, so those stay the single source of // truth for every other component. Overriding just these lets a theme opt // ui-button into a gradient (or any other) background without touching // component markup; --ui-button-border/--ui-button-danger-border default // to transparent (today's look) and are meant to be paired with a shade // darker than the gradient's dark stop when one is set. The `-active` // variants default to whatever `-background` already resolved to (so a // solid override still applies while pressed) — a gradient theme should // set them to the same stops in reverse, for a pressed/\"indented\" look. \"--ui-button-background\": \"var(--ui-primary, #4f46e5)\", \"--ui-button-background-hover\": \"var(--ui-primary-hover, #4338ca)\", \"--ui-button-background-active\": \"var(--ui-button-background, var(--ui-primary, #4f46e5))\", \"--ui-button-border\": \"transparent\", // The bordered, transparent-background secondary variant's equivalents — // shared with confirm-dialog's Cancel button, which is the same visual // pattern. Defaults reproduce today's literal secondary styling exactly // (no background at any state, border colors matching --ui-border / // --ui-text-muted), so a theme only needs to override these to make // secondary/Cancel buttons match a primary/danger gradient theme. \"--ui-button-secondary-background\": \"none\", \"--ui-button-secondary-background-hover\": \"none\", \"--ui-button-secondary-background-active\": \"var(--ui-button-secondary-background, none)\", \"--ui-button-secondary-border\": \"var(--ui-border, #e2e8f0)\", \"--ui-button-secondary-border-hover\": \"var(--ui-text-muted, #64748b)\", // A muted-gray surface used wherever something already paints // --ui-surface-muted as a state indicator in flat mode — button-group's // unchecked-segment hover, pagination-nav's button hover, and // radio-cards/radio-pills' checked background — which is a genuinely // different default than secondary's borderless flat hover, so it can't // reuse --ui-button-secondary-background-hover's \"none\" default. \"--ui-button-secondary-surface-muted\": \"var(--ui-surface-muted, #f8fafc)\", // Shared by both primary/danger — a purely cosmetic gloss/legibility pair, // not color-specific, so one token covers both variants. `-highlight` is a // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for // a glossy top edge, defaulting to a fully transparent (so invisible) // shadow rather than the keyword `none` — some usages combine it with // another literal shadow in a comma-separated list, where a bare `none` // item is invalid CSS and would zero out the *whole* declaration. // `-text-shadow` is a full text-shadow value for label legibility against // a gradient's lighter stop, always used standalone, so it keeps `none`. \"--ui-button-highlight\": \"0 0 0 0 transparent\", \"--ui-button-text-shadow\": \"none\", // A solid stand-in for the same accent, for spots that can't render a // background gradient at all — a native <input>'s accent-color only // accepts a plain color, and a hard-stop background gradient (e.g. // range-slider's filled track) can't nest another gradient inside its own // color-stop list. Consumers that theme the buttons into a gradient should // set this to the gradient's dark stop, so these non-button accents (radio // selection indicators, the range-slider track/thumb) stay visually // coordinated with it even though they can't literally paint a gradient. \"--ui-button-accent\": \"var(--ui-primary, #4f46e5)\", \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-button-danger-background\": \"var(--ui-danger, #dc2626)\", \"--ui-button-danger-background-hover\": \"var(--ui-danger-hover, #b91c1c)\", \"--ui-button-danger-background-active\": \"var(--ui-button-danger-background, var(--ui-danger, #dc2626))\", \"--ui-button-danger-border\": \"transparent\", \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 // toast-notification's per-variant background hooks: default to the flat // --ui-success/--ui-danger/--ui-info/--ui-warning tokens unchanged, so // those stay the single source of truth for every other component — // the same pattern as --ui-button-background/--ui-button-danger-background // above. `-highlight`/`-text-shadow` are the same glossy-top-edge / // legibility-shadow pair as --ui-button-highlight/--ui-button-text-shadow, // kept as separate tokens so a theme can gloss toasts and buttons // independently. \"--ui-toast-success-background\": \"var(--ui-success, #16a34a)\", \"--ui-toast-error-background\": \"var(--ui-danger, #dc2626)\", \"--ui-toast-info-background\": \"var(--ui-info, #0ea5e9)\", \"--ui-toast-warning-background\": \"var(--ui-warning, #d97706)\", \"--ui-toast-highlight\": \"0 0 0 0 transparent\", \"--ui-toast-text-shadow\": \"none\", // AI accent sweep — the four stops of the animated multi-hue ring // ui-button's `ai` modifier draws around a button (and the only place a // rainbow reads as meaning \"this action is AI-powered\" rather than a // semantic state). Ordered around the color wheel and looping back to // stop 1, so the sweep is seamless; --ui-ai-2 is --ui-primary's own // indigo, anchoring the ring to the rest of the palette. Overriding these // four retunes every AI button at once. \"--ui-ai-1\": \"#38bdf8\", // sky-400 \"--ui-ai-2\": \"#6366f1\", // indigo-500 \"--ui-ai-3\": \"#d946ef\", // fuchsia-500 \"--ui-ai-4\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded // The width of a themeable surface/control border. Spacing is deliberately // untokenized, but a border is chrome rather than layout: the `blueprint` // theme's whole structure is carried by hairline rules instead of shadows, // and it needs those rules one step heavier than the default. Defaults to // the literal 1px every component used before, so nothing renders // differently until a theme overrides it. Only genuine surface/control // borders read this — forced-colors `CanvasText` borders and purely // decorative literals (a slider thumb's white ring, a tab's 2px underline) // keep their own widths, since those aren't the theme's structural rules. // Anything with a fixed height/width and a themeable border must also set // `box-sizing: border-box`, or a heavier border grows it past the shared // 2rem control target. \"--ui-border-width\": \"1px\", // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot. // Tokenized rather than hardcoded so a theme that squares the design system // (metro) can reach them too; a literal 9999px/50% silently opts that shape // out of every theme. Use these only where the shape is the point, not as a // heavier --ui-radius. \"--ui-radius-pill\": \"9999px\", \"--ui-radius-circle\": \"50%\", \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", // Casing of chrome micro-labels — the small, wide-tracked labels that name a // region rather than carry content (a `frame-box` legend, an `app-sidebar` // section heading, a `stat-meter` caption). Defaults to `none`, today's // sentence case, so nothing changes until a theme sets it; the `blueprint` // theme sets `uppercase`, where signage-style labels are the point. Never // apply this to user-supplied content — shouting someone's data is not a // theme's decision, and `text-transform` is a presentational lie that // survives copy/paste as the original casing anyway. \"--ui-label-transform\": \"none\", // Numeral rendering for figures that change in place or stack into a column // — a score, a page number, a running clock. Defaults to `normal` // (proportional, as before); `tabular-nums` stops digits from jittering // horizontally as they tick, which the `blueprint` theme's spec-sheet // aesthetic wants everywhere. \"--ui-numeric\": \"normal\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {
@@ -19496,6 +20210,15 @@
           },
           "default": "{ \"--ui-primary\": \"#3274d0\", // the del.icio.us blue; no Tailwind equivalent \"--ui-primary-hover\": \"#2559a8\", \"--ui-focus-ring\": \"0 0 0 2px #3274d0\", // solid and crisp, not the default 3px translucent ring \"--ui-radius\": \"0\", \"--ui-radius-sm\": \"0\", \"--ui-radius-pill\": \"0\", \"--ui-radius-circle\": \"0\", // Hairline rings (slate-900 at low alpha) rather than blurred drop shadows: // separation without depth. -lg is a touch stronger, matching the default // pair's relative weighting. \"--ui-shadow\": \"0 0 0 1px rgb(15 23 42 / 0.12)\", \"--ui-shadow-lg\": \"0 0 0 1px rgb(15 23 42 / 0.18)\", }",
           "description": "\"Metro\" theme overrides, applied via `data-theme=\"metro\"` on `<html>` (see\n`generate-tokens-css.mjs`) — forces `color-scheme: light` like the `\"light\"`\nand `\"gradient\"` overrides, and strips the roundness and depth off the flat\nlight palette to leave hard-edged surfaces over a blue accent, after the\ndense square-cornered look of the early social bookmarking sites.\n\nThis is the first theme to override shape rather than only color, so the\n\"shape/type tokens are theme-independent\" rule `darkTokenValues` notes above\nholds for every theme except this one (see `docs/design-language.md`).\nSquaring the design system means squaring the deliberate pill and circle\nshapes too — chips, avatars, dots, slider thumbs — which is why those read\n`--ui-radius-pill`/`--ui-radius-circle` rather than hardcoding `9999px`/`50%`\n(a literal would silently opt that shape out of the theme).\n\nOne residual is genuinely out of reach: `price-history-chart` rounds its bars\nwith an SVG `rx` presentation attribute, which cannot take a `var()`, so\nthose stay slightly rounded under metro.\n\nThe shadows flatten to a hairline ring rather than to `none`. Dropping them\noutright would leave `slide-panel` — the only overlay with no border of its\nown — as an invisible white-on-white edge; every other consumer of\n`--ui-shadow*` either pairs it with `1px solid var(--ui-border)` or applies\nit on hover/active over an already-bordered control. A hard 1px ring keeps\nthat separation while removing the blur and the faked depth."
+        },
+        {
+          "kind": "variable",
+          "name": "blueprintTokenValues",
+          "type": {
+            "text": "Record<string, string>"
+          },
+          "default": "{ // Ink over paper. --ui-text-muted is the same ink at ~65% over white rather // than a neutral gray, so the quiet text stays in the same warm family // instead of turning blue-gray beside the accent. \"--ui-text\": \"#17160f\", \"--ui-text-muted\": \"#686763\", \"--ui-surface\": \"#ffffff\", \"--ui-surface-muted\": \"#f0f0f0\", // ~40% ink over white: a rule that is unmistakably drawn at 1.5px without // going fully black, which at this width would turn every bordered surface // into a hard box. \"--ui-border\": \"#a2a29f\", \"--ui-tooltip\": \"#17160f\", \"--ui-overlay\": \"rgb(23 22 15 / 0.45)\", // The \"just changed\" flash tints toward the accent instead of amber, which // is the one warm hue this palette has no room for. \"--ui-highlight\": \"#dcdcff\", \"--ui-primary\": \"#0000ff\", \"--ui-primary-hover\": \"#0000cc\", \"--ui-info\": \"#0000ff\", \"--ui-info-hover\": \"#0000cc\", \"--ui-on-accent\": \"#ffffff\", // Solid and crisp at the reference's own 2px, not the default translucent // 3px halo — a blurred ring is the one soft edge this theme has nowhere to // put. \"--ui-focus-ring\": \"0 0 0 2px #0000ff\", // Ink CTA that lights up blue on hover, and inverts its two stops while // pressed. The border is ink at every state so the button keeps a defining // edge even once the fill goes blue. \"--ui-button-background\": \"#17160f\", \"--ui-button-background-hover\": \"#0000ff\", \"--ui-button-background-active\": \"#0000cc\", \"--ui-button-border\": \"#17160f\", \"--ui-button-danger-border\": \"#b91c1c\", // Secondary is the reference's ghost button: no fill, ink border, a paper // wash on hover and an accent border to echo the primary's hover. \"--ui-button-secondary-border\": \"#17160f\", \"--ui-button-secondary-border-hover\": \"#0000ff\", \"--ui-button-secondary-background-hover\": \"#f0f0f0\", \"--ui-button-secondary-surface-muted\": \"#f0f0f0\", // Non-button accents that can only take a plain color (a native input's // accent-color, range-slider's track/thumb) follow --ui-primary, not the // ink button fill — those are selection marks, not calls to action. \"--ui-button-accent\": \"#0000ff\", \"--ui-radius\": \"0\", \"--ui-radius-sm\": \"0\", \"--ui-radius-pill\": \"0\", \"--ui-radius-circle\": \"0\", \"--ui-shadow\": \"0 0 0 1.5px rgb(23 22 15 / 0.24)\", \"--ui-shadow-lg\": \"0 0 0 1.5px #17160f\", \"--ui-border-width\": \"1.5px\", \"--ui-label-transform\": \"uppercase\", \"--ui-numeric\": \"tabular-nums\", \"--ui-font\": '\"Space Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', }",
+          "description": "\"Blueprint\" theme overrides, applied via `data-theme=\"blueprint\"` on `<html>`\n(see `generate-tokens-css.mjs`) — forces `color-scheme: light` like every\nother non-dark theme, and restyles the light palette as a technical catalog\n/ spec sheet: warm near-black ink on white paper, one pure-blue accent,\nsquare corners, and structure carried entirely by hairline rules instead of\nshadows.\n\nIt is the widest theme in the system, and the reason three token axes exist\nthat no earlier theme needed:\n\n- `--ui-font` is retargeted to a monospace stack. `darkTokenValues` notes\n  that shape and type tokens are theme-independent; `metro` already broke\n  that for shape, and this breaks it for the type *family* only. Type\n  *metrics* (size, weight, line height) remain unthemed in every theme —\n  they encode hierarchy, which is not a stylistic choice. \"Space Mono\"\n  leads the stack purely so a consumer who loads that webfont gets the\n  reference face automatically; with no external CSS at all it falls\n  straight through to the same system mono stack `--ui-font-mono` uses, so\n  the theme still renders correctly on its own.\n- `--ui-border-width` goes to `1.5px`. Every border in this theme is doing\n  the work a shadow does elsewhere, and at 1px those rules read as a faint\n  table rather than as drawn structure.\n- `--ui-label-transform` goes to `uppercase`, which is what makes chrome\n  micro-labels read as signage/spec-sheet keys. Only labels that name a\n  region or column carry this — never user content.\n- `--ui-numeric` goes to `tabular-nums`, so figures line up in a column and\n  do not jitter as they change.\n\nButtons are deliberately NOT the accent color. `--ui-primary` stays pure\nblue because it drives accents everywhere else (active tab underlines,\nselected states, links, the certification-style tints), but the primary\nbutton fill is overridden to ink through the `--ui-button-*` hooks and only\nturns blue on hover — a black-on-white CTA that lights up is the\ncatalog-print look, and a large pure-blue fill next to blue accents would\nflatten the two roles into one. That split is exactly what those hooks\nexist for (see `gradientTokenValues` above for the same technique).\n\nSemantic `danger`/`success`/`warning` keep their default hues: they encode\nmeaning rather than style, and the reference's blue-only restraint is an\neditorial choice a component library cannot make on a consumer's behalf.\n`--ui-info` is the exception — it is \"neutral notice\", which in this theme\nis precisely the accent, and the default sky blue would otherwise sit a few\ndegrees off the pure blue beside it and read as a mistake.\n\nShadows flatten to a hard ink ring rather than to `none`, for the same\nreason `metro` does it: `slide-panel` has no border of its own and would\notherwise lose its edge entirely."
         },
         {
           "kind": "variable",
@@ -19534,6 +20257,14 @@
           "name": "metroTokenValues",
           "declaration": {
             "name": "metroTokenValues",
+            "module": "src/tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "blueprintTokenValues",
+          "declaration": {
+            "name": "blueprintTokenValues",
             "module": "src/tokens.ts"
           }
         },
@@ -20957,6 +21688,190 @@
           "declaration": {
             "name": "VideoPlayer",
             "module": "src/video-player.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/vote-control.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "An up/down vote widget with a live score readout — the \"vote an entry up or\ndown toward a promotion threshold\" pattern from a public register site,\nwhere one member casts a single vote that can be changed or withdrawn at any\ntime. Two native `<button>`s flank a score; the button matching the user's\nown cast `vote` reads as pressed (`aria-pressed`), and clicking it again\nwithdraws the vote. Set an optional `target` to render a thin progress meter\ntoward the promotion threshold beneath (vertical) or beside (horizontal) the\nbuttons.",
+          "name": "VoteControl",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The current net score shown between the buttons.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "vote",
+              "type": {
+                "text": "\"up\" | \"down\" | null"
+              },
+              "default": "null",
+              "description": "This user's own cast vote, or `null` if they have not voted. Reflected so CSS can style the pressed button.",
+              "attribute": "vote",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables both buttons and dims the control.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "\"vertical\" | \"horizontal\""
+              },
+              "default": "\"vertical\"",
+              "description": "Layout — `vertical` is the compact stacked box (default); `horizontal` is the wide inline variant.",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Promotion threshold. When > 0, a thin progress meter toward it renders; when 0 (default) no meter renders and no space is reserved for it.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Vote\"",
+              "description": "Accessible label naming the vote group.",
+              "attribute": "label"
+            },
+            {
+              "kind": "method",
+              "name": "#restartBump",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#cast",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "dir",
+                  "type": {
+                    "text": "\"up\" | \"down\""
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "vote-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The user cast, switched, or withdrew their vote; detail: { vote: \"up\" | \"down\" | null, value: number }."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The current net score shown between the buttons.",
+              "fieldName": "value"
+            },
+            {
+              "name": "vote",
+              "type": {
+                "text": "\"up\" | \"down\" | null"
+              },
+              "default": "null",
+              "description": "This user's own cast vote, or `null` if they have not voted. Reflected so CSS can style the pressed button.",
+              "fieldName": "vote"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables both buttons and dims the control.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "\"vertical\" | \"horizontal\""
+              },
+              "default": "\"vertical\"",
+              "description": "Layout — `vertical` is the compact stacked box (default); `horizontal` is the wide inline variant.",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Promotion threshold. When > 0, a thin progress meter toward it renders; when 0 (default) no meter renders and no space is reserved for it.",
+              "fieldName": "target"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Vote\"",
+              "description": "Accessible label naming the vote group.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "vote-control",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "VoteControl",
+          "declaration": {
+            "name": "VoteControl",
+            "module": "src/vote-control.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "vote-control",
+          "declaration": {
+            "name": "VoteControl",
+            "module": "src/vote-control.ts"
           }
         }
       ]

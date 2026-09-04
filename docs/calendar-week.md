@@ -54,6 +54,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-danger` |
 | `--ui-focus-ring` |
 | `--ui-font` |

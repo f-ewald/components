@@ -94,7 +94,7 @@ export class ConfirmDialog extends LitElement {
       }
       .btn-cancel {
         background: var(--ui-button-secondary-background, none);
-        border: 1px solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
+        border: var(--ui-border-width, 1px) solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         color: var(--ui-text, #0f172a);
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 1rem;
@@ -112,8 +112,11 @@ export class ConfirmDialog extends LitElement {
       }
       .btn-danger,
       .btn-primary {
-        border: 1px solid transparent;
+        border: var(--ui-border-width, 1px) solid transparent;
         border-radius: var(--ui-radius-sm, 0.25rem);
+        /* The border width is themeable, so it has to stay inside the fixed
+           height the sm size sets below. */
+        box-sizing: border-box;
         padding: 0.5rem 1rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         font-weight: var(--ui-font-weight-medium, 500);

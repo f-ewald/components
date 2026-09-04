@@ -46,7 +46,7 @@ export class RadioPills extends LitElement {
         min-height: 2rem;
         box-sizing: border-box;
         padding: 0.25rem 0.5rem;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-pill, 9999px);
         cursor: pointer;
         font-family: var(

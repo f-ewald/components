@@ -51,6 +51,7 @@ import "@f-ewald/components/confirm-dialog.js";
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-button-background` |
 | `--ui-button-background-active` |
 | `--ui-button-background-hover` |

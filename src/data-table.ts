@@ -47,13 +47,14 @@ export class DataTable extends LitElement {
       th {
         text-align: left;
         font-weight: var(--ui-font-weight-semibold, 600);
+        text-transform: var(--ui-label-transform, none);
         color: var(--ui-text-muted, #64748b);
         padding: 0.5rem 0.75rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       td {
         padding: 0.5rem 0.75rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         color: var(--ui-text, #0f172a);
       }
       td:first-child {

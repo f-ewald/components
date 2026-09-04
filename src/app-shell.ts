@@ -150,7 +150,7 @@ export class AppShell extends LitElement {
         width: var(--component-sidebar-width, 16rem);
         z-index: 40;
         overflow: hidden;
-        border-right: 1px solid var(--ui-border, #e2e8f0);
+        border-right: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         background: var(--ui-surface, #ffffff);
         transform: translateX(-100%);
         transition: transform 150ms ease;
@@ -181,7 +181,7 @@ export class AppShell extends LitElement {
         gap: 0.5rem;
         min-height: var(--component-topbar-height, 3rem);
         padding: 0.5rem 0.75rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         background: var(--ui-surface, #ffffff);
         /* Deliberately no z-index here: an explicit z-index on a CSS grid
            item creates a stacking context, which would trap .nav-toggle
@@ -261,7 +261,7 @@ export class AppShell extends LitElement {
         display: none;
         min-height: 0;
         overflow: auto;
-        border-left: 1px solid var(--ui-border, #e2e8f0);
+        border-left: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         background: var(--ui-surface, #ffffff);
       }
       :host([detail-open]) .detail {
@@ -270,7 +270,7 @@ export class AppShell extends LitElement {
       .footer {
         grid-area: footer;
         padding: 0.5rem 0.75rem;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         background: var(--ui-surface, #ffffff);
       }
       .footer.empty {

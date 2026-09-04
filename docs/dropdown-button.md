@@ -72,6 +72,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-button-background` |
 | `--ui-button-background-active` |
 | `--ui-button-background-hover` |

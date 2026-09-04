@@ -104,6 +104,7 @@ _None._
 | `--ui-ai-3` |
 | `--ui-ai-4` |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-button-background` |
 | `--ui-button-background-active` |
 | `--ui-button-background-hover` |

@@ -38,6 +38,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-font` |
 | `--ui-font-size-xs` |
 | `--ui-font-weight-semibold` |

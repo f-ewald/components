@@ -84,10 +84,18 @@ import {
   type AutocompleteOption,
   type AudioPlayer,
   type VideoPlayer,
+  type VoteControl,
+  type BreadcrumbNav,
+  type BreadcrumbNavigateDetail,
+  type SpecList,
   type CommentComposer,
 } from "../src/index.js";
 import { addDays, toIsoDate } from "../src/utils/calendar.js";
-import { gradientTokenValues, metroTokenValues } from "../src/tokens.js";
+import {
+  blueprintTokenValues,
+  gradientTokenValues,
+  metroTokenValues,
+} from "../src/tokens.js";
 
 /**
  * Demo-only fetch shim: distribution-chart fetches its data from
@@ -1359,6 +1367,7 @@ const THEMES: Record<string, Record<string, string>> = {
   default: {},
   gradient: gradientTokenValues,
   metro: metroTokenValues,
+  blueprint: blueprintTokenValues,
 };
 
 const applyTheme = (name: string) => {
@@ -1379,6 +1388,7 @@ if (themePicker) {
     { value: "default", label: "Default" },
     { value: "gradient", label: "Gradient" },
     { value: "metro", label: "Metro" },
+    { value: "blueprint", label: "Blueprint" },
   ];
   const storedTheme = localStorage.getItem(THEME_KEY) ?? "default";
   themePicker.value = storedTheme;
@@ -1629,3 +1639,56 @@ commentComposerDemo?.addEventListener("submit", (event) => {
   const { value } = (event as CustomEvent<{ value: string }>).detail;
   if (commentComposerLog) commentComposerLog.textContent = value;
 });
+
+// vote-control — log each cast, switch, or withdrawal as the fired detail.
+const voteControlDemo = document.getElementById("vote-control-demo") as VoteControl | null;
+const voteControlLog = document.getElementById("vote-control-log");
+voteControlDemo?.addEventListener("vote-change", (event) => {
+  const { vote, value } = (event as CustomEvent<{ vote: "up" | "down" | null; value: number }>).detail;
+  if (voteControlLog) voteControlLog.textContent = `vote=${vote ?? "none"}, value=${value}`;
+});
+
+// breadcrumb-nav — sample trails; log the activated crumb.
+const breadcrumbItems = [
+  { label: "Home", href: "#breadcrumb-nav" },
+  { label: "Workspace", href: "#breadcrumb-nav" },
+  { label: "Members" },
+];
+const breadcrumbDemo = document.getElementById("breadcrumb-nav-demo") as BreadcrumbNav | null;
+if (breadcrumbDemo) breadcrumbDemo.items = breadcrumbItems;
+
+const breadcrumbHeaderTrail = document.getElementById("breadcrumb-nav-header-trail") as BreadcrumbNav | null;
+if (breadcrumbHeaderTrail) breadcrumbHeaderTrail.items = breadcrumbItems;
+
+const breadcrumbCollapsed = document.getElementById("breadcrumb-nav-collapsed") as BreadcrumbNav | null;
+if (breadcrumbCollapsed) {
+  breadcrumbCollapsed.items = [
+    { label: "Home", href: "#breadcrumb-nav" },
+    { label: "Reports", href: "#breadcrumb-nav" },
+    { label: "2026", href: "#breadcrumb-nav" },
+    { label: "Q3", href: "#breadcrumb-nav" },
+    { label: "September", href: "#breadcrumb-nav" },
+    { label: "Summary" },
+  ];
+}
+
+const breadcrumbLog = document.getElementById("breadcrumb-nav-log");
+breadcrumbDemo?.addEventListener("breadcrumb-navigate", (event) => {
+  const { item, index } = (event as CustomEvent<BreadcrumbNavigateDetail>).detail;
+  if (breadcrumbLog) breadcrumbLog.textContent = `Navigated: ${item.label} (index ${index})`;
+});
+
+// spec-list — seed the data-driven sheet; the slotted variant is pure markup.
+const specSheet = document.getElementById("spec-list-demo") as SpecList | null;
+if (specSheet) {
+  specSheet.items = [
+    { label: "Material", value: "Anodized aluminum" },
+    { label: "Weight", value: "1.2 kg" },
+    { label: "Warranty", value: "2 years" },
+  ];
+}
+
+// Dividers are turned off via the property: a `dividers="false"` attribute
+// would still parse as a truthy Lit boolean.
+const specSlotted = document.getElementById("spec-list-slotted") as SpecList | null;
+if (specSlotted) specSlotted.dividers = false;

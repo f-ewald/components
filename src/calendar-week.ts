@@ -122,7 +122,7 @@ export class CalendarWeek extends CalendarTimelineBase {
       }
       .grid {
         display: flex;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .hour-gutter {
         flex: 0 0 3rem;
@@ -131,7 +131,7 @@ export class CalendarWeek extends CalendarTimelineBase {
         box-sizing: border-box;
         height: ${HOUR_HEIGHT_REM}rem;
         padding-right: 0.5rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         color: var(--ui-text-muted, #64748b);
         font-variant-numeric: tabular-nums;
         text-align: right;
@@ -145,7 +145,7 @@ export class CalendarWeek extends CalendarTimelineBase {
         position: relative;
         flex: 1 1 0;
         height: ${HOUR_HEIGHT_REM * 24}rem;
-        border-left: 1px solid var(--ui-border, #e2e8f0);
+        border-left: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .day-column.today {
         background: color-mix(in srgb, var(--ui-primary, #4f46e5) 6%, transparent);
@@ -153,7 +153,7 @@ export class CalendarWeek extends CalendarTimelineBase {
       .hour-line {
         box-sizing: border-box;
         height: ${HOUR_HEIGHT_REM}rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .entry-bar {
         position: relative;

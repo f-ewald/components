@@ -63,6 +63,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-button-background` |
 | `--ui-button-highlight` |
 | `--ui-button-secondary-background` |

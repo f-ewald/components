@@ -103,7 +103,7 @@ export class MarkdownView extends LitElement {
         margin: 0.75rem 0;
         padding: 0.75rem;
         background: var(--ui-surface-muted, #f8fafc);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         overflow-x: auto;
       }
@@ -130,7 +130,7 @@ export class MarkdownView extends LitElement {
       .body td {
         text-align: left;
         padding: 0.5rem 0.75rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .body th {
         font-weight: var(--ui-font-weight-semibold, 600);
@@ -139,7 +139,7 @@ export class MarkdownView extends LitElement {
       .body hr {
         margin: 1.5rem 0;
         border: 0;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
     `,
   ];

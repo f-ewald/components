@@ -50,6 +50,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-button-highlight` |
 | `--ui-button-secondary-` |
 | `--ui-button-secondary-background` |
@@ -62,6 +63,7 @@ _None._
 | `--ui-font-size-sm` |
 | `--ui-font-weight-medium` |
 | `--ui-line-height-tight` |
+| `--ui-numeric` |
 | `--ui-radius-sm` |
 | `--ui-surface-muted` |
 | `--ui-text` |

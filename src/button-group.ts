@@ -44,7 +44,7 @@ export class ButtonGroup extends LitElement {
       }
       .group {
         display: flex;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         overflow: hidden;
       }
@@ -58,7 +58,7 @@ export class ButtonGroup extends LitElement {
         height: 2rem;
         box-sizing: border-box;
         padding: 0.5rem 0.75rem;
-        border-left: 1px solid var(--ui-border, #e2e8f0);
+        border-left: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         cursor: pointer;
         font-family: var(
           --ui-font,

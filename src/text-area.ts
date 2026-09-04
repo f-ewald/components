@@ -73,7 +73,7 @@ export class TextArea extends LitElement {
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
         padding: 0.5rem 0.75rem;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         resize: vertical;
       }

@@ -103,7 +103,7 @@ export class TreeView extends LitElement {
         left: 50%;
         top: 0;
         bottom: 0;
-        border-left: 1px solid var(--ui-border, #e2e8f0);
+        border-left: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .guide.connector.last::before {
         bottom: 50%;
@@ -114,7 +114,7 @@ export class TreeView extends LitElement {
         left: 50%;
         right: 0;
         top: 50%;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       @media (forced-colors: active) {
         .row:focus-visible {

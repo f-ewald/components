@@ -70,12 +70,12 @@ export class AppSidebar extends LitElement {
         display: flex;
         align-items: center;
         padding: 0.75rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .foot {
         flex: 0 0 auto;
         padding: 0.75rem;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .brand.empty,
       .foot.empty {

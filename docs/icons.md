@@ -40,6 +40,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconCpuChip` | 18px | System, hardware, or technical/processing content. |
 | `iconCurrencyDollar` | 16px | Monetary values, pricing, or billing-related content. |
 | `iconDocument` | 18px | A generic file/document icon, e.g. tile-grid's default file icon. |
+| `iconEllipsisHorizontal` | 16px | Collapsed items in an inline sequence, e.g. breadcrumb-nav's truncated middle. |
 | `iconEllipsisVertical` | 16px | An overflow ("kebab") menu trigger, e.g. dropdown-button's icon variant. |
 | `iconExclamationCircle` | 16px | Error states, e.g. the error variant of toast-notification. |
 | `iconExclamationTriangle` | 16px | Warning states, e.g. the warning variant of toast-notification. |

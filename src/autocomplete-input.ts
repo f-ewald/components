@@ -72,7 +72,7 @@ export class AutocompleteInput extends LitElement {
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface, #ffffff);
         padding: 0.5rem 0.75rem;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         width: 100%;
         height: 2rem;
@@ -204,7 +204,7 @@ export class AutocompleteInput extends LitElement {
         padding: 0.25rem 0;
         list-style: none;
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }

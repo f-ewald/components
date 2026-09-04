@@ -51,7 +51,7 @@ export class SlidePanel extends LitElement {
         align-items: center;
         justify-content: space-between;
         padding: 0.75rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         flex: 0 0 auto;
       }
       .panel-title {

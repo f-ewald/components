@@ -262,7 +262,7 @@ export class PhotoGallery extends LitElement {
         padding: 0.25rem 0.5rem;
         color: var(--ui-text, #0f172a);
         background: var(--ui-surface-muted, #f8fafc);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         font-size: var(--ui-font-size-sm, 0.75rem);
         line-height: var(--ui-line-height-tight, 1.25);

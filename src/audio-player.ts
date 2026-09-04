@@ -35,7 +35,7 @@ export class AudioPlayer extends LitElement {
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 0.75rem;
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
         background: var(--ui-surface, #ffffff);
         font-family: var(

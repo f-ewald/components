@@ -34,7 +34,7 @@ export class ContentDivider extends LitElement {
       }
       .line {
         flex: 1 1 auto;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .label {
         flex: 0 0 auto;

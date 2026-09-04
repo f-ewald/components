@@ -42,6 +42,7 @@ _None._
 
 | Custom property |
 | --- |
+| `--ui-border-width` |
 | `--ui-danger` |
 | `--ui-font` |
 | `--ui-font-size-sm` |

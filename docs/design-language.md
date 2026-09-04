@@ -23,15 +23,32 @@ defines the details used when creating or reviewing components.
   fallback, and any newly introduced `--ui-*` usage must add/carry one too.
 - Themes are single-valued and mutually exclusive, selected by `data-theme` on
   `<html>`: `dark` and `light` force one of the two flat palettes, `gradient`
-  glosses buttons and toasts, and `metro` squares corners and flattens shadows
-  over a blue accent. `dark` aside, each is layered on the light palette and
+  glosses buttons and toasts, `metro` squares corners and flattens shadows over
+  a blue accent, and `blueprint` restyles the palette as a monospace technical
+  spec sheet — ink on paper, one pure-blue accent, square corners, and
+  structure carried by 1.5px hairline rules instead of shadows. `dark` aside,
+  each is layered on the light palette and
   must be excluded from `tokens.css`'s `prefers-color-scheme: dark` media query
   — that selector outranks a bare `[data-theme]`, so a missing exclusion yields
   a half-dark hybrid rather than an outright failure. Adding a theme therefore
   means adding it to `lightThemes` in `generate-tokens-css.mjs`, which derives
   both the block and the exclusion from that one list.
-- Colors are the normal subject of a theme; `metro` is the sole precedent for
-  overriding shape, and type metrics are never themed.
+- Colors are the normal subject of a theme. Three other axes are themeable, each
+  introduced by exactly one theme and each defaulting to the behavior that
+  predates it:
+  - **Shape** — `metro` and `blueprint` set every `--ui-radius*` to `0`.
+  - **Border weight** — `--ui-border-width` (`1px`), which `blueprint` takes to
+    `1.5px`. Every genuine surface or control border reads it; see "Borders"
+    below for what is deliberately excluded.
+  - **Label case** — `--ui-label-transform` (`none`), which `blueprint` takes to
+    `uppercase`, and `--ui-numeric` (`normal`), which it takes to
+    `tabular-nums`.
+  - **Type family** — `--ui-font` only. `blueprint` retargets it to a monospace
+    stack led by "Space Mono", which falls through to the system mono stack when
+    no webfont is loaded, so the theme still renders correctly with zero
+    external CSS.
+  Type *metrics* — size, weight, line height, tracking — are never themed in any
+  theme: they encode hierarchy rather than style.
 - Semantic states use `primary`, `info`, `success`, `warning`, and `danger`.
 - Foregrounds on solid semantic fills use `--ui-on-accent`.
 - Elevated dark tooltips use `--ui-tooltip`; modal backdrops use
@@ -86,6 +103,20 @@ literal values are migrated onto them.
   labels, and `--ui-line-height-normal` (1.5) for running body text.
 - **Tracking:** `--ui-tracking-normal` (0) is the default; `--ui-tracking-wide`
   (0.04em) is the single widened step for uppercase micro-labels.
+- **Label case:** chrome micro-labels — the small, wide-tracked text that names
+  a region, a field, or a column (`spec-list` keys, `data-table` headers,
+  `stat-meter` and `cron-schedule` group labels) — carry
+  `text-transform: var(--ui-label-transform, none)` so a theme can set them in
+  caps. Never apply it to user-supplied content: shouting someone's data is not
+  a theme's decision, and `text-transform` is presentational, so the text still
+  copies out in its original casing. Components that are uppercase by design in
+  every theme (`frame-box`'s legend, `app-sidebar`'s section heading) keep a
+  literal `uppercase` — the token exists to *add* caps, not to remove them.
+- **Numerals:** figures that change in place or stack into a column
+  (`pagination-nav`'s status, `progress-bar`'s value, `vote-control`'s score)
+  use `font-variant-numeric: var(--ui-numeric, normal)`. Readouts that must be
+  tabular in every theme — a ticking clock, a calendar grid — keep a literal
+  `tabular-nums` instead, since the token's default would undo them.
 - **Exemptions:** SVG presentation attributes (`font-size="…"`,
   `font-weight="…"`) can't take `var()` and stay literal at the token's
   fallback value; `line-height: 0` used purely to collapse an inline
@@ -95,9 +126,30 @@ literal values are migrated onto them.
 
 - `padding`, `margin`, and `gap` use literal multiples of `0.25rem`; spacing is
   not tokenized. Convert CSS layout pixels to rems.
-- Documented spacing exceptions: 1px borders, SVG/canvas geometry, percentages,
+- Documented spacing exceptions: SVG/canvas geometry, percentages,
   aspect ratios, animation timing, proportional calculations derived from a
   public size, `0.125rem` optical alignment nudges, and domain geometry.
+
+### Borders
+
+- A surface or control border goes through `--ui-border-width` (`1px`):
+  `border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);`. A
+  border is chrome, not layout, which is why it is tokenized while spacing is
+  not — under `blueprint` these rules do the work a shadow does elsewhere, and
+  at 1px they read as a faint table rather than as drawn structure.
+- Three kinds of 1px border stay literal, by design:
+  - `@media (forced-colors: active)` borders (`1px solid CanvasText`), which
+    answer to the user's palette rather than to a theme.
+  - Data-mark geometry — `calendar-month`'s entry-footer rule is drawn in the
+    entry's own color and divides one mark's content.
+  - Decorative edges whose width is the effect: `range-slider`'s white thumb
+    ring, `tab-bar`'s 2px active underline.
+- Anything with a fixed height or width *and* a themeable border must also set
+  `box-sizing: border-box`, or a heavier border pushes it past the shared `2rem`
+  control target.
+
+### Radius
+
 - Use `--ui-radius-sm` (`0.25rem` ≈ 4px) for controls, `--ui-radius`
   (`0.5rem` ≈ 8px) for cards/dialogs/surfaces, and `--ui-radius-pill`
   (`9999px`) / `--ui-radius-circle` (`50%`) for intentional pill and circle

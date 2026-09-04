@@ -36,7 +36,7 @@ export class CommentComposer extends LitElement {
         display: block;
       }
       .shell {
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
         background: var(--ui-surface, #ffffff);
       }

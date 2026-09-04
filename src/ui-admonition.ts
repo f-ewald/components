@@ -30,7 +30,7 @@ export class UiAdmonition extends LitElement {
         align-items: flex-start;
         gap: 0.5rem;
         border-radius: var(--ui-radius, 0.5rem);
-        border: 1px solid;
+        border: var(--ui-border-width, 1px) solid;
         padding: 0.75rem 1rem;
         box-sizing: border-box;
         font-family: var(

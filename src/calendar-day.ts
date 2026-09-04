@@ -169,7 +169,7 @@ export class CalendarDay extends CalendarTimelineBase {
       }
       .grid {
         display: flex;
-        border-top: 1px solid var(--ui-border, #e2e8f0);
+        border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .hour-gutter {
         flex: 0 0 3rem;
@@ -178,7 +178,7 @@ export class CalendarDay extends CalendarTimelineBase {
         box-sizing: border-box;
         height: ${HOUR_HEIGHT_REM}rem;
         padding-right: 0.5rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         color: var(--ui-text-muted, #64748b);
         font-variant-numeric: tabular-nums;
         line-height: var(--ui-line-height-tight, 1.25);
@@ -230,7 +230,7 @@ export class CalendarDay extends CalendarTimelineBase {
       .hour-line {
         box-sizing: border-box;
         height: ${HOUR_HEIGHT_REM}rem;
-        border-bottom: 1px solid var(--ui-border, #e2e8f0);
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       .entry-bar {
         position: relative;

@@ -98,7 +98,7 @@ export class ChatMessage extends LitElement {
       }
       :host([role="agent"]) .body-card {
         background: var(--ui-surface, #ffffff);
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
       }
       :host([role="system"]) .body-card {
         padding: 0 0 0 1rem;

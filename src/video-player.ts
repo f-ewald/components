@@ -37,7 +37,7 @@ export class VideoPlayer extends LitElement {
         display: block;
       }
       .player {
-        border: 1px solid var(--ui-border, #e2e8f0);
+        border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
         overflow: hidden;
         background: var(--ui-surface, #ffffff);

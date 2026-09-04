@@ -45,6 +45,7 @@ _None._
 | Custom property |
 | --- |
 | `--ui-border` |
+| `--ui-border-width` |
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-font-weight-medium` |
