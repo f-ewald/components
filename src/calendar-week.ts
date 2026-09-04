@@ -123,6 +123,11 @@ export class CalendarWeek extends CalendarTimelineBase {
       .grid {
         display: flex;
         border-top: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
+        /* The hour grid is the week's canvas — .day-column only paints for
+           weekend/today, so without this the page showed through every
+           ordinary hour. The today tint is translucent and composites over
+           this paper rather than over the page. */
+        background: var(--ui-surface, #ffffff);
       }
       .hour-gutter {
         flex: 0 0 3rem;

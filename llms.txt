@@ -2020,7 +2020,7 @@ Import: `import "@f-ewald/components/radio-pills.js";`
 
 Properties: `options` (JS property only) : RadioPillOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-button-accent`, `--ui-button-highlight`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-pill`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-button-accent`, `--ui-button-highlight`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-pill`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
 
 Example:
 ```html
@@ -2507,7 +2507,7 @@ Import: `import "@f-ewald/components/tile-grid.js";`
 
 Properties: `items` (JS property only) : unknown[], default []; `itemKey` (JS property only) : (item: unknown, index: number) => string | number, default —; `renderTile` (JS property only) : (item: unknown) => unknown, default —; `itemHref` (JS property only) : ((item: unknown) => string | null) | null, default null; `fileIcon` (attribute `file-icon`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-radius`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html

@@ -274,7 +274,10 @@ incomplete, the same as a component without tests.
 3. Add the component to the playground in alphabetical nav/section order:
    - A nav link in `index.html`'s `<nav class="demo-nav">`.
    - A `<section id="<tag-name>">` with a live, rendered example, and a
-     `<pre class="usage">` copy-paste snippet.
+     `<pre class="usage">` copy-paste snippet. The example container carries
+     `demo-example` alongside its Tailwind classes, which is what makes it
+     paint the theme's paper instead of letting a themed page texture show
+     through the example.
    - Wiring in `demo/main.ts` (sample data, event listeners, interactive
      controls) so every property/event/mode is actually exercised by hand.
 4. Add `tests/<tag-name>.spec.ts` with at least one happy-path assertion

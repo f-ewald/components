@@ -25,6 +25,10 @@ export class FrameBox extends LitElement {
         margin: 0;
         border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
+        /* The legend notches the border by painting --ui-surface over it, so
+           the frame has to be that same paper or the notch reads as a stray
+           white patch on a tinted or textured page. */
+        background: var(--ui-surface, #ffffff);
         padding: 0.75rem;
       }
       .label {

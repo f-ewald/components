@@ -34,6 +34,56 @@ pre.usage {
 }
 
 /*
+ * Playground chrome that follows the theme.
+ *
+ * The chrome is Tailwind slate, which is fine while the page is plain white —
+ * but a theme is free to paint the page (blueprint draws a dot grid and a
+ * grain wash), and every one of these boxes was transparent, so the texture
+ * ran straight through the example containers and the demo's own bordered
+ * buttons, selects and inputs. That is the same "a bordered surface paints an
+ * opaque base" rule the components follow; the playground just wasn't holding
+ * to it.
+ *
+ * Each mapping below replaces a slate value with the token whose value is that
+ * same color — surface #ffffff, surface-muted #f8fafc (slate-50), border
+ * #e2e8f0 (slate-200), text #0f172a (slate-900), text-muted #64748b
+ * (slate-500). Default, gradient and metro therefore render unchanged (none of
+ * them override these tokens); only a theme that repaints the page sees a
+ * difference. The match is visual rather than byte-exact, because Tailwind v4
+ * stores its palette in OKLCH and those coordinates round-trip to within a
+ * count or two of the classic hex — enough to re-antialias a glyph, not enough
+ * to see. Slate values with no token counterpart — slate-100/300/400/600/700 —
+ * are deliberately left alone rather than approximated, which would shift the
+ * default theme for no reason.
+ *
+ * These rules sit outside Tailwind's @layer, so they win over the utilities
+ * regardless of source order.
+ */
+.demo-example {
+  background-color: var(--ui-surface, #ffffff);
+  border-color: var(--ui-border, #e2e8f0);
+}
+
+/* The demo's own native controls, identified by the bordered look they all
+   share. Filled buttons (bg-indigo-600, bg-slate-900) carry no border-slate-*
+   class and so keep their fill. */
+:is(button, input, select, textarea)[class*="border-slate-"] {
+  background-color: var(--ui-surface, #ffffff);
+}
+
+.bg-slate-50 {
+  background-color: var(--ui-surface-muted, #f8fafc);
+}
+
+.text-slate-900 {
+  color: var(--ui-text, #0f172a);
+}
+
+.text-slate-500 {
+  color: var(--ui-text-muted, #64748b);
+}
+
+/*
  * Blueprint page texture — demo-only, and deliberately NOT a component or a
  * token. The faint dot grid and the film grain are backdrops the *page* paints
  * behind everything; a component library has no business reaching outside its

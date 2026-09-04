@@ -66,5 +66,6 @@ _None._
 | `--ui-line-height-tight` |
 | `--ui-primary` |
 | `--ui-radius-pill` |
+| `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |

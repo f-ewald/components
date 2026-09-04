@@ -63,6 +63,7 @@ _None._
 | `--ui-font` |
 | `--ui-font-size-sm` |
 | `--ui-radius` |
+| `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |

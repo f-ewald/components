@@ -66,12 +66,30 @@ defines the details used when creating or reviewing components.
   the active tab's `--ui-primary` line drawn on top of it) rather than
   introducing a new token — the same precedent as `ui-button`'s `secondary`
   variant, which is realized via `--ui-border`/`--ui-text-muted`, not a hue.
-- **A bordered control paints an opaque base.** `--ui-button-secondary-*`
-  defaults to `none`, so any control that uses it directly would let the page
-  behind it show through — invisible on a plain `--ui-surface` page, obviously
-  broken on a tinted, textured, or image-backed one, and inconsistent with
-  text fields, which are already opaque. Every such control therefore layers
-  the token over an opaque base rather than declaring it alone:
+- **A bordered surface paints an opaque base.** A component that draws a border
+  but leaves its background unset is invisible on a plain `--ui-surface` page
+  and obviously broken on a tinted, textured, or image-backed one — and it is
+  inconsistent with text fields, which are already opaque. Anything that reads
+  as a panel, card, control, or canvas therefore declares a background, even
+  when that background is just the page's own paper:
+
+  ```css
+  background: var(--ui-surface, #ffffff);
+  ```
+
+  This reaches surfaces that never painted at all — `radio-pills`' unchecked
+  pill, `tile-grid`'s resting tile, `frame-box`'s frame (whose legend already
+  painted `--ui-surface` to notch the border, so a see-through body left the
+  notch reading as a stray white patch), `button-group`'s strip behind its
+  segments, and `calendar-day`/`calendar-week`'s hour grid, where only the
+  weekend and today columns had a fill. A translucent state tint such as
+  `calendar-day`'s `.today` then composites over that paper rather than over
+  the page, which is what it was always meant to do.
+
+  The `--ui-button-secondary-*` family is the same rule with an extra step: it
+  defaults to `none`, so a control using it directly would still be
+  see-through. Those layer the token over the base rather than declaring it
+  alone:
 
   ```css
   background:
@@ -81,12 +99,18 @@ defines the details used when creating or reviewing components.
 
   A themed gradient still paints over that base, so a theme overriding the
   token behaves exactly as before; only the "token contributes nothing" case
-  changes. This applies to `ui-button`'s `secondary` variant,
+  changes. The layered form applies to `ui-button`'s `secondary` variant,
   `confirm-dialog`'s Cancel, `button-group`'s unchecked segments,
   `pagination-nav`'s buttons, `radio-cards`' unchecked cards, and the floating
-  `scroll-to-top`/`scroll-to-bottom`/`fullscreen-button` controls. It does not
-  apply to states that already resolve to an opaque value
-  (`--ui-button-secondary-surface-muted`, `--ui-surface-muted`).
+  `scroll-to-top`/`scroll-to-bottom`/`fullscreen-button` controls. Neither form
+  applies to states that already resolve to an opaque value
+  (`--ui-button-secondary-surface-muted`, `--ui-surface-muted`), nor to
+  elements that draw a *line* or a *mark* rather than a surface —
+  `content-divider`'s rule, `calendar-month`'s entry underline, and
+  `app-sidebar`'s footer, which sits on the sidebar's own paper. Those three
+  are the allowlist in `design-tests/opaque-surfaces.spec.ts`, which walks
+  every shadow root under the blueprint theme and fails on any bordered,
+  see-through surface that is not one of them.
 - `--ui-ai-1`…`--ui-ai-4` are the one multi-hue family: the stops of
   `ui-button[ai]`'s animated ring, where the rainbow itself is the meaning
   ("this action is AI-powered") rather than a semantic state. They are only
@@ -402,6 +426,15 @@ recipe and, ideally, a matching full-page demo under `demo/layouts/`.
   linked parent section.
 - Public API changes update JSDoc, generated docs, `llms.txt`, README when
   relevant, and the changelog.
+- Every example container in `index.html` carries the `demo-example` class.
+  The playground chrome is Tailwind slate, which is transparent by default, so
+  without it a theme that repaints the page (blueprint draws a dot grid and a
+  grain wash) shows straight through the example — the same rule the components
+  follow, applied to the demo's own boxes. `demo/demo.css` maps that class, the
+  demo's bordered native controls, and the slate values that have a token
+  counterpart onto `--ui-surface`/`--ui-surface-muted`/`--ui-border`/
+  `--ui-text`/`--ui-text-muted`; slate steps with no counterpart stay literal
+  rather than being approximated.
 
 ## Measurement contracts
 

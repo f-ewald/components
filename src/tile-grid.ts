@@ -49,6 +49,9 @@ export class TileGrid extends LitElement {
       .tile {
         border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius, 0.5rem);
+        /* A resting tile only painted on hover, so it was see-through over
+           anything but a plain --ui-surface page. */
+        background: var(--ui-surface, #ffffff);
         padding: 0.75rem;
         color: var(--ui-text, #0f172a);
       }

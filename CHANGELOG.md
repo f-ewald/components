@@ -333,6 +333,33 @@
   `scroll-to-top`/`scroll-to-bottom`/`fullscreen-button` controls already did
   this. A themed gradient still paints over the base, so a theme that
   overrides the token renders exactly as before.
+- Extended that same rule to bordered surfaces that had no background at all,
+  which the first pass missed because they never referenced a background token
+  to begin with: `radio-pills`' unchecked pill, `tile-grid`'s resting tile,
+  `frame-box`'s frame, `button-group`'s strip behind its segments, and
+  `calendar-day`/`calendar-week`'s hour grid, where only the weekend and today
+  columns had a fill. Each now paints `var(--ui-surface, #ffffff)`, so it
+  follows the theme's paper rather than showing whatever is behind it;
+  `frame-box` was the clearest case, since its legend already painted
+  `--ui-surface` to notch the border and so read as a stray white patch on a
+  see-through frame. Translucent state tints such as `calendar-day`'s `.today`
+  now composite over that paper rather than over the page. Elements that draw
+  a line or a data mark rather than a surface — `content-divider`'s rule,
+  `calendar-month`'s entry underline, `app-sidebar`'s footer — stay
+  transparent, and are the documented allowlist in the new
+  `design-tests/opaque-surfaces.spec.ts`, which walks every shadow root under
+  the blueprint theme and fails on any other see-through bordered surface.
+- The playground's own chrome now follows the theme instead of staying fixed
+  Tailwind slate. Its example containers and bordered native controls were
+  transparent, so the blueprint dot grid and grain ran straight through the
+  examples themselves — the noisiest part of that theme, and the reason
+  demo text sitting on an unpainted box was hard to read. Every example
+  container carries a `demo-example` class that paints `--ui-surface`, and
+  `demo/demo.css` maps the slate values that have a token counterpart
+  (slate-50/200/500/900) onto `--ui-surface-muted`/`--ui-border`/
+  `--ui-text-muted`/`--ui-text`. Slate steps with no counterpart are left
+  literal rather than approximated, so the default, gradient and metro themes
+  render unchanged. Playground-only; nothing here ships in the package.
 - The playground theme picker now writes the theme to the URL as `?theme=`,
   so a playground link carries the theme it was viewed in. It uses the query
   string rather than the hash, which is already the section anchor, so

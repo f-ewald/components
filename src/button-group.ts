@@ -46,6 +46,9 @@ export class ButtonGroup extends LitElement {
         display: flex;
         border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         border-radius: var(--ui-radius-sm, 0.25rem);
+        /* The segments paint their own base, but the strip's rounded corners
+           sit outside them and would otherwise show the page through. */
+        background: var(--ui-surface, #ffffff);
         overflow: hidden;
       }
       .segment {
