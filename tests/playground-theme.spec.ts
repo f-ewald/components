@@ -68,4 +68,43 @@ test.describe("playground theme in the URL", () => {
     await expect(page).toHaveURL(/\?theme=gradient/);
     await expect.poll(() => activeTheme(page)).toBe("gradient");
   });
+
+  test("developer-dark/developer-light repaint the playground's own page chrome, not just the components", async ({
+    page,
+  }) => {
+    const bodyColors = (p: import("@playwright/test").Page) =>
+      p.evaluate(() => {
+        const style = getComputedStyle(document.body);
+        return { background: style.backgroundColor, color: style.color };
+      });
+
+    await page.goto("/");
+    const defaultColors = await bodyColors(page);
+
+    await page.goto("/?theme=developer-dark");
+    await expect.poll(() => activeTheme(page)).toBe("developer-dark");
+    const darkColors = await bodyColors(page);
+    expect(darkColors.background).not.toBe(defaultColors.background);
+    // A near-black surface with light text, not the reverse.
+    expect(darkColors.background).toBe("rgb(14, 13, 11)");
+    expect(darkColors.color).toBe("rgb(216, 211, 197)");
+
+    await page.goto("/?theme=developer-light");
+    await expect.poll(() => activeTheme(page)).toBe("developer-light");
+    const lightColors = await bodyColors(page);
+    expect(lightColors.background).not.toBe(darkColors.background);
+    expect(lightColors.background).toBe("rgb(243, 238, 225)");
+    expect(lightColors.color).toBe("rgb(26, 24, 19)");
+
+    // Secondary chrome (the nav's active-section highlight) follows too,
+    // rather than keeping the fixed indigo tint every other theme uses.
+    await page.locator("#nav-filter input").fill("code-diff");
+    const activeLink = page.locator('.demo-nav a[href="#code-diff"]');
+    await activeLink.click();
+    await expect.poll(() => activeLink.evaluate((el) => el.classList.contains("active"))).toBe(
+      true,
+    );
+    const activeBg = await activeLink.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(activeBg).not.toBe("rgb(238, 242, 255)"); // bg-indigo-50, the un-themed default
+  });
 });

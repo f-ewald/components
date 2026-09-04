@@ -137,3 +137,58 @@ pre.usage {
     display: none;
   }
 }
+
+/*
+ * developer-dark/developer-light page repaint — demo-only, same motivation as
+ * blueprint's body rule above, minus a decorative texture (this theme's
+ * "paper" is just the flat near-black/cream surface itself, nothing more).
+ *
+ * Unlike gradient/metro/blueprint, this pair genuinely inverts lightness
+ * rather than staying a variation on the light palette, which the always-on
+ * .text-slate-900/.text-slate-500/.bg-slate-50 mappings above don't fully
+ * cover — those three were deliberately narrow (see the comment above them)
+ * because mapping every other slate shade too would have shifted every other
+ * theme's appearance for no reason. Scoping the remaining mappings to just
+ * these two [data-theme] selectors keeps every other theme byte-for-byte
+ * unchanged while fixing this pair, where a light-mode-tuned literal (a
+ * medium-gray caption, a light hover wash, a light hairline) would otherwise
+ * print through unreadably — or just visibly wrong — against the inverted
+ * palette. Filled dark demo buttons (bg-slate-800/900) are left alone, same
+ * exemption as the native-control rule above: they're deliberately dark
+ * regardless of theme, not page chrome that should follow it.
+ */
+:root[data-theme="developer-dark"] body,
+:root[data-theme="developer-light"] body {
+  color: var(--ui-text, #0f172a);
+  background-color: var(--ui-surface, #ffffff);
+  font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+}
+
+:root[data-theme="developer-dark"] :is(.text-slate-400, .text-slate-600),
+:root[data-theme="developer-light"] :is(.text-slate-400, .text-slate-600) {
+  color: var(--ui-text-muted, #64748b);
+}
+
+:root[data-theme="developer-dark"] :is(.text-slate-700, .text-slate-800),
+:root[data-theme="developer-light"] :is(.text-slate-700, .text-slate-800) {
+  color: var(--ui-text, #0f172a);
+}
+
+:root[data-theme="developer-dark"] .bg-slate-100,
+:root[data-theme="developer-light"] .bg-slate-100 {
+  background-color: var(--ui-surface-muted, #f8fafc);
+}
+
+:root[data-theme="developer-dark"] :is(.border-slate-100, .border-slate-200, .border-slate-300),
+:root[data-theme="developer-light"] :is(.border-slate-100, .border-slate-200, .border-slate-300) {
+  border-color: var(--ui-border, #e2e8f0);
+}
+
+/* The active-section nav highlight is a fixed indigo tint/ink pair, which
+   reads as a stray, off-palette accent once the rest of the sidebar follows
+   the theme. Swap it for the theme's own accent + a muted wash. */
+:root[data-theme="developer-dark"] .demo-nav a.active,
+:root[data-theme="developer-light"] .demo-nav a.active {
+  background-color: var(--ui-surface-muted, #f8fafc);
+  color: var(--ui-primary, #4f46e5);
+}
