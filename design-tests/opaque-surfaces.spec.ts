@@ -17,14 +17,17 @@ import { test, expect, type Page } from "@playwright/test";
  * Surfaces that are legitimately transparent, as `host tag` -> selectors.
  *
  * These draw a *line* or a *mark*, not a panel: a divider rule, a calendar
- * entry's data underline, and a sidebar footer that sits on the sidebar's own
- * paper. Asserted exactly — a new entry has to be justified here, and a stale
- * one fails once its component starts painting.
+ * entry's data underline, a sidebar footer that sits on the sidebar's own
+ * paper, and a step-ladder rung's top border separating one rung from the
+ * next (same role as content-divider's rule). Asserted exactly — a new entry
+ * has to be justified here, and a stale one fails once its component starts
+ * painting.
  */
 const TRANSPARENT_BY_DESIGN: Record<string, string[]> = {
   "calendar-month": ["div.entry-footer"],
   "content-divider": ["span.line"],
   "app-sidebar": ["div.foot"],
+  "step-ladder": ["li.rung"],
 };
 
 /** Collects every visible bordered element with no background of its own. */

@@ -105,7 +105,6 @@ _None._
 | `--ui-focus-ring` |
 | `--ui-font-size-sm` |
 | `--ui-line-height-tight` |
-| `--ui-on-accent` |
 | `--ui-overlay` |
 | `--ui-radius-sm` |
 | `--ui-shadow` |
@@ -114,3 +113,4 @@ _None._
 | `--ui-surface-muted` |
 | `--ui-text-muted` |
 | `--ui-tooltip` |
+| `--ui-tooltip-text` |

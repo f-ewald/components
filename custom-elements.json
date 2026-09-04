@@ -2556,6 +2556,64 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/blink-cursor.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A small inline blinking cursor glyph for terminal- or editor-styled\nheadings, prompts, and status lines. It renders its own decorative\ncharacter so consumers can append it directly to adjacent text while\ninheriting the surrounding typography.\n\nThe cursor uses the shared `--ui-primary` accent color so it reads as an\nactive insertion point across themes. Change `char` to swap the glyph (for\nexample `|` or `▋`). Under `prefers-reduced-motion` the blink stops and the\ncursor remains visible.",
+          "name": "BlinkCursor",
+          "members": [
+            {
+              "kind": "field",
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"▋\"",
+              "description": "Character shown for the cursor; any single character or short string such as `|` or `▋` works.",
+              "attribute": "char"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "char",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"▋\"",
+              "description": "Character shown for the cursor; any single character or short string such as `|` or `▋` works.",
+              "fieldName": "char"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "blink-cursor",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "BlinkCursor",
+          "declaration": {
+            "name": "BlinkCursor",
+            "module": "src/blink-cursor.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "blink-cursor",
+          "declaration": {
+            "name": "BlinkCursor",
+            "module": "src/blink-cursor.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/breadcrumb-nav.ts",
       "declarations": [
         {
@@ -4823,6 +4881,102 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/code-diff.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A compact, read-only code diff viewer: a bordered panel with a header bar\nfor `filename` and `stat`, followed by a numbered `<pre>` listing of\n`lines`. Each CodeDiffLine renders as `\"add\"`, `\"del\"`, or\n`\"context\"` with fixed `\"+ \"` / `\"- \"` / `\"  \"` prefixes so the diff\nremains understandable even when color is unavailable.\n\nAdded and removed rows reuse `--ui-success` / `--ui-danger` for their text\nand low-alpha background washes, while the shell itself reuses\n`--ui-font-mono`, `--ui-border`, and `--ui-surface`. The caller owns the\ndata shape entirely: `filename` and `stat` are passed through verbatim, and\n`lines` is a flat ordered array of `{ type, text }` objects.",
+          "name": "CodeDiff",
+          "members": [
+            {
+              "kind": "field",
+              "name": "filename",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The filename shown in the header bar's left side.",
+              "attribute": "filename"
+            },
+            {
+              "kind": "field",
+              "name": "stat",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The caller-supplied stat summary shown in the header bar's right side.",
+              "attribute": "stat"
+            },
+            {
+              "kind": "field",
+              "name": "lines",
+              "type": {
+                "text": "CodeDiffLine[]"
+              },
+              "default": "[]",
+              "description": "Ordered diff lines, each rendered with its type-driven prefix and styling.",
+              "attribute": "lines"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "filename",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The filename shown in the header bar's left side.",
+              "fieldName": "filename"
+            },
+            {
+              "name": "stat",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The caller-supplied stat summary shown in the header bar's right side.",
+              "fieldName": "stat"
+            },
+            {
+              "name": "lines",
+              "type": {
+                "text": "CodeDiffLine[]"
+              },
+              "default": "[]",
+              "description": "Ordered diff lines, each rendered with its type-driven prefix and styling.",
+              "fieldName": "lines"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "code-diff",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CodeDiff",
+          "declaration": {
+            "name": "CodeDiff",
+            "module": "src/code-diff.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "code-diff",
+          "declaration": {
+            "name": "CodeDiff",
+            "module": "src/code-diff.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/comment-composer.ts",
       "declarations": [
         {
@@ -5116,6 +5270,90 @@
           "declaration": {
             "name": "CommentComposer",
             "module": "src/comment-composer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/comment-label.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A code-comment-style eyebrow line for section chrome in terminal- or\neditor-themed pages. It renders a colored comment marker (`##` by default)\nbefore muted slotted text, so `<comment-label>the_whole_idea</comment-label>`\nreads like a short section kicker. Set `prefix=\"//\"` and `italic` for a\nclosing or footer quote line that keeps the marker upright while the message\nitself turns italic.",
+          "name": "CommentLabel",
+          "slots": [
+            {
+              "description": "The label text, such as a section eyebrow or a longer closing quote.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"##\"",
+              "description": "Comment marker rendered before the slotted label text.",
+              "attribute": "prefix"
+            },
+            {
+              "kind": "field",
+              "name": "italic",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders the slotted label text in italics while leaving the prefix upright.",
+              "attribute": "italic",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"##\"",
+              "description": "Comment marker rendered before the slotted label text.",
+              "fieldName": "prefix"
+            },
+            {
+              "name": "italic",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders the slotted label text in italics while leaving the prefix upright.",
+              "fieldName": "italic"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "comment-label",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CommentLabel",
+          "declaration": {
+            "name": "CommentLabel",
+            "module": "src/comment-label.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "comment-label",
+          "declaration": {
+            "name": "CommentLabel",
+            "module": "src/comment-label.ts"
           }
         }
       ]
@@ -11749,10 +11987,130 @@
         },
         {
           "kind": "js",
+          "name": "developerDarkTokenValues",
+          "declaration": {
+            "name": "developerDarkTokenValues",
+            "module": "./tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "developerLightTokenValues",
+          "declaration": {
+            "name": "developerLightTokenValues",
+            "module": "./tokens.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "*",
           "declaration": {
             "name": "*",
             "module": "src/icons.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BlinkCursor",
+          "declaration": {
+            "name": "BlinkCursor",
+            "module": "./blink-cursor.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CommentLabel",
+          "declaration": {
+            "name": "CommentLabel",
+            "module": "./comment-label.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StatStrip",
+          "declaration": {
+            "name": "StatStrip",
+            "module": "./stat-strip.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StatStripItem",
+          "declaration": {
+            "name": "StatStripItem",
+            "module": "./stat-strip.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StepLadder",
+          "declaration": {
+            "name": "StepLadder",
+            "module": "./step-ladder.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StepLadderItem",
+          "declaration": {
+            "name": "StepLadderItem",
+            "module": "./step-ladder.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TerminalBlock",
+          "declaration": {
+            "name": "TerminalBlock",
+            "module": "./terminal-block.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TerminalLine",
+          "declaration": {
+            "name": "TerminalLine",
+            "module": "./terminal-block.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TerminalLineType",
+          "declaration": {
+            "name": "TerminalLineType",
+            "module": "./terminal-block.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CodeDiff",
+          "declaration": {
+            "name": "CodeDiff",
+            "module": "./code-diff.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CodeDiffLine",
+          "declaration": {
+            "name": "CodeDiffLine",
+            "module": "./code-diff.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CodeDiffLineType",
+          "declaration": {
+            "name": "CodeDiffLineType",
+            "module": "./code-diff.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WindowChrome",
+          "declaration": {
+            "name": "WindowChrome",
+            "module": "./window-chrome.js"
           }
         }
       ]
@@ -18698,6 +19056,64 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/stat-strip.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A headless, presentational strip of headline stats — one large figure plus\none muted caption per `items` entry, wrapping across lines on narrow\nviewports. Unlike `stat-meter`, this component does not compute percentages\nor render a fill bar: callers pass preformatted figure strings as-is and\n`stat-strip` only lays them out for marketing, benchmark, or dashboard\nsummary rows.",
+          "name": "StatStrip",
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "StatStripItem[]"
+              },
+              "default": "[]",
+              "description": "Stats rendered in display order; each item is shown as a large figure with a caption beneath it.",
+              "attribute": "items"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "items",
+              "type": {
+                "text": "StatStripItem[]"
+              },
+              "default": "[]",
+              "description": "Stats rendered in display order; each item is shown as a large figure with a caption beneath it.",
+              "fieldName": "items"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "stat-strip",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "StatStrip",
+          "declaration": {
+            "name": "StatStrip",
+            "module": "src/stat-strip.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "stat-strip",
+          "declaration": {
+            "name": "StatStrip",
+            "module": "src/stat-strip.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/status-banner.ts",
       "declarations": [
         {
@@ -18866,6 +19282,130 @@
           "declaration": {
             "name": "StatusPill",
             "module": "src/status-pill.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/step-ladder.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A flat ordered ladder of fallback steps — an escalating \"try this first,\nthen move to the next rung only if it does not solve it\" list. Each rung\nshows a zero-padded ordinal, a bold title, and a muted description, with a\nhairline rule between rows.\n\nFeed it the `items` array for the plain data path, where each\nStepLadderItem supplies a `title` and `description`, or slot bare\n`<li>` steps when a rung needs links, emphasis, or other richer markup.\nSlotted content takes precedence over `items`; with neither, nothing is\nrendered. As with `spec-list`, richer wrapper elements are accepted too, but\nthose own their own inner markup.",
+          "name": "StepLadder",
+          "slots": [
+            {
+              "description": "Optional `<li>` rungs or richer step markup; when present, they replace the `items` path.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "StepLadderItem[]"
+              },
+              "default": "[]",
+              "description": "The rungs for the data-driven path. Ignored when the default slot has content.",
+              "attribute": "items"
+            },
+            {
+              "kind": "field",
+              "name": "_hasSlotted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Whether the default slot currently has assigned content."
+            },
+            {
+              "kind": "method",
+              "name": "_isContent",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "description": "Whether a slot node is real content, ignoring the whitespace ordinary indented markup leaves between children."
+            },
+            {
+              "kind": "method",
+              "name": "_onSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Tracks whether the default slot has content so slotted markup can take precedence over `items`."
+            },
+            {
+              "kind": "method",
+              "name": "_rows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "StepLadderItem[]"
+                }
+              },
+              "description": "The rungs, defended against a non-array value assigned at runtime by a JS or HTML consumer."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "items",
+              "type": {
+                "text": "StepLadderItem[]"
+              },
+              "default": "[]",
+              "description": "The rungs for the data-driven path. Ignored when the default slot has content.",
+              "fieldName": "items"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "step-ladder",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "StepLadder",
+          "declaration": {
+            "name": "StepLadder",
+            "module": "src/step-ladder.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "step-ladder",
+          "declaration": {
+            "name": "StepLadder",
+            "module": "src/step-ladder.ts"
           }
         }
       ]
@@ -19186,6 +19726,64 @@
           "declaration": {
             "name": "TabItem",
             "module": "src/tab-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/terminal-block.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A headless, data-driven terminal transcript shell for short install or usage\ninstructions. Callers provide a flat ordered `lines` array of\n`TerminalLine` objects, and the component renders each line exactly in that\norder with a type-driven visual treatment: `\"prompt\"` lines get a fixed\nleading `❯` marker in `--ui-primary`, `\"comment\"` lines render as dim italic\nguidance, and `\"output\"` lines render as plain terminal text.\n\nThe panel deliberately stays dark regardless of the surrounding page theme:\nit reuses `--ui-tooltip` for the surface and `--ui-tooltip-text` for the\nmain foreground (not `--ui-on-accent` — that token means \"text on a solid\n*semantic* fill\" and a theme is free to darken it for a light accent color,\nwhereas `--ui-tooltip`'s own fill stays dark unconditionally), because this\nis meant to read as \"the terminal\" rather than as a normal page card that\nfollows the ambient surface palette.\n\nAn empty `lines` array still renders the bordered, padded shell so consumers\ncan see that an instruction block is present but currently has no transcript\ncontent, rather than having the component silently disappear.",
+          "name": "TerminalBlock",
+          "members": [
+            {
+              "kind": "field",
+              "name": "lines",
+              "type": {
+                "text": "TerminalLine[]"
+              },
+              "default": "[]",
+              "description": "Ordered terminal transcript lines. Each entry is a `{ type, text }`\nobject, and an empty array still renders the visible terminal shell.",
+              "attribute": "lines"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "lines",
+              "type": {
+                "text": "TerminalLine[]"
+              },
+              "default": "[]",
+              "description": "Ordered terminal transcript lines. Each entry is a `{ type, text }`\nobject, and an empty array still renders the visible terminal shell.",
+              "fieldName": "lines"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "terminal-block",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TerminalBlock",
+          "declaration": {
+            "name": "TerminalBlock",
+            "module": "src/terminal-block.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "terminal-block",
+          "declaration": {
+            "name": "TerminalBlock",
+            "module": "src/terminal-block.ts"
           }
         }
       ]
@@ -20345,7 +20943,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 // Button-specific background/border hooks: default to the flat --ui-primary // / --ui-danger tokens above unchanged, so those stay the single source of // truth for every other component. Overriding just these lets a theme opt // ui-button into a gradient (or any other) background without touching // component markup; --ui-button-border/--ui-button-danger-border default // to transparent (today's look) and are meant to be paired with a shade // darker than the gradient's dark stop when one is set. The `-active` // variants default to whatever `-background` already resolved to (so a // solid override still applies while pressed) — a gradient theme should // set them to the same stops in reverse, for a pressed/\"indented\" look. \"--ui-button-background\": \"var(--ui-primary, #4f46e5)\", \"--ui-button-background-hover\": \"var(--ui-primary-hover, #4338ca)\", \"--ui-button-background-active\": \"var(--ui-button-background, var(--ui-primary, #4f46e5))\", \"--ui-button-border\": \"transparent\", // The bordered, transparent-background secondary variant's equivalents — // shared with confirm-dialog's Cancel button, which is the same visual // pattern. Defaults reproduce today's literal secondary styling exactly // (no background at any state, border colors matching --ui-border / // --ui-text-muted), so a theme only needs to override these to make // secondary/Cancel buttons match a primary/danger gradient theme. \"--ui-button-secondary-background\": \"none\", \"--ui-button-secondary-background-hover\": \"none\", \"--ui-button-secondary-background-active\": \"var(--ui-button-secondary-background, none)\", \"--ui-button-secondary-border\": \"var(--ui-border, #e2e8f0)\", \"--ui-button-secondary-border-hover\": \"var(--ui-text-muted, #64748b)\", // A muted-gray surface used wherever something already paints // --ui-surface-muted as a state indicator in flat mode — button-group's // unchecked-segment hover, pagination-nav's button hover, and // radio-cards/radio-pills' checked background — which is a genuinely // different default than secondary's borderless flat hover, so it can't // reuse --ui-button-secondary-background-hover's \"none\" default. \"--ui-button-secondary-surface-muted\": \"var(--ui-surface-muted, #f8fafc)\", // Shared by both primary/danger — a purely cosmetic gloss/legibility pair, // not color-specific, so one token covers both variants. `-highlight` is a // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for // a glossy top edge, defaulting to a fully transparent (so invisible) // shadow rather than the keyword `none` — some usages combine it with // another literal shadow in a comma-separated list, where a bare `none` // item is invalid CSS and would zero out the *whole* declaration. // `-text-shadow` is a full text-shadow value for label legibility against // a gradient's lighter stop, always used standalone, so it keeps `none`. \"--ui-button-highlight\": \"0 0 0 0 transparent\", \"--ui-button-text-shadow\": \"none\", // A solid stand-in for the same accent, for spots that can't render a // background gradient at all — a native <input>'s accent-color only // accepts a plain color, and a hard-stop background gradient (e.g. // range-slider's filled track) can't nest another gradient inside its own // color-stop list. Consumers that theme the buttons into a gradient should // set this to the gradient's dark stop, so these non-button accents (radio // selection indicators, the range-slider track/thumb) stay visually // coordinated with it even though they can't literally paint a gradient. \"--ui-button-accent\": \"var(--ui-primary, #4f46e5)\", \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-button-danger-background\": \"var(--ui-danger, #dc2626)\", \"--ui-button-danger-background-hover\": \"var(--ui-danger-hover, #b91c1c)\", \"--ui-button-danger-background-active\": \"var(--ui-button-danger-background, var(--ui-danger, #dc2626))\", \"--ui-button-danger-border\": \"transparent\", \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 // toast-notification's per-variant background hooks: default to the flat // --ui-success/--ui-danger/--ui-info/--ui-warning tokens unchanged, so // those stay the single source of truth for every other component — // the same pattern as --ui-button-background/--ui-button-danger-background // above. `-highlight`/`-text-shadow` are the same glossy-top-edge / // legibility-shadow pair as --ui-button-highlight/--ui-button-text-shadow, // kept as separate tokens so a theme can gloss toasts and buttons // independently. \"--ui-toast-success-background\": \"var(--ui-success, #16a34a)\", \"--ui-toast-error-background\": \"var(--ui-danger, #dc2626)\", \"--ui-toast-info-background\": \"var(--ui-info, #0ea5e9)\", \"--ui-toast-warning-background\": \"var(--ui-warning, #d97706)\", \"--ui-toast-highlight\": \"0 0 0 0 transparent\", \"--ui-toast-text-shadow\": \"none\", // AI accent sweep — the four stops of the animated multi-hue ring // ui-button's `ai` modifier draws around a button (and the only place a // rainbow reads as meaning \"this action is AI-powered\" rather than a // semantic state). Ordered around the color wheel and looping back to // stop 1, so the sweep is seamless; --ui-ai-2 is --ui-primary's own // indigo, anchoring the ring to the rest of the palette. Overriding these // four retunes every AI button at once. \"--ui-ai-1\": \"#38bdf8\", // sky-400 \"--ui-ai-2\": \"#6366f1\", // indigo-500 \"--ui-ai-3\": \"#d946ef\", // fuchsia-500 \"--ui-ai-4\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded // The width of a themeable surface/control border. Spacing is deliberately // untokenized, but a border is chrome rather than layout: the `blueprint` // theme's whole structure is carried by hairline rules instead of shadows, // and it needs those rules one step heavier than the default. Defaults to // the literal 1px every component used before, so nothing renders // differently until a theme overrides it. Only genuine surface/control // borders read this — forced-colors `CanvasText` borders and purely // decorative literals (a slider thumb's white ring, a tab's 2px underline) // keep their own widths, since those aren't the theme's structural rules. // Anything with a fixed height/width and a themeable border must also set // `box-sizing: border-box`, or a heavier border grows it past the shared // 2rem control target. \"--ui-border-width\": \"1px\", // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot. // Tokenized rather than hardcoded so a theme that squares the design system // (metro) can reach them too; a literal 9999px/50% silently opts that shape // out of every theme. Use these only where the shape is the point, not as a // heavier --ui-radius. \"--ui-radius-pill\": \"9999px\", \"--ui-radius-circle\": \"50%\", \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", // Casing of chrome micro-labels — the small, wide-tracked labels that name a // region rather than carry content (a `frame-box` legend, an `app-sidebar` // section heading, a `stat-meter` caption). Defaults to `none`, today's // sentence case, so nothing changes until a theme sets it; the `blueprint` // theme sets `uppercase`, where signage-style labels are the point. Never // apply this to user-supplied content — shouting someone's data is not a // theme's decision, and `text-transform` is a presentational lie that // survives copy/paste as the original casing anyway. \"--ui-label-transform\": \"none\", // Numeral rendering for figures that change in place or stack into a column // — a score, a page number, a running clock. Defaults to `normal` // (proportional, as before); `tabular-nums` stops digits from jittering // horizontally as they tick, which the `blueprint` theme's spec-sheet // aesthetic wants everywhere. \"--ui-numeric\": \"normal\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 // Button-specific background/border hooks: default to the flat --ui-primary // / --ui-danger tokens above unchanged, so those stay the single source of // truth for every other component. Overriding just these lets a theme opt // ui-button into a gradient (or any other) background without touching // component markup; --ui-button-border/--ui-button-danger-border default // to transparent (today's look) and are meant to be paired with a shade // darker than the gradient's dark stop when one is set. The `-active` // variants default to whatever `-background` already resolved to (so a // solid override still applies while pressed) — a gradient theme should // set them to the same stops in reverse, for a pressed/\"indented\" look. \"--ui-button-background\": \"var(--ui-primary, #4f46e5)\", \"--ui-button-background-hover\": \"var(--ui-primary-hover, #4338ca)\", \"--ui-button-background-active\": \"var(--ui-button-background, var(--ui-primary, #4f46e5))\", \"--ui-button-border\": \"transparent\", // The primary/danger fill's own text color, split out from --ui-on-accent // (which every button used directly until now): --ui-on-accent means \"text // on any solid semantic fill\" and a theme may need to darken it for a light // accent color (see developerDarkTokenValues), but that darkening should // only reach the button itself if the theme wants it to. Defaults to // --ui-on-accent unchanged, so every existing theme renders identically. \"--ui-button-text\": \"var(--ui-on-accent, #ffffff)\", \"--ui-button-danger-text\": \"var(--ui-on-accent, #ffffff)\", // The bordered, transparent-background secondary variant's equivalents — // shared with confirm-dialog's Cancel button, which is the same visual // pattern. Defaults reproduce today's literal secondary styling exactly // (no background at any state, border colors matching --ui-border / // --ui-text-muted), so a theme only needs to override these to make // secondary/Cancel buttons match a primary/danger gradient theme. \"--ui-button-secondary-background\": \"none\", \"--ui-button-secondary-background-hover\": \"none\", \"--ui-button-secondary-background-active\": \"var(--ui-button-secondary-background, none)\", \"--ui-button-secondary-border\": \"var(--ui-border, #e2e8f0)\", \"--ui-button-secondary-border-hover\": \"var(--ui-text-muted, #64748b)\", // A muted-gray surface used wherever something already paints // --ui-surface-muted as a state indicator in flat mode — button-group's // unchecked-segment hover, pagination-nav's button hover, and // radio-cards/radio-pills' checked background — which is a genuinely // different default than secondary's borderless flat hover, so it can't // reuse --ui-button-secondary-background-hover's \"none\" default. \"--ui-button-secondary-surface-muted\": \"var(--ui-surface-muted, #f8fafc)\", // Shared by both primary/danger — a purely cosmetic gloss/legibility pair, // not color-specific, so one token covers both variants. `-highlight` is a // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for // a glossy top edge, defaulting to a fully transparent (so invisible) // shadow rather than the keyword `none` — some usages combine it with // another literal shadow in a comma-separated list, where a bare `none` // item is invalid CSS and would zero out the *whole* declaration. // `-text-shadow` is a full text-shadow value for label legibility against // a gradient's lighter stop, always used standalone, so it keeps `none`. \"--ui-button-highlight\": \"0 0 0 0 transparent\", \"--ui-button-text-shadow\": \"none\", // A solid stand-in for the same accent, for spots that can't render a // background gradient at all — a native <input>'s accent-color only // accepts a plain color, and a hard-stop background gradient (e.g. // range-slider's filled track) can't nest another gradient inside its own // color-stop list. Consumers that theme the buttons into a gradient should // set this to the gradient's dark stop, so these non-button accents (radio // selection indicators, the range-slider track/thumb) stay visually // coordinated with it even though they can't literally paint a gradient. \"--ui-button-accent\": \"var(--ui-primary, #4f46e5)\", \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-button-danger-background\": \"var(--ui-danger, #dc2626)\", \"--ui-button-danger-background-hover\": \"var(--ui-danger-hover, #b91c1c)\", \"--ui-button-danger-background-active\": \"var(--ui-button-danger-background, var(--ui-danger, #dc2626))\", \"--ui-button-danger-border\": \"transparent\", \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 // toast-notification's per-variant background hooks: default to the flat // --ui-success/--ui-danger/--ui-info/--ui-warning tokens unchanged, so // those stay the single source of truth for every other component — // the same pattern as --ui-button-background/--ui-button-danger-background // above. `-highlight`/`-text-shadow` are the same glossy-top-edge / // legibility-shadow pair as --ui-button-highlight/--ui-button-text-shadow, // kept as separate tokens so a theme can gloss toasts and buttons // independently. \"--ui-toast-success-background\": \"var(--ui-success, #16a34a)\", \"--ui-toast-error-background\": \"var(--ui-danger, #dc2626)\", \"--ui-toast-info-background\": \"var(--ui-info, #0ea5e9)\", \"--ui-toast-warning-background\": \"var(--ui-warning, #d97706)\", \"--ui-toast-highlight\": \"0 0 0 0 transparent\", \"--ui-toast-text-shadow\": \"none\", // AI accent sweep — the four stops of the animated multi-hue ring // ui-button's `ai` modifier draws around a button (and the only place a // rainbow reads as meaning \"this action is AI-powered\" rather than a // semantic state). Ordered around the color wheel and looping back to // stop 1, so the sweep is seamless; --ui-ai-2 is --ui-primary's own // indigo, anchoring the ring to the rest of the palette. Overriding these // four retunes every AI button at once. \"--ui-ai-1\": \"#38bdf8\", // sky-400 \"--ui-ai-2\": \"#6366f1\", // indigo-500 \"--ui-ai-3\": \"#d946ef\", // fuchsia-500 \"--ui-ai-4\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 // The tooltip's own foreground, kept separate from --ui-on-accent: that // token means \"text on a solid *semantic* fill\" (a button, a toast), which // a theme may need to darken if it makes those fills light (see // developerDarkTokenValues). --ui-tooltip's own fill is a dedicated dark // surface in every theme regardless, so its text stays white unconditionally. \"--ui-tooltip-text\": \"#ffffff\", \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Same reasoning as --ui-tooltip-text: a control drawn directly on the // --ui-overlay scrim (photo-gallery's arrow buttons) needs text/icon // contrast against that always-dark backdrop, not against whatever a theme // repoints --ui-on-accent to for its semantic fills. \"--ui-overlay-text\": \"#ffffff\", // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded // The width of a themeable surface/control border. Spacing is deliberately // untokenized, but a border is chrome rather than layout: the `blueprint` // theme's whole structure is carried by hairline rules instead of shadows, // and it needs those rules one step heavier than the default. Defaults to // the literal 1px every component used before, so nothing renders // differently until a theme overrides it. Only genuine surface/control // borders read this — forced-colors `CanvasText` borders and purely // decorative literals (a slider thumb's white ring, a tab's 2px underline) // keep their own widths, since those aren't the theme's structural rules. // Anything with a fixed height/width and a themeable border must also set // `box-sizing: border-box`, or a heavier border grows it past the shared // 2rem control target. \"--ui-border-width\": \"1px\", // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot. // Tokenized rather than hardcoded so a theme that squares the design system // (metro) can reach them too; a literal 9999px/50% silently opts that shape // out of every theme. Use these only where the shape is the point, not as a // heavier --ui-radius. \"--ui-radius-pill\": \"9999px\", \"--ui-radius-circle\": \"50%\", \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", // Casing of chrome micro-labels — the small, wide-tracked labels that name a // region rather than carry content (a `frame-box` legend, an `app-sidebar` // section heading, a `stat-meter` caption). Defaults to `none`, today's // sentence case, so nothing changes until a theme sets it; the `blueprint` // theme sets `uppercase`, where signage-style labels are the point. Never // apply this to user-supplied content — shouting someone's data is not a // theme's decision, and `text-transform` is a presentational lie that // survives copy/paste as the original casing anyway. \"--ui-label-transform\": \"none\", // Numeral rendering for figures that change in place or stack into a column // — a score, a page number, a running clock. Defaults to `normal` // (proportional, as before); `tabular-nums` stops digits from jittering // horizontally as they tick, which the `blueprint` theme's spec-sheet // aesthetic wants everywhere. \"--ui-numeric\": \"normal\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {
@@ -20383,6 +20981,24 @@
           },
           "default": "{ // Ink over paper. --ui-text-muted is the same ink at ~65% over white rather // than a neutral gray, so the quiet text stays in the same warm family // instead of turning blue-gray beside the accent. \"--ui-text\": \"#17160f\", \"--ui-text-muted\": \"#686763\", \"--ui-surface\": \"#ffffff\", \"--ui-surface-muted\": \"#f0f0f0\", // ~55% ink over white. Darker than it looks like it needs to be, because a // border is often the only thing bounding a white-on-white control, and // WCAG 1.4.11 wants 3:1 against both adjacent surfaces for that: this is // 3.55:1 on white and 3.12:1 on the muted surface. The lighter ~40% ink // (#a2a29f) reads better but only reaches 2.56:1, and 1.5px of extra weight // does not buy an exemption. Still short of fully black, which at this width // would turn every bordered surface into a hard box. \"--ui-border\": \"#898883\", \"--ui-tooltip\": \"#17160f\", \"--ui-overlay\": \"rgb(23 22 15 / 0.45)\", // The \"just changed\" flash tints toward the accent instead of amber, which // is the one warm hue this palette has no room for. \"--ui-highlight\": \"#dcdcff\", \"--ui-primary\": \"#0000ff\", \"--ui-primary-hover\": \"#0000cc\", \"--ui-info\": \"#0000ff\", \"--ui-info-hover\": \"#0000cc\", \"--ui-on-accent\": \"#ffffff\", // Solid and crisp at the reference's own 2px, not the default translucent // 3px halo — a blurred ring is the one soft edge this theme has nowhere to // put. \"--ui-focus-ring\": \"0 0 0 2px #0000ff\", // Ink CTA that lights up blue on hover, and inverts its two stops while // pressed. The border is ink at every state so the button keeps a defining // edge even once the fill goes blue. \"--ui-button-background\": \"#17160f\", \"--ui-button-background-hover\": \"#0000ff\", \"--ui-button-background-active\": \"#0000cc\", \"--ui-button-border\": \"#17160f\", \"--ui-button-danger-border\": \"#b91c1c\", // Secondary is the reference's ghost button: no fill, ink border, a paper // wash on hover and an accent border to echo the primary's hover. \"--ui-button-secondary-border\": \"#17160f\", \"--ui-button-secondary-border-hover\": \"#0000ff\", \"--ui-button-secondary-background-hover\": \"#f0f0f0\", \"--ui-button-secondary-surface-muted\": \"#f0f0f0\", // Non-button accents that can only take a plain color (a native input's // accent-color, range-slider's track/thumb) follow --ui-primary, not the // ink button fill — those are selection marks, not calls to action. \"--ui-button-accent\": \"#0000ff\", \"--ui-radius\": \"0\", \"--ui-radius-sm\": \"0\", \"--ui-radius-pill\": \"0\", \"--ui-radius-circle\": \"0\", \"--ui-shadow\": \"0 0 0 1.5px rgb(23 22 15 / 0.24)\", \"--ui-shadow-lg\": \"0 0 0 1.5px #17160f\", \"--ui-border-width\": \"1.5px\", \"--ui-label-transform\": \"uppercase\", \"--ui-numeric\": \"tabular-nums\", \"--ui-font\": '\"Space Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', }",
           "description": "\"Blueprint\" theme overrides, applied via `data-theme=\"blueprint\"` on `<html>`\n(see `generate-tokens-css.mjs`) — forces `color-scheme: light` like every\nother non-dark theme, and restyles the light palette as a technical catalog\n/ spec sheet: warm near-black ink on white paper, one pure-blue accent,\nsquare corners, and structure carried entirely by hairline rules instead of\nshadows.\n\nIt is the widest theme in the system, and the reason three token axes exist\nthat no earlier theme needed:\n\n- `--ui-font` is retargeted to a monospace stack. `darkTokenValues` notes\n  that shape and type tokens are theme-independent; `metro` already broke\n  that for shape, and this breaks it for the type *family* only. Type\n  *metrics* (size, weight, line height) remain unthemed in every theme —\n  they encode hierarchy, which is not a stylistic choice. \"Space Mono\"\n  leads the stack purely so a consumer who loads that webfont gets the\n  reference face automatically; with no external CSS at all it falls\n  straight through to the same system mono stack `--ui-font-mono` uses, so\n  the theme still renders correctly on its own.\n- `--ui-border-width` goes to `1.5px`. Every border in this theme is doing\n  the work a shadow does elsewhere, and at 1px those rules read as a faint\n  table rather than as drawn structure.\n- `--ui-label-transform` goes to `uppercase`, which is what makes chrome\n  micro-labels read as signage/spec-sheet keys. Only labels that name a\n  region or column carry this — never user content.\n- `--ui-numeric` goes to `tabular-nums`, so figures line up in a column and\n  do not jitter as they change.\n\nButtons are deliberately NOT the accent color. `--ui-primary` stays pure\nblue because it drives accents everywhere else (active tab underlines,\nselected states, links, the certification-style tints), but the primary\nbutton fill is overridden to ink through the `--ui-button-*` hooks and only\nturns blue on hover — a black-on-white CTA that lights up is the\ncatalog-print look, and a large pure-blue fill next to blue accents would\nflatten the two roles into one. That split is exactly what those hooks\nexist for (see `gradientTokenValues` above for the same technique).\n\nSemantic `danger`/`success`/`warning` keep their default hues: they encode\nmeaning rather than style, and the reference's blue-only restraint is an\neditorial choice a component library cannot make on a consumer's behalf.\n`--ui-info` is the exception — it is \"neutral notice\", which in this theme\nis precisely the accent, and the default sky blue would otherwise sit a few\ndegrees off the pure blue beside it and read as a mistake.\n\nShadows flatten to a hard ink ring rather than to `none`, for the same\nreason `metro` does it: `slide-panel` has no border of its own and would\notherwise lose its edge entirely."
+        },
+        {
+          "kind": "variable",
+          "name": "developerDarkTokenValues",
+          "type": {
+            "text": "Record<string, string>"
+          },
+          "default": "{ \"--ui-primary\": \"#83c167\", \"--ui-primary-hover\": \"#a3d488\", \"--ui-info\": \"#e08a4a\", \"--ui-info-hover\": \"#e8a06a\", \"--ui-danger\": \"#e0705f\", \"--ui-danger-hover\": \"#e88b7d\", \"--ui-success\": \"#83c167\", \"--ui-warning\": \"#d8a657\", \"--ui-warning-hover\": \"#e0b877\", // Dark ink, not white — the accent itself is light enough (8.3:1 against // it) to carry dark text, and that ink-on-green fill is the reference's own // CTA look. \"--ui-on-accent\": \"#0e0d0b\", \"--ui-text\": \"#d8d3c5\", \"--ui-text-muted\": \"#8b8270\", \"--ui-border\": \"#211f19\", \"--ui-surface\": \"#0e0d0b\", // Lighter than --ui-surface, same direction as darkTokenValues' own // surface-muted (an elevated panel reads lighter, not darker, once the base // is already near-black). \"--ui-surface-muted\": \"#161410\", // A translucent accent wash rather than a hand-picked solid, so the flash // stays legible without depending on exactly which dark literal the surface // ends up at. \"--ui-highlight\": \"rgb(131 193 103 / 0.25)\", \"--ui-tooltip\": \"#050504\", \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.12)\", \"--ui-overlay\": \"rgb(5 4 4 / 0.6)\", \"--ui-focus-ring\": \"0 0 0 3px rgb(131 193 103 / 0.45)\", \"--ui-radius\": \"0.25rem\", \"--ui-radius-sm\": \"0.125rem\", \"--ui-numeric\": \"tabular-nums\", \"--ui-font\": '\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', }",
+          "description": "\"Developer dark\" theme overrides, applied via `data-theme=\"developer-dark\"`\non `<html>` (see `generate-tokens-css.mjs`) — a true dark palette, not one\nlayered on the light palette, so it is handled like `\"dark\"` itself: its own\nexplicit `:root[data-theme=\"developer-dark\"]` block layered over\n`darkTokenValues` (not the light palette), needing no dark-media-query\nexclusion (see `scripts/tokens-css.mjs`'s `darkThemes` list, which merges\nthis map over `darkTokenValues` before emitting the block). Only tokens\nthat differ from `darkTokenValues` need to be listed here; anything not\nrepeated falls through to the same dark default `\"dark\"` itself uses, which\nis why this list happens to repeat nearly all of `darkTokenValues`'s own\nkeys — a dark theme rarely agrees with the *other* dark theme's colors.\nShape/type tokens not present in `darkTokenValues` either (radius-pill,\nshadow, border-width, label-transform) fall through one level further, to\nthe light palette's defaults, via the ordinary `:root` cascade.\n\nModeled on a real reference (a monospace, editor/terminal-chrome developer\ntool marketing page): near-black warm ink-well background, a warm off-white\nforeground, and one accent green used for links, focus rings, and button\nfills — with dark ink (not white) as the fill's foreground, since the\naccent itself is light enough to carry dark text at high contrast (8.3:1),\nmatching the reference's own \"ink CTA that fills with the accent\" button.\n\nLike `blueprintTokenValues`, this is a \"wide\" theme that also retunes shape\nand type: `--ui-font` retargets to a monospace stack (falls through to the\nsystem mono stack with zero webfont, same technique as blueprint's \"Space\nMono\"), corners are small but not squared (2–4px, not 0 — this theme reads\nas a dark code editor, not blueprint's flattened spec sheet), and\n`--ui-numeric: tabular-nums` keeps the diff/stat figures from jittering.\nUnlike `blueprint`, chrome labels stay sentence-case (`--ui-label-transform`\nis left at its default) — the reference's own section labels are lowercase\n`snake_case`, not shouted."
+        },
+        {
+          "kind": "variable",
+          "name": "developerLightTokenValues",
+          "type": {
+            "text": "Record<string, string>"
+          },
+          "default": "{ \"--ui-text\": \"#1a1813\", \"--ui-text-muted\": \"#6b6255\", \"--ui-surface\": \"#f3eee1\", \"--ui-surface-muted\": \"#e8e1cf\", \"--ui-border\": \"#d9d0ba\", \"--ui-tooltip\": \"#1a1813\", \"--ui-overlay\": \"rgb(26 24 19 / 0.45)\", \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-highlight\": \"#f0dfa0\", \"--ui-primary\": \"#457032\", \"--ui-primary-hover\": \"#3a6329\", \"--ui-info\": \"#8f5124\", \"--ui-info-hover\": \"#7a4420\", \"--ui-danger\": \"#a8402f\", \"--ui-danger-hover\": \"#8c3625\", \"--ui-success\": \"#457032\", \"--ui-warning\": \"#7c5d24\", \"--ui-warning-hover\": \"#5e4419\", \"--ui-focus-ring\": \"0 0 0 3px rgb(69 112 50 / 0.35)\", \"--ui-radius\": \"0.25rem\", \"--ui-radius-sm\": \"0.125rem\", \"--ui-numeric\": \"tabular-nums\", \"--ui-font\": '\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', }",
+          "description": "\"Developer light\" theme overrides, applied via `data-theme=\"developer-light\"`\non `<html>` (see `generate-tokens-css.mjs`) — the light counterpart to\n`developerDarkTokenValues` above. The reference this pair is modeled on\nnever shipped a light mode (its own light-mode toggle is a running joke\nthat refuses to switch); this theme exists anyway, built from the two\ncolors that joke's own tooltip already uses (a warm cream bubble with near-\nblack ink) — the closest thing the reference gives to \"what its light mode\nwould have looked like.\"\n\nLayered on the light palette like `gradient`/`metro`/`blueprint` (needs the\ndark-media-query exclusion, hence `lightThemes` in `generate-tokens-css.mjs`\nrather than `darkThemes`), so only the differences from `tokenValues` are\nlisted here — same convention as `blueprintTokenValues`.\n\nThe accent green is darkened one step further than `developerDarkTokenValues`'s\nbrighter green — that brighter green fails contrast against a light paper\nboth as plain text (1.85:1) and as a white-on-fill button (2.15:1); this\ndarker step clears both (5.0:1 text, 5.8:1 white-on-fill), so this theme\nkeeps `--ui-on-accent` at its default white rather than reusing the dark\ntheme's ink-on-accent trick, which does not have enough contrast at this\ndarker shade (3.65:1 unbolded)."
         },
         {
           "kind": "variable",
@@ -20429,6 +21045,22 @@
           "name": "blueprintTokenValues",
           "declaration": {
             "name": "blueprintTokenValues",
+            "module": "src/tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "developerDarkTokenValues",
+          "declaration": {
+            "name": "developerDarkTokenValues",
+            "module": "src/tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "developerLightTokenValues",
+          "declaration": {
+            "name": "developerLightTokenValues",
             "module": "src/tokens.ts"
           }
         },
@@ -22082,6 +22714,70 @@
           "declaration": {
             "name": "WeightBarChart",
             "module": "src/weight-bar-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/window-chrome.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Sticky editor/terminal-style chrome bar for the top edge of a page or panel:\nthree decorative traffic-light dots, a filename-style label, and a\nright-aligned actions slot for controls such as a theme toggle.\n\nThe text property is named `label` rather than `title`, matching\n`page-header`'s text-property precedent and avoiding confusion with the\nglobal HTML `title` tooltip attribute. The dots are purely decorative, are\nhidden from assistive technology, and reuse the semantic `--ui-danger`,\n`--ui-warning`, and `--ui-success` tokens rather than introducing\nchrome-only colors.\n\nIt sticks with `position: sticky; top: 0`, so callers must place it at the\ntop of the element that actually scrolls. Its `z-index: 1` is a deliberate\nplain literal: just enough to keep the bar above in-flow content as it\nsticks, while staying far below the shared overlay stack (dialogs/popovers\nstart at 100), so it does not participate in `utils/layer-stack.ts`.",
+          "name": "WindowChrome",
+          "slots": [
+            {
+              "description": "Optional right-aligned controls such as theme or view toggles.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Filename-style text shown beside the decorative dots.",
+              "attribute": "label"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Filename-style text shown beside the decorative dots.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "window-chrome",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "WindowChrome",
+          "declaration": {
+            "name": "WindowChrome",
+            "module": "src/window-chrome.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "window-chrome",
+          "declaration": {
+            "name": "WindowChrome",
+            "module": "src/window-chrome.ts"
           }
         }
       ]

@@ -207,11 +207,19 @@ real `modal-dialog`/`confirm-dialog`/`popover-panel`/`slide-panel` (all
   external CSS; `tokens.ts` is the single source of truth for what those
   fallback values are. Any new `--ui-*` usage must carry the exact fallback
   from `tokenValues`.
-- Five themes ship, selected by `data-theme` on `<html>`: `light`, `dark`,
-  `gradient`, `metro`, and `blueprint` (a monospace ink-on-paper spec sheet
-  ruled by 1.5px hairlines, with one pure-blue accent). A new theme is a
+- Seven themes ship, selected by `data-theme` on `<html>`: `light`, `dark`,
+  `gradient`, `metro`, `blueprint` (a monospace ink-on-paper spec sheet ruled
+  by 1.5px hairlines, with one pure-blue accent), and `developer-dark` /
+  `developer-light` (a JetBrains-Mono-styled editor/terminal theme — a
+  near-black warm palette with a green accent, modeled on a real developer-tool
+  marketing page, plus a light counterpart of our own design since that
+  reference never shipped one). A new theme built on the light palette is a
   `*TokenValues` map in `tokens.ts` plus an entry in `lightThemes` in
-  `generate-tokens-css.mjs` and in the playground picker in `demo/main.ts`.
+  `generate-tokens-css.mjs`; a new *dark* theme (a true dark palette, not one
+  layered on light — like `dark` and `developer-dark`) is an entry in
+  `darkThemes` instead, which layers over `darkTokenValues` rather than the
+  light palette and needs no dark-media-query exclusion. Either way, also add
+  an entry to the playground picker in `demo/main.ts`.
 - Type is tokenized: sizes (`--ui-font-size`, `-sm`, `-xs`, `-lg` = `1rem`),
   weights (`--ui-font-weight-regular|medium|semibold|bold` = 400/500/600/700),
   line heights (`--ui-line-height-glyph|tight|normal` = 1/1.25/1.5), and
@@ -356,10 +364,11 @@ authored `docs/layouts/*.md` layout recipes.
 Four tools:
 - `list_components` — every tag + one-line description.
 - `get_component_docs(tag)` — the full generated Markdown doc for one tag.
-- `list_layouts` — every dashboard page template (layout recipe) + a one-line
-  summary.
+- `list_layouts` — every page template (layout recipe) + a one-line summary.
 - `get_layout(name)` — the full recipe for one page template (which components
-  fill which `app-shell` slots, markup, and notes).
+  fill which `app-shell` slots and how, plus markup and notes — or, for a
+  shell-less page like a marketing landing page, the section-by-section
+  component composition instead).
 
 The layout tools read `docs/layouts/*.md` directly (the `name` is the filename
 without `.md`); add a page template by adding a recipe there (and, ideally, a

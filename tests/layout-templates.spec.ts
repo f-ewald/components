@@ -79,4 +79,43 @@ test.describe("layout templates", () => {
     await page.locator('[data-testid="tpl-form"] ui-button[type="submit"]').click();
     await expect(page.locator('[data-tpl-form-status]')).toHaveText("Saved.");
   });
+
+  test("marketing-landing renders every section, shell-less, with real data", async ({ page }) => {
+    await page.goto("/demo/layouts/marketing-landing.html");
+    // No app-shell here — it's the one recipe that isn't a dashboard page.
+    await expect(page.locator("app-shell")).toHaveCount(0);
+    await expect(page.locator('[data-testid="tpl-chrome"]')).toContainText("README.md");
+    await expect(page.locator('[data-testid="tpl-diff"] .line')).toHaveCount(5);
+    await expect(page.locator('[data-testid="tpl-step-ladder"] .rung')).toHaveCount(5);
+    await expect(page.locator('[data-testid="tpl-stat-strip"] .item')).toHaveCount(5);
+    await expect(page.locator('[data-testid="tpl-terminal"] .line')).toHaveCount(3);
+    await expect(page.locator('[data-testid="tpl-commands-table"] tbody tr')).toHaveCount(3);
+  });
+
+  test("marketing-landing's theme toggle actually switches developer-dark/developer-light", async ({
+    page,
+  }) => {
+    await page.goto("/demo/layouts/marketing-landing.html");
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe(
+      "developer-dark",
+    );
+    const surfaceBefore = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue("--ui-surface").trim(),
+    );
+
+    await page.locator('[data-testid="tpl-theme-toggle"]').click();
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe(
+      "developer-light",
+    );
+    const surfaceAfter = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue("--ui-surface").trim(),
+    );
+    expect(surfaceAfter).not.toBe(surfaceBefore);
+
+    // Toggling back returns to the original dark palette.
+    await page.locator('[data-testid="tpl-theme-toggle"]').click();
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe(
+      "developer-dark",
+    );
+  });
 });

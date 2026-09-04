@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="developer-dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>marketing-landing template — @f-ewald/components</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: var(--ui-surface, #ffffff);
+        color: var(--ui-text, #0f172a);
+        font-family: var(--ui-font, ui-sans-serif, system-ui, sans-serif);
+      }
+      .wrap {
+        max-width: 48rem;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+      header.hero {
+        padding: 4rem 0 3.5rem;
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(2.25rem, 6vw, 3.5rem);
+        line-height: 1;
+        font-weight: var(--ui-font-weight-bold, 700);
+      }
+      .tag {
+        margin: 0.75rem 0 0;
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        font-weight: var(--ui-font-weight-medium, 500);
+      }
+      .sub {
+        max-width: 42rem;
+        margin: 1rem 0 0;
+        color: var(--ui-text-muted, #64748b);
+        line-height: var(--ui-line-height-normal, 1.5);
+      }
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.75rem;
+      }
+      ui-admonition {
+        margin-top: 1.75rem;
+      }
+      section {
+        padding: 3.25rem 0;
+        border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
+      }
+      section h2 {
+        margin: 0 0 1.25rem;
+        max-width: 26ch;
+        font-size: clamp(1.25rem, 3vw, 1.6rem);
+        line-height: 1.3;
+        font-weight: var(--ui-font-weight-bold, 700);
+      }
+      .others {
+        margin-top: 1.5rem;
+      }
+      .other-agent {
+        font-weight: var(--ui-font-weight-semibold, 600);
+      }
+      .other-command {
+        display: block;
+        margin-top: 0.25rem;
+        overflow-wrap: anywhere;
+        font-family: var(--ui-font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        color: var(--ui-text-muted, #64748b);
+      }
+      .levels {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 1rem;
+      }
+      .levels p {
+        margin: 0.5rem 0 0;
+        color: var(--ui-text-muted, #64748b);
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        line-height: var(--ui-line-height-normal, 1.5);
+      }
+      .level-default {
+        margin-bottom: 0.5rem;
+      }
+      footer {
+        padding: 3rem 0 4rem;
+      }
+      .prompt {
+        margin: 1rem 0 0;
+        font-family: var(--ui-font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        color: var(--ui-text-muted, #64748b);
+      }
+    </style>
+  </head>
+  <body>
+    <window-chrome label="~/product — README.md" data-testid="tpl-chrome">
+      <icon-button
+        id="theme-toggle"
+        slot="actions"
+        data-testid="tpl-theme-toggle"
+        label="Toggle light/dark"
+      ></icon-button>
+    </window-chrome>
+
+    <main class="wrap">
+      <header class="hero">
+        <h1>product<blink-cursor></blink-cursor></h1>
+        <p class="tag">One line. It works.</p>
+        <p class="sub">
+          A ruleset that makes your AI coding agent write the least code that
+          works — like a senior dev who has been paged at 3am one too many
+          times.
+        </p>
+        <div class="cta">
+          <ui-button variant="primary">[ view on github ]</ui-button>
+          <ui-button variant="secondary">[ install ]</ui-button>
+        </div>
+        <ui-admonition variant="warning" data-testid="tpl-admonition">
+          Something's coming. Be the first to know.
+          <ui-button slot="actions" size="sm" variant="secondary">Notify me</ui-button>
+        </ui-admonition>
+      </header>
+
+      <section id="why" data-testid="tpl-why">
+        <comment-label>the_whole_idea</comment-label>
+        <h2>Your agent reaches for fifty lines. The job needs one.</h2>
+        <code-diff
+          id="landing-diff"
+          data-testid="tpl-diff"
+          filename="cache.py"
+          stat="&minus;48  +1"
+        ></code-diff>
+      </section>
+
+      <section id="ladder" data-testid="tpl-ladder">
+        <comment-label>the_ladder</comment-label>
+        <h2>Stop at the first rung that holds.</h2>
+        <step-ladder id="landing-ladder" data-testid="tpl-step-ladder"></step-ladder>
+      </section>
+
+      <section id="benchmarks" data-testid="tpl-benchmarks">
+        <comment-label>benchmarks</comment-label>
+        <h2>Less code. Fewer tokens. Same safety.</h2>
+        <stat-strip id="landing-stats" data-testid="tpl-stat-strip"></stat-strip>
+      </section>
+
+      <section id="install" data-testid="tpl-install">
+        <comment-label>install</comment-label>
+        <h2>Two lines to get started.</h2>
+        <terminal-block id="landing-terminal" data-testid="tpl-terminal"></terminal-block>
+        <div class="others">
+          <tile-grid id="landing-others" data-testid="tpl-others"></tile-grid>
+        </div>
+      </section>
+
+      <section id="commands" data-testid="tpl-commands">
+        <comment-label>commands</comment-label>
+        <h2>Drive it from chat.</h2>
+        <data-table id="landing-commands" data-testid="tpl-commands-table"></data-table>
+      </section>
+
+      <section id="levels" data-testid="tpl-levels">
+        <comment-label>intensity</comment-label>
+        <h2>Pick how much.</h2>
+        <div class="levels">
+          <frame-box label="mode = lite">
+            <p>Builds what you asked, names the lazier alternative in one line.</p>
+          </frame-box>
+          <frame-box label="mode = full">
+            <status-pill label="default" color="warning" class="level-default"></status-pill>
+            <p>The ladder, enforced. Stdlib and native first.</p>
+          </frame-box>
+          <frame-box label="mode = ultra">
+            <p>YAGNI extremist. Ships the one-liner, challenges the rest.</p>
+          </frame-box>
+        </div>
+      </section>
+
+      <footer>
+        <comment-label prefix="//" italic>the best code is the code never written.</comment-label>
+        <p class="prompt">~/product &#10095; <blink-cursor></blink-cursor></p>
+      </footer>
+    </main>
+
+    <script type="module" src="./marketing-landing.ts"></script>
+  </body>
+</html>

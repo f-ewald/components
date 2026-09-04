@@ -540,6 +540,39 @@ test("every light-palette theme is excluded from the dark media query", async ()
   }
 });
 
+test("every dark-family theme layers over darkTokenValues with no media-query exclusion", async () => {
+  // A theme built on the dark palette (e.g. "dark" itself, or a second true
+  // dark theme like "developer-dark") never needs the :not() exclusion the
+  // light-based themes require: its own :root[data-theme="x"] block (0,2,0)
+  // already outranks the bare :root (0,1,0) the dark media query types into,
+  // regardless of the reader's OS preference. Driven through synthetic themes
+  // so this checks the generator's logic rather than today's theme list.
+  const { buildTokensCss } = await import(path.join(root, "scripts/tokens-css.mjs"));
+  const darkThemes: [string, Record<string, string>][] = [
+    ["dark", {}],
+    ["gamma", { "--ui-primary": "#222222" }],
+  ];
+  const css = buildTokensCss({
+    tokenValues: { "--ui-primary": "#000000" },
+    darkTokenValues: { "--ui-primary": "#ffffff", "--ui-text": "#eeeeee" },
+    lightThemes: [],
+    darkThemes,
+  });
+
+  // "dark" (values {}) falls through entirely to darkTokenValues.
+  expect(css).toContain(':root[data-theme="dark"] {\n  color-scheme: dark;\n  --ui-primary: #ffffff;\n  --ui-text: #eeeeee;\n}');
+  // "gamma" overrides --ui-primary but still carries darkTokenValues' --ui-text.
+  expect(css).toContain(':root[data-theme="gamma"] {\n  color-scheme: dark;\n  --ui-primary: #222222;\n  --ui-text: #eeeeee;\n}');
+  // Neither dark-family theme should ever appear in the dark media query's
+  // exclusion list — that list is only for light-based themes.
+  const darkSelector = css.match(/@media \(prefers-color-scheme: dark\) \{\n([^\n]+)\{/)?.[1];
+  for (const [name] of darkThemes) {
+    expect(darkSelector, `${name} not excluded from dark media query`).not.toContain(
+      `:not([data-theme="${name}"])`,
+    );
+  }
+});
+
 test("pill and circle radii are tokenized, not hardcoded", () => {
   // A literal 9999px/50% silently opts that shape out of every theme — it is
   // exactly what left metro's square-corner theme with round chips, avatars and

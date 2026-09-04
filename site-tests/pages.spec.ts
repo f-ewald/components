@@ -150,7 +150,14 @@ test.describe("GitHub Pages artifact", () => {
 
   test("publishes the full-page layout template demos", async ({page}) => {
     const failures = watchSiteRequests(page);
-    const templates = ["list-only", "list-detail", "detail-only", "record-detail", "form-page"];
+    const templates = [
+      "list-only",
+      "list-detail",
+      "detail-only",
+      "record-detail",
+      "form-page",
+      "marketing-landing",
+    ];
     for (const name of templates) {
       const response = await page.request.get(`/playground/demo/layouts/${name}.html`);
       expect(response.ok(), `${name} template published`).toBe(true);

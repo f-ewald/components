@@ -8,7 +8,7 @@
  * `docs/layouts/*.md` recipes:
  * - `list_components`: every tag name + one-line description.
  * - `get_component_docs`: the full generated Markdown doc for one tag.
- * - `list_layouts`: every dashboard page template + one-line summary.
+ * - `list_layouts`: every page template + one-line summary.
  * - `get_layout`: the full recipe for one page template.
  * - `list_icons`: every icon, its default size, and its intended use case.
  *

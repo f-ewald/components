@@ -74,8 +74,8 @@ import "@f-ewald/components/photo-gallery.js";
 | `--ui-font-size-sm` |
 | `--ui-line-height-normal` |
 | `--ui-line-height-tight` |
-| `--ui-on-accent` |
 | `--ui-overlay` |
+| `--ui-overlay-text` |
 | `--ui-primary` |
 | `--ui-radius` |
 | `--ui-radius-pill` |

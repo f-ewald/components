@@ -113,6 +113,7 @@ _None._
 | `--ui-button-danger-background-active` |
 | `--ui-button-danger-background-hover` |
 | `--ui-button-danger-border` |
+| `--ui-button-danger-text` |
 | `--ui-button-highlight` |
 | `--ui-button-secondary-` |
 | `--ui-button-secondary-background` |
@@ -120,6 +121,7 @@ _None._
 | `--ui-button-secondary-background-hover` |
 | `--ui-button-secondary-border` |
 | `--ui-button-secondary-border-hover` |
+| `--ui-button-text` |
 | `--ui-button-text-shadow` |
 | `--ui-danger` |
 | `--ui-danger-hover` |

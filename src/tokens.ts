@@ -26,6 +26,14 @@ export const tokenValues: Record<string, string> = {
   "--ui-button-background-hover": "var(--ui-primary-hover, #4338ca)",
   "--ui-button-background-active": "var(--ui-button-background, var(--ui-primary, #4f46e5))",
   "--ui-button-border": "transparent",
+  // The primary/danger fill's own text color, split out from --ui-on-accent
+  // (which every button used directly until now): --ui-on-accent means "text
+  // on any solid semantic fill" and a theme may need to darken it for a light
+  // accent color (see developerDarkTokenValues), but that darkening should
+  // only reach the button itself if the theme wants it to. Defaults to
+  // --ui-on-accent unchanged, so every existing theme renders identically.
+  "--ui-button-text": "var(--ui-on-accent, #ffffff)",
+  "--ui-button-danger-text": "var(--ui-on-accent, #ffffff)",
   // The bordered, transparent-background secondary variant's equivalents —
   // shared with confirm-dialog's Cancel button, which is the same visual
   // pattern. Defaults reproduce today's literal secondary styling exactly
@@ -109,8 +117,19 @@ export const tokenValues: Record<string, string> = {
   "--ui-surface-muted": "#f8fafc", // slate-50
   "--ui-highlight": "#fde68a", // amber-200 — transient "just changed" flash
   "--ui-tooltip": "#0f172a", // slate-900
+  // The tooltip's own foreground, kept separate from --ui-on-accent: that
+  // token means "text on a solid *semantic* fill" (a button, a toast), which
+  // a theme may need to darken if it makes those fills light (see
+  // developerDarkTokenValues). --ui-tooltip's own fill is a dedicated dark
+  // surface in every theme regardless, so its text stays white unconditionally.
+  "--ui-tooltip-text": "#ffffff",
   "--ui-hover-overlay": "rgb(255 255 255 / 0.32)",
   "--ui-overlay": "rgb(15 23 42 / 0.45)", // slate-900 / 45%
+  // Same reasoning as --ui-tooltip-text: a control drawn directly on the
+  // --ui-overlay scrim (photo-gallery's arrow buttons) needs text/icon
+  // contrast against that always-dark backdrop, not against whatever a theme
+  // repoints --ui-on-accent to for its semantic fills.
+  "--ui-overlay-text": "#ffffff",
 
   // Shape / depth
   "--ui-radius": "0.5rem", // rounded-lg
@@ -427,6 +446,129 @@ export const blueprintTokenValues: Record<string, string> = {
   "--ui-numeric": "tabular-nums",
   "--ui-font":
     '"Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+};
+
+/**
+ * "Developer dark" theme overrides, applied via `data-theme="developer-dark"`
+ * on `<html>` (see `generate-tokens-css.mjs`) — a true dark palette, not one
+ * layered on the light palette, so it is handled like `"dark"` itself: its own
+ * explicit `:root[data-theme="developer-dark"]` block layered over
+ * `darkTokenValues` (not the light palette), needing no dark-media-query
+ * exclusion (see `scripts/tokens-css.mjs`'s `darkThemes` list, which merges
+ * this map over `darkTokenValues` before emitting the block). Only tokens
+ * that differ from `darkTokenValues` need to be listed here; anything not
+ * repeated falls through to the same dark default `"dark"` itself uses, which
+ * is why this list happens to repeat nearly all of `darkTokenValues`'s own
+ * keys — a dark theme rarely agrees with the *other* dark theme's colors.
+ * Shape/type tokens not present in `darkTokenValues` either (radius-pill,
+ * shadow, border-width, label-transform) fall through one level further, to
+ * the light palette's defaults, via the ordinary `:root` cascade.
+ *
+ * Modeled on a real reference (a monospace, editor/terminal-chrome developer
+ * tool marketing page): near-black warm ink-well background, a warm off-white
+ * foreground, and one accent green used for links, focus rings, and button
+ * fills — with dark ink (not white) as the fill's foreground, since the
+ * accent itself is light enough to carry dark text at high contrast (8.3:1),
+ * matching the reference's own "ink CTA that fills with the accent" button.
+ *
+ * Like `blueprintTokenValues`, this is a "wide" theme that also retunes shape
+ * and type: `--ui-font` retargets to a monospace stack (falls through to the
+ * system mono stack with zero webfont, same technique as blueprint's "Space
+ * Mono"), corners are small but not squared (2–4px, not 0 — this theme reads
+ * as a dark code editor, not blueprint's flattened spec sheet), and
+ * `--ui-numeric: tabular-nums` keeps the diff/stat figures from jittering.
+ * Unlike `blueprint`, chrome labels stay sentence-case (`--ui-label-transform`
+ * is left at its default) — the reference's own section labels are lowercase
+ * `snake_case`, not shouted.
+ */
+export const developerDarkTokenValues: Record<string, string> = {
+  "--ui-primary": "#83c167",
+  "--ui-primary-hover": "#a3d488",
+  "--ui-info": "#e08a4a",
+  "--ui-info-hover": "#e8a06a",
+  "--ui-danger": "#e0705f",
+  "--ui-danger-hover": "#e88b7d",
+  "--ui-success": "#83c167",
+  "--ui-warning": "#d8a657",
+  "--ui-warning-hover": "#e0b877",
+  // Dark ink, not white — the accent itself is light enough (8.3:1 against
+  // it) to carry dark text, and that ink-on-green fill is the reference's own
+  // CTA look.
+  "--ui-on-accent": "#0e0d0b",
+  "--ui-text": "#d8d3c5",
+  "--ui-text-muted": "#8b8270",
+  "--ui-border": "#211f19",
+  "--ui-surface": "#0e0d0b",
+  // Lighter than --ui-surface, same direction as darkTokenValues' own
+  // surface-muted (an elevated panel reads lighter, not darker, once the base
+  // is already near-black).
+  "--ui-surface-muted": "#161410",
+  // A translucent accent wash rather than a hand-picked solid, so the flash
+  // stays legible without depending on exactly which dark literal the surface
+  // ends up at.
+  "--ui-highlight": "rgb(131 193 103 / 0.25)",
+  "--ui-tooltip": "#050504",
+  "--ui-hover-overlay": "rgb(255 255 255 / 0.12)",
+  "--ui-overlay": "rgb(5 4 4 / 0.6)",
+  "--ui-focus-ring": "0 0 0 3px rgb(131 193 103 / 0.45)",
+
+  "--ui-radius": "0.25rem",
+  "--ui-radius-sm": "0.125rem",
+  "--ui-numeric": "tabular-nums",
+  "--ui-font":
+    '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+};
+
+/**
+ * "Developer light" theme overrides, applied via `data-theme="developer-light"`
+ * on `<html>` (see `generate-tokens-css.mjs`) — the light counterpart to
+ * `developerDarkTokenValues` above. The reference this pair is modeled on
+ * never shipped a light mode (its own light-mode toggle is a running joke
+ * that refuses to switch); this theme exists anyway, built from the two
+ * colors that joke's own tooltip already uses (a warm cream bubble with near-
+ * black ink) — the closest thing the reference gives to "what its light mode
+ * would have looked like."
+ *
+ * Layered on the light palette like `gradient`/`metro`/`blueprint` (needs the
+ * dark-media-query exclusion, hence `lightThemes` in `generate-tokens-css.mjs`
+ * rather than `darkThemes`), so only the differences from `tokenValues` are
+ * listed here — same convention as `blueprintTokenValues`.
+ *
+ * The accent green is darkened one step further than `developerDarkTokenValues`'s
+ * brighter green — that brighter green fails contrast against a light paper
+ * both as plain text (1.85:1) and as a white-on-fill button (2.15:1); this
+ * darker step clears both (5.0:1 text, 5.8:1 white-on-fill), so this theme
+ * keeps `--ui-on-accent` at its default white rather than reusing the dark
+ * theme's ink-on-accent trick, which does not have enough contrast at this
+ * darker shade (3.65:1 unbolded).
+ */
+export const developerLightTokenValues: Record<string, string> = {
+  "--ui-text": "#1a1813",
+  "--ui-text-muted": "#6b6255",
+  "--ui-surface": "#f3eee1",
+  "--ui-surface-muted": "#e8e1cf",
+  "--ui-border": "#d9d0ba",
+  "--ui-tooltip": "#1a1813",
+  "--ui-overlay": "rgb(26 24 19 / 0.45)",
+  "--ui-hover-overlay": "rgb(255 255 255 / 0.32)",
+  "--ui-highlight": "#f0dfa0",
+
+  "--ui-primary": "#457032",
+  "--ui-primary-hover": "#3a6329",
+  "--ui-info": "#8f5124",
+  "--ui-info-hover": "#7a4420",
+  "--ui-danger": "#a8402f",
+  "--ui-danger-hover": "#8c3625",
+  "--ui-success": "#457032",
+  "--ui-warning": "#7c5d24",
+  "--ui-warning-hover": "#5e4419",
+  "--ui-focus-ring": "0 0 0 3px rgb(69 112 50 / 0.35)",
+
+  "--ui-radius": "0.25rem",
+  "--ui-radius-sm": "0.125rem",
+  "--ui-numeric": "tabular-nums",
+  "--ui-font":
+    '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
 };
 
 /**

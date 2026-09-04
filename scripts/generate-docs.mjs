@@ -136,6 +136,44 @@ const PLAYGROUND_ANCHORS = {
 
 /** One copy-paste usage example per component, mirroring the playground snippets. */
 const EXAMPLES = {
+  "blink-cursor": `<h1>ponytail<blink-cursor></blink-cursor></h1>
+<p>~/ponytail &#10095; <blink-cursor char="|"></blink-cursor></p>`,
+  "comment-label": `<comment-label>the_whole_idea</comment-label>
+<comment-label prefix="//" italic>the best code is the code never written.</comment-label>`,
+  "stat-strip": `<stat-strip></stat-strip>
+<script type="module">
+  document.querySelector("stat-strip").items = [
+    { value: "54%", label: "less code" },
+    { value: "22%", label: "fewer tokens" },
+    { value: "100%", label: "safety kept" },
+  ];
+</script>`,
+  "step-ladder": `<step-ladder></step-ladder>
+<script type="module">
+  document.querySelector("step-ladder").items = [
+    { title: "Does this need to exist?", description: "Speculative need = skip it." },
+    { title: "Already in this codebase?", description: "Reuse the helper that already lives here." },
+    { title: "Does the standard library do it?", description: "Use it." },
+  ];
+</script>`,
+  "terminal-block": `<terminal-block></terminal-block>
+<script type="module">
+  document.querySelector("terminal-block").lines = [
+    { type: "comment", text: "# Claude Code" },
+    { type: "prompt", text: "/plugin marketplace add example/example" },
+    { type: "prompt", text: "/plugin install example@example" },
+  ];
+</script>`,
+  "code-diff": `<code-diff filename="cache.py" stat="&minus;48  +1"></code-diff>
+<script type="module">
+  document.querySelector("code-diff").lines = [
+    { type: "del", text: "class CacheManager:" },
+    { type: "add", text: "@lru_cache(maxsize=1000)" },
+  ];
+</script>`,
+  "window-chrome": `<window-chrome label="~/product — README.md">
+  <icon-button slot="actions" label="Toggle theme"></icon-button>
+</window-chrome>`,
   "ui-checkbox": `<ui-checkbox label="Subscribe to updates"></ui-checkbox>
 <ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>
 <!-- Slot the label when it needs its own markup; it overrides the property -->

@@ -49,3 +49,4 @@ _None._
 | `--ui-primary` |
 | `--ui-text-muted` |
 | `--ui-tooltip` |
+| `--ui-tooltip-text` |

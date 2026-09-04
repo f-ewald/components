@@ -104,7 +104,7 @@ export class UiButton extends LitElement {
       .btn.primary {
         background: var(--ui-button-background, var(--ui-primary, #4f46e5));
         border-color: var(--ui-button-border, transparent);
-        color: var(--ui-on-accent, #ffffff);
+        color: var(--ui-button-text, var(--ui-on-accent, #ffffff));
         box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
         text-shadow: var(--ui-button-text-shadow, none);
       }
@@ -144,7 +144,7 @@ export class UiButton extends LitElement {
       .btn.danger {
         background: var(--ui-button-danger-background, var(--ui-danger, #dc2626));
         border-color: var(--ui-button-danger-border, transparent);
-        color: var(--ui-on-accent, #ffffff);
+        color: var(--ui-button-danger-text, var(--ui-on-accent, #ffffff));
         box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
         text-shadow: var(--ui-button-text-shadow, none);
       }

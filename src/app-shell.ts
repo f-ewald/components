@@ -223,7 +223,7 @@ export class AppShell extends LitElement {
         padding: 0.25rem 0.5rem;
         border-radius: var(--ui-radius-sm, 0.25rem);
         background: var(--ui-tooltip, #0f172a);
-        color: var(--ui-on-accent, #ffffff);
+        color: var(--ui-tooltip-text, #ffffff);
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
         font-size: var(--ui-font-size-sm, 0.75rem);
         line-height: var(--ui-line-height-tight, 1.25);

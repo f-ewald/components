@@ -19,6 +19,7 @@ export default defineConfig({
         "detail-only": resolve(dir, "demo/layouts/detail-only.html"),
         "record-detail": resolve(dir, "demo/layouts/record-detail.html"),
         "form-page": resolve(dir, "demo/layouts/form-page.html"),
+        "marketing-landing": resolve(dir, "demo/layouts/marketing-landing.html"),
       },
     },
   },

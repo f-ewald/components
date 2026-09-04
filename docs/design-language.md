@@ -24,29 +24,41 @@ defines the details used when creating or reviewing components.
 - Themes are single-valued and mutually exclusive, selected by `data-theme` on
   `<html>`: `dark` and `light` force one of the two flat palettes, `gradient`
   glosses buttons and toasts, `metro` squares corners and flattens shadows over
-  a blue accent, and `blueprint` restyles the palette as a monospace technical
+  a blue accent, `blueprint` restyles the palette as a monospace technical
   spec sheet — ink on paper, one pure-blue accent, square corners, and
-  structure carried by 1.5px hairline rules instead of shadows. `dark` aside,
-  each is layered on the light palette and
-  must be excluded from `tokens.css`'s `prefers-color-scheme: dark` media query
-  — that selector outranks a bare `[data-theme]`, so a missing exclusion yields
-  a half-dark hybrid rather than an outright failure. Adding a theme therefore
-  means adding it to `lightThemes` in `generate-tokens-css.mjs`, which derives
-  both the block and the exclusion from that one list.
+  structure carried by 1.5px hairline rules instead of shadows — and
+  `developer-dark`/`developer-light` restyle it as a monospace editor/terminal
+  theme — a near-black warm palette (or its light counterpart) with one green
+  accent, small (not squared) corners, and chrome micro-labels left in
+  sentence case rather than shouted.
+  `dark`/`developer-dark` aside, each is layered on the light palette and must
+  be excluded from `tokens.css`'s `prefers-color-scheme: dark` media query —
+  that selector outranks a bare `[data-theme]`, so a missing exclusion yields
+  a half-dark hybrid rather than an outright failure. Adding a theme layered on
+  the light palette therefore means adding it to `lightThemes` in
+  `generate-tokens-css.mjs`, which derives both the block and the exclusion
+  from that one list. Adding a second *true dark* theme (like
+  `developer-dark`) instead means adding it to `darkThemes`, which layers the
+  theme's overrides over `darkTokenValues` and needs no such exclusion, since
+  its own `[data-theme]` block already outranks the bare `:root` the media
+  query types into regardless of the reader's OS preference.
 - Colors are the normal subject of a theme. Three other axes are themeable, each
   introduced by exactly one theme and each defaulting to the behavior that
   predates it:
-  - **Shape** — `metro` and `blueprint` set every `--ui-radius*` to `0`.
+  - **Shape** — `metro` and `blueprint` set every `--ui-radius*` to `0`;
+    `developer-dark`/`developer-light` set `--ui-radius`/`--ui-radius-sm` to a
+    small but non-zero step (`0.25rem`/`0.125rem`) rather than squaring them.
   - **Border weight** — `--ui-border-width` (`1px`), which `blueprint` takes to
     `1.5px`. Every genuine surface or control border reads it; see "Borders"
     below for what is deliberately excluded.
   - **Label case** — `--ui-label-transform` (`none`), which `blueprint` takes to
-    `uppercase`, and `--ui-numeric` (`normal`), which it takes to
-    `tabular-nums`.
+    `uppercase`, and `--ui-numeric` (`normal`), which `blueprint` and
+    `developer-dark`/`developer-light` take to `tabular-nums`.
   - **Type family** — `--ui-font` only. `blueprint` retargets it to a monospace
-    stack led by "Space Mono", which falls through to the system mono stack when
-    no webfont is loaded, so the theme still renders correctly with zero
-    external CSS.
+    stack led by "Space Mono", and `developer-dark`/`developer-light` retarget
+    it to one led by "JetBrains Mono" — both fall through to the system mono
+    stack when no webfont is loaded, so the theme still renders correctly with
+    zero external CSS.
   Type *metrics* — size, weight, line height, tracking — are never themed in any
   theme: they encode hierarchy rather than style.
 - Semantic states use `primary`, `info`, `success`, `warning`, and `danger`.
@@ -106,8 +118,10 @@ defines the details used when creating or reviewing components.
   applies to states that already resolve to an opaque value
   (`--ui-button-secondary-surface-muted`, `--ui-surface-muted`), nor to
   elements that draw a *line* or a *mark* rather than a surface —
-  `content-divider`'s rule, `calendar-month`'s entry underline, and
-  `app-sidebar`'s footer, which sits on the sidebar's own paper. Those three
+  `content-divider`'s rule, `calendar-month`'s entry underline,
+  `app-sidebar`'s footer, which sits on the sidebar's own paper, and
+  `step-ladder`'s rung border, which separates rows the same way
+  `content-divider`'s rule does. Those four
   are the allowlist in `design-tests/opaque-surfaces.spec.ts`, which walks
   every shadow root under the blueprint theme and fails on any bordered,
   see-through surface that is not one of them.
@@ -411,10 +425,15 @@ backbone, and `app-sidebar`, `action-bar`, `page-header`, `pagination-nav`, and
 
 ### Templates
 
-The recipes under `docs/layouts/` compose these into four pages — list-only,
-list + detail, detail-only, and form — and the MCP `list_layouts` /
-`get_layout` tools serve them. Add a page by adding a `docs/layouts/<name>.md`
-recipe and, ideally, a matching full-page demo under `demo/layouts/`.
+The recipes under `docs/layouts/` compose these into five pages — list-only,
+list + detail, detail-only, form, and marketing-landing — and the MCP
+`list_layouts` / `get_layout` tools serve them. Add a page by adding a
+`docs/layouts/<name>.md` recipe and, ideally, a matching full-page demo under
+`demo/layouts/`. Not every recipe is an `app-shell` dashboard page:
+`marketing-landing` is shell-less — a `window-chrome`-topped page built
+directly from section components (`code-diff`, `step-ladder`, `stat-strip`,
+`terminal-block`, etc.), for a marketing/landing-page context rather than an
+authenticated app view.
 
 ## Playground and documentation
 

@@ -89,10 +89,16 @@ import {
   type BreadcrumbNavigateDetail,
   type SpecList,
   type CommentComposer,
+  type CodeDiff,
+  type StatStrip,
+  type StepLadder,
+  type TerminalBlock,
 } from "../src/index.js";
 import { addDays, toIsoDate } from "../src/utils/calendar.js";
 import {
   blueprintTokenValues,
+  developerDarkTokenValues,
+  developerLightTokenValues,
   gradientTokenValues,
   metroTokenValues,
 } from "../src/tokens.js";
@@ -1368,6 +1374,8 @@ const THEMES: Record<string, Record<string, string>> = {
   gradient: gradientTokenValues,
   metro: metroTokenValues,
   blueprint: blueprintTokenValues,
+  "developer-dark": developerDarkTokenValues,
+  "developer-light": developerLightTokenValues,
 };
 
 const applyTheme = (name: string) => {
@@ -1415,6 +1423,8 @@ if (themePicker) {
     { value: "gradient", label: "Gradient" },
     { value: "metro", label: "Metro" },
     { value: "blueprint", label: "Blueprint" },
+    { value: "developer-dark", label: "Developer Dark" },
+    { value: "developer-light", label: "Developer Light" },
   ];
   // A theme in the link wins over the reader's own stored preference: the
   // whole point of sharing ?theme=... is that the recipient sees what the
@@ -1673,6 +1683,52 @@ commentComposerDemo?.addEventListener("submit", (event) => {
   const { value } = (event as CustomEvent<{ value: string }>).detail;
   if (commentComposerLog) commentComposerLog.textContent = value;
 });
+
+// code-diff — seed the before/after listing; filename/stat are set as attributes in markup.
+const codeDiffDemo = document.getElementById("code-diff-demo") as CodeDiff | null;
+if (codeDiffDemo) {
+  codeDiffDemo.lines = [
+    { type: "del", text: "class CacheManager:" },
+    { type: "del", text: "def __init__(self, ttl, maxsize): ..." },
+    { type: "context", text: "" },
+    { type: "add", text: "@lru_cache(maxsize=1000)" },
+    { type: "add", text: "def fetch(...): ..." },
+  ];
+}
+
+// stat-strip — seed the benchmark row of headline stats.
+const statStripDemo = document.getElementById("stat-strip-demo") as StatStrip | null;
+if (statStripDemo) {
+  statStripDemo.items = [
+    { value: "54%", label: "less code" },
+    { value: "22%", label: "fewer tokens" },
+    { value: "20%", label: "lower cost" },
+    { value: "100%", label: "safety kept" },
+  ];
+}
+
+// step-ladder — seed the prioritized fallback rungs.
+const stepLadderDemo = document.getElementById("step-ladder-demo") as StepLadder | null;
+if (stepLadderDemo) {
+  stepLadderDemo.items = [
+    { title: "Does this need to exist?", description: "Speculative need = skip it." },
+    {
+      title: "Already in this codebase?",
+      description: "Reuse the helper, util, or pattern that already lives here.",
+    },
+    { title: "Does the standard library do it?", description: "Use it." },
+  ];
+}
+
+// terminal-block — seed the install transcript.
+const terminalBlockDemo = document.getElementById("terminal-block-demo") as TerminalBlock | null;
+if (terminalBlockDemo) {
+  terminalBlockDemo.lines = [
+    { type: "comment", text: "# Claude Code" },
+    { type: "prompt", text: "/plugin marketplace add example/example" },
+    { type: "prompt", text: "/plugin install example@example" },
+  ];
+}
 
 // vote-control — log each cast, switch, or withdrawal as the fired detail.
 const voteControlDemo = document.getElementById("vote-control-demo") as VoteControl | null;

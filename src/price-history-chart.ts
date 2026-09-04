@@ -120,7 +120,7 @@ export class PriceHistoryChart extends LitElement {
         fill: var(--ui-tooltip, #0f172a);
       }
       .tooltip-label {
-        fill: var(--ui-on-accent, #ffffff);
+        fill: var(--ui-tooltip-text, #ffffff);
       }
     `,
   ];

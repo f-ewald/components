@@ -52,6 +52,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<audio-player>` | [API reference](https://f-ewald.github.io/components/docs/audio-player.html) |
 | `<auto-scroll>` | [API reference](https://f-ewald.github.io/components/docs/auto-scroll.html) |
 | `<autocomplete-input>` | [API reference](https://f-ewald.github.io/components/docs/autocomplete-input.html) |
+| `<blink-cursor>` | [API reference](https://f-ewald.github.io/components/docs/blink-cursor.html) |
 | `<breadcrumb-nav>` | [API reference](https://f-ewald.github.io/components/docs/breadcrumb-nav.html) |
 | `<button-group>` | [API reference](https://f-ewald.github.io/components/docs/button-group.html) |
 | `<calendar-day>` | [API reference](https://f-ewald.github.io/components/docs/calendar-day.html) |
@@ -62,7 +63,9 @@ import "@f-ewald/components/roman-numeral.js";
 | `<card-grid>` | [API reference](https://f-ewald.github.io/components/docs/card-grid.html) |
 | `<chat-message>` | [API reference](https://f-ewald.github.io/components/docs/chat-message.html) |
 | `<chevron-panel>` | [API reference](https://f-ewald.github.io/components/docs/chevron-panel.html) |
+| `<code-diff>` | [API reference](https://f-ewald.github.io/components/docs/code-diff.html) |
 | `<comment-composer>` | [API reference](https://f-ewald.github.io/components/docs/comment-composer.html) |
+| `<comment-label>` | [API reference](https://f-ewald.github.io/components/docs/comment-label.html) |
 | `<confirm-dialog>` | [API reference](https://f-ewald.github.io/components/docs/confirm-dialog.html) |
 | `<content-divider>` | [API reference](https://f-ewald.github.io/components/docs/content-divider.html) |
 | `<copy-link-button>` | [API reference](https://f-ewald.github.io/components/docs/copy-link-button.html) |
@@ -118,10 +121,13 @@ import "@f-ewald/components/roman-numeral.js";
 | `<spec-list>` | [API reference](https://f-ewald.github.io/components/docs/spec-list.html) |
 | `<split-hero>` | [API reference](https://f-ewald.github.io/components/docs/split-hero.html) |
 | `<stat-meter>` | [API reference](https://f-ewald.github.io/components/docs/stat-meter.html) |
+| `<stat-strip>` | [API reference](https://f-ewald.github.io/components/docs/stat-strip.html) |
 | `<status-banner>` | [API reference](https://f-ewald.github.io/components/docs/status-banner.html) |
 | `<status-pill>` | [API reference](https://f-ewald.github.io/components/docs/status-pill.html) |
+| `<step-ladder>` | [API reference](https://f-ewald.github.io/components/docs/step-ladder.html) |
 | `<tab-bar>` | [API reference](https://f-ewald.github.io/components/docs/tab-bar.html) |
 | `<tab-item>` | [API reference](https://f-ewald.github.io/components/docs/tab-item.html) |
+| `<terminal-block>` | [API reference](https://f-ewald.github.io/components/docs/terminal-block.html) |
 | `<text-area>` | [API reference](https://f-ewald.github.io/components/docs/text-area.html) |
 | `<tile-grid>` | [API reference](https://f-ewald.github.io/components/docs/tile-grid.html) |
 | `<timeline-container>` | [API reference](https://f-ewald.github.io/components/docs/timeline-container.html) |
@@ -135,6 +141,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<video-player>` | [API reference](https://f-ewald.github.io/components/docs/video-player.html) |
 | `<vote-control>` | [API reference](https://f-ewald.github.io/components/docs/vote-control.html) |
 | `<weight-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/weight-bar-chart.html) |
+| `<window-chrome>` | [API reference](https://f-ewald.github.io/components/docs/window-chrome.html) |
 
 Each doc lists the component's attributes/properties, events, slots, and the
 `--ui-*` CSS custom properties it consumes. For a machine-readable summary of
@@ -272,10 +279,11 @@ catalog to AI coding assistants, with five tools:
 - `get_component_docs(tag)` — the full generated Markdown doc for one tag
   (install snippet, usage example, attributes/properties, events, slots,
   CSS custom properties).
-- `list_layouts` — every dashboard page template (layout recipe) + a one-line
-  summary.
+- `list_layouts` — every page template (layout recipe) + a one-line summary.
 - `get_layout(name)` — the full recipe for one page template (which components
-  fill which `app-shell` slots, markup, and notes).
+  fill which `app-shell` slots and how, plus markup and notes — or, for a
+  shell-less page like a marketing landing page, the section-by-section
+  component composition instead).
 - `list_icons` — every icon in `icons.js`, its default size, and its intended
   use case (e.g. delete vs. edit vs. close), for consistent icon choices
   across apps. See [`docs/icons.md`](./docs/icons.md) for the same catalog.

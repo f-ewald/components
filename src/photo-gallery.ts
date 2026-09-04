@@ -200,7 +200,7 @@ export class PhotoGallery extends LitElement {
         width: 2rem;
         height: 2rem;
         padding: 0;
-        color: var(--ui-on-accent, #ffffff);
+        color: var(--ui-overlay-text, #ffffff);
         background: var(--ui-overlay, rgb(15 23 42 / 0.45));
         border-radius: var(--ui-radius-pill, 9999px);
         pointer-events: auto;

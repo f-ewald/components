@@ -226,7 +226,7 @@ Import: `import "@f-ewald/components/app-shell.js";`
 
 Properties: `sidebarOpen` (attribute `sidebar-open`) : boolean, default false; `sidebarMode` (attribute `sidebar-mode`) : "overlay" | "push", default "overlay"; `sidebarWidth` (attribute `sidebar-width`) : "full" | "icon", default "full"; `detailOpen` (attribute `detail-open`) : boolean, default false; `detailWidth` (attribute `detail-width`) : "compact" | "comfortable", default "compact"; `noTopbar` (attribute `no-topbar`) : boolean, default false
 Events: `sidebar-toggle`, `detail-close`
-CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-radius-sm`, `--ui-shadow`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`, `--ui-tooltip`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font-size-sm`, `--ui-line-height-tight`, `--ui-overlay`, `--ui-radius-sm`, `--ui-shadow`, `--ui-shadow-lg`, `--ui-surface`, `--ui-surface-muted`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`
 
 Example:
 ```html
@@ -385,6 +385,30 @@ Example:
   // API mode: omit `options` and set `endpoint` instead — it's queried as
   // `${endpoint}?${queryParam}=<text>` and must respond with [{key, value}].
 </script>
+```
+
+## <blink-cursor>
+
+A small inline blinking cursor glyph for terminal- or editor-styled
+headings, prompts, and status lines. It renders its own decorative
+character so consumers can append it directly to adjacent text while
+inheriting the surrounding typography.
+
+The cursor uses the shared `--ui-primary` accent color so it reads as an
+active insertion point across themes. Change `char` to swap the glyph (for
+example `|` or `▋`). Under `prefers-reduced-motion` the blink stops and the
+cursor remains visible.
+
+Import: `import "@f-ewald/components/blink-cursor.js";`
+
+Properties: `char` (attribute `char`) : string, default "▋"
+Events: none
+CSS custom properties: `--ui-line-height-glyph`, `--ui-primary`
+
+Example:
+```html
+<h1>ponytail<blink-cursor></blink-cursor></h1>
+<p>~/ponytail &#10095; <blink-cursor char="|"></blink-cursor></p>
 ```
 
 ## <breadcrumb-nav>
@@ -707,6 +731,37 @@ Example:
 </script>
 ```
 
+## <code-diff>
+
+A compact, read-only code diff viewer: a bordered panel with a header bar
+for `filename` and `stat`, followed by a numbered `<pre>` listing of
+`lines`. Each CodeDiffLine renders as `"add"`, `"del"`, or
+`"context"` with fixed `"+ "` / `"- "` / `"  "` prefixes so the diff
+remains understandable even when color is unavailable.
+
+Added and removed rows reuse `--ui-success` / `--ui-danger` for their text
+and low-alpha background washes, while the shell itself reuses
+`--ui-font-mono`, `--ui-border`, and `--ui-surface`. The caller owns the
+data shape entirely: `filename` and `stat` are passed through verbatim, and
+`lines` is a flat ordered array of `{ type, text }` objects.
+
+Import: `import "@f-ewald/components/code-diff.js";`
+
+Properties: `filename` (attribute `filename`) : string, default ""; `stat` (attribute `stat`) : string, default ""; `lines` (attribute `lines`) : CodeDiffLine[], default []
+Events: none
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-danger`, `--ui-font-mono`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-numeric`, `--ui-radius`, `--ui-success`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<code-diff filename="cache.py" stat="&minus;48  +1"></code-diff>
+<script type="module">
+  document.querySelector("code-diff").lines = [
+    { type: "del", text: "class CacheManager:" },
+    { type: "add", text: "@lru_cache(maxsize=1000)" },
+  ];
+</script>
+```
+
 ## <comment-composer>
 
 GitHub/Slack-style comment composer: a one-line text field that expands
@@ -740,6 +795,27 @@ Example:
     postComment(e.detail.value);
   });
 </script>
+```
+
+## <comment-label>
+
+A code-comment-style eyebrow line for section chrome in terminal- or
+editor-themed pages. It renders a colored comment marker (`##` by default)
+before muted slotted text, so `<comment-label>the_whole_idea</comment-label>`
+reads like a short section kicker. Set `prefix="//"` and `italic` for a
+closing or footer quote line that keeps the marker upright while the message
+itself turns italic.
+
+Import: `import "@f-ewald/components/comment-label.js";`
+
+Properties: `prefix` (attribute `prefix`) : string, default "##"; `italic` (attribute `italic`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-font-mono`, `--ui-font-size-sm`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-tight`, `--ui-primary`, `--ui-text-muted`, `--ui-tracking-wide`
+
+Example:
+```html
+<comment-label>the_whole_idea</comment-label>
+<comment-label prefix="//" italic>the best code is the code never written.</comment-label>
 ```
 
 ## <confirm-dialog>
@@ -1851,7 +1927,7 @@ Import: `import "@f-ewald/components/photo-gallery.js";`
 
 Properties: `currentIndex` (attribute `current-index`) : number, default 0; `delay` (attribute `delay`) : number, default 0; `showControls` (attribute `show-controls`) : boolean, default true; `showCounter` (attribute `show-counter`) : boolean, default false; `showIndicators` (attribute `show-indicators`) : boolean, default false; `showAutoplayControl` (attribute `show-autoplay-control`) : boolean, default true; `paused` (attribute `paused`) : boolean, default false; `aspectRatio` (attribute `aspect-ratio`) : string, default "16 / 9"; `objectFit` (attribute `object-fit`) : PhotoGalleryObjectFit, default "cover"
 Events: `slide-change`
-CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-overlay`, `--ui-primary`, `--ui-radius`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-overlay`, `--ui-overlay-text`, `--ui-primary`, `--ui-radius`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -1919,7 +1995,7 @@ Import: `import "@f-ewald/components/price-history-chart.js";`
 
 Properties: `history` (attribute `history`) : PricePoint[], default []; `yLabels` (attribute `y-labels`) : "auto" | "always" | "never", default "auto"; `maxXLabels` (attribute `max-x-labels`) : number, default 3
 Events: none
-CSS custom properties: `--ui-border`, `--ui-font`, `--ui-on-accent`, `--ui-primary`, `--ui-text-muted`, `--ui-tooltip`
+CSS custom properties: `--ui-border`, `--ui-font`, `--ui-on-accent`, `--ui-primary`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`
 
 Example:
 ```html
@@ -2371,6 +2447,33 @@ Example:
 <stat-meter label="GPU" percent="88" color="#dc2626"></stat-meter>
 ```
 
+## <stat-strip>
+
+A headless, presentational strip of headline stats — one large figure plus
+one muted caption per `items` entry, wrapping across lines on narrow
+viewports. Unlike `stat-meter`, this component does not compute percentages
+or render a fill bar: callers pass preformatted figure strings as-is and
+`stat-strip` only lays them out for marketing, benchmark, or dashboard
+summary rows.
+
+Import: `import "@f-ewald/components/stat-strip.js";`
+
+Properties: `items` (attribute `items`) : StatStripItem[], default []
+Events: none
+CSS custom properties: `--ui-font`, `--ui-font-size-lg`, `--ui-font-size-sm`, `--ui-font-weight-bold`, `--ui-font-weight-medium`, `--ui-label-transform`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-primary`, `--ui-text-muted`, `--ui-tracking-wide`
+
+Example:
+```html
+<stat-strip></stat-strip>
+<script type="module">
+  document.querySelector("stat-strip").items = [
+    { value: "54%", label: "less code" },
+    { value: "22%", label: "fewer tokens" },
+    { value: "100%", label: "safety kept" },
+  ];
+</script>
+```
+
 ## <status-banner>
 
 Full-width, app-level status bar for a persistent condition — "Reconnecting…",
@@ -2413,6 +2516,38 @@ Example:
 ```html
 <status-pill label="Running" color="primary" spinner></status-pill>
 <status-pill label="Blocked" color="danger"></status-pill>
+```
+
+## <step-ladder>
+
+A flat ordered ladder of fallback steps — an escalating "try this first,
+then move to the next rung only if it does not solve it" list. Each rung
+shows a zero-padded ordinal, a bold title, and a muted description, with a
+hairline rule between rows.
+
+Feed it the `items` array for the plain data path, where each
+StepLadderItem supplies a `title` and `description`, or slot bare
+`<li>` steps when a rung needs links, emphasis, or other richer markup.
+Slotted content takes precedence over `items`; with neither, nothing is
+rendered. As with `spec-list`, richer wrapper elements are accepted too, but
+those own their own inner markup.
+
+Import: `import "@f-ewald/components/step-ladder.js";`
+
+Properties: `items` (attribute `items`) : StepLadderItem[], default []
+Events: none
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-weight-bold`, `--ui-font-weight-regular`, `--ui-line-height-normal`, `--ui-numeric`, `--ui-primary`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<step-ladder></step-ladder>
+<script type="module">
+  document.querySelector("step-ladder").items = [
+    { title: "Does this need to exist?", description: "Speculative need = skip it." },
+    { title: "Already in this codebase?", description: "Reuse the helper that already lives here." },
+    { title: "Does the standard library do it?", description: "Use it." },
+  ];
+</script>
 ```
 
 ## <tab-bar>
@@ -2461,6 +2596,45 @@ CSS custom properties: none
 Example:
 ```html
 <tab-item></tab-item>
+```
+
+## <terminal-block>
+
+A headless, data-driven terminal transcript shell for short install or usage
+instructions. Callers provide a flat ordered `lines` array of
+`TerminalLine` objects, and the component renders each line exactly in that
+order with a type-driven visual treatment: `"prompt"` lines get a fixed
+leading `❯` marker in `--ui-primary`, `"comment"` lines render as dim italic
+guidance, and `"output"` lines render as plain terminal text.
+
+The panel deliberately stays dark regardless of the surrounding page theme:
+it reuses `--ui-tooltip` for the surface and `--ui-tooltip-text` for the
+main foreground (not `--ui-on-accent` — that token means "text on a solid
+*semantic* fill" and a theme is free to darken it for a light accent color,
+whereas `--ui-tooltip`'s own fill stays dark unconditionally), because this
+is meant to read as "the terminal" rather than as a normal page card that
+follows the ambient surface palette.
+
+An empty `lines` array still renders the bordered, padded shell so consumers
+can see that an instruction block is present but currently has no transcript
+content, rather than having the component silently disappear.
+
+Import: `import "@f-ewald/components/terminal-block.js";`
+
+Properties: `lines` (attribute `lines`) : TerminalLine[], default []
+Events: none
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-font-mono`, `--ui-font-size`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-on-accent`, `--ui-primary`, `--ui-radius`, `--ui-tooltip`, `--ui-tooltip-text`
+
+Example:
+```html
+<terminal-block></terminal-block>
+<script type="module">
+  document.querySelector("terminal-block").lines = [
+    { type: "comment", text: "# Claude Code" },
+    { type: "prompt", text: "/plugin marketplace add example/example" },
+    { type: "prompt", text: "/plugin install example@example" },
+  ];
+</script>
 ```
 
 ## <text-area>
@@ -2807,7 +2981,7 @@ Import: `import "@f-ewald/components/ui-button.js";`
 
 Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `pill` (attribute `pill`) : boolean, default false; `ai` (attribute `ai`) : boolean, default false; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-ai-1`, `--ui-ai-2`, `--ui-ai-3`, `--ui-ai-4`, `--ui-border`, `--ui-border-width`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-ai-1`, `--ui-ai-2`, `--ui-ai-3`, `--ui-ai-4`, `--ui-border`, `--ui-border-width`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-danger-text`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2952,4 +3126,36 @@ Example:
     { id: "commute", label: "Commute", value: 0.25 },
   ];
 </script>
+```
+
+## <window-chrome>
+
+Sticky editor/terminal-style chrome bar for the top edge of a page or panel:
+three decorative traffic-light dots, a filename-style label, and a
+right-aligned actions slot for controls such as a theme toggle.
+
+The text property is named `label` rather than `title`, matching
+`page-header`'s text-property precedent and avoiding confusion with the
+global HTML `title` tooltip attribute. The dots are purely decorative, are
+hidden from assistive technology, and reuse the semantic `--ui-danger`,
+`--ui-warning`, and `--ui-success` tokens rather than introducing
+chrome-only colors.
+
+It sticks with `position: sticky; top: 0`, so callers must place it at the
+top of the element that actually scrolls. Its `z-index: 1` is a deliberate
+plain literal: just enough to keep the bar above in-flow content as it
+sticks, while staying far below the shared overlay stack (dialogs/popovers
+start at 100), so it does not participate in `utils/layer-stack.ts`.
+
+Import: `import "@f-ewald/components/window-chrome.js";`
+
+Properties: `label` (attribute `label`) : string, default ""
+Events: none
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-danger`, `--ui-font`, `--ui-font-mono`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-radius-circle`, `--ui-success`, `--ui-surface-muted`, `--ui-text-muted`, `--ui-warning`
+
+Example:
+```html
+<window-chrome label="~/product — README.md">
+  <icon-button slot="actions" label="Toggle theme"></icon-button>
+</window-chrome>
 ```
