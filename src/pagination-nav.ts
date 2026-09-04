@@ -61,7 +61,12 @@ export class PaginationNav extends LitElement {
         width: 2rem;
         height: 2rem;
         padding: 0;
-        background: var(--ui-button-secondary-background, none);
+        /* Opaque base under the transparent-by-default secondary token — a
+           pager button is a solid control, not a window onto the page behind
+           it. See ui-button's secondary variant. */
+        background:
+          var(--ui-button-secondary-background, none),
+          var(--ui-surface, #ffffff);
         border: var(--ui-border-width, 1px) solid
           var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         border-radius: var(--ui-radius-sm, 0.25rem);
@@ -76,7 +81,9 @@ export class PaginationNav extends LitElement {
         border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
       }
       button:active:not(:disabled) {
-        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        background:
+          var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none)),
+          var(--ui-surface, #ffffff);
         box-shadow: none;
       }
       button:disabled {

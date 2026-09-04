@@ -322,6 +322,24 @@
   `autocomplete-input`, `address-autocomplete`, and `text-area`. Empty labels
   rest inside the field and move to a smaller top-left position on focus or
   content; unsupported controls retain the external-label layout.
+- Bordered secondary-style controls now paint an opaque `--ui-surface` base
+  under the `--ui-button-secondary-*` background rather than declaring the
+  token alone. That token defaults to `none`, so these controls were letting
+  the page show through — invisible on a plain white page, but obviously
+  broken on a tinted, textured, or image-backed one, and inconsistent with
+  text fields, which were already opaque. Affects `ui-button`'s `secondary`
+  variant, `confirm-dialog`'s Cancel, `button-group`'s unchecked segments,
+  `pagination-nav`'s buttons, and `radio-cards`' unchecked cards; the floating
+  `scroll-to-top`/`scroll-to-bottom`/`fullscreen-button` controls already did
+  this. A themed gradient still paints over the base, so a theme that
+  overrides the token renders exactly as before.
+- The playground theme picker now writes the theme to the URL as `?theme=`,
+  so a playground link carries the theme it was viewed in. It uses the query
+  string rather than the hash, which is already the section anchor, so
+  `?theme=blueprint#button-group` opens that component in that theme. A theme
+  in the link takes precedence over the reader's stored preference, unknown
+  values fall back to the default, and switching themes uses `replaceState`
+  so it doesn't bury the previous page under one back-step per switch.
 - Post-release review fixes for the components added alongside the
   `blueprint` theme:
   - `skip-link` now moves focus into its fragment target, not just the scroll

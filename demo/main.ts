@@ -1382,6 +1382,32 @@ const applyTheme = (name: string) => {
   else dataset.theme = name;
 };
 
+// The theme also lives in the URL so a playground link can carry the theme it
+// was viewed in. It goes in the query string rather than the hash, because the
+// hash is already the section anchor — ?theme=blueprint#button-group has to
+// keep working as "this component, in this theme".
+const THEME_PARAM = "theme";
+
+/** Resolves a theme name to a known one, so a typo or a stale link falls back rather than half-applying. */
+const resolveTheme = (name: string | null): string | null =>
+  name !== null && Object.hasOwn(THEMES, name) ? name : null;
+
+/**
+ * Writes the current theme to the URL without touching the history stack.
+ *
+ * replaceState, not pushState: switching themes is adjusting a view control,
+ * not navigating, and pushing would bury the previous page under one back-step
+ * per switch. The hash is preserved so the reader stays on their section, and
+ * the default theme drops the parameter entirely rather than pinning a
+ * redundant ?theme=default.
+ */
+const syncThemeToUrl = (name: string) => {
+  const url = new URL(window.location.href);
+  if (name === "default") url.searchParams.delete(THEME_PARAM);
+  else url.searchParams.set(THEME_PARAM, name);
+  window.history.replaceState(window.history.state, "", url);
+};
+
 const themePicker = document.getElementById("theme-picker") as FormSelect | null;
 if (themePicker) {
   themePicker.options = [
@@ -1390,13 +1416,21 @@ if (themePicker) {
     { value: "metro", label: "Metro" },
     { value: "blueprint", label: "Blueprint" },
   ];
-  const storedTheme = localStorage.getItem(THEME_KEY) ?? "default";
-  themePicker.value = storedTheme;
-  applyTheme(storedTheme);
+  // A theme in the link wins over the reader's own stored preference: the
+  // whole point of sharing ?theme=... is that the recipient sees what the
+  // sender saw. It is still persisted, so their next visit without a
+  // parameter stays on it.
+  const urlTheme = resolveTheme(new URL(window.location.href).searchParams.get(THEME_PARAM));
+  const initialTheme = urlTheme ?? resolveTheme(localStorage.getItem(THEME_KEY)) ?? "default";
+  themePicker.value = initialTheme;
+  applyTheme(initialTheme);
+  localStorage.setItem(THEME_KEY, initialTheme);
+  syncThemeToUrl(initialTheme);
   themePicker.addEventListener("change", (e) => {
     const { value } = (e as CustomEvent<{ value: string }>).detail;
     applyTheme(value);
     localStorage.setItem(THEME_KEY, value);
+    syncThemeToUrl(value);
   });
 }
 

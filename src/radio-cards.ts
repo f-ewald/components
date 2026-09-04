@@ -84,7 +84,12 @@ export class RadioCards extends LitElement {
         align-items: flex-start;
         gap: 0.5rem;
         box-sizing: border-box;
-        background: var(--ui-button-secondary-background, none);
+        /* Opaque base under the transparent-by-default secondary token, so an
+           unchecked card is a solid card rather than a bordered hole in the
+           page. See ui-button's secondary variant. */
+        background:
+          var(--ui-button-secondary-background, none),
+          var(--ui-surface, #ffffff);
         border: var(--ui-border-width, 1px) solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         border-radius: var(--ui-radius-sm, 0.25rem);
         padding: 0.5rem 0.75rem;
@@ -105,7 +110,9 @@ export class RadioCards extends LitElement {
          resting/hover gradient tokens), so a gradient theme applies here the
          same way it does to every button — a card is not a special case. */
       .card:hover:not(:has(input:disabled)):not(:has(input:checked)) {
-        background: var(--ui-button-secondary-background-hover, none);
+        background:
+          var(--ui-button-secondary-background-hover, none),
+          var(--ui-surface, #ffffff);
         border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
       }
       /* Same single muted-surface variable as button-group/pagination-nav,

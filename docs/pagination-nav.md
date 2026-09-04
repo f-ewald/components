@@ -65,6 +65,7 @@ _None._
 | `--ui-line-height-tight` |
 | `--ui-numeric` |
 | `--ui-radius-sm` |
+| `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
 | `--ui-text-muted` |

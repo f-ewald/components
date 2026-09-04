@@ -447,7 +447,7 @@ Import: `import "@f-ewald/components/button-group.js";`
 
 Properties: `options` (JS property only) : ButtonGroupOption[], default []; `value` (attribute `value`) : string, default ""; `disabled` (attribute `disabled`) : boolean, default false; `iconOnly` (attribute `icon-only`) : boolean, default false; `size` (attribute `size`) : "sm" | "md", default "md"
 Events: `change`
-CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-button-background`, `--ui-button-highlight`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-surface-muted`, `--ui-button-text-shadow`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-button-background`, `--ui-button-highlight`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-surface-muted`, `--ui-button-text-shadow`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`
 
 Example:
 ```html
@@ -1799,7 +1799,7 @@ Import: `import "@f-ewald/components/pagination-nav.js";`
 
 Properties: `currentPage` (attribute `current-page`) : number, default 1; `totalPages` (attribute `total-pages`) : number, default 1
 Events: `page-change`
-CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-secondary-surface-muted`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html
@@ -2807,7 +2807,7 @@ Import: `import "@f-ewald/components/ui-button.js";`
 
 Properties: `variant` (attribute `variant`) : ButtonVariant, default "primary"; `size` (attribute `size`) : "sm" | "md", default "md"; `pill` (attribute `pill`) : boolean, default false; `ai` (attribute `ai`) : boolean, default false; `href` (attribute `href`) : string | null, default null; `type` (attribute `type`) : "button" | "submit" | "reset", default "button"; `disabled` (attribute `disabled`) : boolean, default false; `busy` (attribute `busy`) : boolean, default false
 Events: none
-CSS custom properties: `--ui-ai-1`, `--ui-ai-2`, `--ui-ai-3`, `--ui-ai-4`, `--ui-border`, `--ui-border-width`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-text`, `--ui-text-muted`
+CSS custom properties: `--ui-ai-1`, `--ui-ai-2`, `--ui-ai-3`, `--ui-ai-4`, `--ui-border`, `--ui-border-width`, `--ui-button-background`, `--ui-button-background-active`, `--ui-button-background-hover`, `--ui-button-border`, `--ui-button-danger-background`, `--ui-button-danger-background-active`, `--ui-button-danger-background-hover`, `--ui-button-danger-border`, `--ui-button-highlight`, `--ui-button-secondary-`, `--ui-button-secondary-background`, `--ui-button-secondary-background-active`, `--ui-button-secondary-background-hover`, `--ui-button-secondary-border`, `--ui-button-secondary-border-hover`, `--ui-button-text-shadow`, `--ui-danger`, `--ui-danger-hover`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-on-accent`, `--ui-primary`, `--ui-primary-hover`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-text`, `--ui-text-muted`
 
 Example:
 ```html

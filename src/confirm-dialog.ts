@@ -93,7 +93,11 @@ export class ConfirmDialog extends LitElement {
         line-height: var(--ui-line-height-tight, 1.25);
       }
       .btn-cancel {
-        background: var(--ui-button-secondary-background, none);
+        /* Opaque base under the transparent-by-default secondary token, the
+           same as ui-button's secondary variant — see the comment there. */
+        background:
+          var(--ui-button-secondary-background, none),
+          var(--ui-surface, #ffffff);
         border: var(--ui-border-width, 1px) solid var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         color: var(--ui-text, #0f172a);
         border-radius: var(--ui-radius-sm, 0.25rem);
@@ -103,11 +107,15 @@ export class ConfirmDialog extends LitElement {
         box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .btn-cancel:hover:not(:disabled) {
-        background: var(--ui-button-secondary-background-hover, none);
+        background:
+          var(--ui-button-secondary-background-hover, none),
+          var(--ui-surface, #ffffff);
         border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
       }
       .btn-cancel:active:not(:disabled) {
-        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        background:
+          var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none)),
+          var(--ui-surface, #ffffff);
         box-shadow: none;
       }
       .btn-danger,

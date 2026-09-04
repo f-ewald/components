@@ -134,5 +134,6 @@ _None._
 | `--ui-primary-hover` |
 | `--ui-radius-pill` |
 | `--ui-radius-sm` |
+| `--ui-surface` |
 | `--ui-text` |
 | `--ui-text-muted` |

@@ -116,17 +116,29 @@ export class UiButton extends LitElement {
         box-shadow: none;
       }
       .btn.secondary {
-        background: var(--ui-button-secondary-background, none);
+        /* Layered over an opaque --ui-surface base rather than left flat: the
+           secondary background token is transparent by default, and a bordered
+           button that lets the page show through reads as broken on any
+           surface that isn't plain --ui-surface (a textured or tinted page, an
+           image). A themed gradient still paints over the base, so this only
+           changes what shows when the token contributes nothing. */
+        background:
+          var(--ui-button-secondary-background, none),
+          var(--ui-surface, #ffffff);
         border-color: var(--ui-button-secondary-border, var(--ui-border, #e2e8f0));
         color: var(--ui-text, #0f172a);
         box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .btn.secondary:hover:not(:disabled) {
-        background: var(--ui-button-secondary-background-hover, none);
+        background:
+          var(--ui-button-secondary-background-hover, none),
+          var(--ui-surface, #ffffff);
         border-color: var(--ui-button-secondary-border-hover, var(--ui-text-muted, #64748b));
       }
       .btn.secondary:active:not(:disabled) {
-        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        background:
+          var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none)),
+          var(--ui-surface, #ffffff);
         box-shadow: none;
       }
       .btn.danger {

@@ -75,7 +75,12 @@ export class ButtonGroup extends LitElement {
         line-height: var(--ui-line-height-tight, 1.25);
         color: var(--ui-text, #0f172a);
         white-space: nowrap;
-        background: var(--ui-button-secondary-background, none);
+        /* Opaque base under the transparent-by-default secondary token, so an
+           unchecked segment reads as a solid control rather than letting a
+           textured or tinted page show through. See ui-button's secondary. */
+        background:
+          var(--ui-button-secondary-background, none),
+          var(--ui-surface, #ffffff);
         box-shadow: var(--ui-button-highlight, 0 0 0 0 transparent);
       }
       .segment:first-child {
@@ -96,7 +101,9 @@ export class ButtonGroup extends LitElement {
         background: var(--ui-button-secondary-surface-muted, var(--ui-surface-muted, #f8fafc));
       }
       .segment:not(:has(input:checked)):active {
-        background: var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none));
+        background:
+          var(--ui-button-secondary-background-active, var(--ui-button-secondary-background, none)),
+          var(--ui-surface, #ffffff);
         box-shadow: none;
       }
       .segment input {

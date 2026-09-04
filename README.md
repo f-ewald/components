@@ -311,6 +311,12 @@ Opens a live playground (`index.html`) with a rendered, hand-testable example
 of every component, plus a copy-paste usage snippet for each. Component
 sources are imported directly from `src/`, so edits hot-reload.
 
+The theme picker writes the chosen theme to the URL as a `?theme=` parameter,
+so the address bar is always shareable — for example
+[`?theme=blueprint#button-group`](https://f-ewald.github.io/components/playground/?theme=blueprint#button-group)
+opens `button-group` under the blueprint theme. A theme in the link takes
+precedence over the reader's own remembered choice.
+
 ```bash
 npm run build:demo   # static build of the playground, into demo-dist/
 npm run build:site   # docs + playground Pages artifact, into pages-dist/

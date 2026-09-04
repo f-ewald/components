@@ -66,6 +66,27 @@ defines the details used when creating or reviewing components.
   the active tab's `--ui-primary` line drawn on top of it) rather than
   introducing a new token — the same precedent as `ui-button`'s `secondary`
   variant, which is realized via `--ui-border`/`--ui-text-muted`, not a hue.
+- **A bordered control paints an opaque base.** `--ui-button-secondary-*`
+  defaults to `none`, so any control that uses it directly would let the page
+  behind it show through — invisible on a plain `--ui-surface` page, obviously
+  broken on a tinted, textured, or image-backed one, and inconsistent with
+  text fields, which are already opaque. Every such control therefore layers
+  the token over an opaque base rather than declaring it alone:
+
+  ```css
+  background:
+    var(--ui-button-secondary-background, none),
+    var(--ui-surface, #ffffff);
+  ```
+
+  A themed gradient still paints over that base, so a theme overriding the
+  token behaves exactly as before; only the "token contributes nothing" case
+  changes. This applies to `ui-button`'s `secondary` variant,
+  `confirm-dialog`'s Cancel, `button-group`'s unchecked segments,
+  `pagination-nav`'s buttons, `radio-cards`' unchecked cards, and the floating
+  `scroll-to-top`/`scroll-to-bottom`/`fullscreen-button` controls. It does not
+  apply to states that already resolve to an opaque value
+  (`--ui-button-secondary-surface-muted`, `--ui-surface-muted`).
 - `--ui-ai-1`…`--ui-ai-4` are the one multi-hue family: the stops of
   `ui-button[ai]`'s animated ring, where the rainbow itself is the meaning
   ("this action is AI-powered") rather than a semantic state. They are only

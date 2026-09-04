@@ -79,5 +79,6 @@ _None._
 | `--ui-on-accent` |
 | `--ui-primary` |
 | `--ui-radius-sm` |
+| `--ui-surface` |
 | `--ui-surface-muted` |
 | `--ui-text` |
