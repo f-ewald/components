@@ -1,5 +1,5 @@
 import { LitElement, css, html, nothing, type PropertyValues } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, query } from "lit/decorators.js";
 import { iconX } from "./icons.js";
 import { tokens } from "./tokens.js";
 import { activateLayer, claimEscape, deactivateLayer, isTopLayer } from "./utils/layer-stack.js";
@@ -7,15 +7,15 @@ import { activateLayer, claimEscape, deactivateLayer, isTopLayer } from "./utils
 export type ModalDialogSize = "default" | "lg" | "fullscreen";
 
 /**
- * Generic centered modal-dialog shell: overlay + card with header chrome, a
- * close button, and an arbitrary slotted body — the modal sibling to
- * `slide-panel` (fixed-edge) and `popover-panel` (anchored). Unlike
- * `confirm-dialog`, it has no baked-in actions; the consumer supplies the
- * body content (a form, a read-only viewer, a table) and any footer buttons
- * itself. Instant `display:none` → `display:flex` toggle, no transition.
- * Traps focus, closes on Escape, and restores focus to the trigger on
- * close, stacking correctly against other open `confirm-dialog`/
- * `slide-panel`/`popover-panel`/`modal-dialog` layers.
+ * Generic centered modal-dialog shell: a native modal `<dialog>` card with
+ * header chrome, a close button, and an arbitrary slotted body — the modal
+ * sibling to `slide-panel` (fixed-edge) and `popover-panel` (anchored).
+ * Unlike `confirm-dialog`, it has no baked-in actions; the consumer supplies
+ * the body content (a form, a read-only viewer, a table) and any footer
+ * buttons itself. Instant open/close, no transition. Because it uses
+ * `showModal()`, it renders in the browser's top layer, makes the rest of the
+ * page inert, contains focus, and restores focus to the trigger on close;
+ * Escape is routed to the topmost layer only (see `utils/layer-stack`).
  *
  * @element modal-dialog
  * @fires panel-close - User clicked the close (✕) button, pressed Escape, or (when `dismissible`) clicked the backdrop.
@@ -27,25 +27,14 @@ export class ModalDialog extends LitElement {
   static override styles = [
     tokens,
     css`
-      .overlay {
-        position: fixed;
-        inset: 0;
-        background: var(--ui-overlay, rgb(15 23 42 / 0.45));
-        z-index: var(--component-layer-z, 50);
-        display: none;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 10vh 1.25rem 1.25rem;
-        box-sizing: border-box;
-      }
-      .overlay.open {
-        display: flex;
-      }
-      .overlay.fullscreen {
-        padding: 0;
-        align-items: stretch;
-      }
       .dialog {
+        /* Native modal <dialog>: top layer, inert page behind it, built-in focus containment. */
+        position: fixed;
+        inset: 0 0 auto 0;
+        margin: 10vh auto 0;
+        padding: 0;
+        border: 0;
+        color: inherit;
         background: var(--ui-surface, #ffffff);
         border-radius: var(--ui-radius, 0.5rem);
         box-shadow: var(
@@ -56,16 +45,24 @@ export class ModalDialog extends LitElement {
         width: 100%;
         max-width: min(25rem, calc(100vw - 2rem));
         max-height: calc(100vh - 10vh - 1.25rem);
-        display: flex;
-        flex-direction: column;
         overflow: hidden;
         box-sizing: border-box;
         outline: none;
+      }
+      /* Scoped to [open]: an author display value would otherwise defeat the UA's display:none. */
+      .dialog[open] {
+        display: flex;
+        flex-direction: column;
+      }
+      .dialog::backdrop {
+        background: var(--ui-overlay, rgb(15 23 42 / 0.45));
       }
       .dialog.lg {
         max-width: min(60rem, calc(100vw - 2rem));
       }
       .dialog.fullscreen {
+        inset: 0;
+        margin: 0;
         width: 100vw;
         height: 100vh;
         max-width: 100vw;
@@ -134,9 +131,8 @@ export class ModalDialog extends LitElement {
         }
       }
       @media (max-width: 48rem) {
-        .overlay {
-          padding: 0.75rem;
-          overflow-y: auto;
+        .dialog {
+          margin-top: 0.75rem;
         }
       }
     `,
@@ -155,118 +151,82 @@ export class ModalDialog extends LitElement {
   /** When true, clicking the backdrop also closes the dialog (off by default — safe for forms with unsaved input). */
   @property({ type: Boolean }) dismissible = false;
 
-  private _previousFocus: HTMLElement | null = null;
+  @query("dialog") private _dialog!: HTMLDialogElement;
 
   private _close() {
     this.dispatchEvent(new CustomEvent("panel-close", { bubbles: true, composed: true }));
   }
 
-  private _getFocusableElements(): HTMLElement[] {
-    const selector =
-      "a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex='-1'])";
-    const slotted = Array.from(this.querySelectorAll<HTMLElement>(selector));
-    const internal = Array.from(
-      this.shadowRoot?.querySelectorAll<HTMLElement>(selector) ?? [],
-    ).filter((element) => element.closest(".dialog") !== null);
-    return [...slotted, ...internal].filter((element) => !element.hasAttribute("hidden"));
-  }
-
+  /** Native focus delegation doesn't reliably reach slotted light-DOM content, so focus explicitly. */
   private _focusInitial(): void {
     const autofocus = this.querySelector<HTMLElement>("[autofocus]");
     const close = this.shadowRoot?.querySelector<HTMLElement>(".close-btn");
-    const dialog = this.shadowRoot?.querySelector<HTMLElement>(".dialog");
-    (autofocus ?? close ?? this._getFocusableElements()[0] ?? dialog)?.focus();
+    (autofocus ?? close)?.focus();
   }
 
-  private _onDocumentFocusIn = (event: FocusEvent): void => {
-    if (!this.open || !isTopLayer(this) || event.composedPath().includes(this)) return;
-    this._focusInitial();
-  };
-
+  /** Escape goes to the topmost layer only (a popover opened inside this dialog claims it first). */
   private _onWindowKeydown = (event: KeyboardEvent): void => {
-    if (!this.open || !isTopLayer(this)) return;
-    if (claimEscape(this, event)) {
-      this._close();
-      return;
-    }
-    if (event.key !== "Tab") return;
-
-    const focusable = this._getFocusableElements();
-    if (focusable.length === 0) {
-      event.preventDefault();
-      this._focusInitial();
-      return;
-    }
-    const active = (this.shadowRoot?.activeElement ?? document.activeElement) as HTMLElement | null;
-    const index = focusable.indexOf(active as HTMLElement);
-    if (event.shiftKey && index <= 0) {
-      event.preventDefault();
-      focusable.at(-1)?.focus();
-    } else if (!event.shiftKey && index === focusable.length - 1) {
-      event.preventDefault();
-      focusable[0]?.focus();
-    }
+    if (this.open && claimEscape(this, event)) this._close();
   };
 
-  private _onOverlayClick = (event: MouseEvent): void => {
-    if (this.dismissible && event.target === event.currentTarget) this._close();
+  /** Native close requests (e.g. a back gesture) are routed through `panel-close`; the consumer owns `open`. */
+  private _onCancel = (event: Event): void => {
+    event.preventDefault();
+    if (this.open && isTopLayer(this)) this._close();
+  };
+
+  /** A click that lands on the `<dialog>` itself, outside its box, is a backdrop click. */
+  private _onDialogClick = (event: MouseEvent): void => {
+    if (!this.dismissible || event.target !== event.currentTarget) return;
+    const box = this._dialog.getBoundingClientRect();
+    const outside =
+      event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+    if (outside) this._close();
   };
 
   protected override updated(changed: PropertyValues): void {
     if (!changed.has("open")) return;
     if (this.open) {
       activateLayer(this);
-      this._previousFocus = document.activeElement as HTMLElement | null;
-      document.addEventListener("focusin", this._onDocumentFocusIn, true);
       window.addEventListener("keydown", this._onWindowKeydown, true);
+      if (!this._dialog.open) this._dialog.showModal();
       this._focusInitial();
       return;
     }
     deactivateLayer(this);
-    document.removeEventListener("focusin", this._onDocumentFocusIn, true);
     window.removeEventListener("keydown", this._onWindowKeydown, true);
-    if (this._previousFocus?.isConnected) this._previousFocus.focus();
-    this._previousFocus = null;
+    if (this._dialog.open) this._dialog.close();
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    document.removeEventListener("focusin", this._onDocumentFocusIn, true);
     window.removeEventListener("keydown", this._onWindowKeydown, true);
     deactivateLayer(this);
-    if (this._previousFocus?.isConnected) this._previousFocus.focus();
-    this._previousFocus = null;
     this.open = false;
   }
 
   override render() {
     const explicitLabel = this.getAttribute("aria-label");
     return html`
-      <div
-        class="overlay ${this.open ? "open" : ""} ${this.size === "fullscreen" ? "fullscreen" : ""}"
-        @click=${this._onOverlayClick}
+      <dialog
+        class="dialog ${this.size === "lg" ? "lg" : this.size === "fullscreen" ? "fullscreen" : ""}"
+        aria-label=${explicitLabel ?? nothing}
+        aria-labelledby=${explicitLabel ? nothing : "dialog-title"}
+        @click=${this._onDialogClick}
+        @cancel=${this._onCancel}
       >
-        <div
-          class="dialog ${this.size === "lg" ? "lg" : this.size === "fullscreen" ? "fullscreen" : ""}"
-          role="dialog"
-          aria-modal="true"
-          aria-label=${explicitLabel ?? nothing}
-          aria-labelledby=${explicitLabel ? nothing : "dialog-title"}
-          tabindex="-1"
-        >
-          <div class="dialog-header">
-            <span id="dialog-title" class="dialog-title">
-              <slot name="title">${this.heading}</slot>
-            </span>
-            <button class="close-btn" aria-label="Close" @click=${this._close}>
-              <span aria-hidden="true">${iconX(18)}</span>
-            </button>
-          </div>
-          <div class="body">
-            <slot></slot>
-          </div>
+        <div class="dialog-header">
+          <span id="dialog-title" class="dialog-title">
+            <slot name="title">${this.heading}</slot>
+          </span>
+          <button class="close-btn" aria-label="Close" @click=${this._close}>
+            <span aria-hidden="true">${iconX(18)}</span>
+          </button>
         </div>
-      </div>
+        <div class="body">
+          <slot></slot>
+        </div>
+      </dialog>
     `;
   }
 }

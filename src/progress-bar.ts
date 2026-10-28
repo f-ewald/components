@@ -35,16 +35,22 @@ export class ProgressBar extends LitElement {
       .track {
         flex: 1 1 auto;
         display: block;
+        appearance: none;
         height: 0.5rem;
+        border: 0;
         border-radius: var(--ui-radius-sm, 0.25rem);
         background: var(--track-color, var(--ui-surface-muted, #f8fafc));
         overflow: hidden;
       }
-      .fill {
-        display: block;
-        height: 100%;
+      .track::-webkit-progress-bar {
+        background: transparent;
+      }
+      .track::-webkit-progress-value {
         background: var(--fill-color, var(--ui-button-accent, var(--ui-primary, #4f46e5)));
         transition: width 200ms ease;
+      }
+      .track::-moz-progress-bar {
+        background: var(--fill-color, var(--ui-button-accent, var(--ui-primary, #4f46e5)));
       }
       .label {
         flex: 0 0 auto;
@@ -54,7 +60,7 @@ export class ProgressBar extends LitElement {
         white-space: nowrap;
       }
       @media (prefers-reduced-motion: reduce) {
-        .fill {
+        .track::-webkit-progress-value {
           transition: none;
         }
       }
@@ -62,7 +68,8 @@ export class ProgressBar extends LitElement {
         .track {
           border: 1px solid CanvasText;
         }
-        .fill {
+        .track::-webkit-progress-value,
+        .track::-moz-progress-bar {
           background: Highlight;
         }
       }
@@ -83,21 +90,20 @@ export class ProgressBar extends LitElement {
   override render() {
     const max = Math.max(0, this.max);
     const clamped = Math.min(max, Math.max(0, this.value));
-    const pct = max === 0 ? 0 : (clamped / max) * 100;
-    const fillStyle = this.color ? `width: ${pct}%; --fill-color: ${this.color}` : `width: ${pct}%`;
-    const trackStyle = this.trackColor ? `--track-color: ${this.trackColor}` : "";
+    const style = [
+      this.trackColor && `--track-color: ${this.trackColor}`,
+      this.color && `--fill-color: ${this.color}`,
+    ]
+      .filter(Boolean)
+      .join("; ");
     return html`
-      <span
+      <progress
         class="track"
-        style=${trackStyle}
-        role="progressbar"
-        aria-valuenow=${clamped}
-        aria-valuemin="0"
-        aria-valuemax=${max}
+        style=${style}
+        value=${clamped}
+        max=${max || 1}
         aria-label=${this.label || nothing}
-      >
-        <span class="fill" style=${fillStyle}></span>
-      </span>
+      ></progress>
       ${this.label ? html`<span class="label">${this.label}</span>` : nothing}
     `;
   }

@@ -1,14 +1,14 @@
 # `<modal-dialog>`
 
-Generic centered modal-dialog shell: overlay + card with header chrome, a
-close button, and an arbitrary slotted body — the modal sibling to
-`slide-panel` (fixed-edge) and `popover-panel` (anchored). Unlike
-`confirm-dialog`, it has no baked-in actions; the consumer supplies the
-body content (a form, a read-only viewer, a table) and any footer buttons
-itself. Instant `display:none` → `display:flex` toggle, no transition.
-Traps focus, closes on Escape, and restores focus to the trigger on
-close, stacking correctly against other open `confirm-dialog`/
-`slide-panel`/`popover-panel`/`modal-dialog` layers.
+Generic centered modal-dialog shell: a native modal `<dialog>` card with
+header chrome, a close button, and an arbitrary slotted body — the modal
+sibling to `slide-panel` (fixed-edge) and `popover-panel` (anchored).
+Unlike `confirm-dialog`, it has no baked-in actions; the consumer supplies
+the body content (a form, a read-only viewer, a table) and any footer
+buttons itself. Instant open/close, no transition. Because it uses
+`showModal()`, it renders in the browser's top layer, makes the rest of the
+page inert, contains focus, and restores focus to the trigger on close;
+Escape is routed to the topmost layer only (see `utils/layer-stack`).
 
 ## Install
 

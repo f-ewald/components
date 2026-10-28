@@ -1,14 +1,15 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("modal-dialog", () => {
-  test("the open attribute shows the overlay and the close button fires panel-close", async ({ page }) => {
+  test("the open attribute opens the native modal and the close button fires panel-close", async ({ page }) => {
     await page.goto("/");
     const dialog = page.locator("#modal-demo");
-    const overlay = dialog.locator(".overlay");
-    await expect(overlay).not.toHaveClass(/open/);
+    const native = dialog.locator("dialog");
+    await expect(native).toHaveJSProperty("open", false);
 
     await page.locator("#modal-open").click();
-    await expect(overlay).toHaveClass(/open/);
+    await expect(native).toHaveJSProperty("open", true);
+    expect(await native.evaluate((el) => el.matches(":modal"))).toBe(true);
 
     await page.evaluate(() => {
       document.getElementById("modal-demo")!.addEventListener("panel-close", () => {
@@ -26,7 +27,7 @@ test.describe("modal-dialog", () => {
     const modal = dialog.getByRole("dialog");
 
     await trigger.click();
-    await expect(modal).toHaveAttribute("aria-modal", "true");
+    expect(await modal.evaluate((el) => el.matches(":modal"))).toBe(true);
     await expect(modal).toHaveAccessibleName("Changelog");
     await expect(dialog.locator(".close-btn")).toBeFocused();
 
@@ -45,14 +46,14 @@ test.describe("modal-dialog", () => {
     });
 
     await page.locator("#modal-open").click();
-    await expect(dialog.locator(".overlay")).toHaveClass(/open/);
-    await dialog.locator(".overlay").click({ position: { x: 5, y: 5 } });
+    await expect(dialog.locator("dialog")).toHaveJSProperty("open", true);
+    await page.mouse.click(5, 5);
     await expect(dialog.getByRole("dialog")).not.toBeVisible();
 
     const nonDismissible = page.locator("#modal-lg-demo");
     await page.locator("#modal-lg-open").click();
-    await expect(nonDismissible.locator(".overlay")).toHaveClass(/open/);
-    await nonDismissible.locator(".overlay").click({ position: { x: 5, y: 5 } });
+    await expect(nonDismissible.locator("dialog")).toHaveJSProperty("open", true);
+    await page.mouse.click(5, 5);
     await expect(nonDismissible.getByRole("dialog")).toBeVisible();
   });
 

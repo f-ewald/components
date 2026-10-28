@@ -1,7 +1,7 @@
 # `<slide-panel>`
 
-Generic sliding panel shell. Handles positioning, open/close animation,
-header chrome, and a close button. Body content is provided via the
+Generic sliding panel shell: a non-modal native `<dialog>` (`show()`). Handles
+positioning, open/close animation, header chrome, and a close button. Body content is provided via the
 default slot; the consumer controls its own padding and overflow.
 
 Desktop: fixed right-side panel that slides from the right.

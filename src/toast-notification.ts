@@ -107,6 +107,20 @@ export class ToastNotification extends LitElement {
         gap: 0.5rem;
         width: 22.5rem;
         pointer-events: none;
+        /* Reset the UA [popover] box (the host is a manual popover, see _promote()). */
+        inset: auto;
+        inset-block-start: 1rem;
+        inset-inline-end: 1rem;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: visible;
+        background: transparent;
+        color: inherit;
+      }
+      /* An author display value would otherwise defeat the UA's display:none for a closed popover. */
+      :host([popover]:not(:popover-open)) {
+        display: none;
       }
       .toast {
         pointer-events: auto;
@@ -320,7 +334,19 @@ export class ToastNotification extends LitElement {
     this._toasts = [...this._toasts, toast];
     if (duration > 0) this._scheduleTimer(id, duration);
     this._syncTicking();
+    this._promote();
     return id;
+  }
+
+  /**
+   * Moves the stack to the top of the browser's top layer, so it renders above any native
+   * modal `<dialog>` opened earlier (a `position: fixed; z-index` stack can't). Re-showing
+   * puts it above layers added since the last toast. No-op without Popover API support.
+   */
+  private _promote(): void {
+    if (!this.isConnected || !this.popover) return;
+    if (this.matches(":popover-open")) this.hidePopover();
+    this.showPopover();
   }
 
   /**
@@ -336,6 +362,12 @@ export class ToastNotification extends LitElement {
     this._interaction.delete(id);
     this._toasts = this._toasts.filter((t) => t.id !== id);
     this._syncTicking();
+    if (this._toasts.length === 0 && this.matches(":popover-open")) this.hidePopover();
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+    if ("popover" in HTMLElement.prototype) this.popover = "manual";
   }
 
   override disconnectedCallback() {

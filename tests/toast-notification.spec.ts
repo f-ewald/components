@@ -1,6 +1,23 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("toast-notification", () => {
+  test("lives in the top layer so it can render above an open native modal", async ({ page }) => {
+    await page.goto("/");
+    const toastHost = page.locator("toast-notification");
+    await expect(toastHost).toHaveJSProperty("popover", "manual");
+    expect(await toastHost.evaluate((el) => el.matches(":popover-open"))).toBe(false);
+
+    await page.locator("#modal-open").click();
+    await toastHost.evaluate((el) => (el as HTMLElement & { show: (m: string) => number }).show("Over the modal"));
+    expect(await toastHost.evaluate((el) => el.matches(":popover-open"))).toBe(true);
+    await expect(toastHost.locator(".toast")).toBeVisible();
+
+    // Emptying the stack closes the popover again.
+    await toastHost.evaluate((el) => (el as HTMLElement & { dismiss: (id: number) => void }).dismiss(0));
+    await expect(toastHost.locator(".toast")).toHaveCount(0);
+    expect(await toastHost.evaluate((el) => el.matches(":popover-open"))).toBe(false);
+  });
+
   test("show() renders a toast, the close button dismisses it, and it auto-dismisses", async ({ page }) => {
     await page.goto("/");
     const toastHost = page.locator("toast-notification");

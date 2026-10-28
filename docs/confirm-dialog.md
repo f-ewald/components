@@ -1,8 +1,9 @@
 # `<confirm-dialog>`
 
-Reusable confirmation dialog: overlay + centered card with a slotted body,
-an optional error line, and Cancel/Confirm actions. Instant `display:none`
-→ `display:flex` toggle (no transitions). Fires `confirm`/`cancel`
+Reusable confirmation dialog: a native modal `<dialog>` (top layer, inert
+page behind it, built-in focus containment) with a slotted body, an
+optional error line, and Cancel/Confirm actions. Instant open/close (no
+transitions). Fires `confirm`/`cancel`
 (bubbling, composed) instead of owning any deletion logic itself —
 callers stay in charge of the request. Set `size="sm"` for compact
 actions one step below the default, matching `ui-button`'s `sm` size.

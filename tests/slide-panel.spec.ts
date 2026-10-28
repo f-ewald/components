@@ -4,11 +4,11 @@ test.describe("slide-panel", () => {
   test("the open attribute slides the panel in and the close button fires panel-close", async ({ page }) => {
     await page.goto("/");
     const panel = page.locator("#panel-demo");
-    const panelInner = panel.locator(".panel");
-    await expect(panelInner).not.toHaveClass(/open/);
+    const panelInner = panel.locator("dialog.panel");
+    await expect(panelInner).toHaveJSProperty("open", false);
 
     await page.locator("#panel-open").click();
-    await expect(panelInner).toHaveClass(/open/);
+    await expect(panelInner).toHaveJSProperty("open", true);
 
     await page.evaluate(() => {
       document.getElementById("panel-demo")!.addEventListener("panel-close", () => {
@@ -29,12 +29,35 @@ test.describe("slide-panel", () => {
 
     await trigger.click();
     await expect(dialog).toHaveAccessibleName("Property details");
-    await expect(dialog).toHaveAttribute("aria-modal", "false");
+    expect(await dialog.evaluate((el) => el.matches(":modal"))).toBe(false);
     await expect(panel.locator(".close-btn")).toBeFocused();
 
     await page.keyboard.press("Escape");
     await expect(dialog).not.toBeVisible();
     await expect(trigger).toBeFocused();
+  });
+
+  test("slides in from off-screen and stays rendered until the closing slide finishes", async ({ page }) => {
+    await page.goto("/");
+    const states = await page.locator("#panel-demo").evaluate(async (element) => {
+      const host = element as HTMLElement & { open: boolean; updateComplete: Promise<boolean> };
+      const dialog = host.shadowRoot!.querySelector("dialog")!;
+      const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      host.open = true;
+      await host.updateComplete;
+      const openStart = getComputedStyle(dialog).transform;
+      await wait(400);
+      const openEnd = getComputedStyle(dialog).transform;
+      host.open = false;
+      await host.updateComplete;
+      const closeStart = getComputedStyle(dialog).display;
+      await wait(400);
+      return { openStart, openEnd, closeStart, closeEnd: getComputedStyle(dialog).display };
+    });
+    expect(states.openStart).toBe("matrix(1, 0, 0, 1, 352, 0)"); // 110% of the 20rem panel, i.e. @starting-style
+    expect(states.openEnd).toBe("matrix(1, 0, 0, 1, 0, 0)");
+    expect(states.closeStart).toBe("flex"); // display transitions discretely, so the slide-out stays visible
+    expect(states.closeEnd).toBe("none");
   });
 
   test("removes the slide transition when reduced motion is requested", async ({ page }) => {

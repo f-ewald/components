@@ -5364,7 +5364,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Reusable confirmation dialog: overlay + centered card with a slotted body,\nan optional error line, and Cancel/Confirm actions. Instant `display:none`\n→ `display:flex` toggle (no transitions). Fires `confirm`/`cancel`\n(bubbling, composed) instead of owning any deletion logic itself —\ncallers stay in charge of the request. Set `size=\"sm\"` for compact\nactions one step below the default, matching `ui-button`'s `sm` size.",
+          "description": "Reusable confirmation dialog: a native modal `<dialog>` (top layer, inert\npage behind it, built-in focus containment) with a slotted body, an\noptional error line, and Cancel/Confirm actions. Instant open/close (no\ntransitions). Fires `confirm`/`cancel`\n(bubbling, composed) instead of owning any deletion logic itself —\ncallers stay in charge of the request. Set `size=\"sm\"` for compact\nactions one step below the default, matching `ui-button`'s `sm` size.",
           "name": "ConfirmDialog",
           "members": [
             {
@@ -5440,12 +5440,11 @@
             },
             {
               "kind": "field",
-              "name": "_previousFocus",
+              "name": "_dialog",
               "type": {
-                "text": "HTMLElement | null"
+                "text": "HTMLDialogElement"
               },
-              "privacy": "private",
-              "default": "null"
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -5459,33 +5458,26 @@
             },
             {
               "kind": "method",
-              "name": "_getFocusableElements",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "_focusInitial",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
                 }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_onDocumentFocusIn",
-              "privacy": "private"
+              },
+              "description": "Native focus delegation doesn't reliably reach slotted light-DOM content, so focus explicitly."
             },
             {
               "kind": "field",
               "name": "_onWindowKeydown",
-              "privacy": "private"
+              "privacy": "private",
+              "description": "Escape goes to the topmost layer only; it's ignored while a request is in flight."
+            },
+            {
+              "kind": "field",
+              "name": "_onNativeCancel",
+              "privacy": "private",
+              "description": "Native close requests (e.g. a back gesture) are routed through `cancel`; the consumer owns `open`.\nNamed `_onNativeCancel` because this component also fires its own bubbling `cancel` CustomEvent."
             }
           ],
           "events": [
@@ -14342,7 +14334,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Generic centered modal-dialog shell: overlay + card with header chrome, a\nclose button, and an arbitrary slotted body — the modal sibling to\n`slide-panel` (fixed-edge) and `popover-panel` (anchored). Unlike\n`confirm-dialog`, it has no baked-in actions; the consumer supplies the\nbody content (a form, a read-only viewer, a table) and any footer buttons\nitself. Instant `display:none` → `display:flex` toggle, no transition.\nTraps focus, closes on Escape, and restores focus to the trigger on\nclose, stacking correctly against other open `confirm-dialog`/\n`slide-panel`/`popover-panel`/`modal-dialog` layers.",
+          "description": "Generic centered modal-dialog shell: a native modal `<dialog>` card with\nheader chrome, a close button, and an arbitrary slotted body — the modal\nsibling to `slide-panel` (fixed-edge) and `popover-panel` (anchored).\nUnlike `confirm-dialog`, it has no baked-in actions; the consumer supplies\nthe body content (a form, a read-only viewer, a table) and any footer\nbuttons itself. Instant open/close, no transition. Because it uses\n`showModal()`, it renders in the browser's top layer, makes the rest of the\npage inert, contains focus, and restores focus to the trigger on close;\nEscape is routed to the topmost layer only (see `utils/layer-stack`).",
           "name": "ModalDialog",
           "slots": [
             {
@@ -14397,27 +14389,16 @@
             },
             {
               "kind": "field",
-              "name": "_previousFocus",
+              "name": "_dialog",
               "type": {
-                "text": "HTMLElement | null"
+                "text": "HTMLDialogElement"
               },
-              "privacy": "private",
-              "default": "null"
+              "privacy": "private"
             },
             {
               "kind": "method",
               "name": "_close",
               "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_getFocusableElements",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              }
             },
             {
               "kind": "method",
@@ -14427,22 +14408,26 @@
                 "type": {
                   "text": "void"
                 }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_onDocumentFocusIn",
-              "privacy": "private"
+              },
+              "description": "Native focus delegation doesn't reliably reach slotted light-DOM content, so focus explicitly."
             },
             {
               "kind": "field",
               "name": "_onWindowKeydown",
-              "privacy": "private"
+              "privacy": "private",
+              "description": "Escape goes to the topmost layer only (a popover opened inside this dialog claims it first)."
             },
             {
               "kind": "field",
-              "name": "_onOverlayClick",
-              "privacy": "private"
+              "name": "_onCancel",
+              "privacy": "private",
+              "description": "Native close requests (e.g. a back gesture) are routed through `panel-close`; the consumer owns `open`."
+            },
+            {
+              "kind": "field",
+              "name": "_onDialogClick",
+              "privacy": "private",
+              "description": "A click that lands on the `<dialog>` itself, outside its box, is a backdrop click."
             }
           ],
           "events": [
@@ -18574,7 +18559,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Generic sliding panel shell. Handles positioning, open/close animation,\nheader chrome, and a close button. Body content is provided via the\ndefault slot; the consumer controls its own padding and overflow.\n\nDesktop: fixed right-side panel that slides from the right.\nMobile (≤48rem): bottom-sheet drawer (60vh) — reserved for future use.",
+          "description": "Generic sliding panel shell: a non-modal native `<dialog>` (`show()`). Handles\npositioning, open/close animation, header chrome, and a close button. Body content is provided via the\ndefault slot; the consumer controls its own padding and overflow.\n\nDesktop: fixed right-side panel that slides from the right.\nMobile (≤48rem): bottom-sheet drawer (60vh) — reserved for future use.",
           "name": "SlidePanel",
           "members": [
             {
@@ -18599,12 +18584,11 @@
             },
             {
               "kind": "field",
-              "name": "_previousFocus",
+              "name": "_dialog",
               "type": {
-                "text": "HTMLElement | null"
+                "text": "HTMLDialogElement"
               },
-              "privacy": "private",
-              "default": "null"
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -20559,6 +20543,17 @@
                 }
               ],
               "description": "Queues a toast for display."
+            },
+            {
+              "kind": "method",
+              "name": "_promote",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Moves the stack to the top of the browser's top layer, so it renders above any native\nmodal `<dialog>` opened earlier (a `position: fixed; z-index` stack can't). Re-showing\nputs it above layers added since the last toast. No-op without Popover API support."
             },
             {
               "kind": "method",

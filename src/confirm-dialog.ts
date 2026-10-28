@@ -1,5 +1,5 @@
 import { LitElement, css, html, nothing, type PropertyValues } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, query } from "lit/decorators.js";
 import { iconArrowPath } from "./icons.js";
 import { tokens } from "./tokens.js";
 import {
@@ -10,9 +10,10 @@ import {
 } from "./utils/layer-stack.js";
 
 /**
- * Reusable confirmation dialog: overlay + centered card with a slotted body,
- * an optional error line, and Cancel/Confirm actions. Instant `display:none`
- * → `display:flex` toggle (no transitions). Fires `confirm`/`cancel`
+ * Reusable confirmation dialog: a native modal `<dialog>` (top layer, inert
+ * page behind it, built-in focus containment) with a slotted body, an
+ * optional error line, and Cancel/Confirm actions. Instant open/close (no
+ * transitions). Fires `confirm`/`cancel`
  * (bubbling, composed) instead of owning any deletion logic itself —
  * callers stay in charge of the request. Set `size="sm"` for compact
  * actions one step below the default, matching `ui-button`'s `sm` size.
@@ -26,21 +27,13 @@ export class ConfirmDialog extends LitElement {
   static override styles = [
     tokens,
     css`
-      .overlay {
-        position: fixed;
-        inset: 0;
-        background: var(--ui-overlay, rgb(15 23 42 / 0.45));
-        z-index: var(--component-layer-z, 50);
-        display: none;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 10vh 1.25rem 1.25rem;
-        box-sizing: border-box;
-      }
-      .overlay.open {
-        display: flex;
-      }
       .dialog {
+        /* Native modal <dialog>: top layer, inert page behind it, built-in focus containment. */
+        position: fixed;
+        inset: 0 0 auto 0;
+        margin: 10vh auto 0;
+        border: 0;
+        color: inherit;
         background: var(--ui-surface, #ffffff);
         border-radius: var(--ui-radius, 0.5rem);
         box-shadow: var(
@@ -53,6 +46,9 @@ export class ConfirmDialog extends LitElement {
         padding: 1rem;
         box-sizing: border-box;
         outline: none;
+      }
+      .dialog::backdrop {
+        background: var(--ui-overlay, rgb(15 23 42 / 0.45));
       }
       .dialog-text {
         margin: 0 0 1rem;
@@ -208,11 +204,8 @@ export class ConfirmDialog extends LitElement {
         }
       }
       @media (max-width: 48rem) {
-        .overlay {
-          padding: 0.75rem;
-          overflow-y: auto;
-        }
         .dialog {
+          margin-top: 0.75rem;
           padding: 0.75rem;
         }
       }
@@ -234,7 +227,7 @@ export class ConfirmDialog extends LitElement {
   /** Size — `sm` reduces both action buttons' height/padding/font-size one step below the default. */
   @property({ reflect: true }) size: "sm" | "md" = "md";
 
-  private _previousFocus: HTMLElement | null = null;
+  @query("dialog") private _dialog!: HTMLDialogElement;
 
   private _confirm() {
     this.dispatchEvent(new CustomEvent("confirm", { bubbles: true, composed: true }));
@@ -244,107 +237,71 @@ export class ConfirmDialog extends LitElement {
     this.dispatchEvent(new CustomEvent("cancel", { bubbles: true, composed: true }));
   }
 
-  private _getFocusableElements(): HTMLElement[] {
-    const selector =
-      "a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex='-1'])";
-    const slotted = Array.from(this.querySelectorAll<HTMLElement>(selector));
-    const internal = Array.from(
-      this.shadowRoot?.querySelectorAll<HTMLElement>(selector) ?? [],
-    ).filter((element) => element.closest(".dialog") !== null);
-    return [...slotted, ...internal].filter((element) => !element.hasAttribute("hidden"));
-  }
-
+  /** Native focus delegation doesn't reliably reach slotted light-DOM content, so focus explicitly. */
   private _focusInitial(): void {
     const autofocus = this.querySelector<HTMLElement>("[autofocus]");
     const cancel = this.shadowRoot?.querySelector<HTMLElement>(".btn-cancel:not(:disabled)");
-    const dialog = this.shadowRoot?.querySelector<HTMLElement>(".dialog");
-    (autofocus ?? cancel ?? this._getFocusableElements()[0] ?? dialog)?.focus();
+    (autofocus ?? cancel)?.focus();
   }
 
-  private _onDocumentFocusIn = (event: FocusEvent): void => {
-    if (!this.open || !isTopLayer(this) || event.composedPath().includes(this)) return;
-    this._focusInitial();
+  /** Escape goes to the topmost layer only; it's ignored while a request is in flight. */
+  private _onWindowKeydown = (event: KeyboardEvent): void => {
+    if (this.open && claimEscape(this, event) && !this.busy) this._cancel();
   };
 
-  private _onWindowKeydown = (event: KeyboardEvent): void => {
-    if (!this.open || !isTopLayer(this)) return;
-    if (claimEscape(this, event) && !this.busy) {
-      this._cancel();
-      return;
-    }
-    if (event.key !== "Tab") return;
-
-    const focusable = this._getFocusableElements();
-    if (focusable.length === 0) {
-      event.preventDefault();
-      this._focusInitial();
-      return;
-    }
-    const active = (this.shadowRoot?.activeElement ?? document.activeElement) as HTMLElement | null;
-    const index = focusable.indexOf(active as HTMLElement);
-    if (event.shiftKey && index <= 0) {
-      event.preventDefault();
-      focusable.at(-1)?.focus();
-    } else if (!event.shiftKey && index === focusable.length - 1) {
-      event.preventDefault();
-      focusable[0]?.focus();
-    }
+  /**
+   * Native close requests (e.g. a back gesture) are routed through `cancel`; the consumer owns `open`.
+   * Named `_onNativeCancel` because this component also fires its own bubbling `cancel` CustomEvent.
+   */
+  private _onNativeCancel = (event: Event): void => {
+    event.preventDefault();
+    if (this.open && isTopLayer(this) && !this.busy) this._cancel();
   };
 
   protected override updated(changed: PropertyValues): void {
     if (!changed.has("open")) return;
     if (this.open) {
       activateLayer(this);
-      this._previousFocus = document.activeElement as HTMLElement | null;
-      document.addEventListener("focusin", this._onDocumentFocusIn, true);
       window.addEventListener("keydown", this._onWindowKeydown, true);
+      if (!this._dialog.open) this._dialog.showModal();
       this._focusInitial();
       return;
     }
     deactivateLayer(this);
-    document.removeEventListener("focusin", this._onDocumentFocusIn, true);
     window.removeEventListener("keydown", this._onWindowKeydown, true);
-    if (this._previousFocus?.isConnected) this._previousFocus.focus();
-    this._previousFocus = null;
+    if (this._dialog.open) this._dialog.close();
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    document.removeEventListener("focusin", this._onDocumentFocusIn, true);
     window.removeEventListener("keydown", this._onWindowKeydown, true);
     deactivateLayer(this);
-    if (this._previousFocus?.isConnected) this._previousFocus.focus();
-    this._previousFocus = null;
     this.open = false;
   }
 
   override render() {
     const accessibleName = this.getAttribute("aria-label") ?? "Confirmation";
     return html`
-      <div class="overlay ${this.open ? "open" : ""}">
-        <div
-          class="dialog"
-          role="dialog"
-          aria-modal="true"
-          aria-label=${accessibleName}
-          aria-describedby=${this.error ? "dialog-text dialog-error" : "dialog-text"}
-          tabindex="-1"
-        >
-          <p id="dialog-text" class="dialog-text"><slot></slot></p>
-          ${this.error
-            ? html`<p id="dialog-error" class="error-text" role="alert">${this.error}</p>`
-            : nothing}
-          <div class="dialog-actions">
-            <button class="btn-cancel" ?disabled=${this.busy} @click=${this._cancel}>${this.cancelLabel}</button>
-            <button class=${this.danger ? "btn-danger" : "btn-primary"} ?disabled=${this.busy} @click=${this._confirm}>
-              ${this.busy
-                ? html`<span class="spin" aria-hidden="true">${iconArrowPath(14)}</span>`
-                : nothing}
-              ${this.confirmLabel}
-            </button>
-          </div>
+      <dialog
+        class="dialog"
+        aria-label=${accessibleName}
+        aria-describedby=${this.error ? "dialog-text dialog-error" : "dialog-text"}
+        @cancel=${this._onNativeCancel}
+      >
+        <p id="dialog-text" class="dialog-text"><slot></slot></p>
+        ${this.error
+          ? html`<p id="dialog-error" class="error-text" role="alert">${this.error}</p>`
+          : nothing}
+        <div class="dialog-actions">
+          <button class="btn-cancel" ?disabled=${this.busy} @click=${this._cancel}>${this.cancelLabel}</button>
+          <button class=${this.danger ? "btn-danger" : "btn-primary"} ?disabled=${this.busy} @click=${this._confirm}>
+            ${this.busy
+              ? html`<span class="spin" aria-hidden="true">${iconArrowPath(14)}</span>`
+              : nothing}
+            ${this.confirmLabel}
+          </button>
         </div>
-      </div>
+      </dialog>
     `;
   }
 }

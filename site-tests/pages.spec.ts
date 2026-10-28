@@ -136,7 +136,7 @@ test.describe("GitHub Pages artifact", () => {
     expect(componentState.upgraded).toBe(true);
     expect(componentState.hasShadowRoot).toBe(true);
     await page.getByTestId("confirm-open").click();
-    await expect(page.getByTestId("confirm-demo").locator(".overlay")).toHaveClass(/open/);
+    await expect(page.getByTestId("confirm-demo").locator("dialog")).toHaveJSProperty("open", true);
 
     const activeImage = page
       .locator('#photo-gallery-demo picture:not([aria-hidden="true"]) img')

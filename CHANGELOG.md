@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- `modal-dialog`, `confirm-dialog` and `slide-panel` are now built on the native `<dialog>` element
+  instead of a `role="dialog"` `<div>` with a hand-rolled focus trap. `modal-dialog`/`confirm-dialog`
+  use `showModal()`: they render in the top layer, make the page behind them inert, contain focus
+  and restore it on close (Tab can now also leave to browser chrome, which is native behavior).
+  `slide-panel` uses non-modal `show()` and keeps `--component-layer-z` stacking; its slide uses
+  `@starting-style` + `display` transitions. Public API (props, `panel-close`/`confirm`/`cancel`
+  events, slots, sizes) is unchanged, but code that reached into the internals must update:
+  `.overlay` is gone (use `dialog[open]` / `::backdrop`), `.panel.open` is now `.panel[open]`, and
+  `aria-modal` is implicit. `utils/layer-stack` is kept so `popover-panel` and `cron-schedule`
+  still win Escape when opened inside a modal. A modal opened over an open `slide-panel` now
+  covers it (top layer).
+- `toast-notification` is a manual `popover`, so toasts render in the top layer above native modal
+  dialogs. While a modal is open the rest of the page is inert, so a toast shown then is visible
+  but not clickable (auto-dismiss still runs) until the modal closes.
+- `progress-bar` renders a native `<progress>` (styled via `::-webkit-progress-*` /
+  `::-moz-progress-bar`) instead of a `role="progressbar"` span; `.fill` is gone. Props and the
+  `--fill-color`/`--track-color` hooks are unchanged.
 - Added a `"blueprint"` theme (`data-theme="blueprint"` on `<html>`, alongside
   `"light"`/`"dark"`/`"gradient"`/`"metro"`): a technical spec-sheet look —
   warm ink on paper, one pure `#0000ff` accent, square corners, hard hairline

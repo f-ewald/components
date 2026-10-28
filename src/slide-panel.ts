@@ -1,12 +1,12 @@
 import { LitElement, css, html, nothing, type PropertyValues } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, query } from "lit/decorators.js";
 import { iconX } from "./icons.js";
 import { tokens } from "./tokens.js";
 import { activateLayer, claimEscape, deactivateLayer } from "./utils/layer-stack.js";
 
 /**
- * Generic sliding panel shell. Handles positioning, open/close animation,
- * header chrome, and a close button. Body content is provided via the
+ * Generic sliding panel shell: a non-modal native `<dialog>` (`show()`). Handles
+ * positioning, open/close animation, header chrome, and a close button. Body content is provided via the
  * default slot; the consumer controls its own padding and overflow.
  *
  * Desktop: fixed right-side panel that slides from the right.
@@ -29,22 +29,38 @@ export class SlidePanel extends LitElement {
         display: block;
       }
       .panel {
+        /* Non-modal native <dialog> (show()): stays in normal stacking, so --component-layer-z still orders panels. */
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
+        left: auto;
         width: 20rem;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        color: inherit;
         z-index: var(--component-layer-z, 20);
         background: var(--ui-surface, #ffffff);
         box-shadow: var(--ui-shadow-lg, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1));
         transform: translateX(110%);
-        transition: transform 250ms ease;
-        display: flex;
+        /* display is animated discretely so the closing slide stays visible until it finishes. */
+        transition:
+          transform 250ms ease,
+          display 250ms allow-discrete;
         flex-direction: column;
         overflow: hidden;
       }
-      .panel.open {
+      /* Scoped to [open]: an author display value would otherwise defeat the UA's display:none. */
+      .panel[open] {
+        display: flex;
         transform: translateX(0);
+      }
+      @starting-style {
+        .panel[open] {
+          transform: translateX(110%);
+        }
       }
       .panel-header {
         display: flex;
@@ -127,8 +143,13 @@ export class SlidePanel extends LitElement {
           );
           transform: translateY(110%);
         }
-        .panel.open {
+        .panel[open] {
           transform: translateY(0);
+        }
+        @starting-style {
+          .panel[open] {
+            transform: translateY(110%);
+          }
         }
         .handle {
           display: block;
@@ -146,7 +167,7 @@ export class SlidePanel extends LitElement {
     `,
   ];
 
-  private _previousFocus: HTMLElement | null = null;
+  @query("dialog") private _dialog!: HTMLDialogElement;
 
   private _close() {
     this.dispatchEvent(new CustomEvent("panel-close", { bubbles: true, composed: true }));
@@ -161,37 +182,30 @@ export class SlidePanel extends LitElement {
     if (!changed.has("open")) return;
     if (this.open) {
       activateLayer(this);
-      this._previousFocus = document.activeElement as HTMLElement | null;
       window.addEventListener("keydown", this._onWindowKeydown);
+      if (!this._dialog.open) this._dialog.show();
       this.shadowRoot?.querySelector<HTMLElement>(".close-btn")?.focus();
       return;
     }
     deactivateLayer(this);
     window.removeEventListener("keydown", this._onWindowKeydown);
-    if (this._previousFocus?.isConnected) this._previousFocus.focus();
-    this._previousFocus = null;
+    if (this._dialog.open) this._dialog.close();
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener("keydown", this._onWindowKeydown);
     deactivateLayer(this);
-    if (this._previousFocus?.isConnected) this._previousFocus.focus();
-    this._previousFocus = null;
     this.open = false;
   }
 
   override render() {
     const explicitLabel = this.getAttribute("aria-label");
     return html`
-      <div
-        class="panel ${this.open ? "open" : ""}"
-        role="dialog"
-        aria-modal="false"
+      <dialog
+        class="panel"
         aria-label=${explicitLabel ?? nothing}
         aria-labelledby=${explicitLabel ? nothing : "panel-title"}
-        aria-hidden=${String(!this.open)}
-        ?inert=${!this.open}
       >
         <div class="handle" aria-hidden="true"></div>
         <div class="panel-header">
@@ -203,7 +217,7 @@ export class SlidePanel extends LitElement {
           </button>
         </div>
         <slot></slot>
-      </div>
+      </dialog>
     `;
   }
 }
