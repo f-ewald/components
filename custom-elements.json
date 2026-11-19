@@ -12387,6 +12387,22 @@
         },
         {
           "kind": "js",
+          "name": "KindIcon",
+          "declaration": {
+            "name": "KindIcon",
+            "module": "./kind-icon.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "KindIconStyle",
+          "declaration": {
+            "name": "KindIconStyle",
+            "module": "./kind-icon.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "FrameBox",
           "declaration": {
             "name": "FrameBox",
@@ -14064,6 +14080,113 @@
           "declaration": {
             "name": "KbdHint",
             "module": "src/kbd-hint.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kind-icon.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Inline icon for a named kind (e.g. a service, a library, an external\npackage), looked up in a shared `kinds` map so tables, lists, and search\nresults show the same icon and color as a `dag-graph` legend. With\n`show-label` the kind's label follows the icon as text; otherwise the\nicon alone is exposed as an image named by the label. Renders nothing for\na kind missing from `kinds`.",
+          "name": "KindIcon",
+          "members": [
+            {
+              "kind": "field",
+              "name": "kind",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Key of the kind to show, looked up in `kinds`.",
+              "attribute": "kind",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "kinds",
+              "type": {
+                "text": "Record<string, KindIconStyle>"
+              },
+              "default": "{}",
+              "description": "Presentation per kind: label, color, and icon. Shareable with `dag-graph`'s `kinds`."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "14 | 18"
+              },
+              "default": "14",
+              "description": "Square icon size in pixels: 14 inline, 18 standalone.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "showLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the kind's label as text after the icon.",
+              "attribute": "show-label",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "kind",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Key of the kind to show, looked up in `kinds`.",
+              "fieldName": "kind"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "14 | 18"
+              },
+              "default": "14",
+              "description": "Square icon size in pixels: 14 inline, 18 standalone.",
+              "fieldName": "size"
+            },
+            {
+              "name": "show-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the kind's label as text after the icon.",
+              "fieldName": "showLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "kind-icon",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KindIcon",
+          "declaration": {
+            "name": "KindIcon",
+            "module": "src/kind-icon.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "kind-icon",
+          "declaration": {
+            "name": "KindIcon",
+            "module": "src/kind-icon.ts"
           }
         }
       ]

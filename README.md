@@ -91,6 +91,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<kanban-card>` | [API reference](https://f-ewald.github.io/components/docs/kanban-card.html) |
 | `<kanban-column>` | [API reference](https://f-ewald.github.io/components/docs/kanban-column.html) |
 | `<kbd-hint>` | [API reference](https://f-ewald.github.io/components/docs/kbd-hint.html) |
+| `<kind-icon>` | [API reference](https://f-ewald.github.io/components/docs/kind-icon.html) |
 | `<link-card>` | [API reference](https://f-ewald.github.io/components/docs/link-card.html) |
 | `<live-timer>` | [API reference](https://f-ewald.github.io/components/docs/live-timer.html) |
 | `<load-more>` | [API reference](https://f-ewald.github.io/components/docs/load-more.html) |

@@ -103,6 +103,7 @@ export {
 } from "./dropdown-button.js";
 export { IconButton } from "./icon-button.js";
 export { KbdHint, type KbdPlatform } from "./kbd-hint.js";
+export { KindIcon, type KindIconStyle } from "./kind-icon.js";
 export { FrameBox } from "./frame-box.js";
 export { AppShell, type SidebarToggleDetail } from "./app-shell.js";
 export { AppSidebar } from "./app-sidebar.js";

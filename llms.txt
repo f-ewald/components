@@ -1536,6 +1536,36 @@ Example:
 <kbd-hint keys="Mod+Shift+Enter" platform="mac"></kbd-hint>
 ```
 
+## <kind-icon>
+
+Inline icon for a named kind (e.g. a service, a library, an external
+package), looked up in a shared `kinds` map so tables, lists, and search
+results show the same icon and color as a `dag-graph` legend. With
+`show-label` the kind's label follows the icon as text; otherwise the
+icon alone is exposed as an image named by the label. Renders nothing for
+a kind missing from `kinds`.
+
+Import: `import "@f-ewald/components/kind-icon.js";`
+
+Properties: `kind` (attribute `kind`) : string, default ""; `kinds` (JS property only) : Record<string, KindIconStyle>, default {}; `size` (attribute `size`) : 14 | 18, default 14; `showLabel` (attribute `show-label`) : boolean, default false
+Events: none
+CSS custom properties: `--ui-primary`
+
+Example:
+```html
+<kind-icon kind="service" show-label></kind-icon>
+<kind-icon kind="package" size="18"></kind-icon>
+<script type="module">
+  import { iconCube, iconServer } from "@f-ewald/components/icons.js";
+
+  const kinds = {
+    service: { label: "Service", icon: iconServer, color: "#4269d0" },
+    package: { label: "External package", icon: iconCube, color: "#9498a0" },
+  };
+  for (const el of document.querySelectorAll("kind-icon")) el.kinds = kinds;
+</script>
+```
+
 ## <link-card>
 
 A single linked-resource tile — logo (or an initial-letter fallback),

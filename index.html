@@ -69,6 +69,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kanban-board">kanban-board</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kbd-hint">kbd-hint</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kind-icon">kind-icon</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#link-card">link-card</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#load-more">load-more</a>
@@ -2018,6 +2019,43 @@ board.addEventListener("card-open", (e) => console.log(e.detail.cardId));</code>
 
 &lt;kbd-hint keys="Mod+K"&gt;&lt;/kbd-hint&gt;
 &lt;kbd-hint keys="Mod+Shift+Enter" platform="mac"&gt;&lt;/kbd-hint&gt;</code></pre>
+        </section>
+
+        <section id="kind-icon" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-kind-icon">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#kind-icon">kind-icon</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Inline icon for a named kind, looked up in a <code>kinds</code> map — the same map
+            <code>dag-graph</code> takes — so tables, lists, and search results match the graph's icons and
+            colors. <code>show-label</code> adds the kind's label as text; without it the icon is an image named
+            by the label.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 demo-example rounded-lg border border-slate-200 p-6 text-sm">
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <ui-checkbox id="kind-icon-labels" data-testid="kind-icon-labels" label="Show labels" checked></ui-checkbox>
+              <ui-checkbox id="kind-icon-large" data-testid="kind-icon-large" label="Size 18"></ui-checkbox>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-2" data-testid="kind-icon-demo">
+              <kind-icon class="kind-icon-demo kind-icon-labeled" kind="service" show-label></kind-icon>
+              <kind-icon class="kind-icon-demo kind-icon-labeled" kind="library" show-label></kind-icon>
+              <kind-icon class="kind-icon-demo kind-icon-labeled" kind="package" show-label></kind-icon>
+              <kind-icon class="kind-icon-demo kind-icon-labeled" kind="unknown" show-label></kind-icon>
+            </div>
+            <p class="text-slate-700" data-testid="kind-icon-inline">
+              <kind-icon class="kind-icon-demo" kind="service"></kind-icon> api-gateway depends on
+              <kind-icon class="kind-icon-demo" kind="package"></kind-icon> requests.
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/kind-icon.js";
+import { iconCube, iconServer } from "@f-ewald/components/icons.js";
+
+const kinds = {
+  service: { label: "Service", icon: iconServer, color: "#4269d0" },
+  package: { label: "External package", icon: iconCube, color: "#9498a0" },
+};
+for (const el of document.querySelectorAll("kind-icon")) el.kinds = kinds;
+
+&lt;kind-icon kind="service" show-label&gt;&lt;/kind-icon&gt;
+&lt;kind-icon kind="package" size="18"&gt;&lt;/kind-icon&gt;</code></pre>
         </section>
 
         <section id="link-card" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-link-card">

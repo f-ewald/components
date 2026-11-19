@@ -684,6 +684,17 @@ See the [changelog](#markdown-view) for details.\`;
 </script>`,
   "kbd-hint": `<kbd-hint keys="Mod+K"></kbd-hint>
 <kbd-hint keys="Mod+Shift+Enter" platform="mac"></kbd-hint>`,
+  "kind-icon": `<kind-icon kind="service" show-label></kind-icon>
+<kind-icon kind="package" size="18"></kind-icon>
+<script type="module">
+  import { iconCube, iconServer } from "@f-ewald/components/icons.js";
+
+  const kinds = {
+    service: { label: "Service", icon: iconServer, color: "#4269d0" },
+    package: { label: "External package", icon: iconCube, color: "#9498a0" },
+  };
+  for (const el of document.querySelectorAll("kind-icon")) el.kinds = kinds;
+</script>`,
   "frame-box": `<frame-box label="Debug">
   Framed content goes here.
 </frame-box>`,

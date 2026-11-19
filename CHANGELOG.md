@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added `kind-icon`: an inline icon for a named kind, looked up in a `kinds` map of label, color, and
+  icon (`KindIconStyle`). `dag-graph`'s `kinds` map fits it as is, so tables, lists, and search results can
+  show the same icons and colors as the graph. `show-label` adds the label as text; without it the icon is
+  an image named by the label. `size` is 14 (default) or 18. A kind missing from `kinds` renders nothing.
 - Added `dag-graph`: an interactive, layered drawing of a directed graph (e.g. dependencies). Nodes are
   laid out in layers with `@dagrejs/dagre` (a new runtime dependency, imported only by `dag-graph`),
   flowing left to right or top to bottom (`direction`); cycles are allowed and their closing edges are

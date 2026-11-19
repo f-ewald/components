@@ -39,6 +39,8 @@ import {
   type DagGraph,
   type DagNode,
   type DagNodeKind,
+  type KindIcon,
+  type KindIconStyle,
   type ChatMessage,
   type ChevronPanel,
   type UiCheckbox,
@@ -1248,6 +1250,24 @@ if (dagDemo) {
     dagDemo.style.setProperty("--dag-edge-color", custom ? "#4269d0" : "");
   });
 }
+
+// kind-icon (the dag-graph kinds; toggle labels and size)
+const kindIcons = [...document.querySelectorAll<KindIcon>("kind-icon.kind-icon-demo")];
+const kindIconKinds: Record<string, KindIconStyle> = {
+  service: { label: "Service", icon: iconServer, color: "#4269d0" },
+  library: { label: "Library", icon: iconBookOpen, color: "#3ca951" },
+  package: { label: "External package", icon: iconCube, color: "#9498a0" },
+  unknown: { label: "Unknown", icon: iconQuestionMarkCircle, color: "#efb118" },
+};
+for (const icon of kindIcons) icon.kinds = kindIconKinds;
+document.getElementById("kind-icon-labels")?.addEventListener("change", (e) => {
+  const checked = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+  for (const icon of kindIcons) if (icon.classList.contains("kind-icon-labeled")) icon.showLabel = checked;
+});
+document.getElementById("kind-icon-large")?.addEventListener("change", (e) => {
+  const size = (e as CustomEvent<{ checked: boolean }>).detail.checked ? 18 : 14;
+  for (const icon of kindIcons) icon.size = size;
+});
 
 // data-table (seed columns/rows, wire a row-click destination)
 const tableTasks = document.getElementById("table-tasks") as DataTable;
