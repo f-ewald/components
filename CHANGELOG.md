@@ -18,6 +18,10 @@
 - Added `--ui-button-secondary-gloss-start`/`--ui-button-secondary-gloss-end`: the secondary gloss as two
   stop colors, for SVG surfaces that can't paint a CSS `linear-gradient` (`dag-graph`'s nodes). Both
   default to `--ui-surface` (a flat fill); `gradient` sets them to its secondary background's stops.
+- Added optional `icon` and `description` fields to `autocomplete-input`'s `AutocompleteOption`: the
+  pre-rendered icon (e.g. `iconServer(14)`) sits before the value, and the description is a smaller,
+  muted line under it. Both apply to local `options`; an `endpoint` response can include `description`.
+  Filtering still matches the value only.
 - Added `iconServer`, `iconBookOpen`, `iconCube`, `iconMagnifyingGlassPlus`, `iconMagnifyingGlassMinus`,
   `iconViewfinderCircle`, `iconArrowLongRight`, and `iconArrowLongDown` to the icon catalog.
 

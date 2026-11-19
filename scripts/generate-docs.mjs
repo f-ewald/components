@@ -482,9 +482,12 @@ const EXAMPLES = {
   <autocomplete-input clearable name="language" placeholder="Start typing a language…"></autocomplete-input>
 </form>
 <script type="module">
-  // Local mode: filters client-side, no network request.
+  import { iconGlobeAlt } from "@f-ewald/components/icons.js";
+
+  // Local mode: filters client-side, no network request. \`icon\` and
+  // \`description\` are optional.
   document.querySelector("autocomplete-input").options = [
-    { key: "ts", value: "TypeScript" },
+    { key: "ts", value: "TypeScript", icon: iconGlobeAlt(14), description: "Typed superset of JavaScript" },
     { key: "py", value: "Python" },
   ];
 

@@ -209,6 +209,42 @@ test.describe("autocomplete-input", () => {
     await expect(input).toHaveValue("JavaScript");
   });
 
+  test("renders optional icons and muted descriptions without matching on them", async ({ page }) => {
+    await page.goto("/");
+    const autocomplete = page.locator("#autocomplete-demo");
+    const input = autocomplete.locator("input");
+
+    // "TypeScript" mentions JavaScript only in its description, so it must not match.
+    await input.fill("Jav");
+    const suggestions = autocomplete.locator(".suggestion");
+    await expect(suggestions).toHaveCount(2);
+    const first = suggestions.first();
+    await expect(first.locator(".suggestion-icon svg")).toBeVisible();
+    await expect(first.locator(".suggestion-icon")).toHaveAttribute("aria-hidden", "true");
+    await expect(first.locator(".suggestion-value")).toHaveText("JavaScript");
+    const description = first.locator(".suggestion-description");
+    await expect(description).toHaveText("The language of the web");
+    await expect(description).toHaveCSS("color", "rgb(100, 116, 139)");
+    await expect(description).toHaveCSS("font-size", "11px");
+    await expect(first.locator(".suggestion-value")).toHaveCSS("font-size", "12px");
+    const [valueBox, descriptionBox] = await Promise.all([
+      first.locator(".suggestion-value").boundingBox(),
+      description.boundingBox(),
+    ]);
+    expect(descriptionBox!.y).toBeGreaterThan(valueBox!.y);
+
+    await first.click();
+    await expect(page.locator("#autocomplete-selected")).toContainText("JavaScript (key: js)");
+
+    await autocomplete.evaluate((el: HTMLElement & { options: unknown }) => {
+      el.options = [{ key: "plain", value: "Plain option" }];
+    });
+    await input.fill("Pla");
+    await expect(suggestions).toHaveCount(1);
+    await expect(suggestions.first().locator(".suggestion-icon, .suggestion-description")).toHaveCount(0);
+    await expect(suggestions.first()).toHaveText("Plain option");
+  });
+
   test("input uses the tokenized text-field padding", async ({ page }) => {
     await page.goto("/");
     const input = page.locator("#autocomplete-demo input");

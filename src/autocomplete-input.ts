@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing, type PropertyValues } from "lit";
+import { LitElement, css, html, nothing, type PropertyValues, type TemplateResult } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { iconX } from "./icons.js";
 import { tokens } from "./tokens.js";
@@ -14,6 +14,10 @@ let instanceCount = 0;
 export interface AutocompleteOption {
   key: string;
   value: string;
+  /** Optional pre-rendered icon shown before the value, e.g. `iconServer(14)`. Local `options` only — not JSON-serializable. */
+  icon?: TemplateResult;
+  /** Optional secondary line shown under the value in smaller, muted text. Not matched when filtering. */
+  description?: string;
 }
 
 /**
@@ -34,6 +38,10 @@ export interface AutocompleteOption {
  *   component filters it client-side instead of making any network
  *   request. Useful for small/fixed lists, offline use, or tests. Takes
  *   priority over `endpoint` whenever it's non-null.
+ *
+ * Each option may also carry a pre-rendered `icon` (shown before the value)
+ * and a `description` (a smaller, muted line under the value); options
+ * without them render as a plain value.
  *
  * Set `clearable` to show an in-field clear action whenever a value is
  * present.
@@ -209,9 +217,30 @@ export class AutocompleteInput extends LitElement {
         box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
       }
       .suggestion {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
         padding: 0.5rem 0.75rem;
         font-size: var(--ui-font-size-sm, 0.75rem);
         cursor: pointer;
+      }
+      .suggestion-icon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        /* Centers the icon on the value's first line rather than the whole row. */
+        min-height: calc(1em * var(--ui-line-height-tight, 1.25));
+        color: var(--ui-text-muted, #64748b);
+      }
+      .suggestion-text {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        line-height: var(--ui-line-height-tight, 1.25);
+      }
+      .suggestion-description {
+        color: var(--ui-text-muted, #64748b);
+        font-size: var(--ui-font-size-xs, 0.6875rem);
       }
       .suggestion.active,
       .suggestion:hover {
@@ -246,6 +275,10 @@ export class AutocompleteInput extends LitElement {
         .suggestion:hover {
           color: HighlightText;
           background: Highlight;
+        }
+        .suggestion.active :is(.suggestion-icon, .suggestion-description),
+        .suggestion:hover :is(.suggestion-icon, .suggestion-description) {
+          color: HighlightText;
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -539,7 +572,11 @@ export class AutocompleteInput extends LitElement {
               class="suggestion ${i === this._activeIndex ? "active" : ""}"
               @mousedown=${(e: MouseEvent) => this.#onSuggestionMousedown(e, o)}
             >
-              ${o.value}
+              ${o.icon ? html`<span class="suggestion-icon" aria-hidden="true">${o.icon}</span>` : nothing}
+              <span class="suggestion-text">
+                <span class="suggestion-value">${o.value}</span>
+                ${o.description ? html`<span class="suggestion-description">${o.description}</span>` : nothing}
+              </span>
             </li>
           `,
         )}

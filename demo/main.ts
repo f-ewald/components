@@ -71,6 +71,9 @@ import {
   iconCube,
   iconQuestionMarkCircle,
   iconServer,
+  iconCodeBracketSquare,
+  iconCpuChip,
+  iconGlobeAlt,
   iconEllipsisVertical,
   iconExclamationCircle,
   iconExclamationTriangle,
@@ -464,17 +467,15 @@ autoScrollJump?.addEventListener("click", () => {
 
 // autocomplete-input
 const autocompleteSelected = document.getElementById("autocomplete-selected")!;
-const autocompleteDemo = document.getElementById("autocomplete-demo") as HTMLElement & {
-  options: { key: string; value: string }[];
-};
+const autocompleteDemo = document.getElementById("autocomplete-demo") as AutocompleteInput | null;
 if (autocompleteDemo) {
   autocompleteDemo.options = [
-    { key: "ts", value: "TypeScript" },
-    { key: "js", value: "JavaScript" },
-    { key: "py", value: "Python" },
-    { key: "java", value: "Java" },
-    { key: "go", value: "Go" },
-    { key: "rs", value: "Rust" },
+    { key: "ts", value: "TypeScript", icon: iconGlobeAlt(14), description: "Typed superset of JavaScript" },
+    { key: "js", value: "JavaScript", icon: iconGlobeAlt(14), description: "The language of the web" },
+    { key: "py", value: "Python", icon: iconCodeBracketSquare(14), description: "Batteries-included scripting" },
+    { key: "java", value: "Java", icon: iconServer(14), description: "Runs on the JVM" },
+    { key: "go", value: "Go", icon: iconServer(14) },
+    { key: "rs", value: "Rust", icon: iconCpuChip(14), description: "Memory safety without a garbage collector" },
   ];
 }
 autocompleteDemo?.addEventListener("option-select", (e) => {
