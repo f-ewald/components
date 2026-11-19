@@ -54,6 +54,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#copy-link-button">copy-link-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#countdown-timer">countdown-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#cron-schedule">cron-schedule</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dag-graph">dag-graph</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distance-value">distance-value</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
@@ -1365,6 +1366,77 @@ const schedule = document.querySelector("cron-schedule");
 schedule.addEventListener("change", (e) =&gt; console.log(e.detail.value, schedule.description));</code></pre>
         </section>
 
+        <section id="dag-graph" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-dag-graph">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#dag-graph">dag-graph</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Layered drawing of a directed graph, e.g. dependencies. Edges flow in one direction; cycles are
+            allowed and the edges closing them are dashed. Each <code>kinds</code> entry configures a node
+            kind's icon, color, border style, and legend label, and the <code>--dag-*</code> custom properties
+            recolor nodes, edges, selection, and highlights. Drag to pan, pinch or Ctrl/&#8984; + wheel to zoom,
+            and click a node to select it (keyboard: Tab to a node, Enter; arrows pan, <kbd>+</kbd>/<kbd>-</kbd>
+            zoom, <kbd>0</kbd> fits). <code>controls</code> picks the toolbar buttons, and <code>static</code>
+            presents a fixed, fitted picture with panning and zooming off.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 demo-example rounded-lg border border-slate-200 p-6 text-sm">
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span class="text-slate-500">Toolbar <code>controls</code>:</span>
+              <ui-checkbox class="dag-control" data-control="zoom" data-testid="dag-control-zoom" label="zoom" checked></ui-checkbox>
+              <ui-checkbox class="dag-control" data-control="fit" data-testid="dag-control-fit" label="fit" checked></ui-checkbox>
+              <ui-checkbox class="dag-control" data-control="center" data-testid="dag-control-center" label="center" checked></ui-checkbox>
+              <ui-checkbox class="dag-control" data-control="direction" data-testid="dag-control-direction" label="direction" checked></ui-checkbox>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <ui-checkbox id="dag-static" data-testid="dag-static" label="Static (no pan/zoom)"></ui-checkbox>
+              <ui-checkbox id="dag-cycle" data-testid="dag-cycle" label="Highlight cycle"></ui-checkbox>
+              <ui-checkbox id="dag-colors" data-testid="dag-colors" label="Custom colors"></ui-checkbox>
+            </div>
+            <dag-graph
+              id="dag-demo"
+              data-testid="dag-demo"
+              label="Package dependencies"
+              legend
+              selected="api-gateway"
+              controls="zoom fit center direction"
+            ></dag-graph>
+            <p class="text-slate-500">
+              Selected: <code id="dag-output" data-testid="dag-output">api-gateway</code> · Direction:
+              <code id="dag-direction-output" data-testid="dag-direction-output">LR</code>
+            </p>
+            <p class="text-sm font-medium text-slate-700">Empty (<code>empty</code> slot)</p>
+            <dag-graph id="dag-empty" data-testid="dag-empty" label="Empty graph" style="--dag-graph-height: 6rem">
+              <span slot="empty">Select a package to see its dependencies.</span>
+            </dag-graph>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/dag-graph.js";
+import { iconBookOpen, iconCube, iconServer } from "@f-ewald/components/icons.js";
+
+const graph = document.querySelector("dag-graph");
+graph.kinds = {
+  service: { label: "Service", icon: iconServer, color: "#4269d0" },
+  library: { label: "Library", icon: iconBookOpen, color: "#3ca951" },
+  package: { label: "External package", icon: iconCube, color: "#9498a0", dashed: true },
+};
+graph.nodes = [
+  { id: "web", label: "web", kind: "service" },
+  { id: "auth", label: "auth-lib", kind: "library" },
+  { id: "requests", label: "requests", kind: "package" },
+];
+graph.edges = [
+  { source: "web", target: "auth" },
+  { source: "auth", target: "requests" },
+];
+graph.legend = true;
+graph.controls = "zoom fit center direction"; // toolbar buttons; "" hides the toolbar
+graph.addEventListener("node-select", (e) =&gt; console.log(e.detail.id));
+graph.addEventListener("direction-change", (e) =&gt; console.log(e.detail.direction));
+graph.fit(); // also: center(id), zoomBy(1.25)
+
+&lt;!-- A fixed, fitted picture: no panning, zooming, or toolbar --&gt;
+&lt;dag-graph static&gt;&lt;/dag-graph&gt;
+
+/* Recolor without code: */
+dag-graph { --dag-selected-color: #efb118; --dag-edge-color: #64748b; --dag-graph-height: 30rem; }</code></pre>
+        </section>
         <section id="data-table" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-data-table">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#data-table">data-table</a></h3>
           <p class="mt-1 text-sm text-slate-500">

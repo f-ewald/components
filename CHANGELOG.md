@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Added `dag-graph`: an interactive, layered drawing of a directed graph (e.g. dependencies). Nodes are
+  laid out in layers with `@dagrejs/dagre` (a new runtime dependency, imported only by `dag-graph`),
+  flowing left to right or top to bottom (`direction`); cycles are allowed and their closing edges are
+  dashed. Nodes are compact cards sized to their labels; `kinds` configures each kind's icon, color,
+  dashed border, and legend label, and `--dag-node-background`, `--dag-node-text`, `--dag-edge-color`,
+  `--dag-selected-color`, `--dag-highlight-color`, and `--dag-graph-height` restyle the rest. Supports
+  `selected` with a `node-select` event, `muted` and `highlighted` nodes and edges, drag to pan,
+  pinch/Ctrl+wheel zoom, keyboard pan/zoom/fit, and `fit()`/`center()`/`zoomBy()`. The layout keeps the
+  selected node in place when the graph changes. A built-in toolbar shows the `controls` you list (`zoom`,
+  `fit`, `center`, `direction`; default `"zoom fit center"`, empty hides it); the direction control fires
+  `direction-change`. `static` presents a fixed, always-fitted picture with panning, zooming, keyboard
+  navigation, and the toolbar turned off, while nodes stay selectable. Under the `gradient` theme the
+  toolbar strip and the node cards take the secondary-button gloss.
+- Added `--ui-button-secondary-gloss-start`/`--ui-button-secondary-gloss-end`: the secondary gloss as two
+  stop colors, for SVG surfaces that can't paint a CSS `linear-gradient` (`dag-graph`'s nodes). Both
+  default to `--ui-surface` (a flat fill); `gradient` sets them to its secondary background's stops.
+- Added `iconServer`, `iconBookOpen`, `iconCube`, `iconMagnifyingGlassPlus`, `iconMagnifyingGlassMinus`,
+  `iconViewfinderCircle`, `iconArrowLongRight`, and `iconArrowLongDown` to the icon catalog.
+
 - `modal-dialog`, `confirm-dialog` and `slide-panel` are now built on the native `<dialog>` element
   instead of a `role="dialog"` `<div>` with a hand-rolled focus trap. `modal-dialog`/`confirm-dialog`
   use `showModal()`: they render in the top layer, make the page behind them inert, contain focus

@@ -52,6 +52,13 @@ export const tokenValues: Record<string, string> = {
   // different default than secondary's borderless flat hover, so it can't
   // reuse --ui-button-secondary-background-hover's "none" default.
   "--ui-button-secondary-surface-muted": "var(--ui-surface-muted, #f8fafc)",
+  // The secondary gloss as two plain stop colors, for SVG surfaces that act
+  // as secondary buttons (dag-graph's nodes): SVG fills can't paint a CSS
+  // linear-gradient, so they build an SVG gradient from these stops instead.
+  // Both default to the flat --ui-surface, i.e. a solid fill; a gradient
+  // theme sets them to its secondary background's stops.
+  "--ui-button-secondary-gloss-start": "var(--ui-surface, #ffffff)",
+  "--ui-button-secondary-gloss-end": "var(--ui-surface, #ffffff)",
   // Shared by both primary/danger — a purely cosmetic gloss/legibility pair,
   // not color-specific, so one token covers both variants. `-highlight` is a
   // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for
@@ -279,6 +286,9 @@ export const gradientTokenValues: Record<string, string> = {
   // button turned glossy, so it tracks the hover gradient rather than a
   // separate literal that could drift out of step with it.
   "--ui-button-secondary-surface-muted": "var(--ui-button-secondary-background-hover)",
+  // Stops of --ui-button-secondary-background above, for SVG surfaces.
+  "--ui-button-secondary-gloss-start": "#f8fafc", // slate-50
+  "--ui-button-secondary-gloss-end": "#f1f5f9", // slate-100
   "--ui-button-highlight": "inset 0 1px 0 rgb(255 255 255 / 0.35)", // glossy top edge
   "--ui-button-text-shadow": "0 1px 1px rgb(0 0 0 / 0.25)", // legibility on primary/danger
   "--ui-button-accent": "#4338ca", // indigo-700, matches --ui-button-border

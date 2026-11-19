@@ -35,6 +35,10 @@ import {
   type LiveTimer,
   type CountdownTimer,
   type CronSchedule,
+  type DagEdge,
+  type DagGraph,
+  type DagNode,
+  type DagNodeKind,
   type ChatMessage,
   type ChevronPanel,
   type UiCheckbox,
@@ -62,7 +66,11 @@ import {
   type KanbanBoard,
   type KanbanColumnData,
   iconArrowPath,
+  iconBookOpen,
   iconCheckCircle,
+  iconCube,
+  iconQuestionMarkCircle,
+  iconServer,
   iconEllipsisVertical,
   iconExclamationCircle,
   iconExclamationTriangle,
@@ -1149,6 +1157,94 @@ if (kanbanDemo) {
   kanbanDemo.addEventListener("card-open", (event) => {
     const { cardId } = (event as CustomEvent).detail;
     if (kanbanLog) kanbanLog.textContent = `Opened ${cardId}`;
+  });
+}
+
+// dag-graph (a small dependency graph: every kind, a muted node, and a cycle; every control and event wired)
+const dagDemo = document.getElementById("dag-demo") as DagGraph | null;
+if (dagDemo) {
+  const dagKinds: Record<string, DagNodeKind> = {
+    service: { label: "Service", icon: iconServer, color: "#4269d0" },
+    library: { label: "Library", icon: iconBookOpen, color: "#3ca951" },
+    package: { label: "External package", icon: iconCube, color: "#9498a0", dashed: true },
+    unknown: { label: "Unknown", icon: iconQuestionMarkCircle, color: "#efb118" },
+  };
+  const dagCustomKinds: Record<string, DagNodeKind> = {
+    service: { ...dagKinds.service, color: "#ff725c" },
+    library: { ...dagKinds.library, color: "#a463f2" },
+    package: { ...dagKinds.package, color: "#6cc5b0" },
+    unknown: { ...dagKinds.unknown, color: "#9c6b4e" },
+  };
+  const dagNodes: DagNode[] = [
+    { id: "api-gateway", label: "api-gateway", kind: "service" },
+    { id: "billing-service", label: "billing-service", kind: "service" },
+    { id: "auth-lib", label: "auth-lib", kind: "library" },
+    { id: "http-utils", label: "http-utils", kind: "library" },
+    { id: "config-lib", label: "config-lib", kind: "library" },
+    { id: "metrics-lib", label: "metrics-lib", kind: "library" },
+    { id: "legacy-tool", label: "legacy-tool (not collected)", kind: "unknown", muted: true },
+    { id: "requests", label: "requests", kind: "package" },
+    { id: "pyyaml", label: "pyyaml", kind: "package" },
+    { id: "grpcio", label: "grpcio", kind: "package" },
+    { id: "protobuf", label: "protobuf", kind: "package" },
+  ];
+  const dagEdges: DagEdge[] = [
+    ["api-gateway", "auth-lib"],
+    ["api-gateway", "http-utils"],
+    ["api-gateway", "metrics-lib"],
+    ["api-gateway", "legacy-tool"],
+    ["billing-service", "auth-lib"],
+    ["billing-service", "config-lib"],
+    ["billing-service", "grpcio"],
+    ["auth-lib", "http-utils"],
+    ["auth-lib", "config-lib"],
+    ["config-lib", "metrics-lib"],
+    ["config-lib", "pyyaml"],
+    ["metrics-lib", "auth-lib"],
+    ["http-utils", "requests"],
+    ["grpcio", "protobuf"],
+  ].map(([source, target]) => ({ source, target }));
+  const dagCycle = ["auth-lib", "config-lib", "metrics-lib"];
+  const dagCycleEdges = new Set(["auth-lib>config-lib", "config-lib>metrics-lib", "metrics-lib>auth-lib"]);
+  const applyDagCycle = (highlight: boolean): void => {
+    dagDemo.nodes = dagNodes.map((node) => ({ ...node, highlighted: highlight && dagCycle.includes(node.id) }));
+    dagDemo.edges = dagEdges.map((edge) => ({
+      ...edge,
+      highlighted: highlight && dagCycleEdges.has(`${edge.source}>${edge.target}`),
+    }));
+  };
+  dagDemo.kinds = dagKinds;
+  applyDagCycle(false);
+
+  const dagOutput = document.getElementById("dag-output");
+  dagDemo.addEventListener("node-select", (e) => {
+    if (dagOutput) dagOutput.textContent = (e as CustomEvent<{ id: string }>).detail.id;
+  });
+
+  const dagDirectionOutput = document.getElementById("dag-direction-output");
+  dagDemo.addEventListener("direction-change", (e) => {
+    if (dagDirectionOutput) dagDirectionOutput.textContent = (e as CustomEvent<{ direction: string }>).detail.direction;
+  });
+  const dagControls = [...document.querySelectorAll<UiCheckbox>("ui-checkbox.dag-control")];
+  for (const checkbox of dagControls) {
+    checkbox.addEventListener("change", () => {
+      dagDemo.controls = dagControls
+        .filter((control) => control.checked)
+        .map((control) => control.dataset.control)
+        .join(" ");
+    });
+  }
+  document.getElementById("dag-static")?.addEventListener("change", (e) => {
+    dagDemo.isStatic = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+  });
+  document.getElementById("dag-cycle")?.addEventListener("change", (e) => {
+    applyDagCycle((e as CustomEvent<{ checked: boolean }>).detail.checked);
+  });
+  document.getElementById("dag-colors")?.addEventListener("change", (e) => {
+    const custom = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+    dagDemo.kinds = custom ? dagCustomKinds : dagKinds;
+    dagDemo.style.setProperty("--dag-selected-color", custom ? "#ff8ab7" : "");
+    dagDemo.style.setProperty("--dag-edge-color", custom ? "#4269d0" : "");
   });
 }
 

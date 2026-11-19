@@ -111,7 +111,10 @@ defines the details used when creating or reviewing components.
 
   A themed gradient still paints over that base, so a theme overriding the
   token behaves exactly as before; only the "token contributes nothing" case
-  changes. The layered form applies to `ui-button`'s `secondary` variant,
+  changes. SVG fills can't paint a CSS gradient, so SVG surfaces that act as
+  secondary buttons (`dag-graph`'s nodes) build an SVG `linearGradient` from
+  `--ui-button-secondary-gloss-start`/`-end` instead — both default to
+  `--ui-surface`, a flat fill, and a gradient theme sets them to its stops. The layered form applies to `ui-button`'s `secondary` variant,
   `confirm-dialog`'s Cancel, `button-group`'s unchecked segments,
   `pagination-nav`'s buttons, `radio-cards`' unchecked cards, and the floating
   `scroll-to-top`/`scroll-to-bottom`/`fullscreen-button` controls. Neither form

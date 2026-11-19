@@ -33,6 +33,8 @@ table to pick the icon matching a use case, for consistency across apps:
 | --- | --- | --- |
 | `iconAcademicCap` | 18px | Education, learning, or certification-related content. |
 | `iconArrowDownTray` | 16px | Download or export actions. |
+| `iconArrowLongDown` | 18px | A top-to-bottom flow or layout direction. |
+| `iconArrowLongRight` | 18px | A left-to-right flow or layout direction. |
 | `iconArrowPath` | 12px | Refresh actions, or an animated busy/loading spinner. |
 | `iconArrowRight` | 12px | "Continue" or forward-progressing actions, e.g. a compact next-step arrow. |
 | `iconArrowRightOnRectangle` | 16px | Logout/sign-out actions. |
@@ -41,6 +43,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconArrowsRightLeft` | 16px | Swap, exchange, or compare actions between two items. |
 | `iconArrowTopRightOnSquare` | 16px | Links that open in a new tab/window, or navigate to an external site. |
 | `iconBars3` | 18px | A hamburger menu toggle, e.g. collapsing or opening a sidebar/nav drawer. |
+| `iconBookOpen` | 20px | A library, documentation, or reading content, e.g. a library node in dag-graph. |
 | `iconCalendar` | 16px | Dates, due dates, or calendar-related metadata. |
 | `iconChatBubbleLeftRight` | 18px | Messaging, comments, or conversation-related content. |
 | `iconCheckCircle` | 16px | Success states, confirmations, or a selected-item checkmark. |
@@ -55,6 +58,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconCog` | 20px | Settings, preferences, or configuration entry points. |
 | `iconComputerDesktop` | 16px | A "system/auto" theme option, or to represent a desktop device. |
 | `iconCpuChip` | 18px | System, hardware, or technical/processing content. |
+| `iconCube` | 20px | A package or self-contained artifact, e.g. an external package node in dag-graph. |
 | `iconCurrencyDollar` | 16px | Monetary values, pricing, or billing-related content. |
 | `iconDocument` | 18px | A generic file/document icon, e.g. tile-grid's default file icon. |
 | `iconEllipsisHorizontal` | 16px | Collapsed items in an inline sequence, e.g. breadcrumb-nav's truncated middle. |
@@ -73,6 +77,8 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconLink` | 16px | Hyperlink-related actions or a linked/associated-item indicator. |
 | `iconListBullet` | 18px | A list-view toggle, or to represent list-type content. |
 | `iconMagnifyingGlass` | 16px | Search inputs or search-triggering actions. |
+| `iconMagnifyingGlassMinus` | 18px | Zoom out, e.g. dag-graph's toolbar. |
+| `iconMagnifyingGlassPlus` | 18px | Zoom in, e.g. dag-graph's toolbar. |
 | `iconMap` | 16px | A map-view toggle, or to represent map/geographic content. |
 | `iconMapPin` | 16px | A location, address, or map marker. |
 | `iconMoon` | 16px | A dark-theme toggle, or to represent night/dark mode. |
@@ -83,6 +89,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconPuzzlePiece` | 18px | Plugins, integrations, or extensible/add-on features. |
 | `iconQuestionMarkCircle` | 20px | Help, tooltips, or "learn more" affordances. |
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
+| `iconServer` | 20px | A running service or deployable, e.g. a service node in dag-graph. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
 | `iconSignal` | 16px | Live/real-time data, connectivity strength, or a traffic-conditions toggle. |
@@ -95,6 +102,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconTrash` | 16px | Delete/remove actions, typically paired with a destructive/danger style. |
 | `iconUserCircle` | 20px | A generic user/person fallback, e.g. user-avatar's icon fallback. |
 | `iconUsers` | 18px | Teams, groups, or multi-user/collaboration content. |
+| `iconViewfinderCircle` | 18px | Center or focus the view on the current selection, e.g. dag-graph's toolbar. |
 | `iconWrenchScrewdriver` | 18px | Tools, maintenance, or build/configuration actions. |
 | `iconX` | 18px | Close, dismiss, or clear (e.g. a modal, toast, or clearable input). |
 
@@ -943,6 +951,55 @@ Example:
   schedule.addEventListener("change", (e) => {
     console.log(e.detail.value, schedule.description);
   });
+</script>
+```
+
+## <dag-graph>
+
+Interactive layered drawing of a directed graph — dependencies, pipelines, or any node-link data.
+
+Nodes are placed in layers (via dagre) so edges flow left to right (or top to bottom with
+`direction="TB"`); cycles are allowed, and the edges closing them are drawn dashed and point backward.
+Each node is a compact card sized to its label, with an optional icon, color, and border style from
+`kinds`. The whole graph is shown when it fits at a readable zoom; otherwise the selected node is centered at
+100%. Drag to pan; pinch or Ctrl/⌘ + wheel to zoom (a plain wheel scrolls the page). With keyboard
+focus on the graph, arrow keys pan, `+`/`-` zoom, and `0` fits the graph. Clicking a node, or pressing
+Enter/Space on it, selects it. A toolbar in the top-right corner offers the `controls` you enable.
+
+Set `static` to present a fixed picture: the graph is always fitted into view, panning and zooming
+are off, and the toolbar is hidden; nodes can still be selected.
+
+Colors can be changed with these custom properties: `--dag-node-background`, `--dag-node-text`,
+`--dag-edge-color`, `--dag-selected-color`, and `--dag-highlight-color`; `--dag-graph-height` sets the
+height (default `24rem`).
+
+Import: `import "@f-ewald/components/dag-graph.js";`
+
+Properties: `nodes` (attribute `nodes`) : DagNode[], default []; `edges` (attribute `edges`) : DagEdge[], default []; `kinds` (JS property only) : Record<string, DagNodeKind>, default {}; `selected` (attribute `selected`) : string | null, default null; `direction` (attribute `direction`) : DagDirection, default "LR"; `label` (attribute `label`) : string, default "Directed graph"; `legend` (attribute `legend`) : boolean, default false; `controls` (attribute `controls`) : string, default "zoom fit center"; `isStatic` (attribute `static`) : boolean, default false
+Events: `direction-change`, `node-select`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-button-highlight`, `--ui-button-secondary-background`, `--ui-button-secondary-border`, `--ui-button-secondary-gloss-end`, `--ui-button-secondary-gloss-start`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-warning`
+
+Example:
+```html
+<dag-graph legend selected="web"></dag-graph>
+<script type="module">
+  import { iconBookOpen, iconCube, iconServer } from "@f-ewald/components/icons.js";
+  const graph = document.querySelector("dag-graph");
+  graph.kinds = {
+    service: { label: "Service", icon: iconServer, color: "#4269d0" },
+    library: { label: "Library", icon: iconBookOpen, color: "#3ca951" },
+    package: { label: "External package", icon: iconCube, color: "#9498a0", dashed: true },
+  };
+  graph.nodes = [
+    { id: "web", label: "web", kind: "service" },
+    { id: "auth", label: "auth-lib", kind: "library" },
+    { id: "requests", label: "requests", kind: "package" },
+  ];
+  graph.edges = [
+    { source: "web", target: "auth" },
+    { source: "auth", target: "requests" },
+  ];
+  graph.addEventListener("node-select", (e) => console.log(e.detail.id));
 </script>
 ```
 

@@ -739,6 +739,26 @@ See the [changelog](#markdown-view) for details.\`;
   </calendar-entry>
   <calendar-entry start="2026-07-10" end="2026-07-18" label="Vacation" color="success"></calendar-entry>
 </calendar-year>`,
+  "dag-graph": `<dag-graph legend selected="web"></dag-graph>
+<script type="module">
+  import { iconBookOpen, iconCube, iconServer } from "@f-ewald/components/icons.js";
+  const graph = document.querySelector("dag-graph");
+  graph.kinds = {
+    service: { label: "Service", icon: iconServer, color: "#4269d0" },
+    library: { label: "Library", icon: iconBookOpen, color: "#3ca951" },
+    package: { label: "External package", icon: iconCube, color: "#9498a0", dashed: true },
+  };
+  graph.nodes = [
+    { id: "web", label: "web", kind: "service" },
+    { id: "auth", label: "auth-lib", kind: "library" },
+    { id: "requests", label: "requests", kind: "package" },
+  ];
+  graph.edges = [
+    { source: "web", target: "auth" },
+    { source: "auth", target: "requests" },
+  ];
+  graph.addEventListener("node-select", (e) => console.log(e.detail.id));
+</script>`,
   "data-table": `<data-table></data-table>
 <script type="module">
   const table = document.querySelector("data-table");
