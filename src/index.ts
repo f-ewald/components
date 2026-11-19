@@ -92,7 +92,7 @@ export {
   type MultiSelectOption,
   type MultiSelectVariant,
 } from "./multi-select.js";
-export { DataTable, type DataTableColumn } from "./data-table.js";
+export { DataTable, type DataTableAlign, type DataTableColumn } from "./data-table.js";
 export { TileGrid } from "./tile-grid.js";
 export { TreeView, type TreeNode } from "./tree-view.js";
 export { PopoverPanel } from "./popover-panel.js";

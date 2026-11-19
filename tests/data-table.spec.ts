@@ -12,6 +12,35 @@ test.describe("data-table", () => {
     await expect(rows.nth(1).locator("td")).toHaveText(["Fix the login bug", "Done"]);
   });
 
+  test("columns show decorative header icons and align their header and cells", async ({ page }) => {
+    await page.goto("/");
+    const table = page.locator("#table-packages");
+    const headers = table.locator("th");
+
+    await expect(headers).toHaveText(["Package", "Direct", "Total"]);
+    await expect(headers.nth(1).locator(".header-icon svg")).toBeVisible();
+    await expect(headers.nth(1).locator(".header-icon")).toHaveAttribute("aria-hidden", "true");
+    await expect(headers.nth(0)).toHaveCSS("text-align", "start");
+    await expect(headers.nth(1)).toHaveCSS("text-align", "end");
+    const total = table.locator("tbody tr").first().locator("td").nth(2);
+    await expect(total).toHaveText("1204");
+    await expect(total).toHaveCSS("text-align", "end");
+    await expect(total).toHaveCSS("font-variant-numeric", "tabular-nums");
+    await expect(table.locator("tbody tr").first().locator("td").first()).toHaveCSS("text-align", "start");
+
+    await table.evaluate(async (element) => {
+      const dataTable = element as HTMLElement & {
+        columns: Array<{ key: string; label: string; align?: string }>;
+        updateComplete: Promise<boolean>;
+      };
+      dataTable.columns = [{ key: "name", label: "Package", align: "center" }];
+      await dataTable.updateComplete;
+    });
+    await expect(headers).toHaveCount(1);
+    await expect(headers.first().locator(".header-icon")).toHaveCount(0);
+    await expect(headers.first()).toHaveCSS("text-align", "center");
+  });
+
   test("clicking a row navigates via rowHref", async ({ page }) => {
     await page.goto("/");
     const el = page.locator("#table-tasks");

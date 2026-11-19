@@ -71,6 +71,7 @@ import {
   iconBookOpen,
   iconCheckCircle,
   iconCube,
+  iconArrowLongRight,
   iconQuestionMarkCircle,
   iconServer,
   iconCodeBracketSquare,
@@ -1281,6 +1282,19 @@ if (tableTasks) {
     { id: "tsk_2", title: "Fix the login bug", state: "Done" },
   ];
   tableTasks.rowHref = (row) => `#${(row as { id: string }).id}`;
+}
+const tablePackages = document.getElementById("table-packages") as DataTable | null;
+if (tablePackages) {
+  tablePackages.columns = [
+    { key: "name", label: "Package", icon: iconCube(14) },
+    { key: "direct", label: "Direct", icon: iconArrowLongRight(14), align: "end" },
+    { key: "total", label: "Total", icon: iconArrowLongRight(14), align: "end" },
+  ];
+  tablePackages.rows = [
+    { name: "requests", direct: 312, total: 1204 },
+    { name: "attrs", direct: 9, total: 87 },
+    { name: "six", direct: 41, total: 2391 },
+  ];
 }
 
 // tile-grid

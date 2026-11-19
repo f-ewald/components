@@ -1446,12 +1446,15 @@ dag-graph { --dag-selected-color: #efb118; --dag-edge-color: #64748b; --dag-grap
           <p class="mt-1 text-sm text-slate-500">
             Generic table shell: a header from <code>columns</code>, one row per <code>rows</code>
             entry, cell content from <code>renderCell</code>. Optional <code>rowHref</code> makes
-            whole rows clickable.
+            whole rows clickable. Columns may add a header <code>icon</code> and an <code>align</code>
+            (<code>end</code> for numbers).
           </p>
-          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+          <div class="mt-6 flex flex-col gap-6 demo-example rounded-lg border border-slate-200 p-6">
             <data-table id="table-tasks" data-testid="table-tasks"></data-table>
+            <data-table id="table-packages" data-testid="table-packages"></data-table>
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/data-table.js";
+import { iconArrowLongRight } from "@f-ewald/components/icons.js";
 
 const table = document.querySelector("data-table");
 table.columns = [
@@ -1462,7 +1465,14 @@ table.rows = [
   { id: "tsk_1", title: "Write onboarding docs", state: "Backlog" },
   { id: "tsk_2", title: "Fix the login bug", state: "Done" },
 ];
-table.rowHref = (row) => `#/tasks/${row.id}`;</code></pre>
+table.rowHref = (row) => `#/tasks/${row.id}`;
+
+// Header icons and alignment, e.g. right-aligned numbers:
+const packages = document.querySelector("#packages");
+packages.columns = [
+  { key: "name", label: "Package" },
+  { key: "dependents", label: "Dependents", icon: iconArrowLongRight(14), align: "end" },
+];</code></pre>
         </section>
 
         <section id="distance-value" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-distance-value">

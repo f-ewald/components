@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing } from "lit";
+import { LitElement, css, html, nothing, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { tokens } from "./tokens.js";
@@ -7,13 +7,23 @@ import { tokens } from "./tokens.js";
 export interface DataTableColumn {
   key: string;
   label: string;
+  /** Pre-rendered decorative icon shown before the header text, e.g. `iconClock(14)`. */
+  icon?: TemplateResult;
+  /** Horizontal alignment of the header and its cells; `end` suits numbers. Defaults to `start`. */
+  align?: DataTableAlign;
 }
+
+/** Horizontal alignment of a column's header and cells. */
+export type DataTableAlign = "start" | "center" | "end";
 
 /**
  * A generic, presentational table shell: renders a `<thead>` from `columns`
  * and one `<tr>` per entry in `rows`, with each cell's content produced by
  * `renderCell` (default: plain property lookup on the row object). Knows
  * nothing about what a "row" means — callers own the data shape entirely.
+ *
+ * Each column may add a decorative header `icon` and an `align` for its
+ * header and cells (`end` right-aligns numbers, with tabular figures).
  *
  * Optional `rowHref` makes whole rows clickable (navigating via `location.hash`),
  * without hijacking clicks on nested interactive elements (links/buttons) a
@@ -45,7 +55,7 @@ export class DataTable extends LitElement {
         border-collapse: collapse;
       }
       th {
-        text-align: left;
+        text-align: start;
         font-weight: var(--ui-font-weight-semibold, 600);
         text-transform: var(--ui-label-transform, none);
         color: var(--ui-text-muted, #64748b);
@@ -56,6 +66,22 @@ export class DataTable extends LitElement {
         padding: 0.5rem 0.75rem;
         border-bottom: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0);
         color: var(--ui-text, #0f172a);
+      }
+      .align-center {
+        text-align: center;
+      }
+      .align-end {
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+      }
+      .header {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .header-icon {
+        display: inline-flex;
+        line-height: 0;
       }
       td:first-child {
         position: relative;
@@ -125,6 +151,10 @@ export class DataTable extends LitElement {
     return false;
   }
 
+  #alignClass(column: DataTableColumn): string {
+    return column.align && column.align !== "start" ? `align-${column.align}` : "";
+  }
+
   #rowLinkLabel(row: unknown): string {
     const explicitLabel = this.rowLabel?.(row).trim();
     if (explicitLabel) return explicitLabel;
@@ -139,7 +169,15 @@ export class DataTable extends LitElement {
       <table>
         <thead>
           <tr>
-            ${this.columns.map((c) => html`<th>${c.label}</th>`)}
+            ${this.columns.map(
+              (c) => html`<th class=${this.#alignClass(c)}>
+                ${c.icon
+                  ? html`<span class="header"
+                      ><span class="header-icon" aria-hidden="true">${c.icon}</span>${c.label}</span
+                    >`
+                  : c.label}
+              </th>`,
+            )}
           </tr>
         </thead>
         <tbody>
@@ -155,7 +193,7 @@ export class DataTable extends LitElement {
                 >
                   ${this.columns.map(
                     (c, columnIndex) => html`
-                      <td>
+                      <td class=${this.#alignClass(c)}>
                         ${href && columnIndex === 0
                           ? html`
                               <a

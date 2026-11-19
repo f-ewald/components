@@ -7347,7 +7347,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A generic, presentational table shell: renders a `<thead>` from `columns`\nand one `<tr>` per entry in `rows`, with each cell's content produced by\n`renderCell` (default: plain property lookup on the row object). Knows\nnothing about what a \"row\" means — callers own the data shape entirely.\n\nOptional `rowHref` makes whole rows clickable (navigating via `location.hash`),\nwithout hijacking clicks on nested interactive elements (links/buttons) a\ncell's rendered content might contain.",
+          "description": "A generic, presentational table shell: renders a `<thead>` from `columns`\nand one `<tr>` per entry in `rows`, with each cell's content produced by\n`renderCell` (default: plain property lookup on the row object). Knows\nnothing about what a \"row\" means — callers own the data shape entirely.\n\nEach column may add a decorative header `icon` and an `align` for its\nheader and cells (`end` right-aligns numbers, with tabular figures).\n\nOptional `rowHref` makes whole rows clickable (navigating via `location.hash`),\nwithout hijacking clicks on nested interactive elements (links/buttons) a\ncell's rendered content might contain.",
           "name": "DataTable",
           "members": [
             {
@@ -7446,6 +7446,24 @@
                   "name": "row",
                   "type": {
                     "text": "EventTarget | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#alignClass",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "DataTableColumn"
                   }
                 }
               ]
@@ -12294,6 +12312,14 @@
           "name": "DataTable",
           "declaration": {
             "name": "DataTable",
+            "module": "./data-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DataTableAlign",
+          "declaration": {
+            "name": "DataTableAlign",
             "module": "./data-table.js"
           }
         },

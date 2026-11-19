@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `data-table` columns accept an optional decorative header `icon` (e.g. `iconClock(14)`) and an `align`
+  (`start`, `center`, or `end`) applied to the header and its cells; `end` also uses tabular figures for
+  numbers. New `DataTableAlign` type. Headers now align to `start` instead of `left` (no change in
+  left-to-right layouts).
 - Added `kind-icon`: an inline icon for a named kind, looked up in a `kinds` map of label, color, and
   icon (`KindIconStyle`). `dag-graph`'s `kinds` map fits it as is, so tables, lists, and search results can
   show the same icons and colors as the graph. `show-label` adds the label as text; without it the icon is

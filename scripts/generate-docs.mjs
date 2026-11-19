@@ -785,6 +785,21 @@ See the [changelog](#markdown-view) for details.\`;
     { id: "tsk_2", title: "Fix the login bug", state: "Done" },
   ];
   table.rowHref = (row) => \`#/tasks/\${row.id}\`;
+</script>
+<data-table id="packages"></data-table>
+<script type="module">
+  import { iconArrowLongRight } from "@f-ewald/components/icons.js";
+
+  // Header icons and alignment, e.g. right-aligned numbers.
+  const packages = document.getElementById("packages");
+  packages.columns = [
+    { key: "name", label: "Package" },
+    { key: "dependents", label: "Dependents", icon: iconArrowLongRight(14), align: "end" },
+  ];
+  packages.rows = [
+    { name: "requests", dependents: 1204 },
+    { name: "attrs", dependents: 87 },
+  ];
 </script>`,
   "text-area": `<form-field floating-label label="Description">
   <text-area placeholder="Describe the issue…" rows="4"></text-area>

@@ -5,6 +5,9 @@ and one `<tr>` per entry in `rows`, with each cell's content produced by
 `renderCell` (default: plain property lookup on the row object). Knows
 nothing about what a "row" means — callers own the data shape entirely.
 
+Each column may add a decorative header `icon` and an `align` for its
+header and cells (`end` right-aligns numbers, with tabular figures).
+
 Optional `rowHref` makes whole rows clickable (navigating via `location.hash`),
 without hijacking clicks on nested interactive elements (links/buttons) a
 cell's rendered content might contain.
@@ -30,6 +33,21 @@ import "@f-ewald/components/data-table.js";
     { id: "tsk_2", title: "Fix the login bug", state: "Done" },
   ];
   table.rowHref = (row) => `#/tasks/${row.id}`;
+</script>
+<data-table id="packages"></data-table>
+<script type="module">
+  import { iconArrowLongRight } from "@f-ewald/components/icons.js";
+
+  // Header icons and alignment, e.g. right-aligned numbers.
+  const packages = document.getElementById("packages");
+  packages.columns = [
+    { key: "name", label: "Package" },
+    { key: "dependents", label: "Dependents", icon: iconArrowLongRight(14), align: "end" },
+  ];
+  packages.rows = [
+    { name: "requests", dependents: 1204 },
+    { name: "attrs", dependents: 87 },
+  ];
 </script>
 ```
 
