@@ -51,10 +51,12 @@ test.describe("ui-tooltip", () => {
     await page.goto("/");
     const host = page.getByTestId("tooltip-button");
     const tooltip = host.getByRole("tooltip");
+    // Pinned to the top edge to force a flip, but away from the pointer's (0, 0) start so it isn't hovered.
+    await page.mouse.move(0, 0);
     await host.evaluate((el) => {
       el.style.position = "fixed";
       el.style.top = "0";
-      el.style.left = "0";
+      el.style.left = "50vw";
     });
 
     await host.getByRole("button").focus();
