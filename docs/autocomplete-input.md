@@ -20,7 +20,10 @@ Supports two suggestion sources:
 
 Each option may also carry a pre-rendered `icon` (shown before the value)
 and a `description` (a smaller, muted line under the value); options
-without them render as a plain value.
+without them render as a plain value. The selected option's icon also
+shows inside the field until the text is edited. Picking an option sets
+`selectedKey`; set `selectedKey` and `value` together to show a selection
+made elsewhere.
 
 Set `clearable` to show an in-field clear action whenever a value is
 present.
@@ -66,7 +69,8 @@ import "@f-ewald/components/autocomplete-input.js";
 | `debounce` | `debounce` | `number` | `300` | Debounce delay (ms) before firing a request/filter after typing. |
 | `minLength` | `min-length` | `number` | `3` | Minimum query length before suggestions are shown. |
 | `options` | _(JS property only)_ | `AutocompleteOption[] | null` | `null` | Fixed candidate list to filter locally instead of fetching from `endpoint`. When set (non-null), no network request is ever made — this takes priority over the API mode. |
-| `selectedOption` | _(JS property only)_ | `AutocompleteOption | null` | `—` | Last-picked option, or null once the input diverges from it. _(read-only)_ |
+| `selectedKey` | `selected-key` | `string | null` | `null` | Key of the selected option: set by picking one, or by the caller together with `value`. |
+| `selectedOption` | _(JS property only)_ | `AutocompleteOption | null` | `—` | Selected option (picked, or matching `selectedKey`), or null once the input diverges from it. _(read-only)_ |
 
 ## Events
 

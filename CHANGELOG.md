@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- `autocomplete-input` shows the selected option's icon inside the field until the text is edited. The new
+  `selectedKey` property is set when an option is picked; set it together with `value` to show a selection made
+  elsewhere (it resolves against the local `options`). `selectedOption` now also returns that option.
 - Added `ui-tooltip`: a hover and focus tooltip for its default-slot trigger, with plain or rich content
   in the `content` slot. It appears after `show-delay` (300 ms) on hover and at once on keyboard focus,
   stays open while the pointer is over it, closes on Escape, blur, or pointer leave, and prefers

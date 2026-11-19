@@ -371,14 +371,17 @@ Supports two suggestion sources:
 
 Each option may also carry a pre-rendered `icon` (shown before the value)
 and a `description` (a smaller, muted line under the value); options
-without them render as a plain value.
+without them render as a plain value. The selected option's icon also
+shows inside the field until the text is edited. Picking an option sets
+`selectedKey`; set `selectedKey` and `value` together to show a selection
+made elsewhere.
 
 Set `clearable` to show an in-field clear action whenever a value is
 present.
 
 Import: `import "@f-ewald/components/autocomplete-input.js";`
 
-Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `clearable` (attribute `clearable`) : boolean, default false; `endpoint` (attribute `endpoint`) : string, default ""; `queryParam` (attribute `query-param`) : string, default "q"; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `options` (JS property only) : AutocompleteOption[] | null, default null; `selectedOption` (JS property only) : AutocompleteOption | null, default —
+Properties: `value` (attribute `value`) : string, default ""; `placeholder` (attribute `placeholder`) : string, default ""; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `clearable` (attribute `clearable`) : boolean, default false; `endpoint` (attribute `endpoint`) : string, default ""; `queryParam` (attribute `query-param`) : string, default "q"; `debounce` (attribute `debounce`) : number, default 300; `minLength` (attribute `min-length`) : number, default 3; `options` (JS property only) : AutocompleteOption[] | null, default null; `selectedKey` (attribute `selected-key`) : string | null, default null; `selectedOption` (JS property only) : AutocompleteOption | null, default —
 Events: `option-select`, `input`
 CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-primary`, `--ui-radius-sm`, `--ui-shadow`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
 

@@ -245,6 +245,28 @@ test.describe("autocomplete-input", () => {
     await expect(suggestions.first()).toHaveText("Plain option");
   });
 
+  test("shows the selected option's icon in the field until the text changes", async ({ page }) => {
+    await page.goto("/");
+    const autocomplete = page.locator("#autocomplete-demo");
+    const input = autocomplete.locator("input");
+    const fieldIcon = autocomplete.locator(".field-icon svg");
+    await expect(fieldIcon).toHaveCount(0);
+    await expect(input).toHaveCSS("padding-left", "12px");
+
+    await input.fill("Jav");
+    await autocomplete.locator(".suggestion").first().click();
+    await expect(fieldIcon).toBeVisible();
+    await expect(input).toHaveCSS("padding-left", "32px");
+    expect(await autocomplete.evaluate((el: HTMLElement & { selectedKey: string }) => el.selectedKey)).toBe("js");
+
+    await input.press("Backspace");
+    await expect(fieldIcon).toHaveCount(0);
+
+    await page.getByTestId("autocomplete-select-rust").click();
+    await expect(input).toHaveValue("Rust");
+    await expect(fieldIcon).toBeVisible();
+  });
+
   test("input uses the tokenized text-field padding", async ({ page }) => {
     await page.goto("/");
     const input = page.locator("#autocomplete-demo input");

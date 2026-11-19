@@ -482,6 +482,11 @@ if (autocompleteDemo) {
     { key: "rs", value: "Rust", icon: iconCpuChip(14), description: "Memory safety without a garbage collector" },
   ];
 }
+document.getElementById("autocomplete-select-rust")?.addEventListener("click", () => {
+  if (!autocompleteDemo) return;
+  autocompleteDemo.value = "Rust";
+  autocompleteDemo.selectedKey = "rs";
+});
 autocompleteDemo?.addEventListener("option-select", (e) => {
   const detail = (e as CustomEvent).detail;
   autocompleteSelected.textContent = `Selected: ${detail.value} (key: ${detail.key})`;

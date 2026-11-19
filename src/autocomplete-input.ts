@@ -41,7 +41,10 @@ export interface AutocompleteOption {
  *
  * Each option may also carry a pre-rendered `icon` (shown before the value)
  * and a `description` (a smaller, muted line under the value); options
- * without them render as a plain value.
+ * without them render as a plain value. The selected option's icon also
+ * shows inside the field until the text is edited. Picking an option sets
+ * `selectedKey`; set `selectedKey` and `value` together to show a selection
+ * made elsewhere.
  *
  * Set `clearable` to show an in-field clear action whenever a value is
  * present.
@@ -88,6 +91,19 @@ export class AutocompleteInput extends LitElement {
       }
       .field-shell.clearable input {
         padding-right: 2rem;
+      }
+      .field-shell.has-icon input {
+        padding-left: 2rem;
+      }
+      .field-icon {
+        position: absolute;
+        top: 50%;
+        left: 0.75rem;
+        display: inline-flex;
+        line-height: 0;
+        transform: translateY(-50%);
+        color: var(--ui-text-muted, #64748b);
+        pointer-events: none;
       }
       .clear-button {
         position: absolute;
@@ -161,6 +177,12 @@ export class AutocompleteInput extends LitElement {
       }
       .field-shell.floating .clear-button {
         top: 0.5rem;
+      }
+      .field-shell.floating .field-icon {
+        top: 2rem;
+      }
+      .field-shell.has-icon .floating-label {
+        left: 2rem;
       }
       .field-shell.floating.has-value .floating-label,
       .field-shell.floating:focus-within .floating-label {
@@ -313,6 +335,8 @@ export class AutocompleteInput extends LitElement {
    * this takes priority over the API mode.
    */
   @property({ attribute: false }) options: AutocompleteOption[] | null = null;
+  /** Key of the selected option: set by picking one, or by the caller together with `value`. */
+  @property({ attribute: "selected-key" }) selectedKey: string | null = null;
 
   @state() private _suggestions: AutocompleteOption[] = [];
   @state() private _open = false;
@@ -337,10 +361,10 @@ export class AutocompleteInput extends LitElement {
     return this.disabled || this._formDisabled;
   }
 
-  /** Last-picked option, or null once the input diverges from it. */
+  /** Selected option (picked, or matching `selectedKey`), or null once the input diverges from it. */
   get selectedOption(): AutocompleteOption | null {
     if (this.#lastPicked && this.#lastPicked.value === this.value) return this.#lastPicked;
-    return null;
+    return this.options?.find((o) => o.key === this.selectedKey && o.value === this.value) ?? null;
   }
 
   /**
@@ -523,6 +547,7 @@ export class AutocompleteInput extends LitElement {
 
   #selectOption(o: AutocompleteOption) {
     this.value = o.value;
+    this.selectedKey = o.key;
     this.#lastPicked = o;
     this._open = false;
     this._suggestions = [];
@@ -598,12 +623,16 @@ export class AutocompleteInput extends LitElement {
     const floating =
       Boolean(this._formFieldConfig?.floating) && Boolean(this._formFieldConfig?.label);
     const showClear = this.clearable && Boolean(this.value) && !this.#isDisabled;
+    const icon = this.selectedOption?.icon;
     return html`
       <div
         class="field-shell ${this.clearable ? "clearable" : ""} ${floating
           ? "floating"
-          : ""} ${this.value ? "has-value" : ""} ${this.#isDisabled ? "disabled" : ""}"
+          : ""} ${this.value ? "has-value" : ""} ${this.#isDisabled ? "disabled" : ""} ${icon
+          ? "has-icon"
+          : ""}"
       >
+        ${icon ? html`<span class="field-icon" aria-hidden="true">${icon}</span>` : nothing}
         ${floating
           ? html`
               <label class="floating-label" for=${this.#inputId}>

@@ -1917,7 +1917,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Generic form-associated text input with a suggestion dropdown, for any\n\"type to filter a list of `{key, value}` options\" use case. Works as a\ndrop-in replacement for a plain `<input>` inside a `<form>`: set `name` on\nthe element itself and consumers keep reading\n`new FormData(form).get(name)` and calling `form.reset()` unchanged — the\nsubmitted value is the picked option's `value`, while `key` is available\nvia the `option-select` event and the `selectedOption` getter for cases\nthat need the underlying id rather than the display text.\n\nSupports two suggestion sources:\n- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`\n  query string, responds with a JSON array of `{key, value}` objects.\n  Requests are debounced as the user types.\n- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the\n  component filters it client-side instead of making any network\n  request. Useful for small/fixed lists, offline use, or tests. Takes\n  priority over `endpoint` whenever it's non-null.\n\nEach option may also carry a pre-rendered `icon` (shown before the value)\nand a `description` (a smaller, muted line under the value); options\nwithout them render as a plain value.\n\nSet `clearable` to show an in-field clear action whenever a value is\npresent.",
+          "description": "Generic form-associated text input with a suggestion dropdown, for any\n\"type to filter a list of `{key, value}` options\" use case. Works as a\ndrop-in replacement for a plain `<input>` inside a `<form>`: set `name` on\nthe element itself and consumers keep reading\n`new FormData(form).get(name)` and calling `form.reset()` unchanged — the\nsubmitted value is the picked option's `value`, while `key` is available\nvia the `option-select` event and the `selectedOption` getter for cases\nthat need the underlying id rather than the display text.\n\nSupports two suggestion sources:\n- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`\n  query string, responds with a JSON array of `{key, value}` objects.\n  Requests are debounced as the user types.\n- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the\n  component filters it client-side instead of making any network\n  request. Useful for small/fixed lists, offline use, or tests. Takes\n  priority over `endpoint` whenever it's non-null.\n\nEach option may also carry a pre-rendered `icon` (shown before the value)\nand a `description` (a smaller, muted line under the value); options\nwithout them render as a plain value. The selected option's icon also\nshows inside the field until the text is edited. Picking an option sets\n`selectedKey`; set `selectedKey` and `value` together to show a selection\nmade elsewhere.\n\nSet `clearable` to show an in-field clear action whenever a value is\npresent.",
           "name": "AutocompleteInput",
           "members": [
             {
@@ -2029,6 +2029,16 @@
               },
               "default": "null",
               "description": "Fixed candidate list to filter locally instead of fetching from\n`endpoint`. When set (non-null), no network request is ever made —\nthis takes priority over the API mode."
+            },
+            {
+              "kind": "field",
+              "name": "selectedKey",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Key of the selected option: set by picking one, or by the caller together with `value`.",
+              "attribute": "selected-key"
             },
             {
               "kind": "field",
@@ -2172,7 +2182,7 @@
               "type": {
                 "text": "AutocompleteOption | null"
               },
-              "description": "Last-picked option, or null once the input diverges from it.",
+              "description": "Selected option (picked, or matching `selectedKey`), or null once the input diverges from it.",
               "readonly": true
             },
             {
@@ -2525,6 +2535,15 @@
               "default": "3",
               "description": "Minimum query length before suggestions are shown.",
               "fieldName": "minLength"
+            },
+            {
+              "name": "selected-key",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Key of the selected option: set by picking one, or by the caller together with `value`.",
+              "fieldName": "selectedKey"
             }
           ],
           "superclass": {
