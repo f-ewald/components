@@ -3146,6 +3146,42 @@ Example:
 <ui-checkbox label="Show list view"></ui-checkbox>
 ```
 
+## <ui-tooltip>
+
+Hover and focus tooltip for its default-slot trigger. The `content` slot
+holds the tooltip body — plain text or rich markup such as a list. It
+appears after `show-delay` on hover and at once on keyboard focus, stays
+open while the pointer is over the tooltip itself, and closes on Escape,
+blur, or when the pointer leaves. It renders in the top layer, so
+scrolling or `overflow: hidden` ancestors never clip it.
+
+The trigger is described by the content (`aria-describedby`). A trigger
+with nothing focusable inside (e.g. plain text) makes the tooltip host
+focusable so keyboard users can reach the description too. ARIA references
+can't cross shadow roots, so when the trigger is a custom element whose
+focusable control lives in its own shadow root, screen readers won't
+announce the description on focus; prefer a native trigger such as
+`<button>` when that matters.
+
+Import: `import "@f-ewald/components/ui-tooltip.js";`
+
+Properties: `placement` (attribute `placement`) : UiTooltipPlacement, default "top"; `showDelay` (attribute `show-delay`) : number, default 300; `disabled` (attribute `disabled`) : boolean, default false; `open` (JS property only) : boolean, default —
+Events: none
+CSS custom properties: `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-weight-regular`, `--ui-line-height-tight`, `--ui-radius-sm`, `--ui-shadow`, `--ui-tooltip`, `--ui-tooltip-text`
+
+Example:
+```html
+<ui-tooltip>
+  <button type="button">Copy link</button>
+  <span slot="content">Copies a shareable link to this view</span>
+</ui-tooltip>
+<!-- Plain-text trigger: the tooltip becomes focusable; rich content is fine -->
+<ui-tooltip placement="bottom" show-delay="0">
+  <span>Partial snapshot</span>
+  <div slot="content">3 work items pending: <ul><li>mp:lap-service</li></ul></div>
+</ui-tooltip>
+```
+
 ## <user-avatar>
 
 Circular avatar. Shows `src` when it loads successfully; falls back to the

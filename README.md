@@ -140,6 +140,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<ui-admonition>` | [API reference](https://f-ewald.github.io/components/docs/ui-admonition.html) |
 | `<ui-button>` | [API reference](https://f-ewald.github.io/components/docs/ui-button.html) |
 | `<ui-checkbox>` | [API reference](https://f-ewald.github.io/components/docs/ui-checkbox.html) |
+| `<ui-tooltip>` | [API reference](https://f-ewald.github.io/components/docs/ui-tooltip.html) |
 | `<user-avatar>` | [API reference](https://f-ewald.github.io/components/docs/user-avatar.html) |
 | `<video-player>` | [API reference](https://f-ewald.github.io/components/docs/video-player.html) |
 | `<vote-control>` | [API reference](https://f-ewald.github.io/components/docs/vote-control.html) |

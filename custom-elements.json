@@ -12261,6 +12261,22 @@
         },
         {
           "kind": "js",
+          "name": "UiTooltip",
+          "declaration": {
+            "name": "UiTooltip",
+            "module": "./ui-tooltip.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "UiTooltipPlacement",
+          "declaration": {
+            "name": "UiTooltipPlacement",
+            "module": "./ui-tooltip.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "FormField",
           "declaration": {
             "name": "FormField",
@@ -23127,6 +23143,416 @@
           "declaration": {
             "name": "UiCheckbox",
             "module": "src/ui-checkbox.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/ui-tooltip.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Hover and focus tooltip for its default-slot trigger. The `content` slot\nholds the tooltip body — plain text or rich markup such as a list. It\nappears after `show-delay` on hover and at once on keyboard focus, stays\nopen while the pointer is over the tooltip itself, and closes on Escape,\nblur, or when the pointer leaves. It renders in the top layer, so\nscrolling or `overflow: hidden` ancestors never clip it.\n\nThe trigger is described by the content (`aria-describedby`). A trigger\nwith nothing focusable inside (e.g. plain text) makes the tooltip host\nfocusable so keyboard users can reach the description too. ARIA references\ncan't cross shadow roots, so when the trigger is a custom element whose\nfocusable control lives in its own shadow root, screen readers won't\nannounce the description on focus; prefer a native trigger such as\n`<button>` when that matters.",
+          "name": "UiTooltip",
+          "cssParts": [
+            {
+              "description": "The floating tooltip surface.",
+              "name": "tooltip"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The trigger the tooltip describes.",
+              "name": ""
+            },
+            {
+              "description": "The tooltip body.",
+              "name": "content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "UiTooltipPlacement"
+              },
+              "default": "\"top\"",
+              "description": "Preferred side of the trigger; flips to the other side when this one lacks room.",
+              "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Hover delay in milliseconds before the tooltip appears; keyboard focus shows it at once.",
+              "attribute": "show-delay"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Suppresses the tooltip and closes it if open.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_tooltip",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#showTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#hideTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#describedTarget",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#describedId",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#content",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#madeFocusable",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#contentId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`ui-tooltip-content-${++instanceCount}`"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the tooltip is currently showing.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleShow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "delay",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleHide",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "delay",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "keepOpenWhile",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Hides after `delay` unless the host still matches `keepOpenWhile` (still hovered or focused)."
+            },
+            {
+              "kind": "method",
+              "name": "#clearTimers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "open",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentKeydown",
+              "privacy": "private",
+              "description": "Escape closes the tooltip without dismissing anything else (WCAG 1.4.13)."
+            },
+            {
+              "kind": "field",
+              "name": "#onViewportChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#position",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Places the tooltip beside the host, flipping sides and clamping it inside the viewport."
+            },
+            {
+              "kind": "method",
+              "name": "#onTriggerSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onContentSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#describe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ],
+              "description": "Points the trigger's `aria-describedby` at the content, replacing this tooltip's previous reference."
+            },
+            {
+              "kind": "method",
+              "name": "#describedIds",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The target's `aria-describedby` ids, minus the one this tooltip added."
+            },
+            {
+              "kind": "method",
+              "name": "#setDescribedBy",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "ids",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#updateFocusability",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "needed",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "placement",
+              "type": {
+                "text": "UiTooltipPlacement"
+              },
+              "default": "\"top\"",
+              "description": "Preferred side of the trigger; flips to the other side when this one lacks room.",
+              "fieldName": "placement"
+            },
+            {
+              "name": "show-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Hover delay in milliseconds before the tooltip appears; keyboard focus shows it at once.",
+              "fieldName": "showDelay"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Suppresses the tooltip and closes it if open.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "ui-tooltip",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "UiTooltip",
+          "declaration": {
+            "name": "UiTooltip",
+            "module": "src/ui-tooltip.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ui-tooltip",
+          "declaration": {
+            "name": "UiTooltip",
+            "module": "src/ui-tooltip.ts"
           }
         }
       ]

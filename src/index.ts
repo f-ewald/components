@@ -85,6 +85,7 @@ export {
 } from "./chat-message.js";
 export { ChevronPanel } from "./chevron-panel.js";
 export { UiCheckbox } from "./ui-checkbox.js";
+export { UiTooltip, type UiTooltipPlacement } from "./ui-tooltip.js";
 export { FormField } from "./form-field.js";
 export { FormSelect, type SelectOption } from "./form-select.js";
 export {

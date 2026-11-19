@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added `ui-tooltip`: a hover and focus tooltip for its default-slot trigger, with plain or rich content
+  in the `content` slot. It appears after `show-delay` (300 ms) on hover and at once on keyboard focus,
+  stays open while the pointer is over it, closes on Escape, blur, or pointer leave, and prefers
+  `placement` (`top` or `bottom`), flipping when that side lacks room. It renders in the top layer, so
+  `overflow: hidden` ancestors don't clip it, and uses `--ui-tooltip`/`--ui-tooltip-text`. The content
+  describes the trigger via `aria-describedby`; a trigger that can't take focus makes the host
+  focusable. `disabled` suppresses it.
 - `data-table` columns accept an optional decorative header `icon` (e.g. `iconClock(14)`) and an `align`
   (`start`, `center`, or `end`) applied to the header and its cells; `end` also uses tabular figures for
   numbers. New `DataTableAlign` type. Headers now align to `start` instead of `left` (no change in

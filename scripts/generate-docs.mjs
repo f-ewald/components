@@ -61,6 +61,10 @@ const SLOTS = {
     { name: "(default)", description: "Button label." },
     { name: "icon", description: "Optional leading icon (e.g. an inline SVG)." },
   ],
+  "ui-tooltip": [
+    { name: "(default)", description: "The trigger the tooltip describes." },
+    { name: "content", description: "The tooltip body: plain text or rich markup such as a list." },
+  ],
   "ui-checkbox": [
     {
       name: "(default)",
@@ -174,6 +178,15 @@ const EXAMPLES = {
   "window-chrome": `<window-chrome label="~/product — README.md">
   <icon-button slot="actions" label="Toggle theme"></icon-button>
 </window-chrome>`,
+  "ui-tooltip": `<ui-tooltip>
+  <button type="button">Copy link</button>
+  <span slot="content">Copies a shareable link to this view</span>
+</ui-tooltip>
+<!-- Plain-text trigger: the tooltip becomes focusable; rich content is fine -->
+<ui-tooltip placement="bottom" show-delay="0">
+  <span>Partial snapshot</span>
+  <div slot="content">3 work items pending: <ul><li>mp:lap-service</li></ul></div>
+</ui-tooltip>`,
   "ui-checkbox": `<ui-checkbox label="Subscribe to updates"></ui-checkbox>
 <ui-checkbox name="terms" label="I agree to the terms" required></ui-checkbox>
 <!-- Slot the label when it needs its own markup; it overrides the property -->

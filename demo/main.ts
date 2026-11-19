@@ -41,6 +41,7 @@ import {
   type DagNodeKind,
   type KindIcon,
   type KindIconStyle,
+  type UiTooltip,
   type ChatMessage,
   type ChevronPanel,
   type UiCheckbox,
@@ -1251,6 +1252,12 @@ if (dagDemo) {
     dagDemo.style.setProperty("--dag-edge-color", custom ? "#4269d0" : "");
   });
 }
+
+// ui-tooltip (toggle disabled on every demo tooltip)
+document.getElementById("tooltip-disabled")?.addEventListener("change", (e) => {
+  const disabled = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+  for (const tooltip of document.querySelectorAll<UiTooltip>("ui-tooltip.tooltip-demo")) tooltip.disabled = disabled;
+});
 
 // kind-icon (the dag-graph kinds; toggle labels and size)
 const kindIcons = [...document.querySelectorAll<KindIcon>("kind-icon.kind-icon-demo")];
