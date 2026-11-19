@@ -37,6 +37,18 @@ const ICONS = {
   },
   Cog: { slug: "cog-6-tooth", size: 20, usage: "Settings, preferences, or configuration entry points." },
   Info: { slug: "information-circle", size: 20, usage: "Neutral informational messages, e.g. an info toast or status banner." },
+  MagnifyingGlassPlus: { slug: "magnifying-glass-plus", size: 18, usage: "Zoom in, e.g. dag-graph's toolbar." },
+  MagnifyingGlassMinus: { slug: "magnifying-glass-minus", size: 18, usage: "Zoom out, e.g. dag-graph's toolbar." },
+  ViewfinderCircle: {
+    slug: "viewfinder-circle",
+    size: 18,
+    usage: "Center or focus the view on the current selection, e.g. dag-graph's toolbar.",
+  },
+  ArrowLongRight: { slug: "arrow-long-right", size: 18, usage: "A left-to-right flow or layout direction." },
+  ArrowLongDown: { slug: "arrow-long-down", size: 18, usage: "A top-to-bottom flow or layout direction." },
+  BookOpen: { slug: "book-open", size: 20, usage: "A library, documentation, or reading content, e.g. a library node in dag-graph." },
+  Cube: { slug: "cube", size: 20, usage: "A package or self-contained artifact, e.g. an external package node in dag-graph." },
+  Server: { slug: "server", size: 20, usage: "A running service or deployable, e.g. a service node in dag-graph." },
   QuestionMarkCircle: {
     slug: "question-mark-circle",
     size: 20,

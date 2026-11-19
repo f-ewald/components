@@ -26,7 +26,8 @@ import "@f-ewald/components";
 ```
 
 ...or import components individually — this tree-shakes everything else,
-including the `d3` dependency used only by the chart components:
+including the `d3` dependency used only by the chart components and the `@dagrejs/dagre` layout
+used only by `dag-graph`:
 
 ```js
 import "@f-ewald/components/confirm-dialog.js";
@@ -71,6 +72,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<copy-link-button>` | [API reference](https://f-ewald.github.io/components/docs/copy-link-button.html) |
 | `<countdown-timer>` | [API reference](https://f-ewald.github.io/components/docs/countdown-timer.html) |
 | `<cron-schedule>` | [API reference](https://f-ewald.github.io/components/docs/cron-schedule.html) |
+| `<dag-graph>` | [API reference](https://f-ewald.github.io/components/docs/dag-graph.html) |
 | `<data-table>` | [API reference](https://f-ewald.github.io/components/docs/data-table.html) |
 | `<distance-value>` | [API reference](https://f-ewald.github.io/components/docs/distance-value.html) |
 | `<distribution-chart>` | [API reference](https://f-ewald.github.io/components/docs/distribution-chart.html) |

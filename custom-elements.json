@@ -6559,6 +6559,790 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/dag-graph.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Interactive layered drawing of a directed graph — dependencies, pipelines, or any node-link data.\n\nNodes are placed in layers (via dagre) so edges flow left to right (or top to bottom with\n`direction=\"TB\"`); cycles are allowed, and the edges closing them are drawn dashed and point backward.\nEach node is a compact card sized to its label, with an optional icon, color, and border style from\n`kinds`. The whole graph is shown when it fits at a readable zoom; otherwise the selected node is centered at\n100%. Drag to pan; pinch or Ctrl/⌘ + wheel to zoom (a plain wheel scrolls the page). With keyboard\nfocus on the graph, arrow keys pan, `+`/`-` zoom, and `0` fits the graph. Clicking a node, or pressing\nEnter/Space on it, selects it. A toolbar in the top-right corner offers the `controls` you enable.\n\nSet `static` to present a fixed picture: the graph is always fitted into view, panning and zooming\nare off, and the toolbar is hidden; nodes can still be selected.\n\nColors can be changed with these custom properties: `--dag-node-background`, `--dag-node-text`,\n`--dag-edge-color`, `--dag-selected-color`, and `--dag-highlight-color`; `--dag-graph-height` sets the\nheight (default `24rem`).",
+          "name": "DagGraph",
+          "slots": [
+            {
+              "description": "Shown when there are no nodes.",
+              "name": "empty"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "nodes",
+              "type": {
+                "text": "DagNode[]"
+              },
+              "default": "[]",
+              "description": "Nodes to draw.",
+              "attribute": "nodes"
+            },
+            {
+              "kind": "field",
+              "name": "edges",
+              "type": {
+                "text": "DagEdge[]"
+              },
+              "default": "[]",
+              "description": "Directed edges between `nodes`; edges with an unknown endpoint or to the node itself are ignored.",
+              "attribute": "edges"
+            },
+            {
+              "kind": "field",
+              "name": "kinds",
+              "type": {
+                "text": "Record<string, DagNodeKind>"
+              },
+              "default": "{}",
+              "description": "Presentation per node `kind`: legend label, color, icon, and border style."
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Id of the selected node. Selecting a node updates it; when it changes to a node outside the visible area,\nthe view follows.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "direction",
+              "type": {
+                "text": "DagDirection"
+              },
+              "default": "\"LR\"",
+              "description": "Layer direction: `LR` (left to right) or `TB` (top to bottom).",
+              "attribute": "direction",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Directed graph\"",
+              "description": "Accessible name of the graph; the node and edge counts are appended.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "legend",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a legend of `kinds` below the graph.",
+              "attribute": "legend",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "controls",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"zoom fit center\"",
+              "description": "Space-separated toolbar controls to show: any of `zoom`, `fit`, `center`, and `direction`, in that\norder. An empty value hides the toolbar.",
+              "attribute": "controls",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "isStatic",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Presents a static picture: always fitted, with panning, zooming, and the toolbar turned off.",
+              "attribute": "static",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_view",
+              "type": {
+                "text": "View"
+              },
+              "privacy": "private",
+              "default": "{ x: 0, y: 0, k: 1 }"
+            },
+            {
+              "kind": "field",
+              "name": "_hovered",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_panning",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_svg",
+              "type": {
+                "text": "SVGSVGElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_layout",
+              "type": {
+                "text": "DagLayout"
+              },
+              "privacy": "private",
+              "default": "{ nodes: [], edges: [] }"
+            },
+            {
+              "kind": "field",
+              "name": "_positions",
+              "privacy": "private",
+              "default": "new Map<string, DagLayoutNode>()"
+            },
+            {
+              "kind": "field",
+              "name": "_size",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ width: 0, height: 0 }"
+            },
+            {
+              "kind": "field",
+              "name": "_viewReady",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_lastSelected",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_lastDirection",
+              "type": {
+                "text": "DagDirection | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_measure",
+              "type": {
+                "text": "MeasureText"
+              },
+              "privacy": "private",
+              "default": "approximateTextWidth"
+            },
+            {
+              "kind": "field",
+              "name": "_measureFont",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_drag",
+              "type": {
+                "text": "{ pointerId: number; x: number; y: number; view: View; moved: boolean } | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_suppressClick",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "fit",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Fits the whole graph into view, never enlarging it beyond 100%."
+            },
+            {
+              "kind": "method",
+              "name": "center",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "default": "this.selected",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ],
+              "description": "Centers the view on a node (the selected one by default) at 100% zoom."
+            },
+            {
+              "kind": "method",
+              "name": "zoomBy",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "factor",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Zooms by `factor` (e.g. `1.25` or `0.8`) around the center of the view."
+            },
+            {
+              "kind": "field",
+              "name": "_controls",
+              "type": {
+                "text": "DagControl[]"
+              },
+              "privacy": "private",
+              "description": "The enabled `controls`, in their fixed order; none in static mode or without nodes.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_renderToolbar",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_toggleDirection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_renderEdges",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SVGTemplateResult[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_renderNode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SVGTemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "position",
+                  "type": {
+                    "text": "DagLayoutNode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderLegend",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_edgeKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "{ source: string; target: string }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_layoutChanged",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "PropertyValues<this>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_relayout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Lays the graph out again, keeping the selected node where it was on screen."
+            },
+            {
+              "kind": "method",
+              "name": "_initView",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_frame",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Shows the whole graph when it fits at a readable zoom (always, when static); otherwise centers the selected\nnode at 100%."
+            },
+            {
+              "kind": "method",
+              "name": "_revealSelected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Brings the selected node into view if it is outside the visible area."
+            },
+            {
+              "kind": "method",
+              "name": "_updateMeasure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Measures labels with the host's actual font, so themes with other fonts still size cards correctly."
+            },
+            {
+              "kind": "method",
+              "name": "_resize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rect",
+                  "type": {
+                    "text": "DOMRectReadOnly | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_clamp",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "k",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_centerOn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "DagPoint"
+                  }
+                },
+                {
+                  "name": "k",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_zoomAround",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "screenX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "screenY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "factor",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_activate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onNodeKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPointerDown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPointerMove",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPointerUp",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onWheel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "WheelEvent"
+                  }
+                }
+              ],
+              "description": "Pinch gestures and Ctrl/⌘ + wheel zoom; a plain wheel is left to the page so it can scroll."
+            },
+            {
+              "kind": "method",
+              "name": "_onKeyDown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "direction-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The toolbar's direction control flipped `direction`; `detail` is `{ direction }`."
+            },
+            {
+              "name": "node-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A node was clicked or activated with the keyboard; `detail` is `{ id }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "nodes",
+              "type": {
+                "text": "DagNode[]"
+              },
+              "default": "[]",
+              "description": "Nodes to draw.",
+              "fieldName": "nodes"
+            },
+            {
+              "name": "edges",
+              "type": {
+                "text": "DagEdge[]"
+              },
+              "default": "[]",
+              "description": "Directed edges between `nodes`; edges with an unknown endpoint or to the node itself are ignored.",
+              "fieldName": "edges"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Id of the selected node. Selecting a node updates it; when it changes to a node outside the visible area,\nthe view follows.",
+              "fieldName": "selected"
+            },
+            {
+              "name": "direction",
+              "type": {
+                "text": "DagDirection"
+              },
+              "default": "\"LR\"",
+              "description": "Layer direction: `LR` (left to right) or `TB` (top to bottom).",
+              "fieldName": "direction"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Directed graph\"",
+              "description": "Accessible name of the graph; the node and edge counts are appended.",
+              "fieldName": "label"
+            },
+            {
+              "name": "legend",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a legend of `kinds` below the graph.",
+              "fieldName": "legend"
+            },
+            {
+              "name": "controls",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"zoom fit center\"",
+              "description": "Space-separated toolbar controls to show: any of `zoom`, `fit`, `center`, and `direction`, in that\norder. An empty value hides the toolbar.",
+              "fieldName": "controls"
+            },
+            {
+              "name": "static",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Presents a static picture: always fitted, with panning, zooming, and the toolbar turned off.",
+              "fieldName": "isStatic"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "dag-graph",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DagDirection",
+          "declaration": {
+            "name": "DagDirection",
+            "module": "./utils/dag-layout.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagGraph",
+          "declaration": {
+            "name": "DagGraph",
+            "module": "src/dag-graph.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "dag-graph",
+          "declaration": {
+            "name": "DagGraph",
+            "module": "src/dag-graph.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/data-table.ts",
       "declarations": [
         {
@@ -9417,6 +10201,94 @@
         },
         {
           "kind": "function",
+          "name": "iconMagnifyingGlassPlus",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "Zoom in, e.g. dag-graph's toolbar."
+        },
+        {
+          "kind": "function",
+          "name": "iconMagnifyingGlassMinus",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "Zoom out, e.g. dag-graph's toolbar."
+        },
+        {
+          "kind": "function",
+          "name": "iconViewfinderCircle",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "Center or focus the view on the current selection, e.g. dag-graph's toolbar."
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowLongRight",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "A left-to-right flow or layout direction."
+        },
+        {
+          "kind": "function",
+          "name": "iconArrowLongDown",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "A top-to-bottom flow or layout direction."
+        },
+        {
+          "kind": "function",
+          "name": "iconBookOpen",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "20"
+            }
+          ],
+          "description": "A library, documentation, or reading content, e.g. a library node in dag-graph."
+        },
+        {
+          "kind": "function",
+          "name": "iconCube",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "20"
+            }
+          ],
+          "description": "A package or self-contained artifact, e.g. an external package node in dag-graph."
+        },
+        {
+          "kind": "function",
+          "name": "iconServer",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "20"
+            }
+          ],
+          "description": "A running service or deployable, e.g. a service node in dag-graph."
+        },
+        {
+          "kind": "function",
           "name": "iconQuestionMarkCircle",
           "parameters": [
             {
@@ -10119,6 +10991,70 @@
           "name": "iconInfo",
           "declaration": {
             "name": "iconInfo",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconMagnifyingGlassPlus",
+          "declaration": {
+            "name": "iconMagnifyingGlassPlus",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconMagnifyingGlassMinus",
+          "declaration": {
+            "name": "iconMagnifyingGlassMinus",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconViewfinderCircle",
+          "declaration": {
+            "name": "iconViewfinderCircle",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowLongRight",
+          "declaration": {
+            "name": "iconArrowLongRight",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowLongDown",
+          "declaration": {
+            "name": "iconArrowLongDown",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconBookOpen",
+          "declaration": {
+            "name": "iconBookOpen",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconCube",
+          "declaration": {
+            "name": "iconCube",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconServer",
+          "declaration": {
+            "name": "iconServer",
             "module": "src/icons.ts"
           }
         },
@@ -10919,6 +11855,70 @@
           "declaration": {
             "name": "WeightBarItem",
             "module": "./weight-bar-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagGraph",
+          "declaration": {
+            "name": "DagGraph",
+            "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagControl",
+          "declaration": {
+            "name": "DagControl",
+            "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagDirection",
+          "declaration": {
+            "name": "DagDirection",
+            "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagDirectionChangeDetail",
+          "declaration": {
+            "name": "DagDirectionChangeDetail",
+            "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagEdge",
+          "declaration": {
+            "name": "DagEdge",
+            "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagNode",
+          "declaration": {
+            "name": "DagNode",
+            "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagNodeKind",
+          "declaration": {
+            "name": "DagNodeKind",
+            "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagNodeSelectDetail",
+          "declaration": {
+            "name": "DagNodeSelectDetail",
+            "module": "./dag-graph.js"
           }
         },
         {
@@ -20938,7 +21938,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 // Button-specific background/border hooks: default to the flat --ui-primary // / --ui-danger tokens above unchanged, so those stay the single source of // truth for every other component. Overriding just these lets a theme opt // ui-button into a gradient (or any other) background without touching // component markup; --ui-button-border/--ui-button-danger-border default // to transparent (today's look) and are meant to be paired with a shade // darker than the gradient's dark stop when one is set. The `-active` // variants default to whatever `-background` already resolved to (so a // solid override still applies while pressed) — a gradient theme should // set them to the same stops in reverse, for a pressed/\"indented\" look. \"--ui-button-background\": \"var(--ui-primary, #4f46e5)\", \"--ui-button-background-hover\": \"var(--ui-primary-hover, #4338ca)\", \"--ui-button-background-active\": \"var(--ui-button-background, var(--ui-primary, #4f46e5))\", \"--ui-button-border\": \"transparent\", // The primary/danger fill's own text color, split out from --ui-on-accent // (which every button used directly until now): --ui-on-accent means \"text // on any solid semantic fill\" and a theme may need to darken it for a light // accent color (see developerDarkTokenValues), but that darkening should // only reach the button itself if the theme wants it to. Defaults to // --ui-on-accent unchanged, so every existing theme renders identically. \"--ui-button-text\": \"var(--ui-on-accent, #ffffff)\", \"--ui-button-danger-text\": \"var(--ui-on-accent, #ffffff)\", // The bordered, transparent-background secondary variant's equivalents — // shared with confirm-dialog's Cancel button, which is the same visual // pattern. Defaults reproduce today's literal secondary styling exactly // (no background at any state, border colors matching --ui-border / // --ui-text-muted), so a theme only needs to override these to make // secondary/Cancel buttons match a primary/danger gradient theme. \"--ui-button-secondary-background\": \"none\", \"--ui-button-secondary-background-hover\": \"none\", \"--ui-button-secondary-background-active\": \"var(--ui-button-secondary-background, none)\", \"--ui-button-secondary-border\": \"var(--ui-border, #e2e8f0)\", \"--ui-button-secondary-border-hover\": \"var(--ui-text-muted, #64748b)\", // A muted-gray surface used wherever something already paints // --ui-surface-muted as a state indicator in flat mode — button-group's // unchecked-segment hover, pagination-nav's button hover, and // radio-cards/radio-pills' checked background — which is a genuinely // different default than secondary's borderless flat hover, so it can't // reuse --ui-button-secondary-background-hover's \"none\" default. \"--ui-button-secondary-surface-muted\": \"var(--ui-surface-muted, #f8fafc)\", // Shared by both primary/danger — a purely cosmetic gloss/legibility pair, // not color-specific, so one token covers both variants. `-highlight` is a // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for // a glossy top edge, defaulting to a fully transparent (so invisible) // shadow rather than the keyword `none` — some usages combine it with // another literal shadow in a comma-separated list, where a bare `none` // item is invalid CSS and would zero out the *whole* declaration. // `-text-shadow` is a full text-shadow value for label legibility against // a gradient's lighter stop, always used standalone, so it keeps `none`. \"--ui-button-highlight\": \"0 0 0 0 transparent\", \"--ui-button-text-shadow\": \"none\", // A solid stand-in for the same accent, for spots that can't render a // background gradient at all — a native <input>'s accent-color only // accepts a plain color, and a hard-stop background gradient (e.g. // range-slider's filled track) can't nest another gradient inside its own // color-stop list. Consumers that theme the buttons into a gradient should // set this to the gradient's dark stop, so these non-button accents (radio // selection indicators, the range-slider track/thumb) stay visually // coordinated with it even though they can't literally paint a gradient. \"--ui-button-accent\": \"var(--ui-primary, #4f46e5)\", \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-button-danger-background\": \"var(--ui-danger, #dc2626)\", \"--ui-button-danger-background-hover\": \"var(--ui-danger-hover, #b91c1c)\", \"--ui-button-danger-background-active\": \"var(--ui-button-danger-background, var(--ui-danger, #dc2626))\", \"--ui-button-danger-border\": \"transparent\", \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 // toast-notification's per-variant background hooks: default to the flat // --ui-success/--ui-danger/--ui-info/--ui-warning tokens unchanged, so // those stay the single source of truth for every other component — // the same pattern as --ui-button-background/--ui-button-danger-background // above. `-highlight`/`-text-shadow` are the same glossy-top-edge / // legibility-shadow pair as --ui-button-highlight/--ui-button-text-shadow, // kept as separate tokens so a theme can gloss toasts and buttons // independently. \"--ui-toast-success-background\": \"var(--ui-success, #16a34a)\", \"--ui-toast-error-background\": \"var(--ui-danger, #dc2626)\", \"--ui-toast-info-background\": \"var(--ui-info, #0ea5e9)\", \"--ui-toast-warning-background\": \"var(--ui-warning, #d97706)\", \"--ui-toast-highlight\": \"0 0 0 0 transparent\", \"--ui-toast-text-shadow\": \"none\", // AI accent sweep — the four stops of the animated multi-hue ring // ui-button's `ai` modifier draws around a button (and the only place a // rainbow reads as meaning \"this action is AI-powered\" rather than a // semantic state). Ordered around the color wheel and looping back to // stop 1, so the sweep is seamless; --ui-ai-2 is --ui-primary's own // indigo, anchoring the ring to the rest of the palette. Overriding these // four retunes every AI button at once. \"--ui-ai-1\": \"#38bdf8\", // sky-400 \"--ui-ai-2\": \"#6366f1\", // indigo-500 \"--ui-ai-3\": \"#d946ef\", // fuchsia-500 \"--ui-ai-4\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 // The tooltip's own foreground, kept separate from --ui-on-accent: that // token means \"text on a solid *semantic* fill\" (a button, a toast), which // a theme may need to darken if it makes those fills light (see // developerDarkTokenValues). --ui-tooltip's own fill is a dedicated dark // surface in every theme regardless, so its text stays white unconditionally. \"--ui-tooltip-text\": \"#ffffff\", \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Same reasoning as --ui-tooltip-text: a control drawn directly on the // --ui-overlay scrim (photo-gallery's arrow buttons) needs text/icon // contrast against that always-dark backdrop, not against whatever a theme // repoints --ui-on-accent to for its semantic fills. \"--ui-overlay-text\": \"#ffffff\", // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded // The width of a themeable surface/control border. Spacing is deliberately // untokenized, but a border is chrome rather than layout: the `blueprint` // theme's whole structure is carried by hairline rules instead of shadows, // and it needs those rules one step heavier than the default. Defaults to // the literal 1px every component used before, so nothing renders // differently until a theme overrides it. Only genuine surface/control // borders read this — forced-colors `CanvasText` borders and purely // decorative literals (a slider thumb's white ring, a tab's 2px underline) // keep their own widths, since those aren't the theme's structural rules. // Anything with a fixed height/width and a themeable border must also set // `box-sizing: border-box`, or a heavier border grows it past the shared // 2rem control target. \"--ui-border-width\": \"1px\", // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot. // Tokenized rather than hardcoded so a theme that squares the design system // (metro) can reach them too; a literal 9999px/50% silently opts that shape // out of every theme. Use these only where the shape is the point, not as a // heavier --ui-radius. \"--ui-radius-pill\": \"9999px\", \"--ui-radius-circle\": \"50%\", \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", // Casing of chrome micro-labels — the small, wide-tracked labels that name a // region rather than carry content (a `frame-box` legend, an `app-sidebar` // section heading, a `stat-meter` caption). Defaults to `none`, today's // sentence case, so nothing changes until a theme sets it; the `blueprint` // theme sets `uppercase`, where signage-style labels are the point. Never // apply this to user-supplied content — shouting someone's data is not a // theme's decision, and `text-transform` is a presentational lie that // survives copy/paste as the original casing anyway. \"--ui-label-transform\": \"none\", // Numeral rendering for figures that change in place or stack into a column // — a score, a page number, a running clock. Defaults to `normal` // (proportional, as before); `tabular-nums` stops digits from jittering // horizontally as they tick, which the `blueprint` theme's spec-sheet // aesthetic wants everywhere. \"--ui-numeric\": \"normal\", }",
+          "default": "{ // Colors \"--ui-primary\": \"#4f46e5\", // indigo-600 \"--ui-primary-hover\": \"#4338ca\", // indigo-700 // Button-specific background/border hooks: default to the flat --ui-primary // / --ui-danger tokens above unchanged, so those stay the single source of // truth for every other component. Overriding just these lets a theme opt // ui-button into a gradient (or any other) background without touching // component markup; --ui-button-border/--ui-button-danger-border default // to transparent (today's look) and are meant to be paired with a shade // darker than the gradient's dark stop when one is set. The `-active` // variants default to whatever `-background` already resolved to (so a // solid override still applies while pressed) — a gradient theme should // set them to the same stops in reverse, for a pressed/\"indented\" look. \"--ui-button-background\": \"var(--ui-primary, #4f46e5)\", \"--ui-button-background-hover\": \"var(--ui-primary-hover, #4338ca)\", \"--ui-button-background-active\": \"var(--ui-button-background, var(--ui-primary, #4f46e5))\", \"--ui-button-border\": \"transparent\", // The primary/danger fill's own text color, split out from --ui-on-accent // (which every button used directly until now): --ui-on-accent means \"text // on any solid semantic fill\" and a theme may need to darken it for a light // accent color (see developerDarkTokenValues), but that darkening should // only reach the button itself if the theme wants it to. Defaults to // --ui-on-accent unchanged, so every existing theme renders identically. \"--ui-button-text\": \"var(--ui-on-accent, #ffffff)\", \"--ui-button-danger-text\": \"var(--ui-on-accent, #ffffff)\", // The bordered, transparent-background secondary variant's equivalents — // shared with confirm-dialog's Cancel button, which is the same visual // pattern. Defaults reproduce today's literal secondary styling exactly // (no background at any state, border colors matching --ui-border / // --ui-text-muted), so a theme only needs to override these to make // secondary/Cancel buttons match a primary/danger gradient theme. \"--ui-button-secondary-background\": \"none\", \"--ui-button-secondary-background-hover\": \"none\", \"--ui-button-secondary-background-active\": \"var(--ui-button-secondary-background, none)\", \"--ui-button-secondary-border\": \"var(--ui-border, #e2e8f0)\", \"--ui-button-secondary-border-hover\": \"var(--ui-text-muted, #64748b)\", // A muted-gray surface used wherever something already paints // --ui-surface-muted as a state indicator in flat mode — button-group's // unchecked-segment hover, pagination-nav's button hover, and // radio-cards/radio-pills' checked background — which is a genuinely // different default than secondary's borderless flat hover, so it can't // reuse --ui-button-secondary-background-hover's \"none\" default. \"--ui-button-secondary-surface-muted\": \"var(--ui-surface-muted, #f8fafc)\", // The secondary gloss as two plain stop colors, for SVG surfaces that act // as secondary buttons (dag-graph's nodes): SVG fills can't paint a CSS // linear-gradient, so they build an SVG gradient from these stops instead. // Both default to the flat --ui-surface, i.e. a solid fill; a gradient // theme sets them to its secondary background's stops. \"--ui-button-secondary-gloss-start\": \"var(--ui-surface, #ffffff)\", \"--ui-button-secondary-gloss-end\": \"var(--ui-surface, #ffffff)\", // Shared by both primary/danger — a purely cosmetic gloss/legibility pair, // not color-specific, so one token covers both variants. `-highlight` is a // full box-shadow value (e.g. `inset 0 1px 0 rgb(255 255 255 / 0.35)`) for // a glossy top edge, defaulting to a fully transparent (so invisible) // shadow rather than the keyword `none` — some usages combine it with // another literal shadow in a comma-separated list, where a bare `none` // item is invalid CSS and would zero out the *whole* declaration. // `-text-shadow` is a full text-shadow value for label legibility against // a gradient's lighter stop, always used standalone, so it keeps `none`. \"--ui-button-highlight\": \"0 0 0 0 transparent\", \"--ui-button-text-shadow\": \"none\", // A solid stand-in for the same accent, for spots that can't render a // background gradient at all — a native <input>'s accent-color only // accepts a plain color, and a hard-stop background gradient (e.g. // range-slider's filled track) can't nest another gradient inside its own // color-stop list. Consumers that theme the buttons into a gradient should // set this to the gradient's dark stop, so these non-button accents (radio // selection indicators, the range-slider track/thumb) stay visually // coordinated with it even though they can't literally paint a gradient. \"--ui-button-accent\": \"var(--ui-primary, #4f46e5)\", \"--ui-info\": \"#0ea5e9\", // sky-500 \"--ui-info-hover\": \"#0284c7\", // sky-600 \"--ui-danger\": \"#dc2626\", // red-600 \"--ui-danger-hover\": \"#b91c1c\", // red-700 \"--ui-button-danger-background\": \"var(--ui-danger, #dc2626)\", \"--ui-button-danger-background-hover\": \"var(--ui-danger-hover, #b91c1c)\", \"--ui-button-danger-background-active\": \"var(--ui-button-danger-background, var(--ui-danger, #dc2626))\", \"--ui-button-danger-border\": \"transparent\", \"--ui-success\": \"#16a34a\", // green-600 \"--ui-warning\": \"#d97706\", // amber-600 \"--ui-warning-hover\": \"#b45309\", // amber-700 // toast-notification's per-variant background hooks: default to the flat // --ui-success/--ui-danger/--ui-info/--ui-warning tokens unchanged, so // those stay the single source of truth for every other component — // the same pattern as --ui-button-background/--ui-button-danger-background // above. `-highlight`/`-text-shadow` are the same glossy-top-edge / // legibility-shadow pair as --ui-button-highlight/--ui-button-text-shadow, // kept as separate tokens so a theme can gloss toasts and buttons // independently. \"--ui-toast-success-background\": \"var(--ui-success, #16a34a)\", \"--ui-toast-error-background\": \"var(--ui-danger, #dc2626)\", \"--ui-toast-info-background\": \"var(--ui-info, #0ea5e9)\", \"--ui-toast-warning-background\": \"var(--ui-warning, #d97706)\", \"--ui-toast-highlight\": \"0 0 0 0 transparent\", \"--ui-toast-text-shadow\": \"none\", // AI accent sweep — the four stops of the animated multi-hue ring // ui-button's `ai` modifier draws around a button (and the only place a // rainbow reads as meaning \"this action is AI-powered\" rather than a // semantic state). Ordered around the color wheel and looping back to // stop 1, so the sweep is seamless; --ui-ai-2 is --ui-primary's own // indigo, anchoring the ring to the rest of the palette. Overriding these // four retunes every AI button at once. \"--ui-ai-1\": \"#38bdf8\", // sky-400 \"--ui-ai-2\": \"#6366f1\", // indigo-500 \"--ui-ai-3\": \"#d946ef\", // fuchsia-500 \"--ui-ai-4\": \"#fbbf24\", // amber-400 \"--ui-on-accent\": \"#ffffff\", \"--ui-text\": \"#0f172a\", // slate-900 \"--ui-text-muted\": \"#64748b\", // slate-500 \"--ui-border\": \"#e2e8f0\", // slate-200 \"--ui-surface\": \"#ffffff\", // white \"--ui-surface-muted\": \"#f8fafc\", // slate-50 \"--ui-highlight\": \"#fde68a\", // amber-200 — transient \"just changed\" flash \"--ui-tooltip\": \"#0f172a\", // slate-900 // The tooltip's own foreground, kept separate from --ui-on-accent: that // token means \"text on a solid *semantic* fill\" (a button, a toast), which // a theme may need to darken if it makes those fills light (see // developerDarkTokenValues). --ui-tooltip's own fill is a dedicated dark // surface in every theme regardless, so its text stays white unconditionally. \"--ui-tooltip-text\": \"#ffffff\", \"--ui-hover-overlay\": \"rgb(255 255 255 / 0.32)\", \"--ui-overlay\": \"rgb(15 23 42 / 0.45)\", // slate-900 / 45% // Same reasoning as --ui-tooltip-text: a control drawn directly on the // --ui-overlay scrim (photo-gallery's arrow buttons) needs text/icon // contrast against that always-dark backdrop, not against whatever a theme // repoints --ui-on-accent to for its semantic fills. \"--ui-overlay-text\": \"#ffffff\", // Shape / depth \"--ui-radius\": \"0.5rem\", // rounded-lg \"--ui-radius-sm\": \"0.25rem\", // rounded // The width of a themeable surface/control border. Spacing is deliberately // untokenized, but a border is chrome rather than layout: the `blueprint` // theme's whole structure is carried by hairline rules instead of shadows, // and it needs those rules one step heavier than the default. Defaults to // the literal 1px every component used before, so nothing renders // differently until a theme overrides it. Only genuine surface/control // borders read this — forced-colors `CanvasText` borders and purely // decorative literals (a slider thumb's white ring, a tab's 2px underline) // keep their own widths, since those aren't the theme's structural rules. // Anything with a fixed height/width and a themeable border must also set // `box-sizing: border-box`, or a heavier border grows it past the shared // 2rem control target. \"--ui-border-width\": \"1px\", // Deliberate pill/circle shapes — a chip, an avatar, a slider thumb, a dot. // Tokenized rather than hardcoded so a theme that squares the design system // (metro) can reach them too; a literal 9999px/50% silently opts that shape // out of every theme. Use these only where the shape is the point, not as a // heavier --ui-radius. \"--ui-radius-pill\": \"9999px\", \"--ui-radius-circle\": \"50%\", \"--ui-shadow\": \"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)\", // shadow-md \"--ui-shadow-lg\": \"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)\", // shadow-xl \"--ui-focus-ring\": \"0 0 0 3px rgb(79 70 229 / 0.35)\", // Type \"--ui-font\": 'ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"', \"--ui-font-mono\": \"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace\", \"--ui-font-size-lg\": \"1rem\", // text-base \"--ui-font-size\": \"0.875rem\", // text-sm \"--ui-font-size-sm\": \"0.75rem\", // text-xs \"--ui-font-size-xs\": \"0.6875rem\", // Font weights — the only four weights the system uses. \"--ui-font-weight-regular\": \"400\", \"--ui-font-weight-medium\": \"500\", \"--ui-font-weight-semibold\": \"600\", \"--ui-font-weight-bold\": \"700\", // Line heights — glyph (icon/marker box), tight (headings), normal (body). \"--ui-line-height-glyph\": \"1\", \"--ui-line-height-tight\": \"1.25\", \"--ui-line-height-normal\": \"1.5\", // Letter spacing / tracking — default and the single widened step. \"--ui-tracking-normal\": \"0\", \"--ui-tracking-wide\": \"0.04em\", // Casing of chrome micro-labels — the small, wide-tracked labels that name a // region rather than carry content (a `frame-box` legend, an `app-sidebar` // section heading, a `stat-meter` caption). Defaults to `none`, today's // sentence case, so nothing changes until a theme sets it; the `blueprint` // theme sets `uppercase`, where signage-style labels are the point. Never // apply this to user-supplied content — shouting someone's data is not a // theme's decision, and `text-transform` is a presentational lie that // survives copy/paste as the original casing anyway. \"--ui-label-transform\": \"none\", // Numeral rendering for figures that change in place or stack into a column // — a score, a page number, a running clock. Defaults to `normal` // (proportional, as before); `tabular-nums` stops digits from jittering // horizontally as they tick, which the `blueprint` theme's spec-sheet // aesthetic wants everywhere. \"--ui-numeric\": \"normal\", }",
           "description": "Design token values, sourced from Tailwind v4's default theme palette.\nEach entry maps a `--ui-*` custom property name to its default value.\nThese are the same values baked in as `var(--ui-*, <fallback>)` fallbacks\nthroughout component styles, so components render correctly with zero\nexternal CSS. Consumers may override any of these by setting the custom\nproperty on `:root` or an ancestor element (see `tokens.css`)."
         },
         {
@@ -20956,7 +21956,7 @@
           "type": {
             "text": "Record<string, string>"
           },
-          "default": "{ \"--ui-button-background\": \"linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)\", // indigo-500 -> 600 \"--ui-button-background-hover\": \"linear-gradient(180deg, #818cf8 0%, #6366f1 100%)\", // indigo-400 -> 500 \"--ui-button-background-active\": \"linear-gradient(180deg, #4f46e5 0%, #6366f1 100%)\", // reversed 600 -> 500 \"--ui-button-border\": \"#4338ca\", // indigo-700 \"--ui-button-danger-background\": \"linear-gradient(180deg, #ef4444 0%, #dc2626 100%)\", // red-500 -> 600 \"--ui-button-danger-background-hover\": \"linear-gradient(180deg, #f87171 0%, #ef4444 100%)\", // red-400 -> 500 \"--ui-button-danger-background-active\": \"linear-gradient(180deg, #dc2626 0%, #ef4444 100%)\", // reversed 600 -> 500 \"--ui-button-danger-border\": \"#b91c1c\", // red-700 // Secondary stays neutral gray rather than a saturated hue, matching its // flat \"not the primary action\" role, but one shade darker than the // original white -> slate-50 pairing: at a small button size, that pair // read as flat white with no visible gradient at all. slate-50 -> 100 // keeps enough contrast to actually look like a gradient while still // being clearly lighter/quieter than primary/danger. Border stays // slate-300 (a step past the flat slate-200) so its edge still reads // against the fill. \"--ui-button-secondary-background\": \"linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)\", // slate-50 -> 100 \"--ui-button-secondary-background-hover\": \"linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%)\", // slate-100 -> 200 \"--ui-button-secondary-background-active\": \"linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%)\", // reversed 100 -> 50 \"--ui-button-secondary-border\": \"#cbd5e1\", // slate-300 \"--ui-button-secondary-border-hover\": \"#94a3b8\", // slate-400 // button-group's unchecked segments, pagination-nav's prev/next buttons, and // radio-cards/radio-pills' checked background read this rather than // --ui-button-secondary-background (see tokens above). Left flat they were // the one \"secondary\" surface that stayed matte while every actual secondary // button turned glossy, so it tracks the hover gradient rather than a // separate literal that could drift out of step with it. \"--ui-button-secondary-surface-muted\": \"var(--ui-button-secondary-background-hover)\", \"--ui-button-highlight\": \"inset 0 1px 0 rgb(255 255 255 / 0.35)\", // glossy top edge \"--ui-button-text-shadow\": \"0 1px 1px rgb(0 0 0 / 0.25)\", // legibility on primary/danger \"--ui-button-accent\": \"#4338ca\", // indigo-700, matches --ui-button-border // toast-notification: same light-to-dark, one-shade-step gradient // convention as the button variants above; the bottom stop always matches // the flat --ui-success/--ui-danger/--ui-info/--ui-warning value exactly. \"--ui-toast-success-background\": \"linear-gradient(180deg, #22c55e 0%, #16a34a 100%)\", // green-500 -> 600 \"--ui-toast-error-background\": \"linear-gradient(180deg, #ef4444 0%, #dc2626 100%)\", // red-500 -> 600 \"--ui-toast-info-background\": \"linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%)\", // sky-400 -> 500 \"--ui-toast-warning-background\": \"linear-gradient(180deg, #f59e0b 0%, #d97706 100%)\", // amber-500 -> 600 \"--ui-toast-highlight\": \"inset 0 1px 0 rgb(255 255 255 / 0.35)\", // glossy top edge, same as --ui-button-highlight \"--ui-toast-text-shadow\": \"0 1px 1px rgb(0 0 0 / 0.25)\", // legibility, same as --ui-button-text-shadow }",
+          "default": "{ \"--ui-button-background\": \"linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)\", // indigo-500 -> 600 \"--ui-button-background-hover\": \"linear-gradient(180deg, #818cf8 0%, #6366f1 100%)\", // indigo-400 -> 500 \"--ui-button-background-active\": \"linear-gradient(180deg, #4f46e5 0%, #6366f1 100%)\", // reversed 600 -> 500 \"--ui-button-border\": \"#4338ca\", // indigo-700 \"--ui-button-danger-background\": \"linear-gradient(180deg, #ef4444 0%, #dc2626 100%)\", // red-500 -> 600 \"--ui-button-danger-background-hover\": \"linear-gradient(180deg, #f87171 0%, #ef4444 100%)\", // red-400 -> 500 \"--ui-button-danger-background-active\": \"linear-gradient(180deg, #dc2626 0%, #ef4444 100%)\", // reversed 600 -> 500 \"--ui-button-danger-border\": \"#b91c1c\", // red-700 // Secondary stays neutral gray rather than a saturated hue, matching its // flat \"not the primary action\" role, but one shade darker than the // original white -> slate-50 pairing: at a small button size, that pair // read as flat white with no visible gradient at all. slate-50 -> 100 // keeps enough contrast to actually look like a gradient while still // being clearly lighter/quieter than primary/danger. Border stays // slate-300 (a step past the flat slate-200) so its edge still reads // against the fill. \"--ui-button-secondary-background\": \"linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)\", // slate-50 -> 100 \"--ui-button-secondary-background-hover\": \"linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%)\", // slate-100 -> 200 \"--ui-button-secondary-background-active\": \"linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%)\", // reversed 100 -> 50 \"--ui-button-secondary-border\": \"#cbd5e1\", // slate-300 \"--ui-button-secondary-border-hover\": \"#94a3b8\", // slate-400 // button-group's unchecked segments, pagination-nav's prev/next buttons, and // radio-cards/radio-pills' checked background read this rather than // --ui-button-secondary-background (see tokens above). Left flat they were // the one \"secondary\" surface that stayed matte while every actual secondary // button turned glossy, so it tracks the hover gradient rather than a // separate literal that could drift out of step with it. \"--ui-button-secondary-surface-muted\": \"var(--ui-button-secondary-background-hover)\", // Stops of --ui-button-secondary-background above, for SVG surfaces. \"--ui-button-secondary-gloss-start\": \"#f8fafc\", // slate-50 \"--ui-button-secondary-gloss-end\": \"#f1f5f9\", // slate-100 \"--ui-button-highlight\": \"inset 0 1px 0 rgb(255 255 255 / 0.35)\", // glossy top edge \"--ui-button-text-shadow\": \"0 1px 1px rgb(0 0 0 / 0.25)\", // legibility on primary/danger \"--ui-button-accent\": \"#4338ca\", // indigo-700, matches --ui-button-border // toast-notification: same light-to-dark, one-shade-step gradient // convention as the button variants above; the bottom stop always matches // the flat --ui-success/--ui-danger/--ui-info/--ui-warning value exactly. \"--ui-toast-success-background\": \"linear-gradient(180deg, #22c55e 0%, #16a34a 100%)\", // green-500 -> 600 \"--ui-toast-error-background\": \"linear-gradient(180deg, #ef4444 0%, #dc2626 100%)\", // red-500 -> 600 \"--ui-toast-info-background\": \"linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%)\", // sky-400 -> 500 \"--ui-toast-warning-background\": \"linear-gradient(180deg, #f59e0b 0%, #d97706 100%)\", // amber-500 -> 600 \"--ui-toast-highlight\": \"inset 0 1px 0 rgb(255 255 255 / 0.35)\", // glossy top edge, same as --ui-button-highlight \"--ui-toast-text-shadow\": \"0 1px 1px rgb(0 0 0 / 0.25)\", // legibility, same as --ui-button-text-shadow }",
           "description": "\"Gradient\" theme overrides, applied via `data-theme=\"gradient\"` on `<html>`\n(see `generate-tokens-css.mjs`) — forces `color-scheme: light` like the\n`\"light\"` override and layers a glossy gradient look on top of the flat\nlight palette, using exactly the `--ui-button-*`/`--ui-button-danger-*`/\n`--ui-button-secondary-*` hooks `ui-button.ts` already reads (see that\nfile's doc comment), plus the `--ui-toast-*` hooks `toast-notification.ts`\nreads (see its doc comment). Every other token (`--ui-text`, `--ui-surface`,\n…) is left at its light-mode default — this theme only glosses buttons and\ntoasts by design. Each variant's gradient runs light-to-dark top-to-bottom\n(`180deg`) across one Tailwind shade step lighter/darker than the flat\ntoken so it still reads as \"the same color, glossy\" rather than a\ndifferent hue; `-hover` shifts the whole pair one shade lighter, `-active`\nreverses the two stops for a pressed/\"indented\" look, and `-border` is a\nshade darker than the gradient's dark stop for a defining edge."
         },
         {
@@ -23607,6 +24607,201 @@
           "declaration": {
             "name": "describeCron",
             "module": "src/utils/cron.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/dag-layout.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "DAG_NODE_HEIGHT",
+          "type": {
+            "text": "number"
+          },
+          "default": "24",
+          "description": "Height of every node card, in pixels."
+        },
+        {
+          "kind": "variable",
+          "name": "DAG_LABEL_OFFSET",
+          "type": {
+            "text": "number"
+          },
+          "default": "26",
+          "description": "Space before a node's label: left padding, 14px icon, and gap."
+        },
+        {
+          "kind": "variable",
+          "name": "DAG_LABEL_OFFSET_PLAIN",
+          "type": {
+            "text": "number"
+          },
+          "default": "8",
+          "description": "Space before a node's label when it has no icon."
+        },
+        {
+          "kind": "variable",
+          "name": "DAG_MIN_NODE_WIDTH",
+          "type": {
+            "text": "number"
+          },
+          "default": "48",
+          "description": "Narrowest node card, in pixels."
+        },
+        {
+          "kind": "variable",
+          "name": "DAG_MAX_NODE_WIDTH",
+          "type": {
+            "text": "number"
+          },
+          "default": "200",
+          "description": "Widest node card, in pixels; longer labels are shortened with an ellipsis."
+        },
+        {
+          "kind": "function",
+          "name": "approximateTextWidth",
+          "parameters": [
+            {
+              "name": "text"
+            }
+          ],
+          "description": "Width estimate used when the browser cannot measure text (no 2D canvas)."
+        },
+        {
+          "kind": "function",
+          "name": "fitLabel",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "maxWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "measure",
+              "type": {
+                "text": "MeasureText"
+              }
+            }
+          ],
+          "description": "Shortens `text` with an ellipsis until it fits `maxWidth`."
+        },
+        {
+          "kind": "function",
+          "name": "layoutDag",
+          "return": {
+            "type": {
+              "text": "DagLayout"
+            }
+          },
+          "parameters": [
+            {
+              "name": "nodes",
+              "type": {
+                "text": "DagLayoutInput[]"
+              }
+            },
+            {
+              "name": "edges",
+              "type": {
+                "text": "Array<{ source: string; target: string }>"
+              }
+            },
+            {
+              "name": "direction",
+              "default": "\"LR\"",
+              "type": {
+                "text": "DagDirection"
+              }
+            },
+            {
+              "name": "measure",
+              "default": "approximateTextWidth",
+              "type": {
+                "text": "MeasureText"
+              }
+            }
+          ],
+          "description": "Lays out a directed graph in layers (Sugiyama-style, via dagre) so every edge points along `direction`.\n\nCycles are broken only to assign layers: every edge is returned, and the ones that close a cycle are marked\n`backward`. Edges whose endpoints are not both in `nodes`, self-edges, and duplicates are ignored. The result\ndoes not depend on input order."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DAG_NODE_HEIGHT",
+          "declaration": {
+            "name": "DAG_NODE_HEIGHT",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DAG_LABEL_OFFSET",
+          "declaration": {
+            "name": "DAG_LABEL_OFFSET",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DAG_LABEL_OFFSET_PLAIN",
+          "declaration": {
+            "name": "DAG_LABEL_OFFSET_PLAIN",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DAG_MIN_NODE_WIDTH",
+          "declaration": {
+            "name": "DAG_MIN_NODE_WIDTH",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DAG_MAX_NODE_WIDTH",
+          "declaration": {
+            "name": "DAG_MAX_NODE_WIDTH",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "approximateTextWidth",
+          "declaration": {
+            "name": "approximateTextWidth",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fitLabel",
+          "declaration": {
+            "name": "fitLabel",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "layoutDag",
+          "declaration": {
+            "name": "layoutDag",
+            "module": "src/utils/dag-layout.ts"
           }
         }
       ]

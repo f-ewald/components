@@ -16,6 +16,8 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | --- | --- | --- |
 | `iconAcademicCap` | 18px | Education, learning, or certification-related content. |
 | `iconArrowDownTray` | 16px | Download or export actions. |
+| `iconArrowLongDown` | 18px | A top-to-bottom flow or layout direction. |
+| `iconArrowLongRight` | 18px | A left-to-right flow or layout direction. |
 | `iconArrowPath` | 12px | Refresh actions, or an animated busy/loading spinner. |
 | `iconArrowRight` | 12px | "Continue" or forward-progressing actions, e.g. a compact next-step arrow. |
 | `iconArrowRightOnRectangle` | 16px | Logout/sign-out actions. |
@@ -24,6 +26,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconArrowsRightLeft` | 16px | Swap, exchange, or compare actions between two items. |
 | `iconArrowTopRightOnSquare` | 16px | Links that open in a new tab/window, or navigate to an external site. |
 | `iconBars3` | 18px | A hamburger menu toggle, e.g. collapsing or opening a sidebar/nav drawer. |
+| `iconBookOpen` | 20px | A library, documentation, or reading content, e.g. a library node in dag-graph. |
 | `iconCalendar` | 16px | Dates, due dates, or calendar-related metadata. |
 | `iconChatBubbleLeftRight` | 18px | Messaging, comments, or conversation-related content. |
 | `iconCheckCircle` | 16px | Success states, confirmations, or a selected-item checkmark. |
@@ -38,6 +41,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconCog` | 20px | Settings, preferences, or configuration entry points. |
 | `iconComputerDesktop` | 16px | A "system/auto" theme option, or to represent a desktop device. |
 | `iconCpuChip` | 18px | System, hardware, or technical/processing content. |
+| `iconCube` | 20px | A package or self-contained artifact, e.g. an external package node in dag-graph. |
 | `iconCurrencyDollar` | 16px | Monetary values, pricing, or billing-related content. |
 | `iconDocument` | 18px | A generic file/document icon, e.g. tile-grid's default file icon. |
 | `iconEllipsisHorizontal` | 16px | Collapsed items in an inline sequence, e.g. breadcrumb-nav's truncated middle. |
@@ -56,6 +60,8 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconLink` | 16px | Hyperlink-related actions or a linked/associated-item indicator. |
 | `iconListBullet` | 18px | A list-view toggle, or to represent list-type content. |
 | `iconMagnifyingGlass` | 16px | Search inputs or search-triggering actions. |
+| `iconMagnifyingGlassMinus` | 18px | Zoom out, e.g. dag-graph's toolbar. |
+| `iconMagnifyingGlassPlus` | 18px | Zoom in, e.g. dag-graph's toolbar. |
 | `iconMap` | 16px | A map-view toggle, or to represent map/geographic content. |
 | `iconMapPin` | 16px | A location, address, or map marker. |
 | `iconMoon` | 16px | A dark-theme toggle, or to represent night/dark mode. |
@@ -66,6 +72,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconPuzzlePiece` | 18px | Plugins, integrations, or extensible/add-on features. |
 | `iconQuestionMarkCircle` | 20px | Help, tooltips, or "learn more" affordances. |
 | `iconQueueList` | 16px | Queues, backlogs, or ordered work-item lists. |
+| `iconServer` | 20px | A running service or deployable, e.g. a service node in dag-graph. |
 | `iconShieldCheck` | 16px | Verified, secure, or trusted states. |
 | `iconShieldExclamation` | 16px | Security warnings, or at-risk/compromised states. |
 | `iconSignal` | 16px | Live/real-time data, connectivity strength, or a traffic-conditions toggle. |
@@ -78,5 +85,6 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconTrash` | 16px | Delete/remove actions, typically paired with a destructive/danger style. |
 | `iconUserCircle` | 20px | A generic user/person fallback, e.g. user-avatar's icon fallback. |
 | `iconUsers` | 18px | Teams, groups, or multi-user/collaboration content. |
+| `iconViewfinderCircle` | 18px | Center or focus the view on the current selection, e.g. dag-graph's toolbar. |
 | `iconWrenchScrewdriver` | 18px | Tools, maintenance, or build/configuration actions. |
 | `iconX` | 18px | Close, dismiss, or clear (e.g. a modal, toast, or clearable input). |

@@ -39,6 +39,16 @@ export { DistributionChart, type DistributionValue } from "./distribution-chart.
 export { PercentBarChart, type PercentBarGroup } from "./percent-bar-chart.js";
 export { WeightBarChart, type WeightBarItem } from "./weight-bar-chart.js";
 export {
+  DagGraph,
+  type DagControl,
+  type DagDirection,
+  type DagDirectionChangeDetail,
+  type DagEdge,
+  type DagNode,
+  type DagNodeKind,
+  type DagNodeSelectDetail,
+} from "./dag-graph.js";
+export {
   AddressAutocomplete,
   type AddressSuggestion,
 } from "./address-autocomplete.js";
