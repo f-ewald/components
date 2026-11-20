@@ -4,6 +4,7 @@ import { scaleTime, scaleLinear } from "d3-scale";
 import { line, area } from "d3-shape";
 import { min, max } from "d3-array";
 import { tokens } from "./tokens.js";
+import { parseIsoDate } from "./utils/calendar.js";
 
 export interface PricePoint {
   date: string | null;
@@ -15,6 +16,11 @@ export interface PricePoint {
 interface PlottedPoint extends PricePoint {
   x: number;
   y: number;
+}
+
+/** Reads a date-only `"YYYY-MM-DD"` as local midnight (not UTC); any other string goes through `Date`. */
+function toDate(date: string): Date {
+  return parseIsoDate(date) ?? new Date(date);
 }
 
 function fmtMoney(n: number): string {
@@ -67,7 +73,7 @@ export class PriceHistoryChart extends LitElement {
   private get validPoints(): PricePoint[] {
     return this.history
       .filter((h) => h.price != null && h.date != null)
-      .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
+      .sort((a, b) => toDate(a.date!).getTime() - toDate(b.date!).getTime());
   }
 
   private get showY(): boolean {
@@ -140,7 +146,7 @@ export class PriceHistoryChart extends LitElement {
     const bottomY = MT + plotH;
 
     const prices = points.map((p) => p.price!);
-    const dates = points.map((p) => new Date(p.date!));
+    const dates = points.map((p) => toDate(p.date!));
     const minPrice = min(prices)!;
     const maxPrice = max(prices)!;
     const pad = (maxPrice - minPrice) * 0.05 || maxPrice * 0.05;
@@ -154,17 +160,17 @@ export class PriceHistoryChart extends LitElement {
       .range([bottomY, MT]);
 
     const lineFn = line<PricePoint>()
-      .x((p) => xScale(new Date(p.date!)))
+      .x((p) => xScale(toDate(p.date!)))
       .y((p) => yScale(p.price!));
 
     const areaFn = area<PricePoint>()
-      .x((p) => xScale(new Date(p.date!)))
+      .x((p) => xScale(toDate(p.date!)))
       .y0(bottomY)
       .y1((p) => yScale(p.price!));
 
     const plotted: PlottedPoint[] = points.map((p) => ({
       ...p,
-      x: xScale(new Date(p.date!)),
+      x: xScale(toDate(p.date!)),
       y: yScale(p.price!),
     }));
 
@@ -184,7 +190,7 @@ export class PriceHistoryChart extends LitElement {
     const hovPt = hIdx !== null ? plotted[hIdx] : null;
 
     const tooltipEl = hovPt ? (() => {
-      const tipText = `${fmtMoney(hovPt.price!)} · ${hovPt.date ? new Date(hovPt.date).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : ""} · ${hovPt.eventType}`;
+      const tipText = `${fmtMoney(hovPt.price!)} · ${hovPt.date ? toDate(hovPt.date).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : ""} · ${hovPt.eventType}`;
       const tipW = Math.min(tipText.length * 6.5 + 16, this._width - ML - MR);
       const tipH = 24;
       const tipGap = 8;
@@ -226,7 +232,7 @@ export class PriceHistoryChart extends LitElement {
     const firstPoint = points[0];
     const lastPoint = points[points.length - 1];
     const formatDate = (date: string | null) =>
-      new Date(date!).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+      toDate(date!).toLocaleDateString("en-US", { month: "short", year: "numeric" });
     const summary =
       `${points.length} price points from ${formatDate(firstPoint.date)} at ${fmtMoney(firstPoint.price!)} ` +
       `to ${formatDate(lastPoint.date)} at ${fmtMoney(lastPoint.price!)}.`;

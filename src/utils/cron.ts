@@ -136,16 +136,25 @@ const NAME_LOOKUPS: Partial<Record<CronFieldName, Record<string, number>>> = {
   ),
 };
 
+/** Highest value a field accepts as input; `7` is Vixie cron's second spelling of Sunday. */
+function inputMax(field: CronFieldName): number {
+  return field === "dayOfWeek" ? 7 : CRON_FIELD_BOUNDS[field][1];
+}
+
+/** Parses one value; weekday `7` is kept as-is so ranges like `5-7` stay ordered. */
 function parseValue(token: string, field: CronFieldName): number | null {
   const named = NAME_LOOKUPS[field]?.[token.toLowerCase()];
   if (named !== undefined) return named;
   if (!/^\d+$/.test(token)) return null;
 
   const value = Number(token);
-  const [min, max] = CRON_FIELD_BOUNDS[field];
-  // Vixie cron accepts 7 as a second spelling of Sunday.
-  if (field === "dayOfWeek" && value === 7) return 0;
-  return value >= min && value <= max ? value : null;
+  const min = CRON_FIELD_BOUNDS[field][0];
+  return value >= min && value <= inputMax(field) ? value : null;
+}
+
+/** A lone weekday `7` is Sunday, stored as `0`. */
+function normalizeSingle(value: number, field: CronFieldName): number {
+  return field === "dayOfWeek" && value === 7 ? 0 : value;
 }
 
 function parseTerm(token: string, field: CronFieldName): CronTerm | null {
@@ -157,18 +166,18 @@ function parseTerm(token: string, field: CronFieldName): CronTerm | null {
     const step = Number(stepToken);
     if (step < 1) return null;
 
-    const [min, max] = CRON_FIELD_BOUNDS[field];
+    const min = CRON_FIELD_BOUNDS[field][0];
     if (base === "*" || base === "?") return { kind: "step", from: min, to: null, step };
 
     const range = base.split("-");
     if (range.length === 1) {
       const from = parseValue(range[0]!, field);
-      return from === null ? null : { kind: "step", from, to: null, step };
+      return from === null ? null : { kind: "step", from: normalizeSingle(from, field), to: null, step };
     }
     if (range.length !== 2) return null;
     const from = parseValue(range[0]!, field);
     const to = parseValue(range[1]!, field);
-    if (from === null || to === null || to < from || to > max) return null;
+    if (from === null || to === null || to < from) return null;
     return { kind: "step", from, to, step };
   }
 
@@ -177,7 +186,7 @@ function parseTerm(token: string, field: CronFieldName): CronTerm | null {
   const range = base.split("-");
   if (range.length === 1) {
     const value = parseValue(range[0]!, field);
-    return value === null ? null : { kind: "value", value };
+    return value === null ? null : { kind: "value", value: normalizeSingle(value, field) };
   }
   if (range.length !== 2) return null;
   const from = parseValue(range[0]!, field);
@@ -259,6 +268,8 @@ export function expandField(field: CronField, name: CronFieldName): number[] {
       for (let value = term.from; value <= end; value += term.step) values.add(value);
     }
   }
+  // Ranges may end on weekday 7, which is Sunday.
+  if (name === "dayOfWeek" && values.delete(7)) values.add(0);
   return [...values].sort((a, b) => a - b);
 }
 
@@ -357,7 +368,7 @@ function describeFieldTerms(field: CronField, name: CronFieldName): string {
   const label = name === "month" ? "month" : name === "dayOfMonth" ? "day" : name;
   const readable = (value: number): string => {
     if (name === "month") return MONTH_ABBREVIATIONS[value - 1]!;
-    if (name === "dayOfWeek") return WEEKDAY_ABBREVIATIONS[value]!;
+    if (name === "dayOfWeek") return WEEKDAY_ABBREVIATIONS[value % 7]!;
     return String(value);
   };
   const parts = field.map((term) => {

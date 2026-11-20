@@ -118,7 +118,7 @@ export class UiCheckbox extends LitElement {
   /** Visual "partial selection" state; cleared on the next user interaction. */
   @property({ type: Boolean }) indeterminate = false;
   /** Disables interaction; merged with an ancestor `<fieldset disabled>`. */
-  @property({ type: Boolean }) disabled = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
   /** Marks the control invalid via `ElementInternals` while unchecked. */
   @property({ type: Boolean }) required = false;
   /** Form field name; submitted as `name=on` only while checked. */

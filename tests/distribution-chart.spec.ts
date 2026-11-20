@@ -44,4 +44,49 @@ test.describe("distribution-chart", () => {
     });
     await expect(skeleton).toHaveCSS("animation-name", "none");
   });
+
+  test("shows the latest metric when an older response arrives last, and survives empty data", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      const pending = new Map<string, (points: { x: number; y: number }[]) => void>();
+      (window as unknown as Record<string, unknown>).__resolveMetric = (metric: string, empty: boolean) =>
+        pending.get(metric)!(empty ? [] : [{ x: 0, y: 0 }, { x: 10, y: 1 }, { x: 20, y: 0 }]);
+      window.fetch = (input: RequestInfo | URL) => {
+        const metric = String(input).split("/").pop()!;
+        return new Promise((resolve) => {
+          pending.set(metric, (points) =>
+            resolve(
+              new Response(
+                JSON.stringify({ points, unit: "u", label: `Metric ${metric}`, min: 0, max: 20, mean: 10 }),
+              ),
+            ),
+          );
+        });
+      };
+      const chart = document.createElement("distribution-chart");
+      chart.id = "dist-race";
+      chart.style.display = "block";
+      chart.style.width = "400px";
+      document.body.append(chart);
+      chart.metric = "a";
+      return chart.updateComplete.then(() => {
+        chart.metric = "b";
+      });
+    });
+    const resolveMetric = (metric: string, empty = false) =>
+      page.evaluate(
+        ([m, e]) => ((window as unknown as Record<string, (m: string, e: boolean) => void>).__resolveMetric(m, e)),
+        [metric, empty] as const,
+      );
+    await resolveMetric("b");
+    await resolveMetric("a");
+    const chart = page.locator("#dist-race");
+    await expect(chart.locator("svg")).toHaveAccessibleName(/^Metric b:/);
+
+    await chart.evaluate((element) => {
+      (element as HTMLElement & { metric: string }).metric = "empty";
+    });
+    await resolveMetric("empty", true);
+    await expect(chart.locator(".empty")).toHaveText("No distribution data");
+  });
 });

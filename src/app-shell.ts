@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { iconBars3 } from "./icons.js";
 import "./kbd-hint.js";
 import { tokens } from "./tokens.js";
+import { hasOpenLayer } from "./utils/layer-stack.js";
 
 /** Fired when the built-in toggle changes the sidebar state. */
 export interface SidebarToggleDetail {
@@ -379,6 +380,8 @@ export class AppShell extends LitElement {
   private _onKeydown = (event: KeyboardEvent): void => {
     if (event.defaultPrevented) return;
     if (event.key === "Escape" && this._mobile) {
+      // An open dialog/popover/panel above the shell owns Escape.
+      if (hasOpenLayer()) return;
       if (this.detailOpen) {
         event.preventDefault();
         this._closeDetail();

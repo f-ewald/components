@@ -1,15 +1,14 @@
 import { css, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
-import { CalendarTimelineBase } from "./calendar-timeline-base.js";
+import { CalendarTimelineBase, HOUR_HEIGHT_REM } from "./calendar-timeline-base.js";
 import { iconMapPin } from "./icons.js";
 import { tokens } from "./tokens.js";
 import {
   WEEKDAY_ABBR,
   addDays,
   assignLanes,
-  minutesSinceMidnight,
-  overlapsRange,
+  overlapsTimedRange,
   parseIsoDate,
   startOfWeek,
   toIsoDate,
@@ -17,7 +16,6 @@ import {
   type ResolvedTimedEntry,
 } from "./utils/calendar.js";
 
-const HOUR_HEIGHT_REM = 3;
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const hourLabelFormatter = new Intl.DateTimeFormat(undefined, { hour: "numeric" });
 
@@ -278,32 +276,6 @@ export class CalendarWeek extends CalendarTimelineBase {
     `;
   }
 
-  /** Renders a positioned/sized block for one timed entry, clamped to `day`'s bounds. */
-  private _renderTimedEntry(entry: LanedEntry, laneCount: number, dayStart: Date, dayEnd: Date) {
-    const visibleStart = entry.startDate < dayStart ? dayStart : entry.startDate;
-    const visibleEnd = entry.endDate > dayEnd ? dayEnd : entry.endDate;
-    const topRem = (minutesSinceMidnight(visibleStart) / 60) * HOUR_HEIGHT_REM;
-    const bottomRem = (minutesSinceMidnight(visibleEnd) / 60) * HOUR_HEIGHT_REM;
-    const heightRem = Math.max(bottomRem - topRem, HOUR_HEIGHT_REM / 4);
-    const widthPercent = 100 / laneCount;
-    const bodyText = [entry.label, ...(entry.details ?? []), entry.location].filter(Boolean).join("\n");
-    return html`
-      <div
-        class="entry-bar entry-block ${entry.color}"
-        data-entry-key=${this.entryKey(entry)}
-        title=${entry.href ? nothing : bodyText}
-        style="top: ${topRem}rem; height: ${heightRem}rem; left: ${entry.lane * widthPercent}%; width: ${widthPercent}%;"
-      >
-        ${this.renderEntryLink(entry, bodyText)}
-        <span class="entry-title" aria-hidden=${entry.href ? "true" : nothing}>${entry.label}</span>
-        ${entry.location
-          ? html`<span class="entry-location" aria-hidden=${entry.href ? "true" : nothing}
-              >${iconMapPin(14)}${entry.location}</span
-            >`
-          : nothing}
-      </div>
-    `;
-  }
 
   /** Renders one day's hour column: grid lines plus its own independently laned timed entries. */
   private _renderDayColumn(day: Date, timedWeek: ResolvedTimedEntry[], todayIso: string) {
@@ -311,8 +283,8 @@ export class CalendarWeek extends CalendarTimelineBase {
     dayStart.setHours(0, 0, 0, 0);
     const dayEnd = new Date(day);
     dayEnd.setHours(23, 59, 59, 999);
-    const dayTimed = timedWeek.filter((entry) => overlapsRange(entry, dayStart, dayEnd));
-    const { entries: laned, laneCount } = assignLanes(dayTimed);
+    const dayTimed = timedWeek.filter((entry) => overlapsTimedRange(entry, dayStart, dayEnd));
+    const { entries: laned, laneCount } = assignLanes(dayTimed, { exclusiveEnd: true });
     const isToday = toIsoDate(day) === todayIso;
     return html`
       <div class="day-column ${isToday ? "today" : ""}">
@@ -320,7 +292,7 @@ export class CalendarWeek extends CalendarTimelineBase {
         ${repeat(
           laned,
           (entry) => this.entryKey(entry),
-          (entry) => this._renderTimedEntry(entry, Math.max(laneCount, 1), dayStart, dayEnd),
+          (entry) => this.renderTimedEntry(entry, Math.max(laneCount, 1), dayStart, dayEnd),
         )}
       </div>
     `;

@@ -130,4 +130,38 @@ test.describe("cron-schedule", () => {
       "Custom: minute every 2, hour 8 and day of month 1 and 15",
     );
   });
+
+  test("accepts weekday ranges and steps that end on 7 (Sunday)", async ({ page }) => {
+    await page.goto("/");
+    const results = await page.evaluate(`(async () => {
+      const cron = await import("/src/utils/cron.ts");
+      return ["0 9 * * 5-7", "0 9 * * 1-7", "0 9 * * 5-7/1", "0 9 * * 7"].map((expression) => {
+        const parsed = cron.parseCron(expression);
+        return parsed
+          ? {
+              days: cron.expandField(parsed.dayOfWeek, "dayOfWeek"),
+              text: cron.describeCron(expression),
+              round: cron.formatCron(parsed),
+            }
+          : null;
+      });
+    })()`);
+    expect(results).toEqual([
+      { days: [0, 5, 6], text: "09:00 every Sun, Fri and Sat", round: "0 9 * * 5-7" },
+      { days: [0, 1, 2, 3, 4, 5, 6], text: "09:00 every Sun, Mon, Tue, Wed, Thu, Fri and Sat", round: "0 9 * * 1-7" },
+      { days: [0, 5, 6], text: "09:00 every Sun, Fri and Sat", round: "0 9 * * 5-7/1" },
+      { days: [0], text: "09:00 every Sunday", round: "0 9 * * 0" },
+    ]);
+  });
+
+  test("the advanced editor shows a weekday range ending on Sunday (7)", async ({ page }) => {
+    await page.goto("/");
+    const el = page.locator("#cron-advanced");
+    await el.evaluate((element) => {
+      (element as HTMLElement & { value: string }).value = "*/5 * * * 5-7";
+    });
+    await el.locator("button.trigger[aria-haspopup='dialog']").click();
+    const end = el.locator(".field-editor").last().locator("form-select[label='Day of week range end'] button.trigger");
+    await expect(end).toContainText("Sun");
+  });
 });

@@ -3127,38 +3127,6 @@
               "description": "Renders one lane's stacked all-day bars, given the entries assigned to it."
             },
             {
-              "kind": "method",
-              "name": "_renderTimedEntry",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "entry",
-                  "type": {
-                    "text": "LanedEntry"
-                  }
-                },
-                {
-                  "name": "laneCount",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "dayStart",
-                  "type": {
-                    "text": "Date"
-                  }
-                },
-                {
-                  "name": "dayEnd",
-                  "type": {
-                    "text": "Date"
-                  }
-                }
-              ],
-              "description": "Renders a positioned/sized block for one timed entry, clamped to this day's bounds."
-            },
-            {
               "kind": "field",
               "name": "entryElements",
               "type": {
@@ -3236,6 +3204,42 @@
                 }
               ],
               "description": "Reads, resolves, and filters slotted entries to those overlapping `[rangeStart, rangeEnd]`.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderTimedEntry",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "laneCount",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "dayStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "dayEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Renders a positioned/sized block for one timed entry, clamped to `[dayStart, dayEnd]`.",
               "inheritedFrom": {
                 "name": "CalendarTimelineBase",
                 "module": "src/calendar-timeline-base.ts"
@@ -3939,6 +3943,15 @@
       "path": "src/calendar-timeline-base.ts",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "HOUR_HEIGHT_REM",
+          "type": {
+            "text": "number"
+          },
+          "default": "3",
+          "description": "Height of one hour row in the hour grid."
+        },
+        {
           "kind": "class",
           "description": "Shared base for the hour-grid calendar views, `calendar-day` and\n`calendar-week` — not a registered custom element itself. Holds what both\nneed identically: observing declarative `calendar-entry` children for live\nupdates, resolving them into time-aware entries, and syncing hover/focus\ninteraction classes on rendered entry bars/links. Pure date/geometry math\n(parsing, lane assignment) stays in `utils/calendar.ts` per this\ncodebase's existing convention; this class holds only the parts that need\nto be instance state on a `LitElement` (observers, cached query results).\n\nSubclasses must render a default `<slot",
           "name": "CalendarTimelineBase",
@@ -4005,6 +4018,38 @@
                 }
               ],
               "description": "Reads, resolves, and filters slotted entries to those overlapping `[rangeStart, rangeEnd]`."
+            },
+            {
+              "kind": "method",
+              "name": "renderTimedEntry",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "laneCount",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "dayStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "dayEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Renders a positioned/sized block for one timed entry, clamped to `[dayStart, dayEnd]`."
             },
             {
               "kind": "method",
@@ -4098,6 +4143,14 @@
       "exports": [
         {
           "kind": "js",
+          "name": "HOUR_HEIGHT_REM",
+          "declaration": {
+            "name": "HOUR_HEIGHT_REM",
+            "module": "src/calendar-timeline-base.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "CalendarTimelineBase",
           "declaration": {
             "name": "CalendarTimelineBase",
@@ -4160,38 +4213,6 @@
                 }
               ],
               "description": "Renders one all-day/multi-day bar, spanning the visible-week columns it covers."
-            },
-            {
-              "kind": "method",
-              "name": "_renderTimedEntry",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "entry",
-                  "type": {
-                    "text": "LanedEntry"
-                  }
-                },
-                {
-                  "name": "laneCount",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "dayStart",
-                  "type": {
-                    "text": "Date"
-                  }
-                },
-                {
-                  "name": "dayEnd",
-                  "type": {
-                    "text": "Date"
-                  }
-                }
-              ],
-              "description": "Renders a positioned/sized block for one timed entry, clamped to `day`'s bounds."
             },
             {
               "kind": "method",
@@ -4297,6 +4318,42 @@
                 }
               ],
               "description": "Reads, resolves, and filters slotted entries to those overlapping `[rangeStart, rangeEnd]`.",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderTimedEntry",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "LanedEntry"
+                  }
+                },
+                {
+                  "name": "laneCount",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "dayStart",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "dayEnd",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Renders a positioned/sized block for one timed entry, clamped to `[dayStart, dayEnd]`.",
               "inheritedFrom": {
                 "name": "CalendarTimelineBase",
                 "module": "src/calendar-timeline-base.ts"
@@ -7817,6 +7874,15 @@
               },
               "privacy": "private",
               "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_abort",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "privacy": "private",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -15875,7 +15941,8 @@
               },
               "default": "false",
               "description": "Disables the whole control, preventing the popover from opening.",
-              "attribute": "disabled"
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -19054,7 +19121,8 @@
               },
               "default": "false",
               "description": "Disables interaction; merged with an ancestor `<fieldset disabled>`.",
-              "attribute": "disabled"
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -23254,7 +23322,8 @@
               },
               "default": "false",
               "description": "Disables interaction; merged with an ancestor `<fieldset disabled>`.",
-              "attribute": "disabled"
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -24941,9 +25010,16 @@
               "type": {
                 "text": "ResolvedCalendarEntry[]"
               }
+            },
+            {
+              "name": "{ exclusiveEnd = false }",
+              "default": "{}",
+              "type": {
+                "text": "{ exclusiveEnd?: boolean }"
+              }
             }
           ],
-          "description": "Assigns each entry a 0-based stacking lane via greedy interval\npartitioning (\"meeting rooms II\"): entries are sorted by start date, then\neach is placed in the lowest-numbered lane whose current occupant ends\nstrictly before the entry starts. Because entry ranges are\ninclusive-inclusive, an entry ending on day X and one starting on day X\nboth occupy day X and must not share a lane — hence the strict `<`.\n\nLane assignment is meant to be computed independently per `calendar-month`\n(from only the entries overlapping that month); an entry spanning a month\nboundary may therefore land in a different lane in adjacent months. This\nis an accepted v1 limitation, not a bug."
+          "description": "Assigns each entry a 0-based stacking lane via greedy interval\npartitioning (\"meeting rooms II\"): entries are sorted by start date, then\neach is placed in the lowest-numbered lane whose current occupant ends\nstrictly before the entry starts. Because entry ranges are\ninclusive-inclusive, an entry ending on day X and one starting on day X\nboth occupy day X and must not share a lane — hence the strict `<`.\n\nLane assignment is meant to be computed independently per `calendar-month`\n(from only the entries overlapping that month); an entry spanning a month\nboundary may therefore land in a different lane in adjacent months. This\nis an accepted v1 limitation, not a bug.\n\nPass `exclusiveEnd` for timed hour-grid entries, whose end is an instant\nrather than an inclusive day: a 09:00–10:00 and a 10:00–11:00 entry then\nshare a lane."
         },
         {
           "kind": "function",
@@ -25058,6 +25134,36 @@
             }
           ],
           "description": "Resolves a `CalendarEntryData`'s date/datetime strings for hour-grid\nrendering. Returns `null` when `start` is missing or unparseable. A blank\n`end` defaults to `start`; when `start` has a time but `end` doesn't (or is\nblank), `end` defaults to one hour after `start` rather than clamping to\n`start`'s instant, so a timed entry with no explicit end still renders as\na visible block. `allDay` is true only when neither endpoint carries a\ntime-of-day component — this is a separate, additive resolution path from\n`resolveEntry`/`ResolvedCalendarEntry`, which stay date-only and are used\nunchanged by `calendar-month`/`calendar-year`."
+        },
+        {
+          "kind": "function",
+          "name": "overlapsTimedRange",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "entry",
+              "type": {
+                "text": "ResolvedTimedEntry"
+              }
+            },
+            {
+              "name": "rangeStart",
+              "type": {
+                "text": "Date"
+              }
+            },
+            {
+              "name": "rangeEnd",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "Whether an hour-grid entry intersects `[rangeStart, rangeEnd]`. All-day\nentries use `overlapsRange`'s inclusive days; timed entries end\nexclusively, so one ending at 00:00 does not reach into the next day. A\nzero-length timed entry still counts where it starts."
         }
       ],
       "exports": [
@@ -25194,6 +25300,14 @@
           "name": "resolveTimedEntry",
           "declaration": {
             "name": "resolveTimedEntry",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "overlapsTimedRange",
+          "declaration": {
+            "name": "overlapsTimedRange",
             "module": "src/utils/calendar.ts"
           }
         }
@@ -26150,6 +26264,16 @@
         },
         {
           "kind": "function",
+          "name": "hasOpenLayer",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "description": "Whether any overlay is open, so page-level Escape handlers can defer to it."
+        },
+        {
+          "kind": "function",
           "name": "claimEscape",
           "return": {
             "type": {
@@ -26195,6 +26319,14 @@
           "name": "isTopLayer",
           "declaration": {
             "name": "isTopLayer",
+            "module": "src/utils/layer-stack.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hasOpenLayer",
+          "declaration": {
+            "name": "hasOpenLayer",
             "module": "src/utils/layer-stack.ts"
           }
         },

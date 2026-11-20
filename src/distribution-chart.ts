@@ -113,6 +113,11 @@ export class DistributionChart extends LitElement {
         color: var(--ui-danger, #dc2626);
         padding: 0.5rem 0;
       }
+      .empty {
+        font-size: var(--ui-font-size-sm, 0.75rem);
+        color: var(--ui-text-muted, #64748b);
+        padding: 0.5rem 0;
+      }
       .legend {
         display: flex;
         flex-wrap: wrap;
@@ -159,6 +164,7 @@ export class DistributionChart extends LitElement {
   @state() private _hoverX: number | null = null;
 
   private _fetchedFor = "";
+  private _abort: AbortController | null = null;
   private _ro: ResizeObserver | null = null;
 
   override connectedCallback() {
@@ -178,6 +184,9 @@ export class DistributionChart extends LitElement {
     super.disconnectedCallback();
     this._ro?.disconnect();
     this._ro = null;
+    this._abort?.abort();
+    this._abort = null;
+    this._fetchedFor = "";
   }
 
   override updated(changed: Map<string, unknown>) {
@@ -185,20 +194,27 @@ export class DistributionChart extends LitElement {
   }
 
   private _maybeFetch() {
-    if (!this.metric || this._fetchedFor === this.metric) return;
+    if (this._fetchedFor === this.metric) return;
+    this._abort?.abort();
+    this._abort = null;
     this._fetchedFor = this.metric;
+    if (!this.metric) return;
+    const controller = new AbortController();
+    this._abort = controller;
     this._loading = true;
     this._error = null;
-    fetch(`/api/distribution/${encodeURIComponent(this.metric)}`)
+    fetch(`/api/distribution/${encodeURIComponent(this.metric)}`, { signal: controller.signal })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json() as Promise<DistributionData>;
       })
       .then((data) => {
+        if (controller.signal.aborted) return;
         this._data = data;
         this._loading = false;
       })
       .catch((err: unknown) => {
+        if (controller.signal.aborted) return;
         this._error = err instanceof Error ? err.message : "Failed to load";
         this._loading = false;
       });
@@ -324,6 +340,7 @@ export class DistributionChart extends LitElement {
     if (this._loading || this._width === 0) return html`<div class="wrap"><div class="skeleton"></div></div>`;
     if (this._error) return html`<div class="wrap"><div class="error">Could not load distribution</div></div>`;
     if (!this._data) return nothing;
+    if (this._data.points.length < 2) return html`<div class="wrap"><div class="empty">No distribution data</div></div>`;
     return html`
       <div class="wrap">
         ${this._renderSvg(this._data)}

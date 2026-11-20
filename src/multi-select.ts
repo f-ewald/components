@@ -495,7 +495,7 @@ export class MultiSelect extends LitElement {
   /** Text shown on the trigger when nothing is selected. */
   @property() placeholder = "Select options";
   /** Disables the whole control, preventing the popover from opening. */
-  @property({ type: Boolean }) disabled = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
   /** Marks the control as required for native form validation. */
   @property({ type: Boolean }) required = false;
   /**

@@ -37,4 +37,22 @@ test.describe("range-slider", () => {
     await input.focus();
     await expect(input).toHaveCSS("cursor", "pointer");
   });
+
+  test("a disabled range-slider is left out of form data", async ({ page }) => {
+    await page.goto("/");
+    const entries = await page.evaluate(async () => {
+      const form = document.createElement("form");
+      const el = document.createElement("range-slider");
+      el.setAttribute("name", "field");
+      el.value = 40;
+      form.append(el);
+      document.body.append(form);
+      await el.updateComplete;
+      const before = [...new FormData(form).keys()];
+      el.disabled = true;
+      await el.updateComplete;
+      return { before, after: [...new FormData(form).keys()] };
+    });
+    expect(entries).toEqual({ before: ["field"], after: [] });
+  });
 });

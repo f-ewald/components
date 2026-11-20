@@ -28,6 +28,11 @@ export function isTopLayer(layer: HTMLElement): boolean {
   return layers.at(-1) === layer;
 }
 
+/** Whether any overlay is open, so page-level Escape handlers can defer to it. */
+export function hasOpenLayer(): boolean {
+  return layers.length > 0;
+}
+
 /** Claims Escape for the topmost layer and marks it handled for other listeners. */
 export function claimEscape(layer: HTMLElement, event: KeyboardEvent): boolean {
   if (event.key !== "Escape" || event.defaultPrevented || !isTopLayer(layer)) {

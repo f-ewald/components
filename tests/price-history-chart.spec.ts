@@ -33,3 +33,25 @@ test.describe("price-history-chart", () => {
     await expect(svg.locator(".tooltip-label")).toHaveCSS("fill", "rgb(255, 255, 255)");
   });
 });
+
+test.describe("price-history-chart west of UTC", () => {
+  test.use({ timezoneId: "America/New_York" });
+
+  test("reads first-of-month dates as local calendar days", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      const chart = document.createElement("price-history-chart");
+      chart.id = "price-tz";
+      chart.style.display = "block";
+      chart.style.width = "400px";
+      chart.history = [
+        { date: "2024-01-01", price: 500000, eventType: "Listed" },
+        { date: "2024-06-01", price: 520000, eventType: "Sold" },
+      ];
+      document.body.append(chart);
+    });
+    await expect(page.locator("#price-tz svg")).toHaveAccessibleName(
+      "2 price points from Jan 2024 at $500,000 to Jun 2024 at $520,000.",
+    );
+  });
+});

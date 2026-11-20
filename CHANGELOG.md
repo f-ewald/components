@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Fixes: `calendar-day`/`calendar-week` treat a timed entry's end as exclusive, so back-to-back
+  meetings (09:00–10:00, 10:00–11:00) share a lane at full width and an entry ending at 00:00 no
+  longer shows on the next day. `price-history-chart` reads `"YYYY-MM-DD"` dates as local days, so
+  labels no longer shift a day (or month) early west of UTC. `distribution-chart` ignores a
+  superseded response when `metric` changes quickly and shows "No distribution data" instead of
+  breaking on fewer than two points. On mobile, `app-shell` leaves Escape to an open dialog, popover,
+  or panel instead of closing its drawer underneath it. `cron-schedule` accepts weekday ranges and
+  steps ending in `7` (Sunday), such as `5-7` and `1-7`, and offers Sun as a weekday range end in the
+  advanced editor. `ui-checkbox`, `range-slider`, and `multi-select` reflect `disabled`, so a
+  disabled control is left out of form data.
+
 - `dag-graph` edges accept an optional `label`, drawn midway along the edge with room reserved for it in the
   layout (long labels get an ellipsis; the full text is the tooltip), and an optional non-negative `weight`,
   which draws the edge thicker in proportion to the graph's heaviest weight (1px–6px, with a matching

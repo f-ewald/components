@@ -1,7 +1,7 @@
 import { css, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
-import { CalendarTimelineBase } from "./calendar-timeline-base.js";
+import { CalendarTimelineBase, HOUR_HEIGHT_REM } from "./calendar-timeline-base.js";
 import { iconMapPin } from "./icons.js";
 import { tokens } from "./tokens.js";
 import {
@@ -16,7 +16,6 @@ import {
 
 const NOW_MARKER_INTERVAL_MS = 60_000;
 
-const HOUR_HEIGHT_REM = 3;
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const hourLabelFormatter = new Intl.DateTimeFormat(undefined, { hour: "numeric" });
 
@@ -400,32 +399,6 @@ export class CalendarDay extends CalendarTimelineBase {
     `;
   }
 
-  /** Renders a positioned/sized block for one timed entry, clamped to this day's bounds. */
-  private _renderTimedEntry(entry: LanedEntry, laneCount: number, dayStart: Date, dayEnd: Date) {
-    const visibleStart = entry.startDate < dayStart ? dayStart : entry.startDate;
-    const visibleEnd = entry.endDate > dayEnd ? dayEnd : entry.endDate;
-    const topRem = (minutesSinceMidnight(visibleStart) / 60) * HOUR_HEIGHT_REM;
-    const bottomRem = (minutesSinceMidnight(visibleEnd) / 60) * HOUR_HEIGHT_REM;
-    const heightRem = Math.max(bottomRem - topRem, HOUR_HEIGHT_REM / 4);
-    const widthPercent = 100 / laneCount;
-    const bodyText = [entry.label, ...(entry.details ?? []), entry.location].filter(Boolean).join("\n");
-    return html`
-      <div
-        class="entry-bar entry-block ${entry.color}"
-        data-entry-key=${this.entryKey(entry)}
-        title=${entry.href ? nothing : bodyText}
-        style="top: ${topRem}rem; height: ${heightRem}rem; left: ${entry.lane * widthPercent}%; width: ${widthPercent}%;"
-      >
-        ${this.renderEntryLink(entry, bodyText)}
-        <span class="entry-title" aria-hidden=${entry.href ? "true" : nothing}>${entry.label}</span>
-        ${entry.location
-          ? html`<span class="entry-location" aria-hidden=${entry.href ? "true" : nothing}
-              >${iconMapPin(14)}${entry.location}</span
-            >`
-          : nothing}
-      </div>
-    `;
-  }
 
   protected override render() {
     const day = parseIsoDate(this.date) ?? new Date();
@@ -440,7 +413,7 @@ export class CalendarDay extends CalendarTimelineBase {
     const allDay = resolved.filter((entry) => entry.allDay);
     const timed = resolved.filter((entry) => !entry.allDay);
     const { entries: lanedAllDay, laneCount: allDayLaneCount } = assignLanes(allDay);
-    const { entries: lanedTimed, laneCount: timedLaneCount } = assignLanes(timed);
+    const { entries: lanedTimed, laneCount: timedLaneCount } = assignLanes(timed, { exclusiveEnd: true });
     const nowTopRem =
       this.timeMarker && isToday ? (minutesSinceMidnight(new Date(this._now)) / 60) * HOUR_HEIGHT_REM : null;
     const coveredHour = hourLabelCoveredByNow(nowTopRem);
@@ -477,7 +450,7 @@ export class CalendarDay extends CalendarTimelineBase {
             ${repeat(
               lanedTimed,
               (entry) => this.entryKey(entry),
-              (entry) => this._renderTimedEntry(entry, Math.max(timedLaneCount, 1), dayStart, dayEnd),
+              (entry) => this.renderTimedEntry(entry, Math.max(timedLaneCount, 1), dayStart, dayEnd),
             )}
             ${nowTopRem !== null
               ? html`<div class="now-line" style="top: ${nowTopRem}rem" aria-hidden="true">

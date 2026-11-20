@@ -676,6 +676,8 @@ export class CronSchedule extends LitElement {
   #renderTermInputs(name: CronFieldName, index: number, term: CronTerm): TemplateResult | typeof nothing {
     const [min, max] = CRON_FIELD_BOUNDS[name];
     const options = fieldOptions(name);
+    // A weekday range may end on 7 (Sunday), e.g. Fri–Sun is `5-7`.
+    const endOptions = name === "dayOfWeek" ? [...options, { value: "7", label: "Sun" }] : options;
     const change = (next: CronTerm) => this.#onTermChange(name, index, next);
 
     if (term.kind === "all") return nothing;
@@ -697,7 +699,7 @@ export class CronSchedule extends LitElement {
             change({ kind: "range", from, to: Math.max(from, term.to) });
           })}
           <span class="inline-label">to</span>
-          ${this.#renderSelect(`${CRON_FIELD_LABELS[name]} range end`, options, term.to, (raw) => {
+          ${this.#renderSelect(`${CRON_FIELD_LABELS[name]} range end`, endOptions, term.to, (raw) => {
             const to = Number(raw);
             change({ kind: "range", from: Math.min(term.from, to), to });
           })}
@@ -721,7 +723,7 @@ export class CronSchedule extends LitElement {
           change({ ...term, from, to: term.to === null ? null : Math.max(from, term.to) });
         })}
         <span class="inline-label">to</span>
-        ${this.#renderSelect(`${CRON_FIELD_LABELS[name]} step end`, options, to, (raw) => {
+        ${this.#renderSelect(`${CRON_FIELD_LABELS[name]} step end`, endOptions, to, (raw) => {
           const end = Number(raw);
           change({ ...term, from: Math.min(term.from, end), to: end });
         })}

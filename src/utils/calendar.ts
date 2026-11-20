@@ -146,8 +146,15 @@ export function overlapsRange(entry: ResolvedCalendarEntry, rangeStart: Date, ra
  * (from only the entries overlapping that month); an entry spanning a month
  * boundary may therefore land in a different lane in adjacent months. This
  * is an accepted v1 limitation, not a bug.
+ *
+ * Pass `exclusiveEnd` for timed hour-grid entries, whose end is an instant
+ * rather than an inclusive day: a 09:00–10:00 and a 10:00–11:00 entry then
+ * share a lane.
  */
-export function assignLanes(entries: ResolvedCalendarEntry[]): {
+export function assignLanes(
+  entries: ResolvedCalendarEntry[],
+  { exclusiveEnd = false }: { exclusiveEnd?: boolean } = {},
+): {
   entries: LanedEntry[];
   laneCount: number;
 } {
@@ -164,7 +171,7 @@ export function assignLanes(entries: ResolvedCalendarEntry[]): {
   const laneEnds: Date[] = [];
   const laned: LanedEntry[] = [];
   for (const { entry } of sorted) {
-    let lane = laneEnds.findIndex((end) => end < entry.startDate);
+    let lane = laneEnds.findIndex((end) => (exclusiveEnd ? end <= entry.startDate : end < entry.startDate));
     if (lane === -1) {
       lane = laneEnds.length;
       laneEnds.push(entry.endDate);
@@ -273,4 +280,15 @@ export function resolveTimedEntry(data: CalendarEntryData): ResolvedTimedEntry |
     endDate: endDate < startDate ? startDate : endDate,
     allDay,
   };
+}
+
+/**
+ * Whether an hour-grid entry intersects `[rangeStart, rangeEnd]`. All-day
+ * entries use `overlapsRange`'s inclusive days; timed entries end
+ * exclusively, so one ending at 00:00 does not reach into the next day. A
+ * zero-length timed entry still counts where it starts.
+ */
+export function overlapsTimedRange(entry: ResolvedTimedEntry, rangeStart: Date, rangeEnd: Date): boolean {
+  if (entry.allDay) return overlapsRange(entry, rangeStart, rangeEnd);
+  return entry.startDate <= rangeEnd && (entry.endDate > rangeStart || entry.startDate >= rangeStart);
 }

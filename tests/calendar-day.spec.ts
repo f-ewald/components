@@ -311,4 +311,38 @@ test.describe("calendar-day", () => {
     });
     await expect(calendar).toHaveCSS("min-width", "0px");
   });
+
+  test("end times are exclusive: back-to-back meetings share a lane, midnight ends stay on their day", async ({ page }) => {
+    await page.goto("/");
+    const ids = await page.evaluate(() => {
+      const make = (id: string, date: string, entries: [string, string][]) => {
+        const day = document.createElement("calendar-day");
+        day.id = id;
+        day.date = date;
+        for (const [start, end] of entries) {
+          const entry = document.createElement("calendar-entry");
+          entry.start = start;
+          entry.end = end;
+          entry.label = start;
+          day.append(entry);
+        }
+        document.body.append(day);
+      };
+      make("cal-back-to-back", "2026-07-15", [
+        ["2026-07-15T09:00", "2026-07-15T10:00"],
+        ["2026-07-15T10:00", "2026-07-15T11:00"],
+      ]);
+      make("cal-after-midnight", "2026-07-16", [["2026-07-15T23:00", "2026-07-16T00:00"]]);
+      return true;
+    });
+    expect(ids).toBe(true);
+
+    await expect(page.locator("#cal-after-midnight .day-column .entry-block")).toHaveCount(0);
+
+    const blocks = page.locator("#cal-back-to-back .day-column .entry-block");
+    await expect(blocks).toHaveCount(2);
+    for (const block of await blocks.all()) {
+      await expect(block).toHaveAttribute("style", /width: 100%/);
+    }
+  });
 });

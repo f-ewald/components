@@ -769,4 +769,23 @@ test.describe("multi-select", () => {
     expect(values).toEqual(["red"]);
     await expect(form.locator("ul.persistent")).toBeVisible();
   });
+
+  test("a disabled multi-select is left out of form data", async ({ page }) => {
+    await page.goto("/");
+    const entries = await page.evaluate(async () => {
+      const form = document.createElement("form");
+      const el = document.createElement("multi-select");
+      el.setAttribute("name", "field");
+      el.options = [{ value: "red", label: "Red" }];
+      el.values = ["red"];
+      form.append(el);
+      document.body.append(form);
+      await el.updateComplete;
+      const before = [...new FormData(form).keys()];
+      el.disabled = true;
+      await el.updateComplete;
+      return { before, after: [...new FormData(form).keys()] };
+    });
+    expect(entries).toEqual({ before: ["field"], after: [] });
+  });
 });

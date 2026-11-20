@@ -1,14 +1,19 @@
 import { LitElement, html, nothing } from "lit";
 import { queryAssignedElements, state } from "lit/decorators.js";
 import type { CalendarEntry } from "./calendar-entry.js";
+import { iconMapPin } from "./icons.js";
 import {
   CALENDAR_ENTRY_ATTRIBUTES,
-  overlapsRange,
+  minutesSinceMidnight,
+  overlapsTimedRange,
   readCalendarEntryElement,
   resolveTimedEntry,
   type LanedEntry,
   type ResolvedTimedEntry,
 } from "./utils/calendar.js";
+
+/** Height of one hour row in the hour grid. */
+export const HOUR_HEIGHT_REM = 3;
 
 /**
  * Shared base for the hour-grid calendar views, `calendar-day` and
@@ -70,7 +75,34 @@ export abstract class CalendarTimelineBase extends LitElement {
       .map(readCalendarEntryElement)
       .map(resolveTimedEntry)
       .filter((entry): entry is ResolvedTimedEntry => entry !== null)
-      .filter((entry) => overlapsRange(entry, rangeStart, rangeEnd));
+      .filter((entry) => overlapsTimedRange(entry, rangeStart, rangeEnd));
+  }
+
+  /** Renders a positioned/sized block for one timed entry, clamped to `[dayStart, dayEnd]`. */
+  protected renderTimedEntry(entry: LanedEntry, laneCount: number, dayStart: Date, dayEnd: Date) {
+    const visibleStart = entry.startDate < dayStart ? dayStart : entry.startDate;
+    const visibleEnd = entry.endDate > dayEnd ? dayEnd : entry.endDate;
+    const topRem = (minutesSinceMidnight(visibleStart) / 60) * HOUR_HEIGHT_REM;
+    const bottomRem = (minutesSinceMidnight(visibleEnd) / 60) * HOUR_HEIGHT_REM;
+    const heightRem = Math.max(bottomRem - topRem, HOUR_HEIGHT_REM / 4);
+    const widthPercent = 100 / laneCount;
+    const bodyText = [entry.label, ...(entry.details ?? []), entry.location].filter(Boolean).join("\n");
+    return html`
+      <div
+        class="entry-bar entry-block ${entry.color}"
+        data-entry-key=${this.entryKey(entry)}
+        title=${entry.href ? nothing : bodyText}
+        style="top: ${topRem}rem; height: ${heightRem}rem; left: ${entry.lane * widthPercent}%; width: ${widthPercent}%;"
+      >
+        ${this.renderEntryLink(entry, bodyText)}
+        <span class="entry-title" aria-hidden=${entry.href ? "true" : nothing}>${entry.label}</span>
+        ${entry.location
+          ? html`<span class="entry-location" aria-hidden=${entry.href ? "true" : nothing}
+              >${iconMapPin(14)}${entry.location}</span
+            >`
+          : nothing}
+      </div>
+    `;
   }
 
   /** Current render key shared by an entry's rendered cells/blocks. */

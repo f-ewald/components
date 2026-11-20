@@ -114,4 +114,22 @@ test.describe("ui-checkbox", () => {
     await input.focus();
     await expect(input).toHaveCSS("box-shadow", /rgb/);
   });
+
+  test("a disabled ui-checkbox is left out of form data", async ({ page }) => {
+    await page.goto("/");
+    const entries = await page.evaluate(async () => {
+      const form = document.createElement("form");
+      const el = document.createElement("ui-checkbox");
+      el.setAttribute("name", "field");
+      el.checked = true;
+      form.append(el);
+      document.body.append(form);
+      await el.updateComplete;
+      const before = [...new FormData(form).keys()];
+      el.disabled = true;
+      await el.updateComplete;
+      return { before, after: [...new FormData(form).keys()] };
+    });
+    expect(entries).toEqual({ before: ["field"], after: [] });
+  });
 });

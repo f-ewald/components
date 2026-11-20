@@ -193,4 +193,30 @@ test.describe("app-shell", () => {
     await page.keyboard.press("[");
     await expect(shell).toHaveAttribute("sidebar-open", "");
   });
+
+  test("Escape closes a popover opened above the mobile drawer, not the drawer", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 700 });
+    await page.goto("/");
+    const shell = page.locator("#app-shell-demo");
+    await shell.locator(".nav-toggle").click();
+    await expect(shell).toHaveAttribute("sidebar-open", "");
+
+    await page.evaluate(() => {
+      const popover = document.createElement("popover-panel");
+      popover.id = "shell-popover";
+      popover.heading = "Filters";
+      popover.addEventListener("panel-close", () => (popover.open = false));
+      document.body.append(popover);
+      popover.open = true;
+    });
+    const popover = page.locator("#shell-popover");
+    await expect(popover).toHaveAttribute("open", "");
+
+    await page.keyboard.press("Escape");
+    await expect(popover).not.toHaveAttribute("open", "");
+    await expect(shell).toHaveAttribute("sidebar-open", "");
+
+    await page.keyboard.press("Escape");
+    await expect(shell).not.toHaveAttribute("sidebar-open", "");
+  });
 });

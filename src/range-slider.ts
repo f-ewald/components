@@ -139,7 +139,7 @@ export class RangeSlider extends LitElement {
   /** Current value. */
   @property({ type: Number }) value = 0;
   /** Disables interaction; merged with an ancestor `<fieldset disabled>`. */
-  @property({ type: Boolean }) disabled = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
   /** Form field name. */
   @property() name = "";
 
