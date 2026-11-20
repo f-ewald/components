@@ -11,6 +11,12 @@ const LABEL_PADDING_END = 10;
 export const DAG_MIN_NODE_WIDTH = 48;
 /** Widest node card, in pixels; longer labels are shortened with an ellipsis. */
 export const DAG_MAX_NODE_WIDTH = 200;
+/** Height of an edge label's box, in pixels. */
+export const DAG_EDGE_LABEL_HEIGHT = 16;
+/** Space on each side of an edge label's text, inside its box. */
+export const DAG_EDGE_LABEL_PADDING = 4;
+/** Widest edge label box, in pixels; longer labels are shortened with an ellipsis. */
+export const DAG_MAX_EDGE_LABEL_WIDTH = 140;
 const RANK_GAP = 90;
 const NODE_GAP = 6;
 const ELLIPSIS = "…";
@@ -45,12 +51,27 @@ export interface DagLayoutNode extends DagPoint {
   label: string;
 }
 
+/** One edge to lay out; a `label` gets room of its own between the two nodes. */
+export interface DagLayoutEdgeInput {
+  source: string;
+  target: string;
+  label?: string;
+}
+
+/** A positioned edge label: its box is centered at `(x, y)` and sized to its (possibly shortened) text. */
+export interface DagLayoutEdgeLabel extends DagPoint {
+  text: string;
+  width: number;
+}
+
 /** A routed edge; `backward` edges run against the flow direction and close a cycle. */
 export interface DagLayoutEdge {
   source: string;
   target: string;
   points: DagPoint[];
   backward: boolean;
+  /** Present when the input edge has a non-empty label. */
+  label?: DagLayoutEdgeLabel;
 }
 
 /** Positioned nodes and routed edges, in input-independent order. */
@@ -74,16 +95,22 @@ function nodeSize(node: DagLayoutInput, measure: MeasureText): { label: string; 
   return { label, width: Math.min(DAG_MAX_NODE_WIDTH, Math.max(DAG_MIN_NODE_WIDTH, width)) };
 }
 
+function edgeLabelSize(text: string, measure: MeasureText): { text: string; width: number } {
+  const fitted = fitLabel(text, DAG_MAX_EDGE_LABEL_WIDTH - 2 * DAG_EDGE_LABEL_PADDING, measure);
+  return { text: fitted, width: Math.ceil(measure(fitted) + 2 * DAG_EDGE_LABEL_PADDING) };
+}
+
 /**
  * Lays out a directed graph in layers (Sugiyama-style, via dagre) so every edge points along `direction`.
  *
  * Cycles are broken only to assign layers: every edge is returned, and the ones that close a cycle are marked
- * `backward`. Edges whose endpoints are not both in `nodes`, self-edges, and duplicates are ignored. The result
- * does not depend on input order.
+ * `backward`. Edges whose endpoints are not both in `nodes`, self-edges, and duplicates are ignored (the last
+ * duplicate wins). Labeled edges reserve room for their label midway along the edge. The result does not depend
+ * on input order.
  */
 export function layoutDag(
   nodes: DagLayoutInput[],
-  edges: Array<{ source: string; target: string }>,
+  edges: DagLayoutEdgeInput[],
   direction: DagDirection = "LR",
   measure: MeasureText = approximateTextWidth,
 ): DagLayout {
@@ -107,12 +134,24 @@ export function layoutDag(
   const unique = new Map(
     edges
       .filter((edge) => known.has(edge.source) && known.has(edge.target) && edge.source !== edge.target)
-      .map((edge) => [`${edge.source}\u0000${edge.target}`, { source: edge.source, target: edge.target }]),
+      .map((edge) => [`${edge.source}\u0000${edge.target}`, edge]),
   );
   const kept = [...unique.values()].sort(
     (a, b) => a.source.localeCompare(b.source) || a.target.localeCompare(b.target),
   );
-  for (const edge of kept) graph.setEdge(edge.source, edge.target);
+  const labels = new Map(
+    kept
+      .filter((edge) => edge.label)
+      .map((edge) => [edge, edgeLabelSize(edge.label!, measure)]),
+  );
+  for (const edge of kept) {
+    const label = labels.get(edge);
+    graph.setEdge(
+      edge.source,
+      edge.target,
+      label ? { width: label.width, height: DAG_EDGE_LABEL_HEIGHT, labelpos: "c" } : {},
+    );
+  }
   layout(graph);
   const positioned = new Map(
     sorted.map((node) => {
@@ -123,10 +162,16 @@ export function layoutDag(
   const axis = direction === "LR" ? "x" : "y";
   return {
     nodes: [...positioned.values()],
-    edges: kept.map((edge) => ({
-      ...edge,
-      points: (graph.edge(edge.source, edge.target).points as DagPoint[]).map(({ x, y }) => ({ x, y })),
-      backward: positioned.get(edge.target)![axis] < positioned.get(edge.source)![axis],
-    })),
+    edges: kept.map((edge) => {
+      const routed = graph.edge(edge.source, edge.target) as { points: DagPoint[]; x?: number; y?: number };
+      const label = labels.get(edge);
+      return {
+        source: edge.source,
+        target: edge.target,
+        points: routed.points.map(({ x, y }) => ({ x, y })),
+        backward: positioned.get(edge.target)![axis] < positioned.get(edge.source)![axis],
+        ...(label ? { label: { ...label, x: routed.x!, y: routed.y! } } : {}),
+      };
+    }),
   };
 }

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `dag-graph` edges accept an optional `label`, drawn midway along the edge with room reserved for it in the
+  layout (long labels get an ellipsis; the full text is the tooltip), and an optional non-negative `weight`,
+  which draws the edge thicker in proportion to the graph's heaviest weight (1px–6px, with a matching
+  arrowhead) and is added to the edge's tooltip. Graphs without labels or weights are drawn as before.
+
 - Added `pixel-fire`: a pixelated, 8-bit style fire like old computer games, drawn on a canvas with
   the classic retro palette. It burns full width along the bottom of the viewport as a click-through
   overlay, or along the bottom of its positioned container with `contained`. `pixel-size` sets how

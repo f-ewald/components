@@ -6582,7 +6582,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Interactive layered drawing of a directed graph — dependencies, pipelines, or any node-link data.\n\nNodes are placed in layers (via dagre) so edges flow left to right (or top to bottom with\n`direction=\"TB\"`); cycles are allowed, and the edges closing them are drawn dashed and point backward.\nEach node is a compact card sized to its label, with an optional icon, color, and border style from\n`kinds`. The whole graph is shown when it fits at a readable zoom; otherwise the selected node is centered at\n100%. Drag to pan; pinch or Ctrl/⌘ + wheel to zoom (a plain wheel scrolls the page). With keyboard\nfocus on the graph, arrow keys pan, `+`/`-` zoom, and `0` fits the graph. Clicking a node, or pressing\nEnter/Space on it, selects it. A toolbar in the top-right corner offers the `controls` you enable.\n\nSet `static` to present a fixed picture: the graph is always fitted into view, panning and zooming\nare off, and the toolbar is hidden; nodes can still be selected.\n\nColors can be changed with these custom properties: `--dag-node-background`, `--dag-node-text`,\n`--dag-edge-color`, `--dag-selected-color`, and `--dag-highlight-color`; `--dag-graph-height` sets the\nheight (default `24rem`).",
+          "description": "Interactive layered drawing of a directed graph — dependencies, pipelines, or any node-link data.\n\nNodes are placed in layers (via dagre) so edges flow left to right (or top to bottom with\n`direction=\"TB\"`); cycles are allowed, and the edges closing them are drawn dashed and point backward.\nEach node is a compact card sized to its label, with an optional icon, color, and border style from\n`kinds`. The whole graph is shown when it fits at a readable zoom; otherwise the selected node is centered at\n100%. Drag to pan; pinch or Ctrl/⌘ + wheel to zoom (a plain wheel scrolls the page). With keyboard\nfocus on the graph, arrow keys pan, `+`/`-` zoom, and `0` fits the graph. Clicking a node, or pressing\nEnter/Space on it, selects it. A toolbar in the top-right corner offers the `controls` you enable.\n\nEdges can carry an optional `label`, drawn midway along the edge, and an optional `weight`, which draws the\nedge thicker in proportion to the heaviest weight in the graph.\n\nSet `static` to present a fixed picture: the graph is always fitted into view, panning and zooming\nare off, and the toolbar is hidden; nodes can still be selected.\n\nColors can be changed with these custom properties: `--dag-node-background`, `--dag-node-text`,\n`--dag-edge-color`, `--dag-selected-color`, and `--dag-highlight-color`; `--dag-graph-height` sets the\nheight (default `24rem`).",
           "name": "DagGraph",
           "slots": [
             {
@@ -6890,13 +6890,118 @@
             },
             {
               "kind": "method",
-              "name": "_renderEdges",
+              "name": "_styledEdges",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "StyledEdge[]"
+                }
+              },
+              "description": "Pairs each laid-out edge with its input's presentation; on duplicate edges the last one wins."
+            },
+            {
+              "kind": "method",
+              "name": "_renderWeightedArrows",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "SVGTemplateResult[]"
                 }
-              }
+              },
+              "parameters": [
+                {
+                  "name": "edges",
+                  "type": {
+                    "text": "StyledEdge[]"
+                  }
+                }
+              ],
+              "description": "Arrowheads for weighted edges, one per size and color: they grow more slowly than the stroke and sit just\npast the shortened path, so a thick stroke never pokes out beside the arrow's tip."
+            },
+            {
+              "kind": "method",
+              "name": "_arrowId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "size",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "highlighted",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderEdge",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SVGTemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "StyledEdge"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderEdgeLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SVGTemplateResult | typeof nothing"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "StyledEdge"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_shortenEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DagPoint[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "points",
+                  "type": {
+                    "text": "DagPoint[]"
+                  }
+                },
+                {
+                  "name": "length",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Pulls the last point back by `length` (at most 80% of the final segment) to make room for an arrowhead."
             },
             {
               "kind": "method",
@@ -25522,6 +25627,33 @@
           "description": "Widest node card, in pixels; longer labels are shortened with an ellipsis."
         },
         {
+          "kind": "variable",
+          "name": "DAG_EDGE_LABEL_HEIGHT",
+          "type": {
+            "text": "number"
+          },
+          "default": "16",
+          "description": "Height of an edge label's box, in pixels."
+        },
+        {
+          "kind": "variable",
+          "name": "DAG_EDGE_LABEL_PADDING",
+          "type": {
+            "text": "number"
+          },
+          "default": "4",
+          "description": "Space on each side of an edge label's text, inside its box."
+        },
+        {
+          "kind": "variable",
+          "name": "DAG_MAX_EDGE_LABEL_WIDTH",
+          "type": {
+            "text": "number"
+          },
+          "default": "140",
+          "description": "Widest edge label box, in pixels; longer labels are shortened with an ellipsis."
+        },
+        {
           "kind": "function",
           "name": "approximateTextWidth",
           "parameters": [
@@ -25579,7 +25711,7 @@
             {
               "name": "edges",
               "type": {
-                "text": "Array<{ source: string; target: string }>"
+                "text": "DagLayoutEdgeInput[]"
               }
             },
             {
@@ -25597,7 +25729,7 @@
               }
             }
           ],
-          "description": "Lays out a directed graph in layers (Sugiyama-style, via dagre) so every edge points along `direction`.\n\nCycles are broken only to assign layers: every edge is returned, and the ones that close a cycle are marked\n`backward`. Edges whose endpoints are not both in `nodes`, self-edges, and duplicates are ignored. The result\ndoes not depend on input order."
+          "description": "Lays out a directed graph in layers (Sugiyama-style, via dagre) so every edge points along `direction`.\n\nCycles are broken only to assign layers: every edge is returned, and the ones that close a cycle are marked\n`backward`. Edges whose endpoints are not both in `nodes`, self-edges, and duplicates are ignored (the last\nduplicate wins). Labeled edges reserve room for their label midway along the edge. The result does not depend\non input order."
         }
       ],
       "exports": [
@@ -25638,6 +25770,30 @@
           "name": "DAG_MAX_NODE_WIDTH",
           "declaration": {
             "name": "DAG_MAX_NODE_WIDTH",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DAG_EDGE_LABEL_HEIGHT",
+          "declaration": {
+            "name": "DAG_EDGE_LABEL_HEIGHT",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DAG_EDGE_LABEL_PADDING",
+          "declaration": {
+            "name": "DAG_EDGE_LABEL_PADDING",
+            "module": "src/utils/dag-layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DAG_MAX_EDGE_LABEL_WIDTH",
+          "declaration": {
+            "name": "DAG_MAX_EDGE_LABEL_WIDTH",
             "module": "src/utils/dag-layout.ts"
           }
         },

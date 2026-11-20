@@ -197,6 +197,38 @@ test.describe("dag-graph", () => {
     await expect(graph.locator(".node.selected rect")).toHaveCSS("stroke", "rgb(255, 138, 183)");
   });
 
+  test("edge labels get room in the layout, and weights scale edge thickness", async ({ page }) => {
+    const graph = await openDemo(page);
+    const edge = (source: string, target: string) =>
+      graph.locator(`.edge[data-source="${source}"][data-target="${target}"]`);
+    await expect(graph.locator(".edge-label")).toHaveCount(0);
+    await expect(edge("api-gateway", "auth-lib")).toHaveCSS("stroke-width", "1px");
+
+    await page.getByTestId("dag-labels").click();
+    await expect(graph.locator(".edge-label text")).toHaveText([">=1.60", "~=6.0", ">=4.21", "^2.31"]);
+    const layout = await positions(graph);
+    const label = graph.locator('.edge-label[data-source="http-utils"]');
+    const [, x] = (await label.getAttribute("transform"))!.match(/translate\(([-\d.]+),/)!;
+    expect(Number(x)).toBeGreaterThan(layout["http-utils"].x);
+    expect(Number(x)).toBeLessThan(layout["requests"].x);
+    await expect(label.locator("title")).toHaveText("http-utils → requests: ^2.31");
+
+    await page.getByTestId("dag-weights").click();
+    await expect(edge("api-gateway", "auth-lib")).toHaveCSS("stroke-width", "6px");
+    await expect(edge("api-gateway", "legacy-tool")).toHaveCSS("stroke-width", "1px");
+    await expect(edge("http-utils", "requests").locator("title")).toHaveText(
+      "http-utils → requests: ^2.31 (weight 15)",
+    );
+    await expect(edge("api-gateway", "auth-lib")).toHaveAttribute("marker-end", "url(#arrow-17)");
+
+    // Highlighting adds a pixel on top of the weight, and labels on the hovered node's edges stay legible.
+    await page.getByTestId("dag-cycle").click();
+    await expect(edge("auth-lib", "config-lib")).toHaveCSS("stroke-width", "2.5px");
+    await graph.locator('.node[data-id="http-utils"]').hover();
+    await expect(label).toHaveCSS("opacity", "1");
+    await expect(graph.locator('.edge-label[data-source="grpcio"]')).toHaveCSS("opacity", "0.25");
+  });
+
   for (const [theme, start, end, toolbar] of [
     ["light", "rgb(255, 255, 255)", "rgb(255, 255, 255)", "none"],
     ["gradient", "rgb(248, 250, 252)", "rgb(241, 245, 249)", "linear-gradient"],

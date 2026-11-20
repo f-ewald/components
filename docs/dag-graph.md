@@ -10,6 +10,9 @@ Each node is a compact card sized to its label, with an optional icon, color, an
 focus on the graph, arrow keys pan, `+`/`-` zoom, and `0` fits the graph. Clicking a node, or pressing
 Enter/Space on it, selects it. A toolbar in the top-right corner offers the `controls` you enable.
 
+Edges can carry an optional `label`, drawn midway along the edge, and an optional `weight`, which draws the
+edge thicker in proportion to the heaviest weight in the graph.
+
 Set `static` to present a fixed picture: the graph is always fitted into view, panning and zooming
 are off, and the toolbar is hidden; nodes can still be selected.
 
@@ -41,8 +44,8 @@ import "@f-ewald/components/dag-graph.js";
     { id: "requests", label: "requests", kind: "package" },
   ];
   graph.edges = [
-    { source: "web", target: "auth" },
-    { source: "auth", target: "requests" },
+    { source: "web", target: "auth", weight: 42 },
+    { source: "auth", target: "requests", label: "^2.31", weight: 15 },
   ];
   graph.addEventListener("node-select", (e) => console.log(e.detail.id));
 </script>

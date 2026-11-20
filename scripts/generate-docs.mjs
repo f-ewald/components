@@ -789,8 +789,8 @@ See the [changelog](#markdown-view) for details.\`;
     { id: "requests", label: "requests", kind: "package" },
   ];
   graph.edges = [
-    { source: "web", target: "auth" },
-    { source: "auth", target: "requests" },
+    { source: "web", target: "auth", weight: 42 },
+    { source: "auth", target: "requests", label: "^2.31", weight: 15 },
   ];
   graph.addEventListener("node-select", (e) => console.log(e.detail.id));
 </script>`,

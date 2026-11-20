@@ -1394,8 +1394,9 @@ schedule.addEventListener("change", (e) =&gt; console.log(e.detail.value, schedu
             kind's icon, color, border style, and legend label, and the <code>--dag-*</code> custom properties
             recolor nodes, edges, selection, and highlights. Drag to pan, pinch or Ctrl/&#8984; + wheel to zoom,
             and click a node to select it (keyboard: Tab to a node, Enter; arrows pan, <kbd>+</kbd>/<kbd>-</kbd>
-            zoom, <kbd>0</kbd> fits). <code>controls</code> picks the toolbar buttons, and <code>static</code>
-            presents a fixed, fitted picture with panning and zooming off.
+            zoom, <kbd>0</kbd> fits). Edges take an optional <code>label</code>, drawn midway along the edge, and
+            an optional <code>weight</code>, which draws heavier edges thicker. <code>controls</code> picks the
+            toolbar buttons, and <code>static</code> presents a fixed, fitted picture with panning and zooming off.
           </p>
           <div class="mt-6 flex flex-col gap-4 demo-example rounded-lg border border-slate-200 p-6 text-sm">
             <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -1408,6 +1409,8 @@ schedule.addEventListener("change", (e) =&gt; console.log(e.detail.value, schedu
             <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
               <ui-checkbox id="dag-static" data-testid="dag-static" label="Static (no pan/zoom)"></ui-checkbox>
               <ui-checkbox id="dag-cycle" data-testid="dag-cycle" label="Highlight cycle"></ui-checkbox>
+              <ui-checkbox id="dag-labels" data-testid="dag-labels" label="Edge labels"></ui-checkbox>
+              <ui-checkbox id="dag-weights" data-testid="dag-weights" label="Edge weights"></ui-checkbox>
               <ui-checkbox id="dag-colors" data-testid="dag-colors" label="Custom colors"></ui-checkbox>
             </div>
             <dag-graph
@@ -1442,8 +1445,8 @@ graph.nodes = [
   { id: "requests", label: "requests", kind: "package" },
 ];
 graph.edges = [
-  { source: "web", target: "auth" },
-  { source: "auth", target: "requests" },
+  { source: "web", target: "auth", weight: 42 },                   // thicker in proportion to the heaviest
+  { source: "auth", target: "requests", label: "^2.31", weight: 15 }, // label drawn midway along the edge
 ];
 graph.legend = true;
 graph.controls = "zoom fit center direction"; // toolbar buttons; "" hides the toolbar

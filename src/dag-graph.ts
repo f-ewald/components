@@ -14,11 +14,13 @@ import "./icon-button.js";
 import {
   approximateTextWidth,
   DAG_LABEL_OFFSET,
+  DAG_EDGE_LABEL_HEIGHT,
   DAG_LABEL_OFFSET_PLAIN,
   DAG_NODE_HEIGHT,
   layoutDag,
   type DagDirection,
   type DagLayout,
+  type DagLayoutEdge,
   type DagLayoutNode,
   type DagPoint,
   type MeasureText,
@@ -46,6 +48,16 @@ export interface DagEdge {
   target: string;
   /** Emphasizes the edge, e.g. as part of a highlighted path or cycle. */
   highlighted?: boolean;
+  /**
+   * Text shown midway along the edge, with room reserved for it in the layout; long labels are shortened with an
+   * ellipsis (the full text is the tooltip).
+   */
+  label?: string;
+  /**
+   * Non-negative magnitude, e.g. a call count: the edge is drawn thicker in proportion to the graph's heaviest
+   * weight (1px for none, up to 6px), and the weight is added to its tooltip. Other values are ignored.
+   */
+  weight?: number;
 }
 
 /** Presentation of one node kind. */
@@ -79,6 +91,18 @@ interface View {
   k: number;
 }
 
+/** A laid-out edge with everything needed to draw it and its label. */
+interface StyledEdge {
+  layout: DagLayoutEdge;
+  title: string;
+  highlighted: boolean;
+  incident: boolean;
+  /** Stroke width in pixels, for weighted edges only. */
+  width?: number;
+  /** Arrowhead length in layout units, for weighted edges only. */
+  arrow?: number;
+}
+
 const ICON_SIZE = 14;
 const MIN_SCALE = 0.05;
 const MAX_SCALE = 3;
@@ -89,6 +113,8 @@ const DRAG_THRESHOLD = 4;
 const KEY_PAN = 48;
 const KEY_ZOOM = 1.25;
 const CONTROLS: readonly DagControl[] = ["zoom", "fit", "center", "direction"];
+/** Stroke width, in pixels, of the graph's heaviest edge. */
+const MAX_EDGE_WIDTH = 6;
 
 const route = line<DagPoint>()
   .x((point) => point.x)
@@ -105,6 +131,9 @@ const route = line<DagPoint>()
  * 100%. Drag to pan; pinch or Ctrl/⌘ + wheel to zoom (a plain wheel scrolls the page). With keyboard
  * focus on the graph, arrow keys pan, `+`/`-` zoom, and `0` fits the graph. Clicking a node, or pressing
  * Enter/Space on it, selects it. A toolbar in the top-right corner offers the `controls` you enable.
+ *
+ * Edges can carry an optional `label`, drawn midway along the edge, and an optional `weight`, which draws the
+ * edge thicker in proportion to the heaviest weight in the graph.
  *
  * Set `static` to present a fixed picture: the graph is always fitted into view, panning and zooming
  * are off, and the toolbar is hidden; nodes can still be selected.
@@ -234,7 +263,7 @@ export class DagGraph extends LitElement {
         fill: none;
         stroke: var(--dag-edge-color, var(--ui-text-muted, #64748b));
         stroke-opacity: 0.45;
-        stroke-width: 1;
+        stroke-width: var(--_dag-edge-width, 1px);
         vector-effect: non-scaling-stroke;
       }
       .edge.backward {
@@ -250,7 +279,27 @@ export class DagGraph extends LitElement {
       .edges.emphasis .edge.highlighted {
         stroke: var(--dag-highlight-color, var(--ui-danger, #dc2626));
         stroke-opacity: 1;
-        stroke-width: 2;
+        stroke-width: calc(var(--_dag-edge-width, 1px) + 1px);
+      }
+      .edge-label rect {
+        rx: var(--ui-radius-sm, 0.25rem);
+        fill: var(--ui-surface, #ffffff);
+      }
+      .edge-label text {
+        fill: var(--ui-text-muted, #64748b);
+        text-anchor: middle;
+        dominant-baseline: central;
+        pointer-events: none;
+      }
+      .edge-label.highlighted text {
+        fill: var(--dag-highlight-color, var(--ui-danger, #dc2626));
+      }
+      .edge-labels.emphasis .edge-label {
+        opacity: 0.25;
+      }
+      .edge-labels.emphasis .edge-label.incident,
+      .edge-labels.emphasis .edge-label.highlighted {
+        opacity: 1;
       }
       .arrow {
         fill: var(--dag-edge-color, var(--ui-text-muted, #64748b));
@@ -394,10 +443,14 @@ export class DagGraph extends LitElement {
   /** Fits the whole graph into view, never enlarging it beyond 100%. */
   fit(): void {
     if (!this._layout.nodes.length || !this._size.width) return;
-    const left = Math.min(...this._layout.nodes.map((node) => node.x - node.width / 2));
-    const right = Math.max(...this._layout.nodes.map((node) => node.x + node.width / 2));
-    const top = Math.min(...this._layout.nodes.map((node) => node.y)) - DAG_NODE_HEIGHT / 2;
-    const bottom = Math.max(...this._layout.nodes.map((node) => node.y)) + DAG_NODE_HEIGHT / 2;
+    const boxes = [
+      ...this._layout.nodes.map((node) => ({ ...node, height: DAG_NODE_HEIGHT })),
+      ...this._layout.edges.flatMap((edge) => (edge.label ? [{ ...edge.label, height: DAG_EDGE_LABEL_HEIGHT }] : [])),
+    ];
+    const left = Math.min(...boxes.map((box) => box.x - box.width / 2));
+    const right = Math.max(...boxes.map((box) => box.x + box.width / 2));
+    const top = Math.min(...boxes.map((box) => box.y - box.height / 2));
+    const bottom = Math.max(...boxes.map((box) => box.y + box.height / 2));
     const k = this._clamp(
       Math.min(
         1,
@@ -424,6 +477,8 @@ export class DagGraph extends LitElement {
     const summary = `${this.label}: ${nodeCount} ${nodeCount === 1 ? "node" : "nodes"}, `
       + `${this._layout.edges.length} ${this._layout.edges.length === 1 ? "edge" : "edges"}`;
     const { x, y, k } = this._view;
+    const edges = this._styledEdges();
+    const emphasis = this._hovered ? "emphasis" : "";
     return html`
       <div class="canvas">
         <svg
@@ -446,13 +501,15 @@ export class DagGraph extends LitElement {
               orient="auto">
               <path class="arrow highlighted" d="M0,-4L8,0L0,4Z" />
             </marker>
+            ${this._renderWeightedArrows(edges)}
             <linearGradient id="node-fill" x1="0" y1="0" x2="0" y2="1">
               <stop class="gloss-start" offset="0%" />
               <stop class="gloss-end" offset="100%" />
             </linearGradient>
           </defs>
           <g transform="translate(${x},${y}) scale(${k})">
-            <g class="edges ${this._hovered ? "emphasis" : ""}">${this._renderEdges()}</g>
+            <g class="edges ${emphasis}">${edges.map((edge) => this._renderEdge(edge))}</g>
+            <g class="edge-labels ${emphasis}">${edges.map((edge) => this._renderEdgeLabel(edge))}</g>
             <g class="nodes">${this._layout.nodes.map((node) => this._renderNode(node))}</g>
           </g>
         </svg>
@@ -515,24 +572,105 @@ export class DagGraph extends LitElement {
     );
   }
 
-  private _renderEdges(): SVGTemplateResult[] {
+  /** Pairs each laid-out edge with its input's presentation; on duplicate edges the last one wins. */
+  private _styledEdges(): StyledEdge[] {
+    const inputs = new Map(this.edges.map((edge) => [this._edgeKey(edge), edge]));
     const highlighted = new Set(
       this.edges.filter((edge) => edge.highlighted).map((edge) => this._edgeKey(edge)),
     );
     const names = new Map(this.nodes.map((node) => [node.id, node.label]));
-    return this._layout.edges.map((edge) => {
-      const isHighlighted = highlighted.has(this._edgeKey(edge));
-      const incident = edge.source === this._hovered || edge.target === this._hovered;
-      const classes = [
-        "edge",
-        edge.backward ? "backward" : "",
-        isHighlighted ? "highlighted" : "",
-        incident ? "incident" : "",
-      ].filter(Boolean).join(" ");
-      return svg`<path class=${classes} data-source=${edge.source} data-target=${edge.target}
-        d=${route(edge.points) ?? ""} marker-end="url(#${isHighlighted ? "arrow-highlighted" : "arrow"})">
-        <title>${names.get(edge.source)} → ${names.get(edge.target)}</title></path>`;
+    const weighted = this._layout.edges.map((edge) => {
+      const weight = inputs.get(this._edgeKey(edge))?.weight;
+      return typeof weight === "number" && Number.isFinite(weight) && weight >= 0 ? weight : undefined;
     });
+    const heaviest = Math.max(0, ...weighted.map((weight) => weight ?? 0));
+    return this._layout.edges.map((edge, index) => {
+      const input = inputs.get(this._edgeKey(edge));
+      const weight = weighted[index];
+      const isHighlighted = highlighted.has(this._edgeKey(edge));
+      const width = weight === undefined
+        ? undefined
+        : Math.round(2 * (1 + ((MAX_EDGE_WIDTH - 1) * weight) / (heaviest || 1))) / 2;
+      const title = `${names.get(edge.source)} → ${names.get(edge.target)}`
+        + (input?.label ? `: ${input.label}` : "")
+        + (weight === undefined ? "" : ` (weight ${weight.toLocaleString()})`);
+      return {
+        layout: edge,
+        title,
+        highlighted: isHighlighted,
+        incident: edge.source === this._hovered || edge.target === this._hovered,
+        width,
+        arrow: width === undefined ? undefined : 5 + 2 * (width + (isHighlighted ? 1 : 0)),
+      };
+    });
+  }
+
+  /**
+   * Arrowheads for weighted edges, one per size and color: they grow more slowly than the stroke and sit just
+   * past the shortened path, so a thick stroke never pokes out beside the arrow's tip.
+   */
+  private _renderWeightedArrows(edges: StyledEdge[]): SVGTemplateResult[] {
+    const sizes = new Map<string, { size: number; highlighted: boolean }>();
+    for (const { arrow, highlighted } of edges) {
+      if (arrow !== undefined) sizes.set(this._arrowId(arrow, highlighted), { size: arrow, highlighted });
+    }
+    return [...sizes].map(([id, { size, highlighted }]) => svg`<marker id=${id} viewBox="0 -4 8 8" refX="0"
+      refY="0" markerUnits="userSpaceOnUse" markerWidth=${size} markerHeight=${size} orient="auto">
+      <path class="arrow ${highlighted ? "highlighted" : ""}" d="M0,-4L8,0L0,4Z" /></marker>`);
+  }
+
+  private _arrowId(size: number, highlighted: boolean): string {
+    return `arrow-${size}${highlighted ? "-highlighted" : ""}`;
+  }
+
+  private _renderEdge(edge: StyledEdge): SVGTemplateResult {
+    const { layout, arrow } = edge;
+    const classes = [
+      "edge",
+      layout.backward ? "backward" : "",
+      edge.highlighted ? "highlighted" : "",
+      edge.incident ? "incident" : "",
+    ].filter(Boolean).join(" ");
+    const marker = arrow === undefined
+      ? (edge.highlighted ? "arrow-highlighted" : "arrow")
+      : this._arrowId(arrow, edge.highlighted);
+    const points = arrow === undefined ? layout.points : this._shortenEnd(layout.points, arrow);
+    return svg`<path class=${classes} data-source=${layout.source} data-target=${layout.target}
+      style=${edge.width === undefined ? nothing : `--_dag-edge-width: ${edge.width}px`}
+      d=${route(points) ?? ""} marker-end="url(#${marker})">
+      <title>${edge.title}</title></path>`;
+  }
+
+  private _renderEdgeLabel(edge: StyledEdge): SVGTemplateResult | typeof nothing {
+    const { layout } = edge;
+    const label = layout.label;
+    if (!label) return nothing;
+    const classes = [
+      "edge-label",
+      edge.highlighted ? "highlighted" : "",
+      edge.incident ? "incident" : "",
+    ].filter(Boolean).join(" ");
+    return svg`<g class=${classes} data-source=${layout.source} data-target=${layout.target}
+      transform="translate(${label.x},${label.y})">
+      <title>${edge.title}</title>
+      <rect x=${-label.width / 2} y=${-DAG_EDGE_LABEL_HEIGHT / 2} width=${label.width}
+        height=${DAG_EDGE_LABEL_HEIGHT}></rect>
+      <text>${label.text}</text>
+    </g>`;
+  }
+
+  /** Pulls the last point back by `length` (at most 80% of the final segment) to make room for an arrowhead. */
+  private _shortenEnd(points: DagPoint[], length: number): DagPoint[] {
+    if (points.length < 2) return points;
+    const end = points[points.length - 1];
+    const previous = points[points.length - 2];
+    const distance = Math.hypot(end.x - previous.x, end.y - previous.y);
+    if (!distance) return points;
+    const ratio = Math.min(length, 0.8 * distance) / distance;
+    return [
+      ...points.slice(0, -1),
+      { x: end.x - (end.x - previous.x) * ratio, y: end.y - (end.y - previous.y) * ratio },
+    ];
   }
 
   private _renderNode(position: DagLayoutNode): SVGTemplateResult {

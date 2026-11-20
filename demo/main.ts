@@ -1200,7 +1200,8 @@ if (kanbanDemo) {
   });
 }
 
-// dag-graph (a small dependency graph: every kind, a muted node, and a cycle; every control and event wired)
+// dag-graph (a small dependency graph: every kind, a muted node, a cycle, and optional edge labels and
+// weights; every control and event wired)
 const dagDemo = document.getElementById("dag-demo") as DagGraph | null;
 if (dagDemo) {
   const dagKinds: Record<string, DagNodeKind> = {
@@ -1246,15 +1247,47 @@ if (dagDemo) {
   ].map(([source, target]) => ({ source, target }));
   const dagCycle = ["auth-lib", "config-lib", "metrics-lib"];
   const dagCycleEdges = new Set(["auth-lib>config-lib", "config-lib>metrics-lib", "metrics-lib>auth-lib"]);
-  const applyDagCycle = (highlight: boolean): void => {
-    dagDemo.nodes = dagNodes.map((node) => ({ ...node, highlighted: highlight && dagCycle.includes(node.id) }));
-    dagDemo.edges = dagEdges.map((edge) => ({
-      ...edge,
-      highlighted: highlight && dagCycleEdges.has(`${edge.source}>${edge.target}`),
+  // Version pins on the external-package edges, and import counts as weights.
+  const dagEdgeLabels: Record<string, string> = {
+    "http-utils>requests": "^2.31",
+    "config-lib>pyyaml": "~=6.0",
+    "billing-service>grpcio": ">=1.60",
+    "grpcio>protobuf": ">=4.21",
+  };
+  const dagEdgeWeights: Record<string, number> = {
+    "api-gateway>auth-lib": 42,
+    "api-gateway>http-utils": 18,
+    "api-gateway>metrics-lib": 6,
+    "api-gateway>legacy-tool": 1,
+    "billing-service>auth-lib": 24,
+    "billing-service>config-lib": 9,
+    "billing-service>grpcio": 30,
+    "auth-lib>http-utils": 12,
+    "auth-lib>config-lib": 4,
+    "config-lib>metrics-lib": 3,
+    "config-lib>pyyaml": 2,
+    "metrics-lib>auth-lib": 1,
+    "http-utils>requests": 15,
+    "grpcio>protobuf": 8,
+  };
+  const dagState = { cycle: false, labels: false, weights: false };
+  const applyDagEdges = (): void => {
+    dagDemo.nodes = dagNodes.map((node) => ({
+      ...node,
+      highlighted: dagState.cycle && dagCycle.includes(node.id),
     }));
+    dagDemo.edges = dagEdges.map((edge) => {
+      const key = `${edge.source}>${edge.target}`;
+      return {
+        ...edge,
+        highlighted: dagState.cycle && dagCycleEdges.has(key),
+        label: dagState.labels ? dagEdgeLabels[key] : undefined,
+        weight: dagState.weights ? dagEdgeWeights[key] : undefined,
+      };
+    });
   };
   dagDemo.kinds = dagKinds;
-  applyDagCycle(false);
+  applyDagEdges();
 
   const dagOutput = document.getElementById("dag-output");
   dagDemo.addEventListener("node-select", (e) => {
@@ -1277,9 +1310,12 @@ if (dagDemo) {
   document.getElementById("dag-static")?.addEventListener("change", (e) => {
     dagDemo.isStatic = (e as CustomEvent<{ checked: boolean }>).detail.checked;
   });
-  document.getElementById("dag-cycle")?.addEventListener("change", (e) => {
-    applyDagCycle((e as CustomEvent<{ checked: boolean }>).detail.checked);
-  });
+  for (const [id, key] of [["dag-cycle", "cycle"], ["dag-labels", "labels"], ["dag-weights", "weights"]] as const) {
+    document.getElementById(id)?.addEventListener("change", (e) => {
+      dagState[key] = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+      applyDagEdges();
+    });
+  }
   document.getElementById("dag-colors")?.addEventListener("change", (e) => {
     const custom = (e as CustomEvent<{ checked: boolean }>).detail.checked;
     dagDemo.kinds = custom ? dagCustomKinds : dagKinds;
