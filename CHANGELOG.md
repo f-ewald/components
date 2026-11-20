@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added `pixel-fire`: a pixelated, 8-bit style fire like old computer games, drawn on a canvas with
+  the classic retro palette. It burns full width along the bottom of the viewport as a click-through
+  overlay, or along the bottom of its positioned container with `contained`. `pixel-size` sets how
+  chunky the pixels are (default 4), `intensity` (0–1) sets the flame height, and `0` lets the fire
+  burn out; `--pixel-fire-height` sets the strip's height (default `8rem`). It paints at `z-index: 30`,
+  below `app-shell`'s chrome and every dialog, and draws one still frame under reduced motion.
 - `autocomplete-input` shows the selected option's icon inside the field until the text is edited. The new
   `selectedKey` property is set when an option is picked; set it together with `value` to show a selection made
   elsewhere (it resolves against the local `options`). `selectedOption` now also returns that option.

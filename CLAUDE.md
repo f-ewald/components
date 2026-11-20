@@ -121,6 +121,15 @@ not the resting `.link` rule, because `box-sizing: border-box` would otherwise
 floor the clipped 1×1 box at its own padding box and leave an invisible hit
 target over the page.
 
+`pixel-fire` is a decorative, click-through canvas strip running the classic
+8-bit fire simulation (heat rising, drifting, and cooling through the retro
+palette, with a scrolling cooling map carving it into tongues). It pins
+`position: fixed` to the viewport's bottom edge by default, or `absolute` to
+a positioned ancestor with `contained`. Its `z-index: 30` is a deliberate
+literal below `app-shell`'s chrome (39–41) and `skip-link` (50), so the fire
+never covers navigation or a dialog. Its palette is literal by design, like
+`animate-confetti`'s colors.
+
 `app-shell`'s sidebar has three independent properties rather than a single
 rail/drawer mode switch: `sidebar-open` (visible or not, closed by default,
 at every breakpoint), `sidebar-width` (`full` 16rem vs. `icon` 3.5rem rail —

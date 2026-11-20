@@ -12392,6 +12392,14 @@
         },
         {
           "kind": "js",
+          "name": "PixelFire",
+          "declaration": {
+            "name": "PixelFire",
+            "module": "./pixel-fire.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "PopoverPanel",
           "declaration": {
             "name": "PopoverPanel",
@@ -17880,6 +17888,265 @@
           "declaration": {
             "name": "PhotoGallery",
             "module": "src/photo-gallery.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/pixel-fire.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Pixelated, 8-bit style fire in the manner of old computer games. By default\nit is pinned full width to the bottom of the viewport as a decorative,\nclick-through overlay; `contained` pins it to the bottom of the nearest\npositioned ancestor instead.\n\nThe strip's height is set with `--pixel-fire-height` (default `8rem`). It\npaints at `z-index: 30`, above ordinary page content but below `app-shell`'s\nchrome and every dialog or popover. Under `prefers-reduced-motion: reduce`\nit draws one still frame instead of animating. The canvas is hidden from\nassistive technology.",
+          "name": "PixelFire",
+          "members": [
+            {
+              "kind": "field",
+              "name": "pixelSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Size of one fire pixel in CSS pixels; larger values look chunkier.",
+              "attribute": "pixel-size"
+            },
+            {
+              "kind": "field",
+              "name": "intensity",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Heat of the fire's source, from `0` to `1`. Lowering it shortens the\nflames; `0` lets the fire burn out.",
+              "attribute": "intensity"
+            },
+            {
+              "kind": "field",
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pins the fire to the bottom of the nearest positioned ancestor instead of\nthe viewport.",
+              "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_cols",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_rows",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_heat",
+              "privacy": "private",
+              "default": "new Float32Array(0)"
+            },
+            {
+              "kind": "field",
+              "name": "_cooling",
+              "type": {
+                "text": "Float32Array"
+              },
+              "privacy": "private",
+              "default": "new Float32Array(0)"
+            },
+            {
+              "kind": "field",
+              "name": "_time",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_image",
+              "type": {
+                "text": "ImageData | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_lastStep",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_motionQuery",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_canvas",
+              "type": {
+                "text": "HTMLCanvasElement | null"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_cellSize",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_sourceHeat",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_resize",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Rebuilds the fire grid to cover the host's current box, then restarts it."
+            },
+            {
+              "kind": "field",
+              "name": "_restart",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Animates the fire, or draws one settled frame under reduced motion."
+            },
+            {
+              "kind": "method",
+              "name": "_stop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_tick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_step",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "description": "Advances the fire one step: the bottom row is fed with heat and every cell\nrises one row, drifting sideways and cooling at random."
+            },
+            {
+              "kind": "method",
+              "name": "_draw",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Paints the heat grid to the canvas through the palette."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "pixel-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Size of one fire pixel in CSS pixels; larger values look chunkier.",
+              "fieldName": "pixelSize"
+            },
+            {
+              "name": "intensity",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Heat of the fire's source, from `0` to `1`. Lowering it shortens the\nflames; `0` lets the fire burn out.",
+              "fieldName": "intensity"
+            },
+            {
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pins the fire to the bottom of the nearest positioned ancestor instead of\nthe viewport.",
+              "fieldName": "contained"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "pixel-fire",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PixelFire",
+          "declaration": {
+            "name": "PixelFire",
+            "module": "src/pixel-fire.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "pixel-fire",
+          "declaration": {
+            "name": "PixelFire",
+            "module": "src/pixel-fire.ts"
           }
         }
       ]

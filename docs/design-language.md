@@ -70,9 +70,9 @@ defines the details used when creating or reviewing components.
 - Plain SVG presentation attributes may use literal token fallback values when
   CSS variables are not practical. User-provided marker/chart colors are an
   explicit exception.
-- White map rings, image-overlay controls, avatar foregrounds, and celebratory
-  confetti may remain literal when their contrast is intentionally independent
-  of the surrounding theme.
+- White map rings, image-overlay controls, avatar foregrounds, celebratory
+  confetti, and `pixel-fire`'s retro fire palette may remain literal when their
+  contrast is intentionally independent of the surrounding theme.
 - There is no dedicated secondary accent color. `tab-bar`'s inactive-tab
   indicator reuses `--ui-border` (a shared line beneath the whole strip, with
   the active tab's `--ui-primary` line drawn on top of it) rather than

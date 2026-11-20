@@ -86,6 +86,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#pagination-nav">pagination-nav</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#percent-bar-chart">percent-bar-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#photo-gallery">photo-gallery</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#pixel-fire">pixel-fire</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#popover-panel">popover-panel</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#price-history-chart">price-history-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#progress-bar">progress-bar</a>
@@ -2816,6 +2817,53 @@ chart.valueFormat = (value) => `$${value.toLocaleString()}`;</code></pre>
   &lt;/gallery-item&gt;
   &lt;gallery-item src="/photos/bridge.jpg" alt="Golden Gate Bridge"&gt;&lt;/gallery-item&gt;
 &lt;/photo-gallery&gt;</code></pre>
+        </section>
+
+        <section id="pixel-fire" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-pixel-fire">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#pixel-fire">pixel-fire</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Pixelated, 8-bit style fire like old computer games, burning full width along the bottom of the
+            viewport &mdash; or, with <code>contained</code>, of its positioned container. Draws a still frame
+            under reduced motion.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Intensity
+                <input id="pixel-fire-intensity" data-testid="pixel-fire-intensity" type="range" min="0" max="1" step="0.05" value="1" />
+              </label>
+              <label class="flex items-center gap-2">
+                Pixel size
+                <select id="pixel-fire-size" data-testid="pixel-fire-size" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="2">2</option>
+                  <option value="4" selected>4</option>
+                  <option value="8">8</option>
+                </select>
+              </label>
+              <button
+                id="pixel-fire-page-toggle"
+                data-testid="pixel-fire-page-toggle"
+                type="button"
+                aria-pressed="false"
+                class="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Set the page on fire
+              </button>
+            </div>
+            <div class="relative h-48 overflow-hidden rounded-md border border-slate-200">
+              <pixel-fire id="pixel-fire-demo" data-testid="pixel-fire-demo" contained></pixel-fire>
+            </div>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/pixel-fire.js";
+
+&lt;!-- Full width along the bottom of the viewport --&gt;
+&lt;pixel-fire&gt;&lt;/pixel-fire&gt;
+
+&lt;!-- Along the bottom of a positioned container, chunkier and lower --&gt;
+&lt;div style="position: relative; height: 12rem"&gt;
+  &lt;pixel-fire contained pixel-size="8" intensity="0.6"
+    style="--pixel-fire-height: 6rem"&gt;&lt;/pixel-fire&gt;
+&lt;/div&gt;</code></pre>
         </section>
 
         <section id="popover-panel" class="scroll-mt-8 py-10" data-testid="section-popover-panel">

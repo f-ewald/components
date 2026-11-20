@@ -390,6 +390,14 @@ const EXAMPLES = {
   <ui-button slot="actions" variant="primary">Invite</ui-button>
 </page-header>`,
   "pagination-nav": `<pagination-nav current-page="1" total-pages="5"></pagination-nav>`,
+  "pixel-fire": `<!-- Full width along the bottom of the viewport -->
+<pixel-fire></pixel-fire>
+
+<!-- Along the bottom of a positioned container, chunkier and lower -->
+<div style="position: relative; height: 12rem">
+  <pixel-fire contained pixel-size="8" intensity="0.6"
+    style="--pixel-fire-height: 6rem"></pixel-fire>
+</div>`,
   "animate-confetti": `<animate-confetti duration="6000"></animate-confetti>`,
   "reveal-button": `<reveal-button label="Show the secret">
   Surprise! This content was hidden.

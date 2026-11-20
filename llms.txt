@@ -2067,6 +2067,37 @@ Example:
 </script>
 ```
 
+## <pixel-fire>
+
+Pixelated, 8-bit style fire in the manner of old computer games. By default
+it is pinned full width to the bottom of the viewport as a decorative,
+click-through overlay; `contained` pins it to the bottom of the nearest
+positioned ancestor instead.
+
+The strip's height is set with `--pixel-fire-height` (default `8rem`). It
+paints at `z-index: 30`, above ordinary page content but below `app-shell`'s
+chrome and every dialog or popover. Under `prefers-reduced-motion: reduce`
+it draws one still frame instead of animating. The canvas is hidden from
+assistive technology.
+
+Import: `import "@f-ewald/components/pixel-fire.js";`
+
+Properties: `pixelSize` (attribute `pixel-size`) : number, default 4; `intensity` (attribute `intensity`) : number, default 1; `contained` (attribute `contained`) : boolean, default false
+Events: none
+CSS custom properties: none
+
+Example:
+```html
+<!-- Full width along the bottom of the viewport -->
+<pixel-fire></pixel-fire>
+
+<!-- Along the bottom of a positioned container, chunkier and lower -->
+<div style="position: relative; height: 12rem">
+  <pixel-fire contained pixel-size="8" intensity="0.6"
+    style="--pixel-fire-height: 6rem"></pixel-fire>
+</div>
+```
+
 ## <popover-panel>
 
 Generic anchored popover shell: a floating card positioned relative to its

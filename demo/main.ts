@@ -87,6 +87,7 @@ import {
   iconSquares2x2,
   iconPencil,
   type PhotoGallery,
+  type PixelFire,
   type PhotoGalleryObjectFit,
   type PhotoGallerySlideChangeDetail,
   type GalleryItem,
@@ -155,6 +156,35 @@ document.getElementById("confetti-trigger")?.addEventListener("click", () => {
   el.duration = 4000;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 5000);
+});
+
+// pixel-fire
+const pixelFireDemo = document.getElementById("pixel-fire-demo") as PixelFire;
+const pixelFireIntensity = document.getElementById("pixel-fire-intensity") as HTMLInputElement;
+const pixelFireSize = document.getElementById("pixel-fire-size") as HTMLSelectElement;
+const pixelFirePageToggle = document.getElementById("pixel-fire-page-toggle") as HTMLButtonElement;
+let pageFire: PixelFire | undefined;
+pixelFireIntensity.addEventListener("input", () => {
+  pixelFireDemo.intensity = Number(pixelFireIntensity.value);
+  if (pageFire) pageFire.intensity = pixelFireDemo.intensity;
+});
+pixelFireSize.addEventListener("change", () => {
+  pixelFireDemo.pixelSize = Number(pixelFireSize.value);
+  if (pageFire) pageFire.pixelSize = pixelFireDemo.pixelSize;
+});
+pixelFirePageToggle.addEventListener("click", () => {
+  if (pageFire) {
+    pageFire.remove();
+    pageFire = undefined;
+  } else {
+    pageFire = document.createElement("pixel-fire");
+    pageFire.dataset.testid = "pixel-fire-page";
+    pageFire.intensity = pixelFireDemo.intensity;
+    pageFire.pixelSize = pixelFireDemo.pixelSize;
+    document.body.appendChild(pageFire);
+  }
+  pixelFirePageToggle.setAttribute("aria-pressed", String(Boolean(pageFire)));
+  pixelFirePageToggle.textContent = pageFire ? "Put out the page fire" : "Set the page on fire";
 });
 
 // photo-gallery
