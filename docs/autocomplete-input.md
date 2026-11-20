@@ -59,18 +59,18 @@ import "@f-ewald/components/autocomplete-input.js";
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
+| `endpoint` | `endpoint` | `string` | `""` | API endpoint queried in API mode. Ignored when `options` is set. |
+| `queryParam` | `query-param` | `string` | `"q"` | Query string parameter name the current input text is sent under. |
+| `options` | _(JS property only)_ | `AutocompleteOption[] | null` | `null` | Fixed candidate list to filter locally instead of fetching from `endpoint`. When set (non-null), no network request is ever made — this takes priority over the API mode. |
+| `selectedKey` | `selected-key` | `string | null` | `null` | Key of the selected option: set by picking one, or by the caller together with `value`. |
+| `selectedOption` | _(JS property only)_ | `AutocompleteOption | null` | `—` | Selected option (picked, or matching `selectedKey`), or null once the input diverges from it. _(read-only)_ |
 | `value` | `value` | `string` | `""` | Current input value; also the form-associated value submitted with the form. |
 | `placeholder` | `placeholder` | `string` | `""` | Placeholder text shown when the input is empty. |
 | `required` | `required` | `boolean` | `false` | Marks the input as required for native form validation. |
 | `disabled` | `disabled` | `boolean` | `false` | Disables the input and closes its suggestion popup. |
 | `clearable` | `clearable` | `boolean` | `false` | Shows an in-field clear action while the control has a value. |
-| `endpoint` | `endpoint` | `string` | `""` | API endpoint queried in API mode. Ignored when `options` is set. |
-| `queryParam` | `query-param` | `string` | `"q"` | Query string parameter name the current input text is sent under. |
 | `debounce` | `debounce` | `number` | `300` | Debounce delay (ms) before firing a request/filter after typing. |
 | `minLength` | `min-length` | `number` | `3` | Minimum query length before suggestions are shown. |
-| `options` | _(JS property only)_ | `AutocompleteOption[] | null` | `null` | Fixed candidate list to filter locally instead of fetching from `endpoint`. When set (non-null), no network request is ever made — this takes priority over the API mode. |
-| `selectedKey` | `selected-key` | `string | null` | `null` | Key of the selected option: set by picking one, or by the caller together with `value`. |
-| `selectedOption` | _(JS property only)_ | `AutocompleteOption | null` | `—` | Selected option (picked, or matching `selectedKey`), or null once the input diverges from it. _(read-only)_ |
 
 ## Events
 

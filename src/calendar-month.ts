@@ -11,6 +11,7 @@ import {
   daysInMonth,
   isWeekend,
   monthName,
+  onEachMidnight,
   overlapsRange,
   readCalendarEntryElement,
   resolveEntry,
@@ -320,9 +321,12 @@ export class CalendarMonth extends LitElement {
     `,
   ];
 
-  /** Observes declarative entry attributes and slotted text for live updates. */
+  private _stopMidnightRefresh?: () => void;
+
+  /** Observes declarative entry attributes and slotted text, and re-renders at midnight to move "today". */
   override connectedCallback(): void {
     super.connectedCallback();
+    this._stopMidnightRefresh = onEachMidnight(() => this.requestUpdate());
     this._entriesVersion++;
     this._entriesObserver ??= new MutationObserver(() => this._entriesVersion++);
     this._entriesObserver.observe(this, {
@@ -334,9 +338,10 @@ export class CalendarMonth extends LitElement {
     });
   }
 
-  /** Releases the entry observer when this month disconnects. */
+  /** Releases the entry observer and midnight timer when this month disconnects. */
   override disconnectedCallback(): void {
     this._entriesObserver?.disconnect();
+    this._stopMidnightRefresh?.();
     super.disconnectedCallback();
   }
 

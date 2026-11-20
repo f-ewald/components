@@ -184,6 +184,24 @@ export function assignLanes(
   return { entries: laned, laneCount: laneEnds.length };
 }
 
+/**
+ * Calls `onMidnight` at every local midnight, so a "today" highlight moves
+ * while a page stays open. Returns a function that stops the timer.
+ */
+export function onEachMidnight(onMidnight: () => void): () => void {
+  let timer: ReturnType<typeof setTimeout>;
+  const schedule = () => {
+    const now = new Date();
+    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    timer = setTimeout(() => {
+      onMidnight();
+      schedule();
+    }, next.getTime() - now.getTime());
+  };
+  schedule();
+  return () => clearTimeout(timer);
+}
+
 /** Adds `days` (negative to subtract) to `date`, returning a new local `Date`. */
 export function addDays(date: Date, days: number): Date {
   const result = new Date(date);

@@ -618,4 +618,20 @@ test.describe("calendar-month", () => {
     ]);
     expect(Math.abs(cellHeight - siblingHeight)).toBeLessThan(1);
   });
+
+  test("moves the today highlight at midnight without a re-render from outside", async ({ page }) => {
+    await page.clock.install({ time: new Date(2026, 6, 15, 23, 59) });
+    await page.goto("/");
+    await page.evaluate(() => {
+      const month = document.createElement("calendar-month");
+      month.id = "month-midnight";
+      month.year = 2026;
+      month.month = 7;
+      document.body.append(month);
+    });
+    const today = page.locator("#month-midnight .day-row.today .day-number");
+    await expect(today).toHaveText("15");
+    await page.clock.fastForward("02:00");
+    await expect(today).toHaveText("16");
+  });
 });

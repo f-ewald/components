@@ -73,8 +73,9 @@ only makes sense as instance state; pure date/geometry math
 (`parseIsoDateTime`, `resolveTimedEntry`, `minutesSinceMidnight`,
 `startOfWeek`, etc.) stays in `utils/calendar.ts` as additive, separate
 exports from the date-only `parseIsoDate`/`resolveEntry` path — this is the
-package's first use of component inheritance; every other shared-logic case
-uses free functions instead. `calendar-week` is its own independent 7-column
+package's first use of component inheritance (the second is
+`AutocompleteBase`, below); every other shared-logic case uses free
+functions instead. `calendar-week` is its own independent 7-column
 layout (not 7 nested `<calendar-day>`), so a single hour gutter is drawn
 once and lanes for the all-day band are assigned across the whole visible
 week in one call, giving multi-day bars correct cross-day continuity that
@@ -95,6 +96,19 @@ cell and its multi-day shared body, where it consumes a reserved line budget
 the same way `footer` already does) — a single-day `calendar-month` entry's
 title cell can therefore grow taller than a sibling without a location; that
 tradeoff was chosen over inlining location onto the title line.
+
+`autocomplete-input` and `address-autocomplete` both extend
+`AutocompleteBase<T>` (`src/autocomplete-base.ts`), an unregistered abstract
+`LitElement` that owns the whole combobox: input, debounced local filtering or
+fetching (a newer keystroke aborts any request in flight), keyboard/IME
+handling, the clear action, and the form contract. Subclasses only supply the
+item type and hooks (`localItems`, `view`, `requestUrl`, `parseItems`,
+`onSelect`, optional `fieldIcon`) plus their own public properties and event.
+The shared CSS is exported as `autocompleteStyles`, and each subclass still
+declares `static override styles = [tokens, autocompleteStyles]` in its own
+file. The design contracts and the docs generator also read a component's
+local base class module, so shared CSS stays under the token checks and in the
+generated CSS-property lists.
 
 `vote-control`, `spec-list`, `breadcrumb-nav`, `skip-link`, and `empty-state`
 were added together with the `blueprint` theme, whose reference aesthetic they

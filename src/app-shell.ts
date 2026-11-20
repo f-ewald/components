@@ -461,13 +461,16 @@ export class AppShell extends LitElement {
 
   override render() {
     const scrimActive = this._mobile && (this.sidebarOpen || this.detailOpen);
+    // A mobile overlay is modal: everything behind it is inert. The detail
+    // pane stacks above the sidebar; the nav toggle stays live to close the drawer.
+    const mobileOverlay = !this._mobile ? null : this.detailOpen ? "detail" : this.sidebarOpen ? "sidebar" : null;
     return html`
       <div class="shell">
         <aside
           class="sidebar"
           tabindex="-1"
           aria-label="Primary"
-          ?inert=${!this.sidebarOpen}
+          ?inert=${!this.sidebarOpen || mobileOverlay === "detail"}
           aria-hidden=${String(!this.sidebarOpen)}
         >
           <slot name="sidebar" @slotchange=${this._syncSidebarWidth}></slot>
@@ -475,7 +478,7 @@ export class AppShell extends LitElement {
         ${this.noTopbar
           ? nothing
           : html`
-              <header class="topbar">
+              <header class="topbar" ?inert=${mobileOverlay === "detail"}>
                 <div class="nav-group">
                   <button
                     class="nav-toggle"
@@ -493,10 +496,10 @@ export class AppShell extends LitElement {
                     <kbd-hint keys="["></kbd-hint>
                   </span>
                 </div>
-                <div class="topbar-content"><slot name="topbar"></slot></div>
+                <div class="topbar-content" ?inert=${mobileOverlay !== null}><slot name="topbar"></slot></div>
               </header>
             `}
-        <main class="main"><slot></slot></main>
+        <main class="main" ?inert=${mobileOverlay !== null}><slot></slot></main>
         <aside
           class="detail"
           aria-label="Detail"
@@ -505,7 +508,7 @@ export class AppShell extends LitElement {
         >
           <slot name="detail"></slot>
         </aside>
-        <footer class="footer ${this._hasFooter ? "" : "empty"}">
+        <footer class="footer ${this._hasFooter ? "" : "empty"}" ?inert=${mobileOverlay !== null}>
           <slot name="footer" @slotchange=${this._onFooterSlotChange}></slot>
         </footer>
         <button

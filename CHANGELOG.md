@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Fixes: on mobile, an open `app-shell` drawer or detail pane makes the page behind it inert, so
+  Tab no longer reaches hidden controls (the ☰ toggle stays usable to close the drawer). The MCP
+  server's `get_component_docs` rejects tags that aren't plain tag names, so it can't read files
+  outside `docs/`. `calendar-day`, `calendar-week`, and `calendar-month` move the today highlight at
+  midnight while the page stays open. `autocomplete-input` and `address-autocomplete` cancel the
+  request for the previous text on every keystroke, so an old response can no longer flash under
+  newer text.
+- `autocomplete-input` and `address-autocomplete` now share one implementation
+  (`src/autocomplete-base.ts`); their public properties, events, and labels are unchanged.
+  `address-autocomplete` suggestion rows now use the same markup and tighter line height as
+  `autocomplete-input` rows.
+
 - Fixes: `calendar-day`/`calendar-week` treat a timed entry's end as exclusive, so back-to-back
   meetings (09:00–10:00, 10:00–11:00) share a lane at full width and an entry ending at 00:00 no
   longer shows on the next day. `price-history-chart` reads `"YYYY-MM-DD"` dates as local days, so

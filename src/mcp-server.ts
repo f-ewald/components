@@ -178,16 +178,19 @@ server.registerTool(
     inputSchema: { tag: z.string().describe('Component tag name, e.g. "ui-button".') },
   },
   async ({ tag }) => {
-    try {
-      const text = await readFile(path.join(docsDir, `${tag}.md`), "utf8");
-      return { content: [{ type: "text", text }] };
-    } catch {
-      const validTags = (await listComponents()).map((c) => c.tag).join(", ");
-      return {
-        content: [{ type: "text", text: `No docs found for tag "${tag}". Valid tags: ${validTags}` }],
-        isError: true,
-      };
+    if (/^[a-z0-9-]+$/.test(tag)) {
+      try {
+        const text = await readFile(path.join(docsDir, `${tag}.md`), "utf8");
+        return { content: [{ type: "text", text }] };
+      } catch {
+        // Fall through to the not-found response with valid tags.
+      }
     }
+    const validTags = (await listComponents()).map((c) => c.tag).join(", ");
+    return {
+      content: [{ type: "text", text: `No docs found for tag "${tag}". Valid tags: ${validTags}` }],
+      isError: true,
+    };
   },
 );
 

@@ -36,20 +36,20 @@ import "@f-ewald/components/address-autocomplete.js";
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `value` | `value` | `string` | `""` | Current input value; also the form-associated value submitted with the form. |
-| `placeholder` | `placeholder` | `string` | `""` | Placeholder text shown when the input is empty. |
-| `required` | `required` | `boolean` | `false` | Marks the input as required for native form validation. |
-| `disabled` | `disabled` | `boolean` | `false` | Disables the input and closes its suggestion popup. |
-| `clearable` | `clearable` | `boolean` | `false` | Shows an in-field clear action while the control has a value. |
 | `types` | `types` | `string` | `"address"` | Mapbox `types` param, e.g. "address" or "address,poi". |
 | `endpoint` | `endpoint` | `string` | `"https://api.mapbox.com/search/geocode/v6/forward"` | Geocoding endpoint URL. Defaults to the Mapbox Geocoding v6 forward URL. |
 | `accessToken` | `access-token` | `string` | `""` | Mapbox access token. Required for requests to succeed. |
 | `bbox` | `bbox` | `string` | `""` | Optional bounding box bias, comma-separated `west,south,east,north`. |
 | `proximity` | `proximity` | `string` | `""` | Optional proximity bias, comma-separated `lng,lat`. |
-| `debounce` | `debounce` | `number` | `300` | Debounce delay (ms) before firing a geocode request after typing. |
-| `minLength` | `min-length` | `number` | `3` | Minimum query length before suggestions are fetched. |
 | `suggestions` | _(JS property only)_ | `AddressSuggestion[] | null` | `null` | Fixed candidate list to filter locally instead of fetching from `endpoint`. When set (non-null), no network request is ever made — this takes priority over the API mode. |
 | `selectedSuggestion` | _(JS property only)_ | `AddressSuggestion | null` | `—` | Last-picked suggestion, or null once the input diverges from it. _(read-only)_ |
+| `value` | `value` | `string` | `""` | Current input value; also the form-associated value submitted with the form. |
+| `placeholder` | `placeholder` | `string` | `""` | Placeholder text shown when the input is empty. |
+| `required` | `required` | `boolean` | `false` | Marks the input as required for native form validation. |
+| `disabled` | `disabled` | `boolean` | `false` | Disables the input and closes its suggestion popup. |
+| `clearable` | `clearable` | `boolean` | `false` | Shows an in-field clear action while the control has a value. |
+| `debounce` | `debounce` | `number` | `300` | Debounce delay (ms) before firing a request/filter after typing. |
+| `minLength` | `min-length` | `number` | `3` | Minimum query length before suggestions are shown. |
 
 ## Events
 

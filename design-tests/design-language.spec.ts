@@ -23,6 +23,7 @@ const styleless = new Set([
 interface ManifestDeclaration {
   customElement?: boolean;
   tagName?: string;
+  superclass?: { module?: string };
 }
 
 interface ManifestModule {
@@ -82,16 +83,24 @@ function tokenUsages(source: string): Array<{ token: string; fallback: string | 
   return usages;
 }
 
-/** Returns the manifest module paths that define at least one custom element. */
+/**
+ * Returns the manifest module paths that define at least one custom element,
+ * plus the local base class modules they extend (which may hold shared styles).
+ */
 function componentModulePaths(): string[] {
   const manifest = JSON.parse(
     readFileSync(path.join(root, "custom-elements.json"), "utf8"),
   ) as CustomElementsManifest;
-  return manifest.modules
-    .filter((module) =>
-      (module.declarations ?? []).some((declaration) => declaration.customElement),
-    )
-    .map((module) => module.path);
+  const paths = new Set<string>();
+  for (const module of manifest.modules) {
+    for (const declaration of module.declarations ?? []) {
+      if (!declaration.customElement) continue;
+      paths.add(module.path);
+      const base = declaration.superclass?.module;
+      if (base?.startsWith("/src/")) paths.add(base.slice(1).replace(/\.js$/, ".ts"));
+    }
+  }
+  return [...paths];
 }
 
 /** Collapses whitespace so multi-line CSS values compare as single tokens. */
@@ -251,17 +260,12 @@ test("component sources follow shared style and import contracts", () => {
 
 test("UI token usages have known tokens and exact fallbacks", () => {
   const values = tokenValues();
-  const sourceFiles = readFileSync(path.join(root, "custom-elements.json"), "utf8");
-  const manifest = JSON.parse(sourceFiles) as CustomElementsManifest;
 
-  for (const module of manifest.modules) {
-    if (!(module.declarations ?? []).some((declaration) => declaration.customElement)) {
-      continue;
-    }
-    const source = readFileSync(path.join(root, module.path), "utf8");
+  for (const modulePath of componentModulePaths()) {
+    const source = readFileSync(path.join(root, modulePath), "utf8");
     for (const usage of tokenUsages(source)) {
-      expect(values, `${module.path} token ${usage.token}`).toHaveProperty(usage.token);
-      expect(usage.fallback, `${module.path} ${usage.token} fallback`).not.toBeNull();
+      expect(values, `${modulePath} token ${usage.token}`).toHaveProperty(usage.token);
+      expect(usage.fallback, `${modulePath} ${usage.token} fallback`).not.toBeNull();
       expect(normalizeCssValue(usage.fallback!)).toBe(
         normalizeCssValue(values[usage.token]),
       );
@@ -373,8 +377,7 @@ test("component icon calls use the approved inline and standalone sizes", () => 
   }
 
   const requiredCalls: Record<string, string[]> = {
-    "src/address-autocomplete.ts": ["iconX(18)"],
-    "src/autocomplete-input.ts": ["iconX(18)"],
+    "src/autocomplete-base.ts": ["iconX(18)"],
     "src/chat-message.ts": ["iconChevronRight(14)"],
     "src/confirm-dialog.ts": ["iconArrowPath(14)"],
     "src/copy-link-button.ts": ["iconClipboard(18)"],
@@ -398,10 +401,8 @@ test("component icon calls use the approved inline and standalone sizes", () => 
 
 test("interactive controls use the approved 2rem target", () => {
   const exactHeightRules: Array<[string, string]> = [
-    ["src/address-autocomplete.ts", "input"],
-    ["src/address-autocomplete.ts", "\\.clear-button"],
-    ["src/autocomplete-input.ts", "input"],
-    ["src/autocomplete-input.ts", "\\.clear-button"],
+    ["src/autocomplete-base.ts", "input"],
+    ["src/autocomplete-base.ts", "\\.clear-button"],
     ["src/copy-link-button.ts", "button"],
     ["src/dropdown-button.ts", "button\\.trigger"],
     ["src/form-select.ts", "button\\.trigger"],
@@ -421,13 +422,7 @@ test("interactive controls use the approved 2rem target", () => {
   }
 
   expectRuleDeclaration(
-    "src/address-autocomplete.ts",
-    "\\.field-shell\\.floating input",
-    "height",
-    "3rem",
-  );
-  expectRuleDeclaration(
-    "src/autocomplete-input.ts",
+    "src/autocomplete-base.ts",
     "\\.field-shell\\.floating input",
     "height",
     "3rem",
@@ -485,8 +480,7 @@ test("value-entry form fields fill their container by default", () => {
   // The host is display:block and the inner control is width:100%, so a field
   // fills the column it lives in; shrink-to-fit stays an opt-in host override.
   const fields: Array<{ module: string; control: string }> = [
-    { module: "src/autocomplete-input.ts", control: "input" },
-    { module: "src/address-autocomplete.ts", control: "input" },
+    { module: "src/autocomplete-base.ts", control: "input" },
     { module: "src/editable-text.ts", control: "\\.display" },
     { module: "src/form-select.ts", control: "button\\.trigger" },
     { module: "src/multi-select.ts", control: "button\\.trigger" },

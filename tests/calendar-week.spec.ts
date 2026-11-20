@@ -162,4 +162,19 @@ test.describe("calendar-week", () => {
     await expect(location).toContainText("Main conference room");
     await expect(location.locator("svg")).toBeVisible();
   });
+
+  test("moves the today highlight at midnight without a re-render from outside", async ({ page }) => {
+    await page.clock.install({ time: new Date(2026, 6, 15, 23, 59) });
+    await page.goto("/");
+    await page.evaluate(() => {
+      const week = document.createElement("calendar-week");
+      week.id = "week-midnight";
+      week.date = "2026-07-15";
+      document.body.append(week);
+    });
+    const today = page.locator("#week-midnight .day-header.today .day-number");
+    await expect(today).toHaveText("15");
+    await page.clock.fastForward("02:00");
+    await expect(today).toHaveText("16");
+  });
 });

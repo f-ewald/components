@@ -5,6 +5,7 @@ import { iconMapPin } from "./icons.js";
 import {
   CALENDAR_ENTRY_ATTRIBUTES,
   minutesSinceMidnight,
+  onEachMidnight,
   overlapsTimedRange,
   readCalendarEntryElement,
   resolveTimedEntry,
@@ -38,10 +39,12 @@ export abstract class CalendarTimelineBase extends LitElement {
   @state() protected entriesVersion = 0;
 
   private entriesObserver?: MutationObserver;
+  private stopMidnightRefresh?: () => void;
 
-  /** Observes declarative entry attributes and slotted text for live updates. */
+  /** Observes declarative entry attributes and slotted text, and re-renders at midnight to move "today". */
   override connectedCallback(): void {
     super.connectedCallback();
+    this.stopMidnightRefresh = onEachMidnight(() => this.requestUpdate());
     this.entriesVersion++;
     this.entriesObserver ??= new MutationObserver(() => this.entriesVersion++);
     this.entriesObserver.observe(this, {
@@ -53,9 +56,10 @@ export abstract class CalendarTimelineBase extends LitElement {
     });
   }
 
-  /** Releases the entry observer when this element disconnects. */
+  /** Releases the entry observer and midnight timer when this element disconnects. */
   override disconnectedCallback(): void {
     this.entriesObserver?.disconnect();
+    this.stopMidnightRefresh?.();
     super.disconnectedCallback();
   }
 

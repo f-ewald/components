@@ -360,4 +360,37 @@ test.describe("autocomplete-input", () => {
     });
     await expect(autocomplete.getByRole("button", { name: "Clear input" })).toHaveCount(0);
   });
+
+  test("a newer keystroke drops the response for the older query", async ({ page }) => {
+    await page.goto("/");
+    const shown = await page.evaluate(async () => {
+      const resolvers = new Map<string, (body: unknown) => void>();
+      window.fetch = (input: RequestInfo | URL, init?: RequestInit) =>
+        new Promise((resolve, reject) => {
+          const query = new URL(String(input), location.href).searchParams.get("q")!;
+          init?.signal?.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")));
+          resolvers.set(query, (body) => resolve(new Response(JSON.stringify(body))));
+        });
+      const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      const el = document.createElement("autocomplete-input");
+      el.endpoint = "/api/stale";
+      el.debounce = 200;
+      document.body.append(el);
+      await el.updateComplete;
+      const input = el.shadowRoot!.querySelector("input")!;
+      const type = (text: string) => {
+        input.value = text;
+        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      };
+      type("ber");
+      await sleep(250);
+      type("berl");
+      resolvers.get("ber")!([{ key: "old", value: "Stale result" }]);
+      // Well inside the 200ms debounce for "berl", so its own request hasn't started yet.
+      await sleep(20);
+      await el.updateComplete;
+      return [...el.shadowRoot!.querySelectorAll("[role=option]")].map((option) => option.textContent!.trim());
+    });
+    expect(shown).toEqual([]);
+  });
 });

@@ -59,67 +59,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "formAssociated",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
-              "default": "true"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "Current input value; also the form-associated value submitted with the form.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "Placeholder text shown when the input is empty.",
-              "attribute": "placeholder"
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the input as required for native form validation.",
-              "attribute": "required"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the input and closes its suggestion popup.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows an in-field clear action while the control has a value.",
-              "attribute": "clearable",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "types",
               "type": {
                 "text": "string"
@@ -170,26 +109,6 @@
             },
             {
               "kind": "field",
-              "name": "debounce",
-              "type": {
-                "text": "number"
-              },
-              "default": "300",
-              "description": "Debounce delay (ms) before firing a geocode request after typing.",
-              "attribute": "debounce"
-            },
-            {
-              "kind": "field",
-              "name": "minLength",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "description": "Minimum query length before suggestions are fetched.",
-              "attribute": "min-length"
-            },
-            {
-              "kind": "field",
               "name": "suggestions",
               "type": {
                 "text": "AddressSuggestion[] | null"
@@ -199,139 +118,33 @@
             },
             {
               "kind": "field",
-              "name": "_suggestions",
+              "name": "listboxLabel",
               "type": {
-                "text": "AddressSuggestion[]"
+                "text": "string"
               },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "_open",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_activeIndex",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "-1"
-            },
-            {
-              "kind": "field",
-              "name": "_formDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_formFieldConfig",
-              "type": {
-                "text": "FormFieldControlConfig | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_input",
-              "type": {
-                "text": "HTMLInputElement | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#internals",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#lastPicked",
-              "privacy": "private",
-              "type": {
-                "text": "AddressSuggestion | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#debounceTimer",
-              "privacy": "private",
-              "type": {
-                "text": "ReturnType<typeof setTimeout> | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#abortController",
-              "privacy": "private",
-              "type": {
-                "text": "AbortController | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#isComposing",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "#compositionJustEnded",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "#compositionEndTimer",
-              "privacy": "private",
-              "type": {
-                "text": "ReturnType<typeof setTimeout> | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#inputId",
-              "privacy": "private",
+              "privacy": "protected",
               "readonly": true,
-              "default": "`address-autocomplete-field-${++instanceCount}`"
+              "default": "\"Address suggestions\"",
+              "description": "Accessible name of the suggestion list.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "field",
-              "name": "#listboxId",
-              "privacy": "private",
-              "readonly": true,
-              "default": "`address-autocomplete-listbox-${instanceCount}`"
-            },
-            {
-              "kind": "field",
-              "name": "#isDisabled",
-              "privacy": "private",
+              "name": "clearLabel",
               "type": {
-                "text": "boolean"
+                "text": "string"
               },
-              "description": "Whether the host or an ancestor fieldset currently disables the control.",
-              "readonly": true
+              "privacy": "protected",
+              "readonly": true,
+              "default": "\"Clear address\"",
+              "description": "Accessible name and tooltip of the clear action.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "field",
@@ -341,6 +154,442 @@
               },
               "description": "Last-picked suggestion, or null once the input diverges from it.",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "localItems",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "AddressSuggestion[] | null"
+                }
+              },
+              "description": "The fixed candidate list to filter locally, or null to fetch instead.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "view",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "AutocompleteItemView"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "suggestion",
+                  "type": {
+                    "text": "AddressSuggestion"
+                  }
+                }
+              ],
+              "description": "How `item` is matched, shown, and written into the field.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUrl",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The request URL for `query` in fetch mode.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "parseItems",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "AddressSuggestion[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "body",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Turns a fetch response's JSON body into candidates.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onSelect",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "suggestion",
+                  "type": {
+                    "text": "AddressSuggestion"
+                  }
+                }
+              ],
+              "description": "Runs after `item` was picked and written into the field, e.g. to fire an event.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "attribute": "value",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "attribute": "placeholder",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "attribute": "required",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "attribute": "clearable",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Debounce delay (ms) before firing a request/filter after typing.",
+              "attribute": "debounce",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Minimum query length before suggestions are shown.",
+              "attribute": "min-length",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_suggestions",
+              "type": {
+                "text": "T[]"
+              },
+              "privacy": "private",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_formFieldConfig",
+              "type": {
+                "text": "FormFieldControlConfig | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_input",
+              "type": {
+                "text": "HTMLInputElement | undefined"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastPicked",
+              "type": {
+                "text": "T | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "description": "The last item picked from the list; cleared on reset and clear.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#debounceTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#abortController",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#isComposing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#compositionJustEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#compositionEndTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#inputId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`${this.localName}-field-${++instanceCount}`",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#listboxId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`${this.localName}-listbox-${instanceCount}`",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "fieldIcon",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | undefined"
+                }
+              },
+              "description": "Icon shown inside the field, if any.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -359,12 +608,20 @@
                 }
               ],
               "description": "Applies or clears label configuration supplied by a wrapping `form-field`.",
-              "privacy": "private"
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
               "name": "formResetCallback",
-              "description": "Resets to empty on `form.reset()`, per the form-associated custom element contract."
+              "description": "Resets to empty on `form.reset()`, per the form-associated custom element contract.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -377,7 +634,11 @@
                   }
                 }
               ],
-              "description": "Mirrors ancestor fieldset disabled state onto the native input."
+              "description": "Mirrors ancestor fieldset disabled state onto the native input.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -390,7 +651,11 @@
                     "text": "InputEvent"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -403,11 +668,15 @@
                     "text": "string"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
-              "name": "#filterLocalSuggestions",
+              "name": "#filterLocalItems",
               "privacy": "private",
               "parameters": [
                 {
@@ -417,11 +686,15 @@
                   }
                 }
               ],
-              "description": "Filters the locally-supplied `suggestions` list for `query`, case-insensitively."
+              "description": "Filters the local candidate list for `query`, case-insensitively.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
-              "name": "#fetchSuggestions",
+              "name": "#fetchItems",
               "privacy": "private",
               "parameters": [
                 {
@@ -431,25 +704,11 @@
                   }
                 }
               ],
-              "description": "Fetches suggestions for `query`, cancelling any request still in flight."
-            },
-            {
-              "kind": "method",
-              "name": "#buildUrl",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "query",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
+              "description": "Fetches candidates for `query`, cancelling any request still in flight.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -462,7 +721,11 @@
                     "text": "KeyboardEvent"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -481,7 +744,11 @@
                     "text": "KeyboardEvent"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -494,7 +761,11 @@
                     "text": "KeyboardEvent"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -507,12 +778,20 @@
                     "text": "KeyboardEvent"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
               "name": "onBlur",
-              "privacy": "private"
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -522,6 +801,10 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
               }
             },
             {
@@ -532,6 +815,10 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
               }
             },
             {
@@ -543,20 +830,28 @@
                   "text": "void"
                 }
               },
-              "description": "Clears composition state when the control can no longer receive keys."
+              "description": "Clears composition state when the control can no longer receive keys.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
-              "name": "#selectSuggestion",
+              "name": "#select",
               "privacy": "private",
               "parameters": [
                 {
-                  "name": "s",
+                  "name": "item",
                   "type": {
-                    "text": "AddressSuggestion"
+                    "text": "T"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -567,7 +862,11 @@
                   "text": "void"
                 }
               },
-              "description": "Clears the field and all pending autocomplete state, then restores input focus."
+              "description": "Clears the field and all pending autocomplete state, then restores input focus.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
@@ -581,18 +880,26 @@
                   }
                 },
                 {
-                  "name": "s",
+                  "name": "item",
                   "type": {
-                    "text": "AddressSuggestion"
+                    "text": "T"
                   }
                 }
               ],
-              "description": "Selects on mousedown (not click) so it wins over the input's blur, which closes the list."
+              "description": "Selects on mousedown (not click) so it wins over the input's blur, which closes the list.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "kind": "method",
               "name": "renderSuggestions",
-              "privacy": "private"
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             }
           ],
           "events": [
@@ -608,55 +915,14 @@
               "type": {
                 "text": "InputEvent"
               },
-              "description": "Native-compatible input event fired while editing or clearing."
+              "description": "Native-compatible input event fired while editing or clearing.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             }
           ],
           "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "Current input value; also the form-associated value submitted with the form.",
-              "fieldName": "value"
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "Placeholder text shown when the input is empty.",
-              "fieldName": "placeholder"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the input as required for native form validation.",
-              "fieldName": "required"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the input and closes its suggestion popup.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows an in-field clear action while the control has a value.",
-              "fieldName": "clearable"
-            },
             {
               "name": "types",
               "type": {
@@ -703,13 +969,82 @@
               "fieldName": "proximity"
             },
             {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "fieldName": "value",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "fieldName": "placeholder",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "fieldName": "required",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "fieldName": "clearable",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
               "name": "debounce",
               "type": {
                 "text": "number"
               },
               "default": "300",
-              "description": "Debounce delay (ms) before firing a geocode request after typing.",
-              "fieldName": "debounce"
+              "description": "Debounce delay (ms) before firing a request/filter after typing.",
+              "fieldName": "debounce",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "name": "min-length",
@@ -717,13 +1052,17 @@
                 "text": "number"
               },
               "default": "3",
-              "description": "Minimum query length before suggestions are fetched.",
-              "fieldName": "minLength"
+              "description": "Minimum query length before suggestions are shown.",
+              "fieldName": "minLength",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "LitElement",
-            "package": "lit"
+            "name": "AutocompleteBase",
+            "module": "/src/autocomplete-base.js"
           },
           "tagName": "address-autocomplete",
           "customElement": true
@@ -1913,12 +2252,18 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/autocomplete-input.ts",
+      "path": "src/autocomplete-base.ts",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "autocompleteStyles",
+          "default": "css` :host { display: block; position: relative; } .field-shell { position: relative; } input { font-family: var( --ui-font, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\" ); font-size: var(--ui-font-size, 0.875rem); line-height: var(--ui-line-height-tight, 1.25); color: var(--ui-text, #0f172a); background: var(--ui-surface, #ffffff); padding: 0.5rem 0.75rem; border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0); border-radius: var(--ui-radius-sm, 0.25rem); width: 100%; height: 2rem; box-sizing: border-box; } .field-shell.clearable input { padding-right: 2rem; } .field-shell.has-icon input { padding-left: 2rem; } .field-icon { position: absolute; top: 50%; left: 0.75rem; display: inline-flex; line-height: 0; transform: translateY(-50%); color: var(--ui-text-muted, #64748b); pointer-events: none; } .clear-button { position: absolute; top: 0; right: 0; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 2rem; height: 2rem; /* Insets the hover/focus background by the input's 1px border so it stays fully inside the field instead of painting over the border. */ padding: 1px; background-clip: content-box; border: 0; border-radius: var(--ui-radius-sm, 0.25rem); color: var(--ui-text-muted, #64748b); background-color: transparent; cursor: pointer; line-height: 0; } .clear-button:hover { color: var(--ui-text, #0f172a); background-color: var(--ui-surface-muted, #f8fafc); } .clear-button:focus-visible { outline: none; box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)); } .floating-label { position: absolute; top: 50%; left: 0.75rem; right: 0.75rem; z-index: 1; display: flex; align-items: baseline; gap: 0.25rem; overflow: hidden; transform: translateY(-50%); color: var(--ui-text-muted, #64748b); font-family: var( --ui-font, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\" ); font-size: var(--ui-font-size-sm, 0.75rem); font-weight: var(--ui-font-weight-regular, 400); line-height: var(--ui-line-height-tight, 1.25); white-space: nowrap; text-overflow: ellipsis; cursor: text; transition: top 150ms ease, transform 150ms ease, font-size 150ms ease; } .field-shell.clearable .floating-label { right: 2rem; } .field-shell.floating input { height: 3rem; padding-top: 1.25rem; padding-bottom: 0.25rem; } .field-shell.floating .clear-button { top: 0.5rem; } .field-shell.floating .field-icon { top: 2rem; } .field-shell.has-icon .floating-label { left: 2rem; } .field-shell.floating.has-value .floating-label, .field-shell.floating:focus-within .floating-label { top: 0.25rem; transform: none; font-size: var(--ui-font-size-xs, 0.6875rem); } .field-shell.floating:not(.has-value):not(:focus-within) input::placeholder { opacity: 0; } .field-shell.disabled .floating-label { cursor: not-allowed; opacity: 0.6; } .required-mark { flex: 0 0 auto; color: var(--ui-danger, #dc2626); } .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; } input:disabled { cursor: not-allowed; opacity: 0.6; } input:focus-visible { outline: none; border-color: var(--ui-primary, #4f46e5); box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35)); } .suggestions { position: absolute; top: 100%; left: 0; right: 0; z-index: 10; max-height: 40vh; overflow-y: auto; margin: 0.25rem 0 0; padding: 0.25rem 0; list-style: none; background: var(--ui-surface, #ffffff); border: var(--ui-border-width, 1px) solid var(--ui-border, #e2e8f0); border-radius: var(--ui-radius-sm, 0.25rem); box-shadow: var(--ui-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)); } .suggestion { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.5rem 0.75rem; font-size: var(--ui-font-size-sm, 0.75rem); cursor: pointer; } .suggestion-icon { display: inline-flex; flex: 0 0 auto; align-items: center; /* Centers the icon on the value's first line rather than the whole row. */ min-height: calc(1em * var(--ui-line-height-tight, 1.25)); color: var(--ui-text-muted, #64748b); } .suggestion-text { display: flex; min-width: 0; flex-direction: column; line-height: var(--ui-line-height-tight, 1.25); } .suggestion-description { color: var(--ui-text-muted, #64748b); font-size: var(--ui-font-size-xs, 0.6875rem); } .suggestion.active, .suggestion:hover { background: var(--ui-surface-muted, #f8fafc); } .no-suggestions { padding: 0.5rem 0.75rem; color: var(--ui-text-muted, #64748b); font-size: var(--ui-font-size-sm, 0.75rem); font-style: italic; } @media (forced-colors: active) { input:focus-visible { outline: 2px solid CanvasText; outline-offset: 2px; box-shadow: none; } input:disabled { color: GrayText; opacity: 1; } .clear-button:focus-visible { outline: 2px solid CanvasText; outline-offset: -2px; box-shadow: none; } .field-shell.disabled .floating-label { color: GrayText; opacity: 1; } .suggestion.active, .suggestion:hover { color: HighlightText; background: Highlight; } .suggestion.active :is(.suggestion-icon, .suggestion-description), .suggestion:hover :is(.suggestion-icon, .suggestion-description) { color: HighlightText; } } @media (prefers-reduced-motion: reduce) { .floating-label { transition: none; } } `",
+          "description": "Shared styles for every `AutocompleteBase` subclass; use as `[tokens, autocompleteStyles]`."
+        },
+        {
           "kind": "class",
-          "description": "Generic form-associated text input with a suggestion dropdown, for any\n\"type to filter a list of `{key, value}` options\" use case. Works as a\ndrop-in replacement for a plain `<input>` inside a `<form>`: set `name` on\nthe element itself and consumers keep reading\n`new FormData(form).get(name)` and calling `form.reset()` unchanged — the\nsubmitted value is the picked option's `value`, while `key` is available\nvia the `option-select` event and the `selectedOption` getter for cases\nthat need the underlying id rather than the display text.\n\nSupports two suggestion sources:\n- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`\n  query string, responds with a JSON array of `{key, value}` objects.\n  Requests are debounced as the user types.\n- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the\n  component filters it client-side instead of making any network\n  request. Useful for small/fixed lists, offline use, or tests. Takes\n  priority over `endpoint` whenever it's non-null.\n\nEach option may also carry a pre-rendered `icon` (shown before the value)\nand a `description` (a smaller, muted line under the value); options\nwithout them render as a plain value. The selected option's icon also\nshows inside the field until the text is edited. Picking an option sets\n`selectedKey`; set `selectedKey` and `value` together to show a selection\nmade elsewhere.\n\nSet `clearable` to show an in-field clear action whenever a value is\npresent.",
-          "name": "AutocompleteInput",
+          "description": "Shared form-associated combobox behind `autocomplete-input` and\n`address-autocomplete` — not a registered custom element itself. Owns the\ninput, debounced local filtering or fetching, keyboard and IME handling,\nthe clear action, and the form contract. Subclasses supply the item type\n`T` and how to filter, fetch, show, and announce it.",
+          "name": "AutocompleteBase",
           "members": [
             {
               "kind": "field",
@@ -1983,26 +2328,6 @@
             },
             {
               "kind": "field",
-              "name": "endpoint",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "API endpoint queried in API mode. Ignored when `options` is set.",
-              "attribute": "endpoint"
-            },
-            {
-              "kind": "field",
-              "name": "queryParam",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"q\"",
-              "description": "Query string parameter name the current input text is sent under.",
-              "attribute": "query-param"
-            },
-            {
-              "kind": "field",
               "name": "debounce",
               "type": {
                 "text": "number"
@@ -2023,28 +2348,9 @@
             },
             {
               "kind": "field",
-              "name": "options",
-              "type": {
-                "text": "AutocompleteOption[] | null"
-              },
-              "default": "null",
-              "description": "Fixed candidate list to filter locally instead of fetching from\n`endpoint`. When set (non-null), no network request is ever made —\nthis takes priority over the API mode."
-            },
-            {
-              "kind": "field",
-              "name": "selectedKey",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "description": "Key of the selected option: set by picking one, or by the caller together with `value`.",
-              "attribute": "selected-key"
-            },
-            {
-              "kind": "field",
               "name": "_suggestions",
               "type": {
-                "text": "AutocompleteOption[]"
+                "text": "T[]"
               },
               "privacy": "private",
               "default": "[]"
@@ -2095,17 +2401,40 @@
             },
             {
               "kind": "field",
-              "name": "#internals",
-              "privacy": "private"
+              "name": "listboxLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "default": "\"Suggestions\"",
+              "description": "Accessible name of the suggestion list."
             },
             {
               "kind": "field",
-              "name": "#lastPicked",
-              "privacy": "private",
+              "name": "clearLabel",
               "type": {
-                "text": "AutocompleteOption | null"
+                "text": "string"
               },
-              "default": "null"
+              "privacy": "protected",
+              "readonly": true,
+              "default": "\"Clear input\"",
+              "description": "Accessible name and tooltip of the clear action."
+            },
+            {
+              "kind": "field",
+              "name": "lastPicked",
+              "type": {
+                "text": "T | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "description": "The last item picked from the list; cleared on reset and clear."
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -2157,14 +2486,112 @@
               "name": "#inputId",
               "privacy": "private",
               "readonly": true,
-              "default": "`autocomplete-input-field-${++instanceCount}`"
+              "default": "`${this.localName}-field-${++instanceCount}`"
             },
             {
               "kind": "field",
               "name": "#listboxId",
               "privacy": "private",
               "readonly": true,
-              "default": "`autocomplete-input-listbox-${instanceCount}`"
+              "default": "`${this.localName}-listbox-${instanceCount}`"
+            },
+            {
+              "kind": "method",
+              "name": "localItems",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "T[] | null"
+                }
+              },
+              "description": "The fixed candidate list to filter locally, or null to fetch instead."
+            },
+            {
+              "kind": "method",
+              "name": "view",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "AutocompleteItemView"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "How `item` is matched, shown, and written into the field."
+            },
+            {
+              "kind": "method",
+              "name": "requestUrl",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The request URL for `query` in fetch mode."
+            },
+            {
+              "kind": "method",
+              "name": "parseItems",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "T[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "body",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Turns a fetch response's JSON body into candidates."
+            },
+            {
+              "kind": "method",
+              "name": "onSelect",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Runs after `item` was picked and written into the field, e.g. to fire an event."
+            },
+            {
+              "kind": "method",
+              "name": "fieldIcon",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | undefined"
+                }
+              },
+              "description": "Icon shown inside the field, if any."
             },
             {
               "kind": "field",
@@ -2174,15 +2601,6 @@
                 "text": "boolean"
               },
               "description": "Whether the host or an ancestor fieldset currently disables the control.",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "selectedOption",
-              "type": {
-                "text": "AutocompleteOption | null"
-              },
-              "description": "Selected option (picked, or matching `selectedKey`), or null once the input diverges from it.",
               "readonly": true
             },
             {
@@ -2250,7 +2668,7 @@
             },
             {
               "kind": "method",
-              "name": "#filterLocalOptions",
+              "name": "#filterLocalItems",
               "privacy": "private",
               "parameters": [
                 {
@@ -2260,11 +2678,11 @@
                   }
                 }
               ],
-              "description": "Filters the locally-supplied `options` list for `query`, case-insensitively."
+              "description": "Filters the local candidate list for `query`, case-insensitively."
             },
             {
               "kind": "method",
-              "name": "#fetchOptions",
+              "name": "#fetchItems",
               "privacy": "private",
               "parameters": [
                 {
@@ -2274,25 +2692,7 @@
                   }
                 }
               ],
-              "description": "Fetches options for `query` from `endpoint`, cancelling any request still in flight."
-            },
-            {
-              "kind": "method",
-              "name": "#buildUrl",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "query",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
+              "description": "Fetches candidates for `query`, cancelling any request still in flight."
             },
             {
               "kind": "method",
@@ -2390,13 +2790,13 @@
             },
             {
               "kind": "method",
-              "name": "#selectOption",
+              "name": "#select",
               "privacy": "private",
               "parameters": [
                 {
-                  "name": "o",
+                  "name": "item",
                   "type": {
-                    "text": "AutocompleteOption"
+                    "text": "T"
                   }
                 }
               ]
@@ -2424,9 +2824,9 @@
                   }
                 },
                 {
-                  "name": "o",
+                  "name": "item",
                   "type": {
-                    "text": "AutocompleteOption"
+                    "text": "T"
                   }
                 }
               ],
@@ -2440,18 +2840,10 @@
           ],
           "events": [
             {
-              "name": "option-select",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "description": "An option was picked; detail: AutocompleteOption."
-            },
-            {
               "name": "input",
               "type": {
                 "text": "InputEvent"
-              },
-              "description": "Native-compatible input event fired while editing or clearing."
+              }
             }
           ],
           "attributes": [
@@ -2501,6 +2893,906 @@
               "fieldName": "clearable"
             },
             {
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Debounce delay (ms) before firing a request/filter after typing.",
+              "fieldName": "debounce"
+            },
+            {
+              "name": "min-length",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Minimum query length before suggestions are shown.",
+              "fieldName": "minLength"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autocompleteStyles",
+          "declaration": {
+            "name": "autocompleteStyles",
+            "module": "src/autocomplete-base.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AutocompleteBase",
+          "declaration": {
+            "name": "AutocompleteBase",
+            "module": "src/autocomplete-base.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/autocomplete-input.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Generic form-associated text input with a suggestion dropdown, for any\n\"type to filter a list of `{key, value}` options\" use case. Works as a\ndrop-in replacement for a plain `<input>` inside a `<form>`: set `name` on\nthe element itself and consumers keep reading\n`new FormData(form).get(name)` and calling `form.reset()` unchanged — the\nsubmitted value is the picked option's `value`, while `key` is available\nvia the `option-select` event and the `selectedOption` getter for cases\nthat need the underlying id rather than the display text.\n\nSupports two suggestion sources:\n- **API**: set `endpoint` to a URL that, given a `?<query-param>=<text>`\n  query string, responds with a JSON array of `{key, value}` objects.\n  Requests are debounced as the user types.\n- **Local array**: set `options` to a fixed `AutocompleteOption[]` and the\n  component filters it client-side instead of making any network\n  request. Useful for small/fixed lists, offline use, or tests. Takes\n  priority over `endpoint` whenever it's non-null.\n\nEach option may also carry a pre-rendered `icon` (shown before the value)\nand a `description` (a smaller, muted line under the value); options\nwithout them render as a plain value. The selected option's icon also\nshows inside the field until the text is edited. Picking an option sets\n`selectedKey`; set `selectedKey` and `value` together to show a selection\nmade elsewhere.\n\nSet `clearable` to show an in-field clear action whenever a value is\npresent.",
+          "name": "AutocompleteInput",
+          "members": [
+            {
+              "kind": "field",
+              "name": "endpoint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "API endpoint queried in API mode. Ignored when `options` is set.",
+              "attribute": "endpoint"
+            },
+            {
+              "kind": "field",
+              "name": "queryParam",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"q\"",
+              "description": "Query string parameter name the current input text is sent under.",
+              "attribute": "query-param"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "AutocompleteOption[] | null"
+              },
+              "default": "null",
+              "description": "Fixed candidate list to filter locally instead of fetching from\n`endpoint`. When set (non-null), no network request is ever made —\nthis takes priority over the API mode."
+            },
+            {
+              "kind": "field",
+              "name": "selectedKey",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Key of the selected option: set by picking one, or by the caller together with `value`.",
+              "attribute": "selected-key"
+            },
+            {
+              "kind": "field",
+              "name": "selectedOption",
+              "type": {
+                "text": "AutocompleteOption | null"
+              },
+              "description": "Selected option (picked, or matching `selectedKey`), or null once the input diverges from it.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "localItems",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "AutocompleteOption[] | null"
+                }
+              },
+              "description": "The fixed candidate list to filter locally, or null to fetch instead.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "view",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "AutocompleteItemView"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "AutocompleteOption"
+                  }
+                }
+              ],
+              "description": "How `item` is matched, shown, and written into the field.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUrl",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The request URL for `query` in fetch mode.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "parseItems",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "AutocompleteOption[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "body",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Turns a fetch response's JSON body into candidates.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onSelect",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "AutocompleteOption"
+                  }
+                }
+              ],
+              "description": "Runs after `item` was picked and written into the field, e.g. to fire an event.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "fieldIcon",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | undefined"
+                }
+              },
+              "description": "Icon shown inside the field, if any.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "attribute": "value",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "attribute": "placeholder",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "attribute": "required",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "attribute": "clearable",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Debounce delay (ms) before firing a request/filter after typing.",
+              "attribute": "debounce",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Minimum query length before suggestions are shown.",
+              "attribute": "min-length",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_suggestions",
+              "type": {
+                "text": "T[]"
+              },
+              "privacy": "private",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_formFieldConfig",
+              "type": {
+                "text": "FormFieldControlConfig | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_input",
+              "type": {
+                "text": "HTMLInputElement | undefined"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "listboxLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "default": "\"Suggestions\"",
+              "description": "Accessible name of the suggestion list.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "clearLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "default": "\"Clear input\"",
+              "description": "Accessible name and tooltip of the clear action.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastPicked",
+              "type": {
+                "text": "T | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "description": "The last item picked from the list; cleared on reset and clear.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#debounceTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#abortController",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#isComposing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#compositionJustEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#compositionEndTimer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#inputId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`${this.localName}-field-${++instanceCount}`",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#listboxId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`${this.localName}-listbox-${instanceCount}`",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "[formFieldControl]",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "text": "FormFieldControlConfig | null"
+                  }
+                }
+              ],
+              "description": "Applies or clears label configuration supplied by a wrapping `form-field`.",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "description": "Resets to empty on `form.reset()`, per the form-associated custom element contract.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mirrors ancestor fieldset disabled state onto the native input.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "InputEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleFetch",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#filterLocalItems",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Filters the local candidate list for `query`, case-insensitively.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#fetchItems",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "query",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Fetches candidates for `query`, cancelling any request still in flight.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#moveActive",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleEnter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleEscape",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onBlur",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onCompositionStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onCompositionEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resetComposition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears composition state when the control can no longer receive keys.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#select",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#clear",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the field and all pending autocomplete state, then restores input focus.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onSuggestionMousedown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Selects on mousedown (not click) so it wins over the input's blur, which closes the list.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderSuggestions",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "option-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "An option was picked; detail: AutocompleteOption."
+            },
+            {
+              "name": "input",
+              "type": {
+                "text": "InputEvent"
+              },
+              "description": "Native-compatible input event fired while editing or clearing.",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
               "name": "endpoint",
               "type": {
                 "text": "string"
@@ -2519,13 +3811,91 @@
               "fieldName": "queryParam"
             },
             {
+              "name": "selected-key",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Key of the selected option: set by picking one, or by the caller together with `value`.",
+              "fieldName": "selectedKey"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Current input value; also the form-associated value submitted with the form.",
+              "fieldName": "value",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Placeholder text shown when the input is empty.",
+              "fieldName": "placeholder",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the input as required for native form validation.",
+              "fieldName": "required",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input and closes its suggestion popup.",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows an in-field clear action while the control has a value.",
+              "fieldName": "clearable",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
+            },
+            {
               "name": "debounce",
               "type": {
                 "text": "number"
               },
               "default": "300",
               "description": "Debounce delay (ms) before firing a request/filter after typing.",
-              "fieldName": "debounce"
+              "fieldName": "debounce",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             },
             {
               "name": "min-length",
@@ -2534,21 +3904,16 @@
               },
               "default": "3",
               "description": "Minimum query length before suggestions are shown.",
-              "fieldName": "minLength"
-            },
-            {
-              "name": "selected-key",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "description": "Key of the selected option: set by picking one, or by the caller together with `value`.",
-              "fieldName": "selectedKey"
+              "fieldName": "minLength",
+              "inheritedFrom": {
+                "name": "AutocompleteBase",
+                "module": "src/autocomplete-base.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "LitElement",
-            "package": "lit"
+            "name": "AutocompleteBase",
+            "module": "/src/autocomplete-base.js"
           },
           "tagName": "autocomplete-input",
           "customElement": true
@@ -3166,6 +4531,18 @@
               }
             },
             {
+              "kind": "field",
+              "name": "stopMidnightRefresh",
+              "type": {
+                "text": "() => void | undefined"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "handleSlotChange",
               "privacy": "protected",
@@ -3621,6 +4998,14 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "_stopMidnightRefresh",
+              "type": {
+                "text": "() => void | undefined"
+              },
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "_handleSlotChange",
               "privacy": "private",
@@ -3984,6 +5369,14 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "stopMidnightRefresh",
+              "type": {
+                "text": "() => void | undefined"
+              },
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "handleSlotChange",
               "privacy": "protected",
@@ -4272,6 +5665,18 @@
               "name": "entriesObserver",
               "type": {
                 "text": "MutationObserver | undefined"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "CalendarTimelineBase",
+                "module": "src/calendar-timeline-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "stopMidnightRefresh",
+              "type": {
+                "text": "() => void | undefined"
               },
               "privacy": "private",
               "inheritedFrom": {
@@ -25023,6 +26428,24 @@
         },
         {
           "kind": "function",
+          "name": "onEachMidnight",
+          "return": {
+            "type": {
+              "text": "() => void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "onMidnight",
+              "type": {
+                "text": "() => void"
+              }
+            }
+          ],
+          "description": "Calls `onMidnight` at every local midnight, so a \"today\" highlight moves\nwhile a page stays open. Returns a function that stops the timer."
+        },
+        {
+          "kind": "function",
           "name": "addDays",
           "return": {
             "type": {
@@ -25252,6 +26675,14 @@
           "name": "assignLanes",
           "declaration": {
             "name": "assignLanes",
+            "module": "src/utils/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "onEachMidnight",
+          "declaration": {
+            "name": "onEachMidnight",
             "module": "src/utils/calendar.ts"
           }
         },

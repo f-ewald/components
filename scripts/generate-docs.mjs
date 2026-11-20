@@ -908,7 +908,14 @@ See the [changelog](#markdown-view) for details.\`;
 
 const manifest = JSON.parse(await readFile(path.join(rootDir, "custom-elements.json"), "utf8"));
 
-/** @typedef {{ tagName: string, className: string, description: string, sourcePath: string, properties: any[], events: any[] }} ComponentInfo */
+/** @typedef {{ tagName: string, className: string, description: string, sourcePath: string, stylePaths: string[], properties: any[], events: any[] }} ComponentInfo */
+
+/** The component's source plus its local base class's source, which may hold shared styles. */
+function stylePathsFor(mod, decl) {
+  const base = decl.superclass?.module;
+  if (!base?.startsWith("/src/")) return [mod.path];
+  return [mod.path, base.slice(1).replace(/\.js$/, ".ts")];
+}
 
 /** @type {ComponentInfo[]} */
 const components = [];
@@ -928,6 +935,7 @@ for (const mod of manifest.modules) {
       className: decl.name,
       description: decl.description ?? "",
       sourcePath: mod.path,
+      stylePaths: stylePathsFor(mod, decl),
       properties: publicFields,
       events: decl.events ?? [],
     });
@@ -962,10 +970,10 @@ function iconCatalog() {
 }
 components.sort((a, b) => a.tagName.localeCompare(b.tagName));
 
-/** Extracts the unique `--ui-*` custom property names referenced in a source file. */
-async function cssTokensUsedBy(sourcePath) {
-  const text = await readFile(path.join(rootDir, sourcePath), "utf8");
-  const matches = text.matchAll(/--ui-[\w-]+/g);
+/** Extracts the unique `--ui-*` custom property names referenced in the given source files. */
+async function cssTokensUsedBy(sourcePaths) {
+  const texts = await Promise.all(sourcePaths.map((p) => readFile(path.join(rootDir, p), "utf8")));
+  const matches = texts.join("\n").matchAll(/--ui-[\w-]+/g);
   return [...new Set([...matches].map((m) => m[0]))].sort();
 }
 
@@ -1280,7 +1288,7 @@ async function componentDocumentation() {
   return Promise.all(
     components.map(async (component) => ({
       ...component,
-      tokens: await cssTokensUsedBy(component.sourcePath),
+      tokens: await cssTokensUsedBy(component.stylePaths),
       importLine: `import "@f-ewald/components/${path.basename(component.sourcePath, ".ts")}.js";`,
       example: EXAMPLES[component.tagName] ?? `<${component.tagName}></${component.tagName}>`,
     }))

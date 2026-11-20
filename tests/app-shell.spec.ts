@@ -219,4 +219,31 @@ test.describe("app-shell", () => {
     await page.keyboard.press("Escape");
     await expect(shell).not.toHaveAttribute("sidebar-open", "");
   });
+
+  test("an open mobile drawer makes the page behind it unfocusable", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 700 });
+    await page.goto("/");
+    const shell = page.locator("#app-shell-demo");
+    const focusBehind = () =>
+      shell.evaluate((element) => {
+        let button = element.querySelector<HTMLButtonElement>(":scope > #behind-drawer");
+        if (!button) {
+          button = document.createElement("button");
+          button.id = "behind-drawer";
+          button.textContent = "Behind";
+          element.append(button);
+        }
+        button.focus();
+        return document.activeElement === button;
+      });
+
+    expect(await focusBehind()).toBe(true);
+    await shell.locator(".nav-toggle").click();
+    await expect(shell).toHaveAttribute("sidebar-open", "");
+    expect(await focusBehind()).toBe(false);
+    await expect(shell.locator(".nav-toggle")).toBeEnabled();
+    await shell.locator(".nav-toggle").click();
+    await expect(shell).not.toHaveAttribute("sidebar-open", "");
+    expect(await focusBehind()).toBe(true);
+  });
 });
