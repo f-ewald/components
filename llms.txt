@@ -42,6 +42,7 @@ table to pick the icon matching a use case, for consistency across apps:
 | `iconArrowsPointingOut` | 16px | "Expand" or "view fullscreen" actions. |
 | `iconArrowsRightLeft` | 16px | Swap, exchange, or compare actions between two items. |
 | `iconArrowTopRightOnSquare` | 16px | Links that open in a new tab/window, or navigate to an external site. |
+| `iconArrowUpTray` | 18px | Upload or import actions, e.g. drop-zone's file prompt. |
 | `iconBars3` | 18px | A hamburger menu toggle, e.g. collapsing or opening a sidebar/nav drawer. |
 | `iconBookOpen` | 20px | A library, documentation, or reading content, e.g. a library node in dag-graph. |
 | `iconCalendar` | 16px | Dates, due dates, or calendar-related metadata. |
@@ -1109,6 +1110,45 @@ Example:
 <distribution-chart metric="sqft"></distribution-chart>
 <script type="module">
   document.querySelector("distribution-chart").values = [{ label: "", value: 1450 }];
+</script>
+```
+
+## <drop-zone>
+
+A form-associated area for choosing files by dragging them onto it or by
+browsing. It only collects files — uploading them is up to the consumer.
+Inside a native `<form>`, the chosen files are submitted under `name`,
+just like `<input type="file">`, and `form.reset()` clears them.
+
+Files are checked against `accept`, `max-size`, and `max-files` as they
+arrive; files that don't fit are listed under the zone with the reason and
+reported through `files-reject`. Without `multiple`, a new file replaces
+the current one. Chosen files are listed with their size and a remove
+button. The "Choose" button is the keyboard path; clicking anywhere on the
+zone also opens the file picker.
+
+Import: `import "@f-ewald/components/drop-zone.js";`
+
+Properties: `name` (attribute `name`) : string, default ""; `accept` (attribute `accept`) : string, default ""; `multiple` (attribute `multiple`) : boolean, default false; `maxSize` (attribute `max-size`) : number, default 0; `maxFiles` (attribute `max-files`) : number, default 0; `required` (attribute `required`) : boolean, default false; `disabled` (attribute `disabled`) : boolean, default false; `label` (attribute `label`) : string, default "Drag and drop files here"; `hint` (attribute `hint`) : string, default ""; `files` (JS property only) : File[], default []
+Events: `files-reject`, `change`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-danger`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`
+
+Example:
+```html
+<form>
+  <drop-zone
+    name="attachments"
+    accept="image/*,.pdf"
+    multiple
+    max-size="5242880"
+    max-files="3"
+    hint="Images or PDF, up to 5 MB each"
+  ></drop-zone>
+</form>
+<script>
+  const zone = document.querySelector("drop-zone");
+  zone.addEventListener("change", (e) => console.log(e.detail.files));
+  zone.addEventListener("files-reject", (e) => console.log(e.detail.rejected));
 </script>
 ```
 

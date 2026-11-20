@@ -678,6 +678,21 @@ See the [changelog](#markdown-view) for details.\`;
   select.value = "open";
   select.addEventListener("change", (e) => console.log(e.detail.value));
 </script>`,
+  "drop-zone": `<form>
+  <drop-zone
+    name="attachments"
+    accept="image/*,.pdf"
+    multiple
+    max-size="5242880"
+    max-files="3"
+    hint="Images or PDF, up to 5 MB each"
+  ></drop-zone>
+</form>
+<script>
+  const zone = document.querySelector("drop-zone");
+  zone.addEventListener("change", (e) => console.log(e.detail.files));
+  zone.addEventListener("files-reject", (e) => console.log(e.detail.rejected));
+</script>`,
   "dropdown-button": `<dropdown-button label="Resolve…"></dropdown-button>
 <dropdown-button variant="icon" label="Row actions"></dropdown-button>
 <script type="module">

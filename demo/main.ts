@@ -65,6 +65,7 @@ import {
   type TreeView,
   type PopoverPanel,
   type DropdownButton,
+  type DropZone,
   type IconButton,
   type KanbanBoard,
   type KanbanColumnData,
@@ -1013,6 +1014,25 @@ document.getElementById("popover-centered-open")?.addEventListener("click", () =
 });
 popoverCenteredDemo?.addEventListener("panel-close", () => {
   popoverCenteredDemo.open = false;
+});
+
+// drop-zone (log selection changes, rejections, and the submitted form data)
+const dropZoneLog = document.getElementById("drop-zone-log")!;
+for (const id of ["drop-zone-multi", "drop-zone-single"]) {
+  const zone = document.getElementById(id) as DropZone | null;
+  zone?.addEventListener("change", (e) => {
+    const { files } = (e as CustomEvent<{ files: File[] }>).detail;
+    dropZoneLog.textContent = `${id} change: ${files.map((f) => f.name).join(", ") || "(none)"}`;
+  });
+  zone?.addEventListener("files-reject", (e) => {
+    const { rejected } = (e as CustomEvent<{ rejected: { file: File; reason: string }[] }>).detail;
+    dropZoneLog.textContent = `${id} files-reject: ${rejected.map((r) => `${r.file.name} (${r.reason})`).join(", ")}`;
+  });
+}
+document.getElementById("drop-zone-form")?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const files = new FormData(e.target as HTMLFormElement).getAll("attachments") as File[];
+  dropZoneLog.textContent = `submit: attachments = ${files.map((f) => f.name).join(", ") || "(none)"}`;
 });
 
 // dropdown-button (seed options, log picked actions)

@@ -99,6 +99,13 @@ export { TreeView, type TreeNode } from "./tree-view.js";
 export { PixelFire } from "./pixel-fire.js";
 export { PopoverPanel } from "./popover-panel.js";
 export {
+  DropZone,
+  formatFileSize,
+  matchesAccept,
+  type DropZoneRejectReason,
+  type DropZoneRejection,
+} from "./drop-zone.js";
+export {
   DropdownButton,
   type DropdownButtonVariant,
   type DropdownOption,

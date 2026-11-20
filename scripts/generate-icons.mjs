@@ -112,6 +112,7 @@ const ICONS = {
     usage: "\"Continue\" or forward-progressing actions, e.g. a compact next-step arrow.",
   },
   ArrowDownTray: { slug: "arrow-down-tray", size: 16, usage: "Download or export actions." },
+  ArrowUpTray: { slug: "arrow-up-tray", size: 18, usage: "Upload or import actions, e.g. drop-zone's file prompt." },
   ArrowsRightLeft: {
     slug: "arrows-right-left",
     size: 16,

@@ -25,6 +25,7 @@ const icon = iconPencil(16); // 16px, defaults shown below if omitted
 | `iconArrowsPointingOut` | 16px | "Expand" or "view fullscreen" actions. |
 | `iconArrowsRightLeft` | 16px | Swap, exchange, or compare actions between two items. |
 | `iconArrowTopRightOnSquare` | 16px | Links that open in a new tab/window, or navigate to an external site. |
+| `iconArrowUpTray` | 18px | Upload or import actions, e.g. drop-zone's file prompt. |
 | `iconBars3` | 18px | A hamburger menu toggle, e.g. collapsing or opening a sidebar/nav drawer. |
 | `iconBookOpen` | 20px | A library, documentation, or reading content, e.g. a library node in dag-graph. |
 | `iconCalendar` | 16px | Dates, due dates, or calendar-related metadata. |

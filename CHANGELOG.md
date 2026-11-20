@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Added `drop-zone`: a form-associated area for choosing files by dragging them onto it or with its
+  Choose button (clicking anywhere on the zone also opens the picker). It only collects files;
+  uploading is up to the consumer. Inside a `<form>` the files are submitted under `name`, and
+  `reset()` clears them. `accept`, `max-size` (bytes), and `max-files` are checked as files arrive;
+  files that don't fit are listed under the zone with the reason and reported through
+  `files-reject`. Without `multiple`, a new file replaces the current one. Chosen files are listed
+  with their size and a remove button; `change` fires when the selection changes, and `required`
+  takes part in form validation. Also exports `formatFileSize`, `matchesAccept`, and the new
+  `iconArrowUpTray` icon.
+
 - Fixes: on mobile, an open `app-shell` drawer or detail pane makes the page behind it inert, so
   Tab no longer reaches hidden controls (the ☰ toggle stays usable to close the drawer). The MCP
   server's `get_component_docs` rejects tags that aren't plain tag names, so it can't read files

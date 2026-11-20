@@ -76,6 +76,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<data-table>` | [API reference](https://f-ewald.github.io/components/docs/data-table.html) |
 | `<distance-value>` | [API reference](https://f-ewald.github.io/components/docs/distance-value.html) |
 | `<distribution-chart>` | [API reference](https://f-ewald.github.io/components/docs/distribution-chart.html) |
+| `<drop-zone>` | [API reference](https://f-ewald.github.io/components/docs/drop-zone.html) |
 | `<dropdown-button>` | [API reference](https://f-ewald.github.io/components/docs/dropdown-button.html) |
 | `<editable-text>` | [API reference](https://f-ewald.github.io/components/docs/editable-text.html) |
 | `<empty-state>` | [API reference](https://f-ewald.github.io/components/docs/empty-state.html) |

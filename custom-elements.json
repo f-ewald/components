@@ -9379,6 +9379,573 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/drop-zone.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "formatFileSize",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "bytes",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Formats a byte count for display, e.g. `\"512 B\"`, `\"1.5 MB\"` (1 KB = 1024 bytes)."
+        },
+        {
+          "kind": "function",
+          "name": "matchesAccept",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "file",
+              "type": {
+                "text": "File"
+              }
+            },
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether `file` matches an `accept` list in native `<input type=\"file\">`\nsyntax: comma-separated extensions (`.pdf`), MIME types (`image/png`), or\nwildcards (`image/*`). An empty list accepts everything."
+        },
+        {
+          "kind": "class",
+          "description": "A form-associated area for choosing files by dragging them onto it or by\nbrowsing. It only collects files — uploading them is up to the consumer.\nInside a native `<form>`, the chosen files are submitted under `name`,\njust like `<input type=\"file\">`, and `form.reset()` clears them.\n\nFiles are checked against `accept`, `max-size`, and `max-files` as they\narrive; files that don't fit are listed under the zone with the reason and\nreported through `files-reject`. Without `multiple`, a new file replaces\nthe current one. Chosen files are listed with their size and a remove\nbutton. The \"Choose\" button is the keyboard path; clicking anywhere on the\nzone also opens the file picker.",
+          "name": "DropZone",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form field name the chosen files are submitted under.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Allowed files in native `accept` syntax, e.g. `\"image/*,.pdf\"`. Empty allows any file.",
+              "attribute": "accept"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows choosing more than one file; otherwise a new file replaces the current one.",
+              "attribute": "multiple"
+            },
+            {
+              "kind": "field",
+              "name": "maxSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Largest allowed file size in bytes; `0` means no limit.",
+              "attribute": "max-size"
+            },
+            {
+              "kind": "field",
+              "name": "maxFiles",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Most files allowed with `multiple`; `0` means no limit.",
+              "attribute": "max-files"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires at least one file for native form validation.",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables dropping, browsing, and removing.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Drag and drop files here\"",
+              "description": "Main prompt text inside the zone.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional smaller line under the prompt, e.g. `\"PNG or JPG, up to 5 MB\"`.",
+              "attribute": "hint"
+            },
+            {
+              "kind": "field",
+              "name": "files",
+              "type": {
+                "text": "File[]"
+              },
+              "default": "[]",
+              "description": "The chosen files. Setting it replaces the selection without firing `change`."
+            },
+            {
+              "kind": "field",
+              "name": "_dragging",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_formDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_rejected",
+              "type": {
+                "text": "DropZoneRejection[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_picker",
+              "type": {
+                "text": "HTMLInputElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#dragDepth",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the host or an ancestor fieldset currently disables the control.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Clears the chosen files on `form.reset()`."
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mirrors an ancestor fieldset's disabled state."
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValidity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#addFiles",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "incoming",
+                  "type": {
+                    "text": "File[]"
+                  }
+                }
+              ],
+              "description": "Checks incoming files, adds the ones that fit, and reports the rest."
+            },
+            {
+              "kind": "method",
+              "name": "#removeFile",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": {
+                    "text": "File"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#fireChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#openPicker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onPickerChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onDragEnter",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onDragOver",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onDragLeave",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#onDrop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#rejectionText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "{ file, reason }",
+                  "type": {
+                    "text": "DropZoneRejection"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "files-reject",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Some dropped or picked files were not added; detail: `{ rejected: DropZoneRejection[] }`."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The chosen files changed through a drop, the picker, or a remove button; detail: `{ files: File[] }`. Setting `files` does not fire it."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Form field name the chosen files are submitted under.",
+              "fieldName": "name"
+            },
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Allowed files in native `accept` syntax, e.g. `\"image/*,.pdf\"`. Empty allows any file.",
+              "fieldName": "accept"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows choosing more than one file; otherwise a new file replaces the current one.",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "max-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Largest allowed file size in bytes; `0` means no limit.",
+              "fieldName": "maxSize"
+            },
+            {
+              "name": "max-files",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Most files allowed with `multiple`; `0` means no limit.",
+              "fieldName": "maxFiles"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires at least one file for native form validation.",
+              "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables dropping, browsing, and removing.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Drag and drop files here\"",
+              "description": "Main prompt text inside the zone.",
+              "fieldName": "label"
+            },
+            {
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional smaller line under the prompt, e.g. `\"PNG or JPG, up to 5 MB\"`.",
+              "fieldName": "hint"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "drop-zone",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "formatFileSize",
+          "declaration": {
+            "name": "formatFileSize",
+            "module": "src/drop-zone.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "matchesAccept",
+          "declaration": {
+            "name": "matchesAccept",
+            "module": "src/drop-zone.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropZone",
+          "declaration": {
+            "name": "DropZone",
+            "module": "src/drop-zone.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "drop-zone",
+          "declaration": {
+            "name": "DropZone",
+            "module": "src/drop-zone.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/dropdown-button.ts",
       "declarations": [
         {
@@ -12144,6 +12711,17 @@
         },
         {
           "kind": "function",
+          "name": "iconArrowUpTray",
+          "parameters": [
+            {
+              "name": "size",
+              "default": "18"
+            }
+          ],
+          "description": "Upload or import actions, e.g. drop-zone's file prompt."
+        },
+        {
+          "kind": "function",
           "name": "iconArrowsRightLeft",
           "parameters": [
             {
@@ -12844,6 +13422,14 @@
           "name": "iconArrowDownTray",
           "declaration": {
             "name": "iconArrowDownTray",
+            "module": "src/icons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconArrowUpTray",
+          "declaration": {
+            "name": "iconArrowUpTray",
             "module": "src/icons.ts"
           }
         },
@@ -13980,6 +14566,46 @@
           "declaration": {
             "name": "PopoverPanel",
             "module": "./popover-panel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropZone",
+          "declaration": {
+            "name": "DropZone",
+            "module": "./drop-zone.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatFileSize",
+          "declaration": {
+            "name": "formatFileSize",
+            "module": "./drop-zone.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "matchesAccept",
+          "declaration": {
+            "name": "matchesAccept",
+            "module": "./drop-zone.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropZoneRejectReason",
+          "declaration": {
+            "name": "DropZoneRejectReason",
+            "module": "./drop-zone.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropZoneRejection",
+          "declaration": {
+            "name": "DropZoneRejection",
+            "module": "./drop-zone.js"
           }
         },
         {

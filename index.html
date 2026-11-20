@@ -58,6 +58,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distance-value">distance-value</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#drop-zone">drop-zone</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#empty-state">empty-state</a>
@@ -1539,6 +1540,67 @@ packages.columns = [
 &lt;distribution-chart metric="sqft"&gt;&lt;/distribution-chart&gt;
 &lt;script&gt;
   document.querySelector("distribution-chart").values = [{ label: "", value: 1450 }];
+&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="drop-zone" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-drop-zone">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#drop-zone">drop-zone</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A form-associated area for choosing files by dragging them onto it or with the
+            <em>Choose</em> button (clicking anywhere on the zone also opens the picker). It only
+            collects files; uploading is up to you. <code>accept</code>, <code>max-size</code> (bytes),
+            and <code>max-files</code> are checked as files arrive, and files that don't fit are listed
+            with the reason and reported through <code>files-reject</code>. Without
+            <code>multiple</code>, a new file replaces the current one. Inside a
+            <code>&lt;form&gt;</code> the files are submitted under <code>name</code>, and
+            <code>reset()</code> clears them.
+          </p>
+          <div class="mt-6 flex flex-col gap-6 demo-example rounded-lg border border-slate-200 p-6">
+            <form id="drop-zone-form" data-testid="drop-zone-form" class="flex flex-col gap-3">
+              <drop-zone
+                id="drop-zone-multi"
+                data-testid="drop-zone-multi"
+                name="attachments"
+                accept="image/*,.pdf"
+                multiple
+                max-size="5242880"
+                max-files="3"
+                hint="Images or PDF, up to 5 MB each, at most 3 files"
+              ></drop-zone>
+              <div class="flex gap-2">
+                <ui-button type="submit" variant="primary" size="sm">Submit</ui-button>
+                <ui-button type="reset" variant="secondary" size="sm">Reset</ui-button>
+              </div>
+            </form>
+            <drop-zone
+              id="drop-zone-single"
+              data-testid="drop-zone-single"
+              name="avatar"
+              accept="image/*"
+              required
+              label="Drop a profile photo"
+              hint="One image"
+            ></drop-zone>
+            <drop-zone id="drop-zone-disabled" data-testid="drop-zone-disabled" disabled hint="Disabled"></drop-zone>
+            <p id="drop-zone-log" data-testid="drop-zone-log" class="text-xs text-slate-500"></p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/drop-zone.js";
+
+&lt;form&gt;
+  &lt;drop-zone
+    name="attachments"
+    accept="image/*,.pdf"
+    multiple
+    max-size="5242880"
+    max-files="3"
+    hint="Images or PDF, up to 5 MB each"
+  &gt;&lt;/drop-zone&gt;
+&lt;/form&gt;
+&lt;script&gt;
+  const zone = document.querySelector("drop-zone");
+  zone.addEventListener("change", (e) =&gt; console.log(e.detail.files));
+  zone.addEventListener("files-reject", (e) =&gt; console.log(e.detail.rejected));
+  // new FormData(form).getAll("attachments") returns the chosen File objects.
 &lt;/script&gt;</code></pre>
         </section>
 
