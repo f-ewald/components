@@ -120,6 +120,23 @@ test.describe("dag-graph", () => {
     expect(Math.abs(node.y + node.height / 2 - (canvas.y + canvas.height / 2))).toBeLessThan(2);
   });
 
+  test("hiding and showing the graph keeps its view", async ({ page }) => {
+    const graph = await openDemo(page);
+    await graph.locator('svg[role="group"]').focus();
+    await page.keyboard.press("ArrowLeft");
+    const panned = await transform(graph);
+    // Two frames let the ResizeObserver report the new size.
+    const settle = () => page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))));
+
+    // Like an inactive tab panel, which measures 0×0.
+    await graph.evaluate((element: HTMLElement) => (element.style.display = "none"));
+    await settle();
+    await graph.evaluate((element: HTMLElement) => (element.style.display = ""));
+    await settle();
+
+    expect(await transform(graph)).toBe(panned);
+  });
+
   test("the direction control flips the flow and fires direction-change", async ({ page }) => {
     const graph = await openDemo(page);
     let layout = await positions(graph);

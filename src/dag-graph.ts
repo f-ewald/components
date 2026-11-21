@@ -801,9 +801,11 @@ export class DagGraph extends LitElement {
   private _resize(rect: DOMRectReadOnly | undefined): void {
     if (!rect) return;
     const { width, height } = rect;
+    // A hidden graph (e.g. `display: none` in an inactive tab) measures 0×0; keep the last real size so the view
+    // is unchanged when it is shown again, instead of shifting by half the canvas.
+    if (!width || !height) return;
     const previous = this._size;
     this._size = { width, height };
-    if (!width || !height) return;
     if (!this._viewReady) {
       if (this._layout.nodes.length) this._initView();
       return;

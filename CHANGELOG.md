@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fixes: `dag-graph` keeps its view when it is hidden and shown again, e.g. in an inactive `tab-item`. Before,
+  the graph came back shifted by half its canvas, often out of view.
+
 - Added `drop-zone`: a form-associated area for choosing files by dragging them onto it or with its
   Choose button (clicking anywhere on the zone also opens the picker). It only collects files;
   uploading is up to the consumer. Inside a `<form>` the files are submitted under `name`, and
