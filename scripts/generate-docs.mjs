@@ -1154,7 +1154,7 @@ function componentNavigationHtml(componentDocs, currentTag) {
 }
 
 /** Wraps generated documentation content in the shared static page shell. */
-function pageHtml({ title, description, stylesheet, homeHref, body }) {
+function pageHtml({ title, description, stylesheet, homeHref, body, script }) {
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -1162,7 +1162,9 @@ function pageHtml({ title, description, stylesheet, homeHref, body }) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="${escapeHtml(description)}" />
     <title>${escapeHtml(title)}</title>
-    <link rel="stylesheet" href="${stylesheet}" />
+    <link rel="stylesheet" href="${stylesheet}" />${
+      script ? `\n    <script type="module" src="${script}"></script>` : ""
+    }
   </head>
   <body>
     <header class="site-header">
@@ -1195,8 +1197,9 @@ function landingPageHtml(componentDocs, packageJson) {
     )
     .join("\n");
 
-  const body = `<main>
+  const body = `<main class="landing">
   <section class="hero">
+    <particle-background contained mode="follow"></particle-background>
     <p class="eyebrow">Lit web components</p>
     <h1>Reusable components, documented and ready to explore.</h1>
     <p class="lede">${escapeHtml(packageJson.description)}</p>
@@ -1249,6 +1252,7 @@ import &quot;@f-ewald/components/confirm-dialog.js&quot;;</code></pre>
     title: `${packageJson.name} - Documentation`,
     description: packageJson.description,
     stylesheet: "./assets/docs.css",
+    script: "./assets/landing.js",
     homeHref: "./",
     body,
   });

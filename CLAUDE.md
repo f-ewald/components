@@ -217,7 +217,8 @@ real `modal-dialog`/`confirm-dialog`/`popover-panel`/`slide-panel` (all
 - `docs/` — **generated** per-component markdown, plus the hand-written
   `mcp-evaluation.md`.
 - `site/` — hand-written static styling for the generated GitHub Pages
-  documentation.
+  documentation, plus `landing.ts`, the landing page's only script (the
+  hero's `particle-background`), bundled by `vite.site.config.ts`.
 - `site-tests/` + `playwright.site.config.ts` — smoke tests for the complete
   Pages artifact.
 - `scripts/` — codegen: `generate-icons.mjs`, `generate-tokens-css.mjs`,
@@ -359,7 +360,7 @@ script and run `npm run icons`.
 | `npm run typecheck` | Fast TypeScript check without writing `dist/`. |
 | `npm run build` | `tsc` → `dist/` + `dist/tokens.css`, `chmod +x dist/mcp-server.js`. |
 | `npm run build:demo` | Static playground build → `demo-dist/`. |
-| `npm run build:site` | Static docs + nested playground build → `pages-dist/`; writes no tracked files. |
+| `npm run build:site` | Static docs + nested playground + landing script build → `pages-dist/`; writes no tracked files. |
 | `npm run preview:site` | Preview `pages-dist/` locally. |
 | `npm run icons` | Regenerate `src/icons.ts`. |
 | `npm run analyze` | Regenerate `custom-elements.json`. |
@@ -381,7 +382,11 @@ live playground is under `/components/playground/`. `npm run build:site`
 invokes `generate-docs.mjs --site`, which reads the checked-in
 `custom-elements.json` and `llms.txt`, writes static HTML only beneath
 `pages-dist/`, then builds the existing Vite playground into
-`pages-dist/playground/` with relative asset URLs. It does **not** run
+`pages-dist/playground/` with relative asset URLs, and finally bundles
+`site/landing.ts` (Lit + `particle-background`) into
+`pages-dist/assets/landing.js` via `vite.site.config.ts` — loaded only by the
+landing page, whose hero is a full-width band (`main.landing > .hero`) with a
+`contained` field that scrolls away with it. It does **not** run
 `npm run docs` or modify tracked generated documentation.
 
 `.github/workflows/pages.yml` deploys on pushes to `main` and manual dispatch.

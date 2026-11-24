@@ -103,6 +103,38 @@ test.describe("GitHub Pages artifact", () => {
     expect([...failures]).toEqual([]);
   });
 
+  test("animates a particle field behind the landing hero that scrolls away with it", async ({page}) => {
+    const failures = watchSiteRequests(page);
+    await page.goto("/");
+    const hero = page.locator(".hero");
+    const field = hero.locator("particle-background");
+
+    await expect(field).toHaveAttribute("mode", "follow");
+    await expect(field.locator("canvas")).toHaveAttribute("aria-hidden", "true");
+    const layout = await field.evaluate((el) => {
+      const host = el.getBoundingClientRect();
+      const hero = el.parentElement!;
+      const heroBox = hero.getBoundingClientRect();
+      return {
+        upgraded: el instanceof customElements.get("particle-background")!,
+        position: getComputedStyle(el).position,
+        matchesHero:
+          Math.abs(host.top - heroBox.top) < 1 &&
+          Math.abs(host.width - heroBox.width) < 1 &&
+          Math.abs(host.height - hero.clientHeight) < 1,
+        fullWidth: Math.abs(host.width - document.documentElement.clientWidth) < 1,
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    });
+    expect(layout).toEqual({upgraded: true, position: "absolute", matchesHero: true, fullWidth: true, overflow: 0});
+
+    await page.locator("#components-heading").scrollIntoViewIfNeeded();
+    await expect(field).not.toBeInViewport();
+
+    await page.waitForLoadState("networkidle");
+    expect([...failures]).toEqual([]);
+  });
+
   test("deep-links from API docs to an interactive, image-backed playground", async ({page}) => {
     const failures = watchSiteRequests(page);
     await page.goto("/docs/confirm-dialog.html");

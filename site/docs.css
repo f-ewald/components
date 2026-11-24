@@ -145,6 +145,26 @@ main > section {
   padding-top: clamp(5rem, 12vw, 9rem);
 }
 
+/* The landing page's sections stay in the 72rem column, except the hero,
+   which spans the full width so its particle field reaches both edges. Its
+   padding re-creates the column without 100vw, which would overflow beside
+   a classic scrollbar. */
+main.landing {
+  width: auto;
+}
+
+main.landing > section {
+  width: min(72rem, calc(100% - 2.5rem));
+  margin-inline: auto;
+}
+
+main.landing > .hero {
+  position: relative;
+  isolation: isolate;
+  width: auto;
+  padding-inline: max(1.25rem, calc((100% - 72rem) / 2));
+}
+
 .eyebrow {
   margin-bottom: 0.75rem;
   color: #4f46e5;

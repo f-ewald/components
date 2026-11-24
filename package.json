@@ -38,7 +38,7 @@
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc && node scripts/generate-tokens-css.mjs && chmod +x dist/mcp-server.js",
     "build:demo": "vite build",
-    "build:site": "node scripts/generate-docs.mjs --site && vite build --base=./ --outDir=pages-dist/playground",
+    "build:site": "node scripts/generate-docs.mjs --site && vite build --base=./ --outDir=pages-dist/playground && vite build --config vite.site.config.ts",
     "preview:site": "vite preview --outDir=pages-dist",
     "analyze": "cem analyze --litelement --globs \"src/**/*.ts\"",
     "docs": "npm run analyze && node scripts/generate-docs.mjs",
