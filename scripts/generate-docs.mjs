@@ -822,6 +822,25 @@ See the [changelog](#markdown-view) for details.\`;
   ];
   graph.addEventListener("node-select", (e) => console.log(e.detail.id));
 </script>`,
+  "dag-graph-3d": `<dag-graph-3d rate="6"></dag-graph-3d>
+<script type="module">
+  import { iconCube, iconServer } from "@f-ewald/components/icons.js";
+  const view = document.querySelector("dag-graph-3d");
+  view.kinds = {
+    service: { icon: iconServer, color: "#4269d0" },
+    store: { icon: iconCube, color: "#3ca951" },
+  };
+  view.nodes = [
+    { id: "gateway", label: "gateway", kind: "service" },
+    { id: "search", label: "search", kind: "service" },
+    { id: "index", label: "index", kind: "store" },
+  ];
+  view.edges = [
+    { source: "gateway", target: "search", weight: 40 },
+    { source: "search", target: "index", weight: 40 },
+  ];
+  view.addEventListener("node-select", (e) => console.log(e.detail.id));
+</script>`,
   "data-table": `<data-table></data-table>
 <script type="module">
   const table = document.querySelector("data-table");

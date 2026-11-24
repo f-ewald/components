@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- New experimental `<dag-graph-3d>`: a first-person 3D view (three.js) of the same `nodes`, `edges`, and
+  `kinds` as `dag-graph`, laid out like a street network. The `selected` node is in front of the viewer and
+  the nodes it leads to sit further away toward the horizon. Requests set out from the roots as dots at `rate`
+  per second, travel at a pace set by `speed`, and pick each outgoing edge in proportion to its `weight`;
+  heavier edges are wider roads.
+  Clicking a node or its label selects it and, in the street view, travels there (`node-select`). `view`
+  switches the camera between that `street` view, an `overview` of the whole graph from 45°, and a `top` view,
+  both with the flow running left to right (`view-change`). Drag pans, right-drag or Shift + drag rotates and
+  tilts, and pinch or Ctrl/⌘ + wheel zooms, with keyboard equivalents; `controls` picks the toolbar buttons
+  (Back, Home, the views, zoom, and pause), and `static` fixes the camera for a presentation; `hide-pins` draws nodes as flat disks without their pins. Reduced
+  motion shows a still picture. Adds `three` as a
+  dependency, loaded only by this component.
+
 - `animate-confetti` no longer wipes confetti that is still on screen. After `duration` it only stops
   spawning, and pieces already in flight fall out of the viewport on their own (the fixed 5s cleanup
   timer is gone). A new `confetti-end` event fires once the last piece has left, or immediately under

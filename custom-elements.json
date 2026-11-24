@@ -8109,6 +8109,1179 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/dag-graph-3d.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Experimental three-dimensional view of a directed graph, rendered with three.js: the graph is laid out like a\nstreet network on a ground plane. The default `street` view stands behind the current node, with the nodes it\nleads to further away toward the horizon; `overview` shows the whole graph from 45° and `top` from straight\nabove, both with the flow running left to right. Requests, drawn as dots, set out from the root nodes at `rate` per second and\nflow along the edges at a pace set by `speed`, choosing each outgoing edge in proportion to its `weight`.\n\nTakes the same `nodes`, `edges`, and `kinds` as `dag-graph`. Clicking a node or its label selects it, and in\nthe street view travels there; Back and Home in the toolbar return to the previous node and the first root. Drag\nto pan; right-drag or Shift + drag to rotate and tilt; pinch or Ctrl/⌘ + wheel to zoom (a plain wheel scrolls the\npage). With the view focused, arrow keys pan, Shift + arrows rotate and tilt, `+`/`-` zoom, and `0` resets the\nview. The toolbar offers the `controls` you enable; set `static` to fix the camera, e.g. for a presentation. Heavier edges are drawn as wider roads and highlighted\nnodes and edges use the highlight color. Under reduced motion the view shows a still picture without requests and\nmoves between nodes without a flight. Set `hide-pins` to draw nodes as flat disks without the pin standing up\nfrom each.\n\nColors can be changed with `--dag-edge-color`, `--dag-selected-color`, `--dag-highlight-color`, and\n`--dag-request-color`; `--dag-graph-3d-height` sets the height (default `24rem`).",
+          "name": "DagGraph3d",
+          "slots": [
+            {
+              "description": "Shown when there are no nodes.",
+              "name": "empty"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "nodes",
+              "type": {
+                "text": "DagNode[]"
+              },
+              "default": "[]",
+              "description": "The graph's nodes.",
+              "attribute": "nodes"
+            },
+            {
+              "kind": "field",
+              "name": "edges",
+              "type": {
+                "text": "DagEdge[]"
+              },
+              "default": "[]",
+              "description": "The graph's edges; edges whose endpoints aren't both in `nodes` are ignored.",
+              "attribute": "edges"
+            },
+            {
+              "kind": "field",
+              "name": "kinds",
+              "type": {
+                "text": "Record<string, DagNodeKind>"
+              },
+              "default": "{}",
+              "description": "Presentation of each node kind, keyed by `DagNode.kind`; only `color` and `icon` are used."
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Id of the selected node, where the street view stands; defaults to the first root.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Directed graph\"",
+              "description": "Accessible name of the view.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "rate",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "New requests per second, spread across the root nodes.",
+              "attribute": "rate"
+            },
+            {
+              "kind": "field",
+              "name": "speed",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How fast requests travel, as a multiple of the default pace; `0` stops them where they are.",
+              "attribute": "speed"
+            },
+            {
+              "kind": "field",
+              "name": "hidePins",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws each node as just its ground disk, without the pin standing up from it.",
+              "attribute": "hide-pins",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "view",
+              "type": {
+                "text": "DagGraph3dView"
+              },
+              "default": "\"street\"",
+              "description": "Camera preset; changing it flies there, and `0` returns to it after panning, tilting, or zooming.",
+              "attribute": "view",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "controls",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"back home view zoom pause\"",
+              "description": "Space-separated toolbar controls to show: any of `back`, `home`, `view`, `zoom`, and `pause`, in that order.\nAn empty value hides the toolbar.",
+              "attribute": "controls",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "isStatic",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fixes the camera, e.g. for a presentation: panning, rotating, tilting, and zooming are off, and the `view` and\n`zoom` controls are hidden. `view` and `selected` still move it, and an `overview` or `top` view stays fitted\nwhen resized. Nodes can still be selected.",
+              "attribute": "static",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Freezes the requests in place and stops new ones.",
+              "attribute": "paused",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_unsupported",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_current",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_renderer",
+              "type": {
+                "text": "WebGLRenderer | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_scene",
+              "type": {
+                "text": "Scene | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_camera",
+              "type": {
+                "text": "PerspectiveCamera | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_world",
+              "type": {
+                "text": "Group | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_dots",
+              "type": {
+                "text": "InstancedMesh | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_requestColor",
+              "privacy": "private",
+              "default": "new Color()"
+            },
+            {
+              "kind": "field",
+              "name": "_places",
+              "privacy": "private",
+              "default": "new Map<string, Place>()"
+            },
+            {
+              "kind": "field",
+              "name": "_outgoing",
+              "privacy": "private",
+              "default": "new Map<string, Road[]>()"
+            },
+            {
+              "kind": "field",
+              "name": "_roots",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_requests",
+              "type": {
+                "text": "Request[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_nextSpawn",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Seconds until the next request sets out; arrivals are random (a Poisson process)."
+            },
+            {
+              "kind": "field",
+              "name": "_history",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_pose",
+              "type": {
+                "text": "CameraPose"
+              },
+              "privacy": "private",
+              "default": "{ target: new Vector3(), distance: STREET_DISTANCE, azimuth: 0, elevation: STREET_ELEVATION, }"
+            },
+            {
+              "kind": "field",
+              "name": "_flight",
+              "type": {
+                "text": "Flight | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_bounds",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ center: new Vector3(), width: 0, depth: 0 }",
+              "description": "Center and extent of the laid-out nodes, across (`width`, x) and toward the horizon (`depth`, z)."
+            },
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_lastTime",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_onScreen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "_labels",
+              "privacy": "private",
+              "default": "new Map<string, HTMLElement>()"
+            },
+            {
+              "kind": "field",
+              "name": "_drag",
+              "type": {
+                "text": "{\n    pointerId: number;\n    mode: \"pan\" | \"rotate\";\n    startX: number;\n    startY: number;\n    x: number;\n    y: number;\n    moved: boolean;\n  } | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_shared",
+              "privacy": "private",
+              "default": "new Set<unknown>()"
+            },
+            {
+              "kind": "field",
+              "name": "_glowTexture",
+              "type": {
+                "text": "CanvasTexture | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_geometries",
+              "type": {
+                "text": "{\n    disk: CylinderGeometry;\n    beacon: CylinderGeometry;\n    cap: SphereGeometry;\n    ring: RingGeometry;\n  } | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_motionQuery",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_schemeQuery",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_themeObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_intersectionObserver",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderLabel",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "DagNode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_controls",
+              "type": {
+                "text": "Set<DagGraph3dControl>"
+              },
+              "privacy": "private",
+              "description": "The enabled `controls`, minus camera controls when `static` and pause under reduced motion.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_renderToolbar",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_summary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_reducedMotion",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_animating",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_firstRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "description": "The first node without incoming edges (other than cycle-closing ones), or the first node."
+            },
+            {
+              "kind": "method",
+              "name": "_computeRoots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_choose",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_back",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_home",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_init",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_teardown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_rebuild",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Lays the graph out again and rebuilds the scene with the current theme's colors."
+            },
+            {
+              "kind": "method",
+              "name": "_layOut",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "(name: string) => Color"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_kindOf",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DagNodeKind | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "DagNode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_addRoads",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "routed",
+                  "type": {
+                    "text": "ReturnType<typeof layoutDag>[\"edges\"]"
+                  }
+                },
+                {
+                  "name": "centers",
+                  "type": {
+                    "text": "Map<string, Vector3>"
+                  }
+                },
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "(name: string) => Color"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_addPlaces",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "centers",
+                  "type": {
+                    "text": "Map<string, Vector3>"
+                  }
+                },
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "(name: string) => Color"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_flyTo",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "pose",
+                  "type": {
+                    "text": "CameraPose"
+                  }
+                },
+                {
+                  "name": "instant",
+                  "default": "false"
+                }
+              ],
+              "description": "Moves the camera to `pose`: a flight while animating, otherwise a jump."
+            },
+            {
+              "kind": "method",
+              "name": "_poseFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CameraPose"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "DagGraph3dView"
+                  }
+                }
+              ],
+              "description": "The camera pose of `view`: behind the current node, or fitting the whole graph with the flow left to right."
+            },
+            {
+              "kind": "method",
+              "name": "_fitDistance",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "elevation",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "How far away the camera must be, at `elevation` and looking along the flow, to fit the whole graph."
+            },
+            {
+              "kind": "method",
+              "name": "_setView",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "DagGraph3dView"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateHalos",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Rings the current node in the selected color and highlighted nodes in the highlight color."
+            },
+            {
+              "kind": "field",
+              "name": "_resize",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onIntersect",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_restart",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Runs the frame loop while it may animate; otherwise draws a single still frame."
+            },
+            {
+              "kind": "method",
+              "name": "_stop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_drawIfStill",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_tick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_updateGlows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dt",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Fades each node's glow; a lit node's halo shows and its marker and ground disk brighten."
+            },
+            {
+              "kind": "method",
+              "name": "_simulate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dt",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Spawns requests at the roots and moves every request along its road."
+            },
+            {
+              "kind": "method",
+              "name": "_spawn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Starts a request at a root chosen in proportion to its outgoing traffic, with its own speed, lane, and shade."
+            },
+            {
+              "kind": "method",
+              "name": "_pickRoad",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Road | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Picks one of `id`'s outgoing roads in proportion to its share of the traffic."
+            },
+            {
+              "kind": "method",
+              "name": "_drawFrame",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_drawRequests",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Places each request at its lane across its road, in its own shade."
+            },
+            {
+              "kind": "method",
+              "name": "_positionLabels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "camera",
+                  "type": {
+                    "text": "PerspectiveCamera"
+                  }
+                }
+              ],
+              "description": "Pins each label above its node; labels outside the view or far beyond what the camera looks at are hidden."
+            },
+            {
+              "kind": "method",
+              "name": "_onPointerDown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPointerMove",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPointerUp",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onWheel",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Zooms on pinch or Ctrl/⌘ + wheel, leaving a plain wheel to scroll the page."
+            },
+            {
+              "kind": "method",
+              "name": "_onKeyDown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Arrow keys pan (Shift: rotate and tilt), `+`/`-` zoom, and `0` returns to the current `view`."
+            },
+            {
+              "kind": "method",
+              "name": "_pan",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dx",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "dy",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves what the camera looks at across the ground, as if dragging the ground by `dx`, `dy` pixels."
+            },
+            {
+              "kind": "method",
+              "name": "_rotate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "azimuth",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "elevation",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Turns the camera around what it looks at, and tilts it between near the ground and straight above."
+            },
+            {
+              "kind": "method",
+              "name": "_zoom",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "factor",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves the camera `factor` times as far from what it looks at, within limits."
+            },
+            {
+              "kind": "method",
+              "name": "_pick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ],
+              "description": "Selects the node under the pointer, if any."
+            }
+          ],
+          "events": [
+            {
+              "name": "node-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "A node was selected by clicking it, its label, Back, or Home; `detail` is `{ id }`."
+            },
+            {
+              "name": "view-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "The toolbar switched `view`; `detail` is `{ view }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "nodes",
+              "type": {
+                "text": "DagNode[]"
+              },
+              "default": "[]",
+              "description": "The graph's nodes.",
+              "fieldName": "nodes"
+            },
+            {
+              "name": "edges",
+              "type": {
+                "text": "DagEdge[]"
+              },
+              "default": "[]",
+              "description": "The graph's edges; edges whose endpoints aren't both in `nodes` are ignored.",
+              "fieldName": "edges"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Id of the selected node, where the street view stands; defaults to the first root.",
+              "fieldName": "selected"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Directed graph\"",
+              "description": "Accessible name of the view.",
+              "fieldName": "label"
+            },
+            {
+              "name": "rate",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "New requests per second, spread across the root nodes.",
+              "fieldName": "rate"
+            },
+            {
+              "name": "speed",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How fast requests travel, as a multiple of the default pace; `0` stops them where they are.",
+              "fieldName": "speed"
+            },
+            {
+              "name": "hide-pins",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws each node as just its ground disk, without the pin standing up from it.",
+              "fieldName": "hidePins"
+            },
+            {
+              "name": "view",
+              "type": {
+                "text": "DagGraph3dView"
+              },
+              "default": "\"street\"",
+              "description": "Camera preset; changing it flies there, and `0` returns to it after panning, tilting, or zooming.",
+              "fieldName": "view"
+            },
+            {
+              "name": "controls",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"back home view zoom pause\"",
+              "description": "Space-separated toolbar controls to show: any of `back`, `home`, `view`, `zoom`, and `pause`, in that order.\nAn empty value hides the toolbar.",
+              "fieldName": "controls"
+            },
+            {
+              "name": "static",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fixes the camera, e.g. for a presentation: panning, rotating, tilting, and zooming are off, and the `view` and\n`zoom` controls are hidden. `view` and `selected` still move it, and an `overview` or `top` view stays fitted\nwhen resized. Nodes can still be selected.",
+              "fieldName": "isStatic"
+            },
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Freezes the requests in place and stops new ones.",
+              "fieldName": "paused"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "dag-graph-3d",
+          "customElement": true
+        },
+        {
+          "kind": "variable",
+          "name": "curve",
+          "default": "new CatmullRomCurve3( deduped.map((point) => point.clone().setY(ROAD_Y + i * 0.0005)), false, \"centripetal\", )"
+        },
+        {
+          "kind": "variable",
+          "name": "width"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DagGraph3d",
+          "declaration": {
+            "name": "DagGraph3d",
+            "module": "src/dag-graph-3d.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "dag-graph-3d",
+          "declaration": {
+            "name": "DagGraph3d",
+            "module": "src/dag-graph-3d.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/dag-graph.ts",
       "declarations": [
         {
@@ -14493,6 +15666,38 @@
           "declaration": {
             "name": "DagNodeSelectDetail",
             "module": "./dag-graph.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagGraph3d",
+          "declaration": {
+            "name": "DagGraph3d",
+            "module": "./dag-graph-3d.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagGraph3dControl",
+          "declaration": {
+            "name": "DagGraph3dControl",
+            "module": "./dag-graph-3d.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagGraph3dView",
+          "declaration": {
+            "name": "DagGraph3dView",
+            "module": "./dag-graph-3d.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DagGraph3dViewChangeDetail",
+          "declaration": {
+            "name": "DagGraph3dViewChangeDetail",
+            "module": "./dag-graph-3d.js"
           }
         },
         {

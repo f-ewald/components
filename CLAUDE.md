@@ -174,6 +174,25 @@ attributes change. Its tests measure ink from element screenshots, because
 a WebGL canvas without `preserveDrawingBuffer` can't be read back after
 compositing.
 
+`dag-graph-3d` (experimental) is the package's only `three` consumer: a
+first-person view of `dag-graph`'s data, reusing `layoutDag` with `"TB"` so
+dagre's ranks become depth toward the horizon (`-z`) and its x becomes the
+lateral spread. Edges are flat ribbon meshes along a centripetal
+Catmull-Rom curve through dagre's route points; requests are one
+`InstancedMesh` stepped on the CPU, choosing outgoing roads by `weight`.
+Node labels are real `<button>`s in an HTML overlay, repositioned every
+frame by projecting each node, so they stay crisp, themeable, and
+focusable. Scene colors come from token-backed `--_*` host properties
+resolved through a 1×1 canvas, like `particle-background`. Type-only
+imports from `dag-graph.js` keep it from pulling in `dag-graph`'s runtime.
+The camera is a single orbit pose (target, distance, azimuth, elevation):
+the `street`/`overview`/`top` presets are just poses (the latter two fitted
+to the graph's bounds with the flow left to right), flights interpolate
+between poses, and pan/rotate/tilt/zoom edit the current pose. Fog and label
+fade distances scale with the pose's distance so every preset stays legible.
+`static` and `controls` mirror `dag-graph`'s: `static` drops only the
+camera-moving controls (`view`, `zoom`) and keeps selection working.
+
 `app-shell`'s sidebar has three independent properties rather than a single
 rail/drawer mode switch: `sidebar-open` (visible or not, closed by default,
 at every breakpoint), `sidebar-width` (`full` 16rem vs. `icon` 3.5rem rail —

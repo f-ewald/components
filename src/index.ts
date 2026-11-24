@@ -49,6 +49,12 @@ export {
   type DagNodeSelectDetail,
 } from "./dag-graph.js";
 export {
+  DagGraph3d,
+  type DagGraph3dControl,
+  type DagGraph3dView,
+  type DagGraph3dViewChangeDetail,
+} from "./dag-graph-3d.js";
+export {
   AddressAutocomplete,
   type AddressSuggestion,
 } from "./address-autocomplete.js";

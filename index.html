@@ -55,6 +55,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#countdown-timer">countdown-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#cron-schedule">cron-schedule</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dag-graph">dag-graph</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dag-graph-3d">dag-graph-3d</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#data-table">data-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distance-value">distance-value</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#distribution-chart">distribution-chart</a>
@@ -1494,6 +1495,84 @@ graph.fit(); // also: center(id), zoomBy(1.25)
 
 /* Recolor without code: */
 dag-graph { --dag-selected-color: #efb118; --dag-edge-color: #64748b; --dag-graph-height: 30rem; }</code></pre>
+        </section>
+        <section id="dag-graph-3d" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-dag-graph-3d">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#dag-graph-3d">dag-graph-3d</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Experimental first-person 3D view of a directed graph (three.js), laid out like a street network: the
+            current node is in front of you and the nodes it leads to sit further away toward the horizon. Requests
+            set out from the roots as dots and pick each outgoing edge in proportion to its <code>weight</code>;
+            heavier edges are wider roads. The toolbar switches between the street view, a 45&deg; overview of the whole
+            graph, and a view from the top. Click a node or its label to select it (in the street view, to travel
+            there); Back and Home return. Drag to pan, right-drag or Shift + drag to rotate and tilt, and pinch or
+            Ctrl/&#8984; + wheel to zoom (keyboard: arrows pan, Shift + arrows rotate and tilt, <kbd>+</kbd>/<kbd>-</kbd>
+            zoom, <kbd>0</kbd> resets). Takes the same
+            <code>nodes</code>, <code>edges</code>, and <code>kinds</code> as <code>dag-graph</code>.
+          </p>
+          <div class="mt-6 flex flex-col gap-4 demo-example rounded-lg border border-slate-200 p-6 text-sm">
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <label class="flex items-center gap-2">
+                Requests/s
+                <input id="dag3d-rate" data-testid="dag3d-rate" type="range" min="0" max="20" step="1" value="6" />
+                <code id="dag3d-rate-output">6</code>
+              </label>
+              <label class="flex items-center gap-2">
+                Speed
+                <input id="dag3d-speed" data-testid="dag3d-speed" type="range" min="0" max="3" step="0.25" value="1" />
+                <code id="dag3d-speed-output">1&times;</code>
+              </label>
+              <ui-checkbox id="dag3d-weights" data-testid="dag3d-weights" label="Weighted traffic" checked></ui-checkbox>
+              <ui-checkbox id="dag3d-highlight" data-testid="dag3d-highlight" label="Highlight checkout path"></ui-checkbox>
+              <ui-checkbox id="dag3d-paused" data-testid="dag3d-paused" label="Paused"></ui-checkbox>
+              <ui-checkbox id="dag3d-hide-pins" data-testid="dag3d-hide-pins" label="Hide pins"></ui-checkbox>
+              <ui-checkbox id="dag3d-static" data-testid="dag3d-static" label="Static (fixed camera)"></ui-checkbox>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span class="text-slate-500">Toolbar <code>controls</code>:</span>
+              <ui-checkbox class="dag3d-control" data-control="back" data-testid="dag3d-control-back" label="back" checked></ui-checkbox>
+              <ui-checkbox class="dag3d-control" data-control="home" data-testid="dag3d-control-home" label="home" checked></ui-checkbox>
+              <ui-checkbox class="dag3d-control" data-control="view" data-testid="dag3d-control-view" label="view" checked></ui-checkbox>
+              <ui-checkbox class="dag3d-control" data-control="zoom" data-testid="dag3d-control-zoom" label="zoom" checked></ui-checkbox>
+              <ui-checkbox class="dag3d-control" data-control="pause" data-testid="dag3d-control-pause" label="pause" checked></ui-checkbox>
+            </div>
+            <dag-graph-3d id="dag3d-demo" data-testid="dag3d-demo" label="Service call graph" rate="6" style="--dag-graph-3d-height: 30rem"></dag-graph-3d>
+            <p class="text-slate-500">
+              At: <code id="dag3d-output" data-testid="dag3d-output">edge-proxy</code> · View:
+              <code id="dag3d-view-output" data-testid="dag3d-view-output">street</code>
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/dag-graph-3d.js";
+import { iconCube, iconServer } from "@f-ewald/components/icons.js";
+
+const view = document.querySelector("dag-graph-3d");
+view.kinds = {
+  service: { icon: iconServer, color: "#4269d0" },
+  store: { icon: iconCube, color: "#3ca951" },
+};
+view.nodes = [
+  { id: "gateway", label: "gateway", kind: "service" },
+  { id: "search", label: "search", kind: "service" },
+  { id: "index", label: "index", kind: "store" },
+];
+view.edges = [
+  { source: "gateway", target: "search", weight: 40 }, // share of the traffic and road width
+  { source: "search", target: "index", weight: 40 },
+];
+view.rate = 6;          // new requests per second, spread across the roots
+view.speed = 1.5;       // how fast requests travel, as a multiple of the default pace
+view.hidePins = true;   // flat disks only, without the pin standing up from each node (attribute: hide-pins)
+view.paused = false;    // freeze requests in place
+view.selected = "gateway"; // where the viewer stands; defaults to the first root
+view.view = "overview"; // camera preset: "street" (default), "overview" (45°), or "top"
+view.addEventListener("node-select", (e) =&gt; console.log(e.detail.id));
+view.addEventListener("view-change", (e) =&gt; console.log(e.detail.view));
+view.controls = "view zoom"; // toolbar buttons: any of back home view zoom pause; "" hides the toolbar
+
+&lt;!-- A fixed camera for a presentation: no panning, tilting, zooming, or view/zoom buttons --&gt;
+&lt;dag-graph-3d static view="overview" controls=""&gt;&lt;/dag-graph-3d&gt;
+
+/* Recolor without code: */
+dag-graph-3d { --dag-request-color: #ff725c; --dag-edge-color: #94a3b8; --dag-graph-3d-height: 30rem; }</code></pre>
         </section>
         <section id="data-table" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-data-table">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#data-table">data-table</a></h3>

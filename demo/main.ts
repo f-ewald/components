@@ -37,6 +37,7 @@ import {
   type CronSchedule,
   type DagEdge,
   type DagGraph,
+  type DagGraph3d,
   type DagNode,
   type DagNodeKind,
   type KindIcon,
@@ -79,6 +80,7 @@ import {
   iconCodeBracketSquare,
   iconCpuChip,
   iconGlobeAlt,
+  iconLink,
   iconEllipsisVertical,
   iconExclamationCircle,
   iconExclamationTriangle,
@@ -1396,6 +1398,118 @@ if (dagDemo) {
     dagDemo.style.setProperty("--dag-selected-color", custom ? "#ff8ab7" : "");
     dagDemo.style.setProperty("--dag-edge-color", custom ? "#4269d0" : "");
   });
+}
+
+// dag-graph-3d (a service call graph: weighted traffic, a muted node, a retry cycle, and a highlightable path)
+const dag3d = document.getElementById("dag3d-demo") as DagGraph3d | null;
+if (dag3d) {
+  dag3d.kinds = {
+    edge: { icon: iconGlobeAlt, color: "#ff725c" },
+    service: { icon: iconServer, color: "#4269d0" },
+    store: { icon: iconCube, color: "#3ca951" },
+    external: { icon: iconLink, color: "#9498a0" },
+    unknown: { icon: iconQuestionMarkCircle, color: "#efb118" },
+  };
+  const dag3dNodes: DagNode[] = [
+    ["edge-proxy", "edge"],
+    ["api-gateway", "service"],
+    ["static-assets", "store"],
+    ["auth", "service"],
+    ["search", "service"],
+    ["checkout", "service"],
+    ["recommendations", "service"],
+    ["ranking", "service"],
+    ["payments", "service"],
+    ["inventory", "service"],
+    ["fraud-check", "service"],
+    ["user-db", "store"],
+    ["search-index", "store"],
+    ["feature-store", "store"],
+    ["ledger-db", "store"],
+    ["inventory-db", "store"],
+    ["payment-provider", "external"],
+  ].map(([id, kind]) => ({ id, label: id, kind }));
+  dag3dNodes.push({ id: "legacy-reports", label: "legacy-reports (not instrumented)", kind: "unknown", muted: true });
+  const dag3dEdges: [string, string, number][] = [
+    ["edge-proxy", "api-gateway", 100],
+    ["edge-proxy", "static-assets", 40],
+    ["api-gateway", "auth", 30],
+    ["api-gateway", "search", 45],
+    ["api-gateway", "checkout", 15],
+    ["api-gateway", "recommendations", 25],
+    ["api-gateway", "legacy-reports", 2],
+    ["auth", "user-db", 30],
+    ["search", "ranking", 35],
+    ["search", "search-index", 45],
+    ["ranking", "feature-store", 35],
+    ["recommendations", "feature-store", 20],
+    ["recommendations", "ranking", 10],
+    ["checkout", "payments", 15],
+    ["checkout", "inventory", 12],
+    ["payments", "fraud-check", 15],
+    ["payments", "ledger-db", 15],
+    ["payments", "payment-provider", 12],
+    ["payment-provider", "payments", 3],
+    ["fraud-check", "feature-store", 8],
+    ["inventory", "inventory-db", 12],
+  ];
+  const dag3dPath = ["edge-proxy", "api-gateway", "checkout", "payments", "ledger-db"];
+  const dag3dState = { weights: true, highlight: false };
+  const applyDag3d = (): void => {
+    const onPath = (id: string) => dag3dState.highlight && dag3dPath.includes(id);
+    dag3d.nodes = dag3dNodes.map((node) => ({ ...node, highlighted: onPath(node.id) }));
+    dag3d.edges = dag3dEdges.map(([source, target, weight]) => ({
+      source,
+      target,
+      weight: dag3dState.weights ? weight : undefined,
+      highlighted: onPath(source) && dag3dPath[dag3dPath.indexOf(source) + 1] === target,
+    }));
+  };
+  applyDag3d();
+  dag3d.addEventListener("node-select", (e) => {
+    const output = document.getElementById("dag3d-output");
+    if (output) output.textContent = (e as CustomEvent<{ id: string }>).detail.id;
+  });
+  dag3d.addEventListener("view-change", (e) => {
+    const output = document.getElementById("dag3d-view-output");
+    if (output) output.textContent = (e as CustomEvent<{ view: string }>).detail.view;
+  });
+  const dag3dRate = document.getElementById("dag3d-rate") as HTMLInputElement | null;
+  dag3dRate?.addEventListener("input", () => {
+    dag3d.rate = Number(dag3dRate.value);
+    const output = document.getElementById("dag3d-rate-output");
+    if (output) output.textContent = dag3dRate.value;
+  });
+  const dag3dSpeed = document.getElementById("dag3d-speed") as HTMLInputElement | null;
+  dag3dSpeed?.addEventListener("input", () => {
+    dag3d.speed = Number(dag3dSpeed.value);
+    const output = document.getElementById("dag3d-speed-output");
+    if (output) output.textContent = `${dag3dSpeed.value}\u00d7`;
+  });
+  for (const [id, key] of [["dag3d-weights", "weights"], ["dag3d-highlight", "highlight"]] as const) {
+    document.getElementById(id)?.addEventListener("change", (e) => {
+      dag3dState[key] = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+      applyDag3d();
+    });
+  }
+  document.getElementById("dag3d-paused")?.addEventListener("change", (e) => {
+    dag3d.paused = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+  });
+  document.getElementById("dag3d-hide-pins")?.addEventListener("change", (e) => {
+    dag3d.hidePins = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+  });
+  document.getElementById("dag3d-static")?.addEventListener("change", (e) => {
+    dag3d.isStatic = (e as CustomEvent<{ checked: boolean }>).detail.checked;
+  });
+  const dag3dControls = [...document.querySelectorAll<UiCheckbox>("ui-checkbox.dag3d-control")];
+  for (const checkbox of dag3dControls) {
+    checkbox.addEventListener("change", () => {
+      dag3d.controls = dag3dControls
+        .filter((control) => control.checked)
+        .map((control) => control.dataset.control)
+        .join(" ");
+    });
+  }
 }
 
 // ui-tooltip (toggle disabled on every demo tooltip)
