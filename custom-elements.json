@@ -1093,7 +1093,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Fullscreen confetti animation overlay, rendered on a fixed-position canvas.\nStarts automatically on first render and stops after `duration` ms.",
+          "description": "Fullscreen confetti animation overlay, rendered on a fixed-position canvas.\nStarts automatically on first render and stops spawning after `duration`\nms; confetti already in flight keeps falling until it leaves the viewport.",
           "name": "AnimateConfetti",
           "members": [
             {
@@ -1103,7 +1103,7 @@
                 "text": "number"
               },
               "default": "6000",
-              "description": "How long the confetti streams before stopping, in ms.",
+              "description": "How long new confetti keeps spawning, in ms.",
               "attribute": "duration"
             },
             {
@@ -1178,14 +1178,6 @@
             },
             {
               "kind": "field",
-              "name": "cleanupTimer",
-              "type": {
-                "text": "number | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
               "name": "_canvas",
               "type": {
                 "text": "HTMLCanvasElement"
@@ -1219,7 +1211,17 @@
               "kind": "method",
               "name": "stopConfetti",
               "privacy": "private",
-              "description": "Stop confetti and clean up after reasonable time."
+              "description": "Stops spawning; the loop ends by itself once every piece has fallen out of view."
+            },
+            {
+              "kind": "method",
+              "name": "_dispatchEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -1288,6 +1290,15 @@
               ]
             }
           ],
+          "events": [
+            {
+              "name": "confetti-end",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired once the last confetti piece has left the viewport (immediately under reduced motion), so the element can be removed."
+            }
+          ],
           "attributes": [
             {
               "name": "duration",
@@ -1295,7 +1306,7 @@
                 "text": "number"
               },
               "default": "6000",
-              "description": "How long the confetti streams before stopping, in ms.",
+              "description": "How long new confetti keeps spawning, in ms.",
               "fieldName": "duration"
             }
           ],

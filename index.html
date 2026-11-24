@@ -211,7 +211,12 @@
           </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/animate-confetti.js";
 
-&lt;animate-confetti duration="6000"&gt;&lt;/animate-confetti&gt;</code></pre>
+&lt;animate-confetti duration="6000"&gt;&lt;/animate-confetti&gt;
+
+&lt;script&gt;
+  // Remove once the last piece has fallen out of view.
+  confetti.addEventListener("confetti-end", () =&gt; confetti.remove(), { once: true });
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="app-shell" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-app-shell">

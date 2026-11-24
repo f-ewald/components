@@ -1,7 +1,8 @@
 # `<animate-confetti>`
 
 Fullscreen confetti animation overlay, rendered on a fixed-position canvas.
-Starts automatically on first render and stops after `duration` ms.
+Starts automatically on first render and stops spawning after `duration`
+ms; confetti already in flight keeps falling until it leaves the viewport.
 
 ## Install
 
@@ -19,11 +20,13 @@ import "@f-ewald/components/animate-confetti.js";
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `duration` | `duration` | `number` | `6000` | How long the confetti streams before stopping, in ms. |
+| `duration` | `duration` | `number` | `6000` | How long new confetti keeps spawning, in ms. |
 
 ## Events
 
-_None._
+| Event | Description |
+| --- | --- |
+| `confetti-end` | Fired once the last confetti piece has left the viewport (immediately under reduced motion), so the element can be removed. |
 
 ## Slots
 

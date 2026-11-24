@@ -168,12 +168,13 @@ Example:
 ## <animate-confetti>
 
 Fullscreen confetti animation overlay, rendered on a fixed-position canvas.
-Starts automatically on first render and stops after `duration` ms.
+Starts automatically on first render and stops spawning after `duration`
+ms; confetti already in flight keeps falling until it leaves the viewport.
 
 Import: `import "@f-ewald/components/animate-confetti.js";`
 
 Properties: `duration` (attribute `duration`) : number, default 6000
-Events: none
+Events: `confetti-end`
 CSS custom properties: none
 
 Example:

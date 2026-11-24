@@ -14,13 +14,16 @@ interface Particle {
 
 /**
  * Fullscreen confetti animation overlay, rendered on a fixed-position canvas.
- * Starts automatically on first render and stops after `duration` ms.
+ * Starts automatically on first render and stops spawning after `duration`
+ * ms; confetti already in flight keeps falling until it leaves the viewport.
  *
  * @element animate-confetti
+ * @fires confetti-end - Fired once the last confetti piece has left the
+ *   viewport (immediately under reduced motion), so the element can be removed.
  */
 @customElement("animate-confetti")
 export class AnimateConfetti extends LitElement {
-  /** How long the confetti streams before stopping, in ms. */
+  /** How long new confetti keeps spawning, in ms. */
   @property({ type: Number })
   duration: number = 6000;
 
@@ -46,7 +49,6 @@ export class AnimateConfetti extends LitElement {
   private waveAngle: number = 0.0;
   private animationTimer?: number;
   private stopTimer?: number;
-  private cleanupTimer?: number;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -94,7 +96,10 @@ export class AnimateConfetti extends LitElement {
    */
   protected override firstUpdated(): void {
     this._handleResize();
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      this._dispatchEnd();
+      return;
+    }
 
     this.startConfetti();
     this.stopTimer = window.setTimeout(() => {
@@ -125,20 +130,23 @@ export class AnimateConfetti extends LitElement {
     const canvas = this._canvas;
     const context = canvas.getContext("2d");
     context!.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    if (this.particles.length === 0) this.animationTimer = undefined;
-    else {
+    if (this.particles.length === 0) {
+      this.animationTimer = undefined;
+      if (!this.streamingConfetti) this._dispatchEnd();
+    } else {
       this.updateParticles();
       this.drawParticles(context);
       this.animationTimer = window.requestAnimationFrame(this.runAnimation);
     }
   };
 
-  /**
-   * Stop confetti and clean up after reasonable time.
-   */
+  /** Stops spawning; the loop ends by itself once every piece has fallen out of view. */
   private stopConfetti() {
     this.streamingConfetti = false;
-    this.cleanupTimer = window.setTimeout(this._cleanup, 5000);
+  }
+
+  private _dispatchEnd(): void {
+    this.dispatchEvent(new CustomEvent("confetti-end", { bubbles: true, composed: true }));
   }
 
   /** Removes particle data and stops the animation frame loop. */
@@ -150,7 +158,6 @@ export class AnimateConfetti extends LitElement {
     }
     const canvas = this.shadowRoot?.getElementById("confetti-canvas") as HTMLCanvasElement | null;
     canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
-    this.cleanupTimer = undefined;
   };
 
   /** Cancels all pending work when the component leaves the document. */
@@ -158,10 +165,6 @@ export class AnimateConfetti extends LitElement {
     if (this.stopTimer !== undefined) {
       window.clearTimeout(this.stopTimer);
       this.stopTimer = undefined;
-    }
-    if (this.cleanupTimer !== undefined) {
-      window.clearTimeout(this.cleanupTimer);
-      this.cleanupTimer = undefined;
     }
     this.streamingConfetti = false;
     this._cleanup();

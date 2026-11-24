@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `animate-confetti` no longer wipes confetti that is still on screen. After `duration` it only stops
+  spawning, and pieces already in flight fall out of the viewport on their own (the fixed 5s cleanup
+  timer is gone). A new `confetti-end` event fires once the last piece has left, or immediately under
+  reduced motion, so callers can remove the element at the right time instead of guessing a timeout.
+
 - `autocomplete-input` shows icons for `endpoint` suggestions too. JSON can't carry a template, so an
   endpoint's option may name its icon instead (`{"key": "api", "value": "API", "icon": "service"}`), which
   is looked up in the new `icons` map (e.g. `{ service: iconServer }`); any other JSON `icon` is

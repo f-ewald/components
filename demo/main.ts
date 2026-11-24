@@ -158,8 +158,8 @@ window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
 document.getElementById("confetti-trigger")?.addEventListener("click", () => {
   const el = document.createElement("animate-confetti");
   el.duration = 4000;
+  el.addEventListener("confetti-end", () => el.remove(), { once: true });
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 5000);
 });
 
 // particle-background
