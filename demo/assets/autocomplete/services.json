@@ -1,0 +1,6 @@
+[
+  { "key": "checkout", "value": "checkout-api", "icon": "service", "description": "Order and payment flow" },
+  { "key": "auth", "value": "auth-client", "icon": "library", "description": "Shared login library" },
+  { "key": "lodash", "value": "lodash", "icon": "package", "description": "External package" },
+  { "key": "legacy", "value": "legacy-batch", "description": "No icon in the response, so optionIcon's" }
+]

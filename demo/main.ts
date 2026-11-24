@@ -566,6 +566,16 @@ autocompleteDemo?.addEventListener("option-select", (e) => {
   const detail = (e as CustomEvent).detail;
   autocompleteSelected.textContent = `Selected: ${detail.value} (key: ${detail.key})`;
 });
+// API mode: a static JSON file stands in for the endpoint, so it returns
+// every service whatever is typed. Its options name their icons.
+const autocompleteEndpoint = document.getElementById("autocomplete-endpoint-demo") as AutocompleteInput;
+autocompleteEndpoint.endpoint = new URL("./assets/autocomplete/services.json", import.meta.url).href;
+autocompleteEndpoint.icons = { service: iconServer, library: iconBookOpen, package: iconCube };
+autocompleteEndpoint.optionIcon = () => iconQuestionMarkCircle(14);
+document.getElementById("autocomplete-endpoint-select")?.addEventListener("click", () => {
+  autocompleteEndpoint.selectedKey = "checkout";
+  autocompleteEndpoint.value = "checkout-api";
+});
 document.getElementById("autocomplete-form")?.addEventListener("submit", (e) => {
   e.preventDefault();
   const formValue = new FormData(e.target as HTMLFormElement).get("language");

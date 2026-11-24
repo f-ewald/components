@@ -1,4 +1,20 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Locator, type Page } from "@playwright/test";
+
+type IconName = "iconServer" | "iconBookOpen" | "iconCube" | "iconQuestionMarkCircle" | "iconGlobeAlt";
+
+/** The first path's `d` of each named icon export, so tests can tell rendered icons apart. */
+function iconPaths(page: Page): Promise<Record<IconName, string>> {
+  return page.evaluate(async () => {
+    const icons = (await import("/src/icons.ts")) as unknown as Record<string, () => { strings: string[] }>;
+    const names = ["iconServer", "iconBookOpen", "iconCube", "iconQuestionMarkCircle", "iconGlobeAlt"];
+    return Object.fromEntries(names.map((name) => [name, icons[name]().strings.join("").match(/ d="([^"]+)"/)![1]]));
+  }) as Promise<Record<IconName, string>>;
+}
+
+/** The first path's `d` of the icon in each matched container, or null where there is none. */
+function shownIcons(containers: Locator): Promise<Array<string | null>> {
+  return containers.evaluateAll((els) => els.map((el) => el.querySelector("svg path")?.getAttribute("d") ?? null));
+}
 
 test.describe("autocomplete-input", () => {
   test("filters the playground's local options, fires option-select, and submits via the form", async ({ page }) => {
@@ -392,5 +408,97 @@ test.describe("autocomplete-input", () => {
       return [...el.shadowRoot!.querySelectorAll("[role=option]")].map((option) => option.textContent!.trim());
     });
     expect(shown).toEqual([]);
+  });
+
+  test("API options name their icons from `icons`; the rest fall back to optionIcon", async ({ page }) => {
+    await page.route("**/api/services**", (route) =>
+      route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify([
+          { key: "a", value: "Alpha", icon: "service" },
+          { key: "b", value: "Beta", icon: "unknown" },
+          { key: "c", value: "Gamma" },
+          { key: "d", value: "Delta", icon: { _$litType$: 1, strings: ["<img src=x>"], values: [] } },
+          { key: "e", value: "Epsilon", icon: "constructor" },
+        ]),
+      }),
+    );
+    await page.goto("/");
+    const paths = await iconPaths(page);
+    await page.evaluate(async () => {
+      const { iconServer, iconQuestionMarkCircle } = await import("/src/icons.ts");
+      const el = Object.assign(document.createElement("autocomplete-input"), {
+        id: "autocomplete-icons",
+        endpoint: "/api/services",
+        icons: { service: iconServer },
+        optionIcon: () => iconQuestionMarkCircle(14),
+      });
+      document.body.prepend(el);
+    });
+    const autocomplete = page.locator("#autocomplete-icons");
+    const input = autocomplete.locator("input");
+    const rows = autocomplete.locator(".suggestion");
+
+    await input.fill("alp");
+    await expect(rows).toHaveCount(5);
+    const fallback = paths.iconQuestionMarkCircle;
+    expect(await shownIcons(rows)).toEqual([paths.iconServer, fallback, fallback, fallback, fallback]);
+    await expect(autocomplete.locator(".suggestion img")).toHaveCount(0);
+
+    await rows.first().click();
+    expect(await shownIcons(autocomplete.locator(".field-icon"))).toEqual([paths.iconServer]);
+
+    await autocomplete.evaluate((el: HTMLElement & { optionIcon: unknown }) => {
+      el.optionIcon = null;
+    });
+    await input.fill("bet");
+    await expect(rows).toHaveCount(5);
+    expect(await shownIcons(rows)).toEqual([paths.iconServer, null, null, null, null]);
+  });
+
+  test("a local option's own icon wins over optionIcon, which covers the rest", async ({ page }) => {
+    await page.goto("/");
+    const paths = await iconPaths(page);
+    const autocomplete = page.locator("#autocomplete-demo");
+    await autocomplete.evaluate(async (el: HTMLElement & { optionIcon: unknown; options: unknown }) => {
+      const { iconGlobeAlt, iconQuestionMarkCircle } = await import("/src/icons.ts");
+      el.options = [
+        { key: "js", value: "JavaScript", icon: iconGlobeAlt(14) },
+        { key: "jsx", value: "JavaScript XML" },
+      ];
+      el.optionIcon = () => iconQuestionMarkCircle(14);
+    });
+    await autocomplete.locator("input").fill("JavaScript");
+    const rows = autocomplete.locator(".suggestion");
+    await expect(rows).toHaveCount(2);
+    expect(await shownIcons(rows)).toEqual([paths.iconGlobeAlt, paths.iconQuestionMarkCircle]);
+  });
+
+  test("the playground's endpoint shows named icons and an icon for a selection made from code", async ({
+    page,
+  }) => {
+    await page.goto("/#autocomplete-input");
+    const paths = await iconPaths(page);
+    const autocomplete = page.getByTestId("autocomplete-endpoint-demo");
+    const input = autocomplete.locator("input");
+    const fieldIcon = autocomplete.locator(".field-icon");
+
+    await page.getByTestId("autocomplete-endpoint-select").click();
+    await expect(input).toHaveValue("checkout-api");
+    expect(await shownIcons(fieldIcon)).toEqual([paths.iconQuestionMarkCircle]);
+    await input.fill("checkout");
+    await expect(fieldIcon.locator("svg")).toHaveCount(0);
+
+    await input.fill("che");
+    const rows = autocomplete.locator(".suggestion");
+    await expect(rows).toHaveCount(4);
+    expect(await shownIcons(rows)).toEqual([
+      paths.iconServer,
+      paths.iconBookOpen,
+      paths.iconCube,
+      paths.iconQuestionMarkCircle,
+    ]);
+    await rows.first().click();
+    expect(await shownIcons(fieldIcon)).toEqual([paths.iconServer]);
   });
 });

@@ -55,6 +55,8 @@ export {
 export {
   AutocompleteInput,
   type AutocompleteOption,
+  type AutocompleteIconFactory,
+  type AutocompleteOptionIcon,
 } from "./autocomplete-input.js";
 export { UserAvatar } from "./user-avatar.js";
 export { MapPin } from "./map-pin.js";

@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+- `autocomplete-input` shows icons for `endpoint` suggestions too. JSON can't carry a template, so an
+  endpoint's option may name its icon instead (`{"key": "api", "value": "API", "icon": "service"}`), which
+  is looked up in the new `icons` map (e.g. `{ service: iconServer }`); any other JSON `icon` is
+  ignored. The new `optionIcon` function gives an icon to every option without one, or whose name isn't
+  in `icons`, in local and API mode alike; an option's own icon wins. In API mode, a selection set from
+  code through `selectedKey` and `value` (in the same update) now shows `optionIcon`'s icon in the field
+  until the text is edited. `selectedOption` is unchanged. Also exports the `AutocompleteIconFactory` and
+  `AutocompleteOptionIcon` types.
+
+- Added `floating-text` (1.49.0): text whose last characters float up and away as it scrolls into
+  view, then bob gently in place, after antigravity.google's footer wordmark. The text is the element's
+  own content, in the surrounding font and color. `float-count` sets how many trailing characters float
+  (default 3), each lifting further than the one before; `lift` sets how far the last one rises (default
+  `0.45` em). A sudden jump, such as a page load with the text visible, holds briefly, then floats the
+  characters up; scrolling it back below the viewport lets them settle. Screen readers hear the whole
+  word once, and reduced motion shows the floated pose without animating.
+
+- Added `particle-background` (1.48.0): a decorative WebGL2 field of small color-shifting particles
+  swimming on noise, swollen and parted by a pulsing ring that wanders on its own (`mode="drift"`, the
+  default) or eases toward the pointer (`mode="follow"`). It fills the viewport behind the page at
+  `z-index: -1`, or its positioned container with `contained` (give the container
+  `isolation: isolate`). `spacing` sets the average distance between particles (default 24px), and
+  `--particle-background-color-1`/`-2`/`-3` override its colors (default `--ui-primary`, `--ui-danger`,
+  `--ui-warning`). It pauses off-screen and in hidden tabs, draws one still frame under reduced motion,
+  and draws nothing without WebGL2. The documentation site's landing page now shows it behind its hero.
+
 - Fixes: `dag-graph` keeps its view when it is hidden and shown again, e.g. in an inactive `tab-item`. Before,
   the graph came back shifted by half its canvas, often out of view.
 

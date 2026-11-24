@@ -18,12 +18,19 @@ Supports two suggestion sources:
   request. Useful for small/fixed lists, offline use, or tests. Takes
   priority over `endpoint` whenever it's non-null.
 
-Each option may also carry a pre-rendered `icon` (shown before the value)
-and a `description` (a smaller, muted line under the value); options
-without them render as a plain value. The selected option's icon also
-shows inside the field until the text is edited. Picking an option sets
-`selectedKey`; set `selectedKey` and `value` together to show a selection
-made elsewhere.
+Each option may also carry an `icon` (shown before the value) and a
+`description` (a smaller, muted line under the value); options without
+them render as a plain value. A local option's `icon` is a pre-rendered
+template. An endpoint's JSON can't carry one, so it may name an icon
+instead (`{"key": "api", "value": "API", "icon": "server"}`), which is
+looked up in the `icons` map; any other JSON `icon` is ignored. Options
+with no icon, or an unknown name, fall back to `optionIcon`, if set.
+
+The selected option's icon also shows inside the field until the text is
+edited. Picking an option sets `selectedKey`; set `selectedKey` and
+`value` together, in the same update, to show a selection made elsewhere.
+In API mode such a selection shows `optionIcon`'s icon, since the
+endpoint's own icon for it isn't known until it has been suggested.
 
 Set `clearable` to show an in-field clear action whenever a value is
 present.
@@ -63,6 +70,8 @@ import "@f-ewald/components/autocomplete-input.js";
 | `queryParam` | `query-param` | `string` | `"q"` | Query string parameter name the current input text is sent under. |
 | `options` | _(JS property only)_ | `AutocompleteOption[] | null` | `null` | Fixed candidate list to filter locally instead of fetching from `endpoint`. When set (non-null), no network request is ever made — this takes priority over the API mode. |
 | `selectedKey` | `selected-key` | `string | null` | `null` | Key of the selected option: set by picking one, or by the caller together with `value`. |
+| `icons` | _(JS property only)_ | `Record<string, AutocompleteIconFactory>` | `{}` | Icons an endpoint may name in an option's `icon`, e.g. `{ server: iconServer, library: iconBookOpen }`. Called with `14`. |
+| `optionIcon` | _(JS property only)_ | `AutocompleteOptionIcon | null` | `null` | Icon for any option without one of its own (or whose named icon isn't in `icons`), e.g. `() => iconServer(14)`. Applies to local and API options. |
 | `selectedOption` | _(JS property only)_ | `AutocompleteOption | null` | `—` | Selected option (picked, or matching `selectedKey`), or null once the input diverges from it. _(read-only)_ |
 | `value` | `value` | `string` | `""` | Current input value; also the form-associated value submitted with the form. |
 | `placeholder` | `placeholder` | `string` | `""` | Placeholder text shown when the input is empty. |
