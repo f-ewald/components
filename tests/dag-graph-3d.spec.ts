@@ -138,26 +138,25 @@ test.describe("dag-graph-3d", () => {
     await expect.poll(shown).toEqual(["home", "view"]);
 
     const label = labelOf(view, "api-gateway");
-    // Relative to the view: a static view leaves the wheel to the page, which may scroll.
-    const where = async () => {
-      const [inner, outer] = [(await label.boundingBox())!, (await view.boundingBox())!];
-      return { x: inner.x - outer.x, y: inner.y - outer.y };
-    };
+    // The label's projected placement, which only the camera changes; a static view leaves the wheel to the page,
+    // which may smoothly scroll in the meantime.
+    const where = () => label.evaluate((el) => el.style.transform);
     const before = await where();
     await page.getByTestId("dag3d-static").click();
     await expect(view).toHaveAttribute("static", "");
     await expect.poll(shown).toEqual(["home"]);
     await expect(view.locator(".stage")).not.toHaveAttribute("tabindex", /.*/);
 
+    await view.scrollIntoViewIfNeeded();
     const box = (await view.boundingBox())!;
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height - 20);
+    await page.mouse.move(box.x + 40, box.y + box.height * 0.75);
     await page.mouse.down();
-    await page.mouse.move(box.x + box.width / 2 + 150, box.y + box.height - 60, { steps: 5 });
+    await page.mouse.move(box.x + 190, box.y + box.height * 0.6, { steps: 5 });
     await page.mouse.up();
     await page.keyboard.down("Control");
     await page.mouse.wheel(0, -200);
     await page.keyboard.up("Control");
-    expect(await where()).toEqual(before);
+    expect(await where()).toBe(before);
 
     await label.click();
     await expect(view).toHaveAttribute("selected", "api-gateway");
