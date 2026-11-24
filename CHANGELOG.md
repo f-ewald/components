@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Dark-theme fixes (1.51.1): `code-diff` now tints added and removed lines from the theme's `--ui-success` /
+  `--ui-danger` tokens instead of fixed light-theme colors, and `distribution-chart`'s default `markerColors`
+  are now the theme's primary, warning, success, and danger tokens, so markers keep their contrast in dark
+  themes. Custom `markerColors` may be any CSS color, including `var(...)`.
 - New `<blur-background>` (1.51.0): a decorative, soft circular glow of one color that gently breathes and moves exactly
   like `particle-background`'s ring, wandering on its own (`mode="drift"`) or easing toward the pointer
   (`mode="follow"`). Like `particle-background` it fills the viewport behind the page, or its positioned

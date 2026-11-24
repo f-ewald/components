@@ -23,6 +23,7 @@ test.describe("distribution-chart", () => {
     });
     await expect(svg.locator(".curve")).toHaveCSS("stroke", "rgb(99, 102, 241)");
     await expect(svg.locator(".chart-label").first()).toHaveCSS("fill", "rgb(148, 163, 184)");
+    await expect(svg.locator("line[stroke-dasharray]").first()).toHaveCSS("stroke", "rgb(99, 102, 241)");
   });
 
   test("renders SVG axis labels at the 10px data-label size", async ({ page }) => {

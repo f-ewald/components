@@ -100,14 +100,12 @@ export class CodeDiff extends LitElement {
       .line.context {
         color: var(--ui-text-muted, #64748b);
       }
-      /* Derived from the light theme's --ui-success/#16a34a and
-         --ui-danger/#dc2626 fallbacks; there is no dedicated diff-wash token. */
       .line.add {
-        background: rgb(22 163 74 / 0.1);
+        background: color-mix(in srgb, var(--ui-success, #16a34a) 10%, transparent);
         color: var(--ui-success, #16a34a);
       }
       .line.del {
-        background: rgb(220 38 38 / 0.1);
+        background: color-mix(in srgb, var(--ui-danger, #dc2626) 10%, transparent);
         color: var(--ui-danger, #dc2626);
       }
       @media (forced-colors: active) {

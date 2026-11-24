@@ -10672,8 +10672,8 @@
               "type": {
                 "text": "string[]"
               },
-              "default": "[\"#4f46e5\", \"#d97706\", \"#0d9488\", \"#e11d48\"]",
-              "description": "Colors assigned to markers in order. Defaults to indigo/amber/teal/rose 600s."
+              "default": "[ \"var(--ui-primary, #4f46e5)\", \"var(--ui-warning, #d97706)\", \"var(--ui-success, #16a34a)\", \"var(--ui-danger, #dc2626)\", ]",
+              "description": "CSS colors assigned to markers in order. Defaults to the theme's primary,\nwarning, success, and danger tokens, so markers follow light/dark themes."
             },
             {
               "kind": "field",

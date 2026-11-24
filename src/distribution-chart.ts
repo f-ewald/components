@@ -29,8 +29,13 @@ export interface DistributionValue {
 const SVG_H = 130;
 const PAD = { top: 22, right: 12, bottom: 18, left: 12 };
 
-/** Default marker colors (indigo/amber/teal/rose 600s), assigned in order. */
-const DEFAULT_MARKER_COLORS = ["#4f46e5", "#d97706", "#0d9488", "#e11d48"];
+/** Default marker colors (theme primary/warning/success/danger), assigned in order. */
+const DEFAULT_MARKER_COLORS = [
+  "var(--ui-primary, #4f46e5)",
+  "var(--ui-warning, #d97706)",
+  "var(--ui-success, #16a34a)",
+  "var(--ui-danger, #dc2626)",
+];
 
 /**
  * Renders a KDE distribution curve for a named metric with one or more value
@@ -150,7 +155,10 @@ export class DistributionChart extends LitElement {
   @property() metric = "";
   /** One or more values to mark on the distribution curve. */
   @property({ attribute: false }) values: DistributionValue[] = [];
-  /** Colors assigned to markers in order. Defaults to indigo/amber/teal/rose 600s. */
+  /**
+   * CSS colors assigned to markers in order. Defaults to the theme's primary,
+   * warning, success, and danger tokens, so markers follow light/dark themes.
+   */
   @property({ attribute: false }) markerColors: string[] = DEFAULT_MARKER_COLORS;
   /** Target font size in CSS pixels (default 10). Always renders at this size regardless of container width. */
   @property({ type: Number, attribute: "font-size" }) fontSize = 10;
@@ -259,9 +267,9 @@ export class DistributionChart extends LitElement {
           ? v.label
           : `${v.value.toLocaleString("en-US", { maximumFractionDigits: 0 })} ${data.unit}`;
         return svg`
-          <line stroke=${color} stroke-width="1.5" stroke-dasharray="4 3"
+          <line style="stroke: ${color}" stroke-width="1.5" stroke-dasharray="4 3"
                 x1=${mx} y1=${0} x2=${mx} y2=${innerH} />
-          <text font-size=${fs} font-weight="600" fill=${color} text-anchor="middle"
+          <text font-size=${fs} font-weight="600" style="fill: ${color}" text-anchor="middle"
                 x=${mx} y=${-fs * 0.4}>${labelText}</text>
         `;
       });

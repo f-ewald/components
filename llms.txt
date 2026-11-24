@@ -1202,9 +1202,9 @@ Pass `fontSize` to control all text size (default 10). Pass a single
 
 Import: `import "@f-ewald/components/distribution-chart.js";`
 
-Properties: `metric` (attribute `metric`) : string, default ""; `values` (JS property only) : DistributionValue[], default []; `markerColors` (JS property only) : string[], default ["#4f46e5", "#d97706", "#0d9488", "#e11d48"]; `fontSize` (attribute `font-size`) : number, default 10
+Properties: `metric` (attribute `metric`) : string, default ""; `values` (JS property only) : DistributionValue[], default []; `markerColors` (JS property only) : string[], default [ "var(--ui-primary, #4f46e5)", "var(--ui-warning, #d97706)", "var(--ui-success, #16a34a)", "var(--ui-danger, #dc2626)", ]; `fontSize` (attribute `font-size`) : number, default 10
 Events: none
-CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-primary`, `--ui-radius-circle`, `--ui-radius-sm`, `--ui-surface-muted`, `--ui-text-muted`
+CSS custom properties: `--ui-border`, `--ui-danger`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-primary`, `--ui-radius-circle`, `--ui-radius-sm`, `--ui-success`, `--ui-surface-muted`, `--ui-text-muted`, `--ui-warning`
 
 Example:
 ```html

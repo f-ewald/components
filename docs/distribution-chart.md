@@ -30,7 +30,7 @@ import "@f-ewald/components/distribution-chart.js";
 | --- | --- | --- | --- | --- |
 | `metric` | `metric` | `string` | `""` | Metric name, fetched from `/api/distribution/<metric>` on change. |
 | `values` | _(JS property only)_ | `DistributionValue[]` | `[]` | One or more values to mark on the distribution curve. |
-| `markerColors` | _(JS property only)_ | `string[]` | `["#4f46e5", "#d97706", "#0d9488", "#e11d48"]` | Colors assigned to markers in order. Defaults to indigo/amber/teal/rose 600s. |
+| `markerColors` | _(JS property only)_ | `string[]` | `[ "var(--ui-primary, #4f46e5)", "var(--ui-warning, #d97706)", "var(--ui-success, #16a34a)", "var(--ui-danger, #dc2626)", ]` | CSS colors assigned to markers in order. Defaults to the theme's primary, warning, success, and danger tokens, so markers follow light/dark themes. |
 | `fontSize` | `font-size` | `number` | `10` | Target font size in CSS pixels (default 10). Always renders at this size regardless of container width. |
 
 ## Events
@@ -53,5 +53,7 @@ _None._
 | `--ui-primary` |
 | `--ui-radius-circle` |
 | `--ui-radius-sm` |
+| `--ui-success` |
 | `--ui-surface-muted` |
 | `--ui-text-muted` |
+| `--ui-warning` |
