@@ -85,6 +85,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#multi-select">multi-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#page-header">page-header</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#pagination-nav">pagination-nav</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#particle-background">particle-background</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#percent-bar-chart">percent-bar-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#photo-gallery">photo-gallery</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#pixel-fire">pixel-fire</a>
@@ -2729,6 +2730,54 @@ See the [changelog](#markdown-view) for details.`;</code></pre>
     e.target.setAttribute("current-page", e.detail.page);
   });
 &lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="particle-background" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-particle-background">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#particle-background">particle-background</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A decorative field of color-shifting particles swimming on noise, parted by a pulsing ring that
+            either drifts on its own or follows the pointer. Fills the viewport behind the page &mdash; or, with
+            <code>contained</code>, its positioned container. Draws a still frame under reduced motion.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Mode
+                <select id="particle-background-mode" data-testid="particle-background-mode" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="drift">drift</option>
+                  <option value="follow" selected>follow</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                Spacing
+                <input id="particle-background-spacing" data-testid="particle-background-spacing" type="range" min="12" max="48" step="2" value="24" />
+              </label>
+              <button
+                id="particle-background-page-toggle"
+                data-testid="particle-background-page-toggle"
+                type="button"
+                aria-pressed="false"
+                class="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Fill the page background
+              </button>
+            </div>
+            <div class="relative isolate flex h-72 items-center justify-center overflow-hidden rounded-md border border-slate-200">
+              <particle-background id="particle-background-demo" data-testid="particle-background-demo" mode="follow" contained></particle-background>
+              <p class="text-sm font-medium text-slate-900">Move the pointer over this box</p>
+            </div>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/particle-background.js";
+
+&lt;!-- Behind the whole page, wandering on its own --&gt;
+&lt;particle-background&gt;&lt;/particle-background&gt;
+
+&lt;!-- Behind one positioned box's content, following the pointer --&gt;
+&lt;div style="position: relative; isolation: isolate; height: 18rem"&gt;
+  &lt;particle-background contained mode="follow" spacing="20"
+    style="--particle-background-color-1: teal"&gt;&lt;/particle-background&gt;
+  &lt;h2&gt;Hello&lt;/h2&gt;
+&lt;/div&gt;</code></pre>
         </section>
 
         <section id="percent-bar-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-percent-bar-chart">

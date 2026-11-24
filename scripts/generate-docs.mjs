@@ -390,6 +390,15 @@ const EXAMPLES = {
   <ui-button slot="actions" variant="primary">Invite</ui-button>
 </page-header>`,
   "pagination-nav": `<pagination-nav current-page="1" total-pages="5"></pagination-nav>`,
+  "particle-background": `<!-- Behind the whole page, wandering on its own -->
+<particle-background></particle-background>
+
+<!-- Behind one positioned box's content, following the pointer -->
+<div style="position: relative; isolation: isolate; height: 18rem">
+  <particle-background contained mode="follow" spacing="20"
+    style="--particle-background-color-1: teal"></particle-background>
+  <h2>Hello</h2>
+</div>`,
   "pixel-fire": `<!-- Full width along the bottom of the viewport -->
 <pixel-fire></pixel-fire>
 

@@ -106,6 +106,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<multi-select>` | [API reference](https://f-ewald.github.io/components/docs/multi-select.html) |
 | `<page-header>` | [API reference](https://f-ewald.github.io/components/docs/page-header.html) |
 | `<pagination-nav>` | [API reference](https://f-ewald.github.io/components/docs/pagination-nav.html) |
+| `<particle-background>` | [API reference](https://f-ewald.github.io/components/docs/particle-background.html) |
 | `<percent-bar-chart>` | [API reference](https://f-ewald.github.io/components/docs/percent-bar-chart.html) |
 | `<photo-gallery>` | [API reference](https://f-ewald.github.io/components/docs/photo-gallery.html) |
 | `<pixel-fire>` | [API reference](https://f-ewald.github.io/components/docs/pixel-fire.html) |

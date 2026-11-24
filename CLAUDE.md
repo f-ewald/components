@@ -144,6 +144,24 @@ literal below `app-shell`'s chrome (39–41) and `skip-link` (50), so the fire
 never covers navigation or a dialog. Its palette is literal by design, like
 `animate-confetti`'s colors.
 
+`particle-background` is the package's first WebGL component: a decorative,
+click-through field of small capsules swimming on layered gradient noise,
+swollen and parted by a pulsing ring that wanders on its own
+(`mode="drift"`) or eases toward the pointer (`mode="follow"`). It uses raw
+WebGL2 with no dependency (no three.js) and computes every particle
+statelessly in the vertex shader from its rest position, the clock, and the
+CPU-eased ring — so there are no float render targets or extensions. Its
+`z-index: -1` is deliberate: by default it is `position: fixed` behind
+in-flow content in the root stacking context, which only shows through when
+the page background is painted by `<html>` or `<body>` alone; `contained`
+switches to `absolute`, and the ancestor needs `isolation: isolate` to keep
+the field inside it. Unlike `pixel-fire`, its three colors are tokens
+(`--ui-primary`/`--ui-danger`/`--ui-warning`, overridable per instance),
+resolved via `getComputedStyle` and re-read when `<html>`'s theme
+attributes change. Its tests measure ink from element screenshots, because
+a WebGL canvas without `preserveDrawingBuffer` can't be read back after
+compositing.
+
 `app-shell`'s sidebar has three independent properties rather than a single
 rail/drawer mode switch: `sidebar-open` (visible or not, closed by default,
 at every breakpoint), `sidebar-width` (`full` 16rem vs. `icon` 3.5rem rail —

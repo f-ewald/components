@@ -14554,6 +14554,22 @@
         },
         {
           "kind": "js",
+          "name": "ParticleBackground",
+          "declaration": {
+            "name": "ParticleBackground",
+            "module": "./particle-background.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ParticleBackgroundMode",
+          "declaration": {
+            "name": "ParticleBackgroundMode",
+            "module": "./particle-background.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "PixelFire",
           "declaration": {
             "name": "PixelFire",
@@ -19200,6 +19216,513 @@
           "declaration": {
             "name": "PaginationNav",
             "module": "src/pagination-nav.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/particle-background.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A decorative field of small, color-shifting particles that swim on layered\nnoise. A pulsing ring swells and parts the particles it passes: in `drift`\nmode it wanders across the field on its own; in `follow` mode it eases\ntoward the pointer, and drifts again when the pointer leaves.\n\nBy default it fills the viewport behind the page at `z-index: -1` and never\nintercepts the pointer. That only shows through when the page's background\nis painted by `<html>` or `<body>` alone (if both paint, the body hides it)\nand content between the two is transparent. With `contained` it fills the\nnearest positioned ancestor instead; give that ancestor\n`isolation: isolate` so the field stays behind the ancestor's own content.\n\nParticles mix three colors, set with `--particle-background-color-1`\n(dominant, default `--ui-primary`), `--particle-background-color-2`\n(default `--ui-danger`), and `--particle-background-color-3` (rarest,\ndefault `--ui-warning`). They are re-read when the page theme changes.\n\nRendering uses WebGL2; where that is unavailable nothing is drawn. Under\n`prefers-reduced-motion: reduce` it draws one still frame instead of\nanimating. Animation pauses while the host is off-screen or the tab is\nhidden. The canvas is hidden from assistive technology.",
+          "name": "ParticleBackground",
+          "members": [
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "ParticleBackgroundMode"
+              },
+              "default": "\"drift\"",
+              "description": "How the ring moves: `drift` wanders on its own, `follow` eases toward the\npointer while it is over the host.",
+              "attribute": "mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fills the nearest positioned ancestor instead of the viewport.",
+              "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "spacing",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "description": "Average distance between particles in CSS pixels (minimum `4`). Particle\nsize scales with it.",
+              "attribute": "spacing"
+            },
+            {
+              "kind": "field",
+              "name": "_gl",
+              "type": {
+                "text": "WebGL2RenderingContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_program",
+              "type": {
+                "text": "WebGLProgram | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_buffer",
+              "type": {
+                "text": "WebGLBuffer | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_vao",
+              "type": {
+                "text": "WebGLVertexArrayObject | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_uniforms",
+              "privacy": "private",
+              "default": "new Map<string, WebGLUniformLocation | null>()"
+            },
+            {
+              "kind": "field",
+              "name": "_count",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_width",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_height",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_pixelRatio",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "_colors",
+              "type": {
+                "text": "Array<[number, number, number]>"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_lastFrame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_time",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_ring",
+              "type": {
+                "text": "[number, number]"
+              },
+              "privacy": "private",
+              "default": "[0.5, 0.5]"
+            },
+            {
+              "kind": "field",
+              "name": "_pointer",
+              "type": {
+                "text": "{ x: number; y: number } | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_rect",
+              "type": {
+                "text": "DOMRect | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onScreen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_intersectionObserver",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_themeObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_motionQuery",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_schemeQuery",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_canvas",
+              "type": {
+                "text": "HTMLCanvasElement | null"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_spacing",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_animating",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_initGl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Creates the context, program, and buffers, then sizes and starts the field."
+            },
+            {
+              "kind": "method",
+              "name": "_releaseGl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_onContextLost",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onContextRestored",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_resize",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Matches the backing store to the host's box and rebuilds the particles."
+            },
+            {
+              "kind": "method",
+              "name": "_uploadParticles",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_refreshColors",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Re-reads the three particle colors from the host's computed style."
+            },
+            {
+              "kind": "field",
+              "name": "_onIntersect",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_restart",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Animates while visible and allowed to move; otherwise draws one still frame."
+            },
+            {
+              "kind": "method",
+              "name": "_stop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_drawStill",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_tick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_moveRing",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dt",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Eases the ring toward the pointer (follow mode) or its drift path."
+            },
+            {
+              "kind": "method",
+              "name": "_pointerTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[number, number] | undefined"
+                }
+              },
+              "description": "The pointer in 0–1 host units, or `undefined` when it is outside the host."
+            },
+            {
+              "kind": "method",
+              "name": "_trackPointer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "on",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Starts or stops listening to the pointer; forgets it when stopping."
+            },
+            {
+              "kind": "field",
+              "name": "_onPointerMove",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onPointerLeave",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_invalidateRect",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_uniform",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "WebGLUniformLocation | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_draw",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "time",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Renders the field at `time` seconds with the current ring position."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "mode",
+              "type": {
+                "text": "ParticleBackgroundMode"
+              },
+              "default": "\"drift\"",
+              "description": "How the ring moves: `drift` wanders on its own, `follow` eases toward the\npointer while it is over the host.",
+              "fieldName": "mode"
+            },
+            {
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fills the nearest positioned ancestor instead of the viewport.",
+              "fieldName": "contained"
+            },
+            {
+              "name": "spacing",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "description": "Average distance between particles in CSS pixels (minimum `4`). Particle\nsize scales with it.",
+              "fieldName": "spacing"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "particle-background",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ParticleBackground",
+          "declaration": {
+            "name": "ParticleBackground",
+            "module": "src/particle-background.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "particle-background",
+          "declaration": {
+            "name": "ParticleBackground",
+            "module": "src/particle-background.ts"
           }
         }
       ]

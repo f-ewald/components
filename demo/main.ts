@@ -88,6 +88,8 @@ import {
   iconSquares2x2,
   iconPencil,
   type PhotoGallery,
+  type ParticleBackground,
+  type ParticleBackgroundMode,
   type PixelFire,
   type PhotoGalleryObjectFit,
   type PhotoGallerySlideChangeDetail,
@@ -157,6 +159,35 @@ document.getElementById("confetti-trigger")?.addEventListener("click", () => {
   el.duration = 4000;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 5000);
+});
+
+// particle-background
+const particleDemo = document.getElementById("particle-background-demo") as ParticleBackground;
+const particleMode = document.getElementById("particle-background-mode") as HTMLSelectElement;
+const particleSpacing = document.getElementById("particle-background-spacing") as HTMLInputElement;
+const particlePageToggle = document.getElementById("particle-background-page-toggle") as HTMLButtonElement;
+let pageParticles: ParticleBackground | undefined;
+particleMode.addEventListener("change", () => {
+  particleDemo.mode = particleMode.value as ParticleBackgroundMode;
+  if (pageParticles) pageParticles.mode = particleDemo.mode;
+});
+particleSpacing.addEventListener("input", () => {
+  particleDemo.spacing = Number(particleSpacing.value);
+  if (pageParticles) pageParticles.spacing = particleDemo.spacing;
+});
+particlePageToggle.addEventListener("click", () => {
+  if (pageParticles) {
+    pageParticles.remove();
+    pageParticles = undefined;
+  } else {
+    pageParticles = document.createElement("particle-background");
+    pageParticles.dataset.testid = "particle-background-page";
+    pageParticles.mode = particleDemo.mode;
+    pageParticles.spacing = particleDemo.spacing;
+    document.body.appendChild(pageParticles);
+  }
+  particlePageToggle.setAttribute("aria-pressed", String(Boolean(pageParticles)));
+  particlePageToggle.textContent = pageParticles ? "Remove page background" : "Fill the page background";
 });
 
 // pixel-fire
