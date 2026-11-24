@@ -1,6 +1,7 @@
 import { LitElement, css, html, type PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { tokens } from "./tokens.js";
+import { PointerWatch, pulseRadius, wanderStep } from "./utils/wander.js";
 
 /** How the ring that swells and parts the particles moves. */
 export type ParticleBackgroundMode = "drift" | "follow";
@@ -11,9 +12,6 @@ const MAX_PARTICLES = 40_000;
 const MIN_SPACING = 4;
 /** Particle length per unit of scale, as a share of the spacing. */
 const SIZE_PER_SPACING = 0.15;
-/** Easing rates (per second) of the ring toward its target in each state. */
-const DRIFT_RATE = 0.8;
-const FOLLOW_RATE = 2.4;
 /** Fixed clock and ring position for the reduced-motion still frame. */
 const STILL_TIME = 12;
 /** Elapsed seconds wrap here to keep shader noise inputs well-conditioned. */
@@ -204,14 +202,6 @@ function restPositions(width: number, height: number, spacing: number): Float32A
   return points;
 }
 
-/** A smooth, never-repeating path across the middle of the host, in 0–1 units. */
-function driftTarget(time: number): [number, number] {
-  return [
-    0.5 + 0.3 * Math.sin(time * 0.21) + 0.1 * Math.sin(time * 0.53 + 1.7),
-    0.5 + 0.25 * Math.sin(time * 0.17 + 0.6) + 0.1 * Math.cos(time * 0.41),
-  ];
-}
-
 /**
  * A decorative field of small, color-shifting particles that swim on layered
  * noise. A pulsing ring swells and parts the particles it passes: in `drift`
@@ -272,8 +262,7 @@ export class ParticleBackground extends LitElement {
   private _lastFrame?: number;
   private _time = 0;
   private _ring: [number, number] = [0.5, 0.5];
-  private _pointer?: { x: number; y: number };
-  private _rect?: DOMRect;
+  private readonly _pointer = new PointerWatch(this);
   private _onScreen = true;
 
   private _resizeObserver?: ResizeObserver;
@@ -331,7 +320,6 @@ export class ParticleBackground extends LitElement {
     });
     this._intersectionObserver.observe(this);
     document.addEventListener("visibilitychange", this._restart);
-    window.addEventListener("scroll", this._invalidateRect, { capture: true, passive: true });
     if (this.hasUpdated) this._initGl();
   }
 
@@ -343,9 +331,8 @@ export class ParticleBackground extends LitElement {
     this._resizeObserver?.disconnect();
     this._intersectionObserver?.disconnect();
     document.removeEventListener("visibilitychange", this._restart);
-    window.removeEventListener("scroll", this._invalidateRect, { capture: true });
     this._stop();
-    this._trackPointer(false);
+    this._pointer.track(false);
     this._releaseGl();
   }
 
@@ -434,7 +421,6 @@ export class ParticleBackground extends LitElement {
 
   /** Matches the backing store to the host's box and rebuilds the particles. */
   private readonly _resize = (): void => {
-    this._invalidateRect();
     const canvas = this._canvas;
     if (!canvas) return;
     this._pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -473,7 +459,7 @@ export class ParticleBackground extends LitElement {
   private readonly _restart = (): void => {
     this._stop();
     if (!this._gl) return;
-    this._trackPointer(this.mode === "follow" && this._animating);
+    this._pointer.track(this.mode === "follow" && this._animating);
     if (!this._animating) {
       this._drawStill();
       return;
@@ -504,50 +490,9 @@ export class ParticleBackground extends LitElement {
 
   /** Eases the ring toward the pointer (follow mode) or its drift path. */
   private _moveRing(dt: number): void {
-    const pointer = this._pointerTarget();
-    const target = pointer ?? driftTarget(this._time);
-    const k = 1 - Math.exp(-dt * (pointer ? FOLLOW_RATE : DRIFT_RATE));
-    this._ring = [
-      this._ring[0] + (target[0] - this._ring[0]) * k,
-      this._ring[1] + (target[1] - this._ring[1]) * k,
-    ];
+    const pointer = this.mode === "follow" ? this._pointer.target() : undefined;
+    this._ring = wanderStep(this._ring, this._time, dt, pointer);
   }
-
-  /** The pointer in 0–1 host units, or `undefined` when it is outside the host. */
-  private _pointerTarget(): [number, number] | undefined {
-    if (this.mode !== "follow" || !this._pointer) return undefined;
-    this._rect ??= this.getBoundingClientRect();
-    const { left, top, width, height } = this._rect;
-    if (width === 0 || height === 0) return undefined;
-    const x = (this._pointer.x - left) / width;
-    const y = (this._pointer.y - top) / height;
-    if (x < 0 || x > 1 || y < 0 || y > 1) return undefined;
-    return [x, y];
-  }
-
-  /** Starts or stops listening to the pointer; forgets it when stopping. */
-  private _trackPointer(on: boolean): void {
-    if (on) {
-      window.addEventListener("pointermove", this._onPointerMove, { passive: true });
-      document.documentElement.addEventListener("pointerleave", this._onPointerLeave);
-      return;
-    }
-    window.removeEventListener("pointermove", this._onPointerMove);
-    document.documentElement.removeEventListener("pointerleave", this._onPointerLeave);
-    this._pointer = undefined;
-  }
-
-  private readonly _onPointerMove = (event: PointerEvent): void => {
-    this._pointer = { x: event.clientX, y: event.clientY };
-  };
-
-  private readonly _onPointerLeave = (): void => {
-    this._pointer = undefined;
-  };
-
-  private readonly _invalidateRect = (): void => {
-    this._rect = undefined;
-  };
 
   private _uniform(name: string): WebGLUniformLocation | null {
     if (!this._uniforms.has(name)) {
@@ -572,7 +517,7 @@ export class ParticleBackground extends LitElement {
     gl.uniform1f(this._uniform("uUnit"), unit);
     gl.uniform1f(this._uniform("uTime"), time);
     gl.uniform2f(this._uniform("uRing"), this._ring[0] * aspect[0], this._ring[1] * aspect[1]);
-    gl.uniform1f(this._uniform("uRadius"), 0.36 + Math.sin(time) * 0.06 + Math.cos(time * 3) * 0.04);
+    gl.uniform1f(this._uniform("uRadius"), pulseRadius(time));
     gl.uniform1f(this._uniform("uSize"), this._spacing * SIZE_PER_SPACING);
     gl.uniform1f(this._uniform("uPixelRatio"), this._pixelRatio);
     this._colors.forEach((rgb, i) => gl.uniform3f(this._uniform(`uColor${i + 1}`), ...rgb));

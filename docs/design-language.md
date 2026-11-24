@@ -284,9 +284,9 @@ literal values are migrated onto them.
   become instantaneous under reduced motion.
 - Progress spinners may become static indicators in reduced motion.
 - Components driven by timers must clean up on disconnect.
-- Decorative canvas animations (`pixel-fire`, `particle-background`) draw one
-  still frame under reduced motion rather than disappearing, and pause their
-  frame loop while off-screen or in a hidden tab.
+- Decorative background animations (`pixel-fire`, `particle-background`,
+  `blur-background`) draw one still frame under reduced motion rather than
+  disappearing, and pause their frame loop while off-screen or in a hidden tab.
 
 ## Accessibility
 

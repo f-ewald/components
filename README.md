@@ -54,6 +54,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<auto-scroll>` | [API reference](https://f-ewald.github.io/components/docs/auto-scroll.html) |
 | `<autocomplete-input>` | [API reference](https://f-ewald.github.io/components/docs/autocomplete-input.html) |
 | `<blink-cursor>` | [API reference](https://f-ewald.github.io/components/docs/blink-cursor.html) |
+| `<blur-background>` | [API reference](https://f-ewald.github.io/components/docs/blur-background.html) |
 | `<breadcrumb-nav>` | [API reference](https://f-ewald.github.io/components/docs/breadcrumb-nav.html) |
 | `<button-group>` | [API reference](https://f-ewald.github.io/components/docs/button-group.html) |
 | `<calendar-day>` | [API reference](https://f-ewald.github.io/components/docs/calendar-day.html) |

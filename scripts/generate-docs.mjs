@@ -209,6 +209,15 @@ const EXAMPLES = {
 <vote-control value="3" disabled></vote-control>`,
   "skip-link": `<skip-link href="#main"></skip-link>
 <skip-link href="#results" label="Jump to results"></skip-link>`,
+  "blur-background": `<!-- Behind the whole page, wandering on its own -->
+<blur-background></blur-background>
+
+<!-- Behind one positioned box's content, following the pointer -->
+<div style="position: relative; isolation: isolate; height: 18rem">
+  <blur-background contained mode="follow"
+    style="--blur-background-color: teal; --blur-background-size: 60cqmin"></blur-background>
+  <h2>Hello</h2>
+</div>`,
   "breadcrumb-nav": `<breadcrumb-nav></breadcrumb-nav>
 <script type="module">
   const trail = document.querySelector("breadcrumb-nav");

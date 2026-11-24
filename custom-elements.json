@@ -4067,6 +4067,225 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/blur-background.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A decorative, soft circular glow of one color — a radial gradient that\nfades smoothly to transparent and gently breathes. In `drift` mode it\nwanders across the host on its own; in `follow` mode it eases toward the\npointer, and drifts again when the pointer leaves. It moves exactly like\n`particle-background`'s ring.\n\nBy default it fills the viewport behind the page at `z-index: -1` and never\nintercepts the pointer. That only shows through when the page's background\nis painted by `<html>` or `<body>` alone (if both paint, the body hides it)\nand content between the two is transparent. With `contained` it fills the\nnearest positioned ancestor instead; give that ancestor\n`isolation: isolate` so the glow stays behind the ancestor's own content.\n\nSet the color with `--blur-background-color` (default `--ui-primary`),\nthe diameter with `--blur-background-size` (default `90cqmin`, 90% of the\nhost's shorter side), and the peak opacity with\n`--blur-background-opacity` (default `0.5`). The glow follows theme\nchanges on its own, since it is plain CSS.\n\nUnder `prefers-reduced-motion: reduce` the glow rests, still, in the\ncenter. Animation pauses while the host is off-screen or the tab is hidden.\nThe glow is hidden from assistive technology.",
+          "name": "BlurBackground",
+          "members": [
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "BlurBackgroundMode"
+              },
+              "default": "\"drift\"",
+              "description": "How the glow moves: `drift` wanders on its own, `follow` eases toward the\npointer while it is over the host.",
+              "attribute": "mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fills the nearest positioned ancestor instead of the viewport.",
+              "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_spot",
+              "type": {
+                "text": "HTMLElement | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_pointer",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new PointerWatch(this)"
+            },
+            {
+              "kind": "field",
+              "name": "_position",
+              "type": {
+                "text": "WanderPoint"
+              },
+              "privacy": "private",
+              "default": "[0.5, 0.5]"
+            },
+            {
+              "kind": "field",
+              "name": "_time",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_lastFrame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onScreen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "_intersectionObserver",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_motionQuery",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_reducedMotion",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_animating",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onIntersect",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_restart",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Animates while visible and allowed to move; rests in the center under reduced motion."
+            },
+            {
+              "kind": "method",
+              "name": "_stop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_tick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_place",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "scale",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves the glow to the current position at `scale`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "mode",
+              "type": {
+                "text": "BlurBackgroundMode"
+              },
+              "default": "\"drift\"",
+              "description": "How the glow moves: `drift` wanders on its own, `follow` eases toward the\npointer while it is over the host.",
+              "fieldName": "mode"
+            },
+            {
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fills the nearest positioned ancestor instead of the viewport.",
+              "fieldName": "contained"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "blur-background",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "BlurBackground",
+          "declaration": {
+            "name": "BlurBackground",
+            "module": "src/blur-background.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "blur-background",
+          "declaration": {
+            "name": "BlurBackground",
+            "module": "src/blur-background.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/breadcrumb-nav.ts",
       "declarations": [
         {
@@ -16166,6 +16385,22 @@
         },
         {
           "kind": "js",
+          "name": "BlurBackground",
+          "declaration": {
+            "name": "BlurBackground",
+            "module": "./blur-background.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BlurBackgroundMode",
+          "declaration": {
+            "name": "BlurBackgroundMode",
+            "module": "./blur-background.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "PixelFire",
           "declaration": {
             "name": "PixelFire",
@@ -20985,18 +21220,9 @@
             {
               "kind": "field",
               "name": "_pointer",
-              "type": {
-                "text": "{ x: number; y: number } | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_rect",
-              "type": {
-                "text": "DOMRect | undefined"
-              },
-              "privacy": "private"
+              "privacy": "private",
+              "readonly": true,
+              "default": "new PointerWatch(this)"
             },
             {
               "kind": "field",
@@ -21188,54 +21414,6 @@
                 }
               ],
               "description": "Eases the ring toward the pointer (follow mode) or its drift path."
-            },
-            {
-              "kind": "method",
-              "name": "_pointerTarget",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "[number, number] | undefined"
-                }
-              },
-              "description": "The pointer in 0–1 host units, or `undefined` when it is outside the host."
-            },
-            {
-              "kind": "method",
-              "name": "_trackPointer",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "on",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "description": "Starts or stops listening to the pointer; forgets it when stopping."
-            },
-            {
-              "kind": "field",
-              "name": "_onPointerMove",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_onPointerLeave",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_invalidateRect",
-              "privacy": "private",
-              "readonly": true
             },
             {
               "kind": "method",
@@ -30701,6 +30879,204 @@
           "declaration": {
             "name": "transportRangeStyles",
             "module": "src/utils/transport-controls.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/wander.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "driftTarget",
+          "return": {
+            "type": {
+              "text": "WanderPoint"
+            }
+          },
+          "parameters": [
+            {
+              "name": "time",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "A smooth, never-repeating path across the middle of the host."
+        },
+        {
+          "kind": "function",
+          "name": "wanderStep",
+          "return": {
+            "type": {
+              "text": "WanderPoint"
+            }
+          },
+          "parameters": [
+            {
+              "name": "from",
+              "type": {
+                "text": "WanderPoint"
+              }
+            },
+            {
+              "name": "time",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "dt",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "pointer",
+              "optional": true,
+              "type": {
+                "text": "WanderPoint"
+              }
+            }
+          ],
+          "description": "Advances `from` by `dt` seconds: toward `pointer` when given, otherwise\ntoward the drift path at `time`."
+        },
+        {
+          "kind": "function",
+          "name": "pulseRadius",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "time",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The focus radius at `time`, in units of the host's shorter side; breathes around its mean."
+        },
+        {
+          "kind": "function",
+          "name": "pulseScale",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "time",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "depth",
+              "default": "1"
+            }
+          ],
+          "description": "The same breathing as a scale factor around 1, with `depth` scaling its amplitude."
+        },
+        {
+          "kind": "class",
+          "description": "Tracks the pointer anywhere in the window and reports it relative to a host.",
+          "name": "PointerWatch",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_point",
+              "type": {
+                "text": "{ x: number; y: number } | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "track",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "on",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Starts or stops listening; stopping forgets the pointer."
+            },
+            {
+              "kind": "method",
+              "name": "target",
+              "return": {
+                "type": {
+                  "text": "WanderPoint | undefined"
+                }
+              },
+              "description": "The pointer in 0–1 host units, or `undefined` when it is outside the host."
+            },
+            {
+              "kind": "field",
+              "name": "_onMove",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onLeave",
+              "privacy": "private",
+              "readonly": true
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "driftTarget",
+          "declaration": {
+            "name": "driftTarget",
+            "module": "src/utils/wander.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "wanderStep",
+          "declaration": {
+            "name": "wanderStep",
+            "module": "src/utils/wander.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pulseRadius",
+          "declaration": {
+            "name": "pulseRadius",
+            "module": "src/utils/wander.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pulseScale",
+          "declaration": {
+            "name": "pulseScale",
+            "module": "src/utils/wander.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PointerWatch",
+          "declaration": {
+            "name": "PointerWatch",
+            "module": "src/utils/wander.ts"
           }
         }
       ]

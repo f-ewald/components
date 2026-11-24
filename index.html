@@ -37,6 +37,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#auto-scroll">auto-scroll</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#autocomplete-input">autocomplete-input</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#blink-cursor">blink-cursor</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#blur-background">blur-background</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#breadcrumb-nav">breadcrumb-nav</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#button-group">button-group</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#calendar-day">calendar-day</a>
@@ -501,6 +502,63 @@ import { iconBookOpen, iconGlobeAlt, iconServer } from "@f-ewald/components/icon
 
 &lt;h1&gt;ponytail&lt;blink-cursor&gt;&lt;/blink-cursor&gt;&lt;/h1&gt;
 &lt;p&gt;~/ponytail ❯ &lt;blink-cursor char="|"&gt;&lt;/blink-cursor&gt;&lt;/p&gt;</code></pre>
+        </section>
+
+        <section id="blur-background" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-blur-background">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#blur-background">blur-background</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            A decorative, soft circular glow of one color that gently breathes and either drifts on its own or
+            follows the pointer &mdash; moving exactly like <code>particle-background</code>'s ring. Fills the
+            viewport behind the page &mdash; or, with <code>contained</code>, its positioned container. Rests in
+            the center under reduced motion.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Mode
+                <select id="blur-background-mode" data-testid="blur-background-mode" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="drift">drift</option>
+                  <option value="follow" selected>follow</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                Color
+                <input id="blur-background-color" data-testid="blur-background-color" type="color" value="#4f46e5" />
+              </label>
+              <label class="flex items-center gap-2">
+                Size
+                <input id="blur-background-size" data-testid="blur-background-size" type="range" min="30" max="150" step="10" value="90" />
+              </label>
+              <label class="flex items-center gap-2">
+                Opacity
+                <input id="blur-background-opacity" data-testid="blur-background-opacity" type="range" min="0.1" max="1" step="0.05" value="0.5" />
+              </label>
+              <button
+                id="blur-background-page-toggle"
+                data-testid="blur-background-page-toggle"
+                type="button"
+                aria-pressed="false"
+                class="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                Fill the page background
+              </button>
+            </div>
+            <div class="relative isolate flex h-72 items-center justify-center overflow-hidden rounded-md border border-slate-200">
+              <blur-background id="blur-background-demo" data-testid="blur-background-demo" mode="follow" contained></blur-background>
+              <p class="text-sm font-medium text-slate-900">Move the pointer over this box</p>
+            </div>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/blur-background.js";
+
+&lt;!-- Behind the whole page, wandering on its own --&gt;
+&lt;blur-background&gt;&lt;/blur-background&gt;
+
+&lt;!-- Behind one positioned box's content, following the pointer --&gt;
+&lt;div style="position: relative; isolation: isolate; height: 18rem"&gt;
+  &lt;blur-background contained mode="follow"
+    style="--blur-background-color: teal; --blur-background-size: 60cqmin"&gt;&lt;/blur-background&gt;
+  &lt;h2&gt;Hello&lt;/h2&gt;
+&lt;/div&gt;</code></pre>
         </section>
 
         <section id="breadcrumb-nav" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-breadcrumb-nav">

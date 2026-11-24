@@ -174,6 +174,18 @@ attributes change. Its tests measure ink from element screenshots, because
 a WebGL canvas without `preserveDrawingBuffer` can't be read back after
 compositing.
 
+`blur-background` is `particle-background`'s single-color sibling: one soft
+radial-gradient glow instead of a particle field, with the same `mode`,
+`contained`, stacking, and pausing behavior. Both move their focus point
+with the free functions in `src/utils/wander.ts` (`driftTarget`,
+`wanderStep`, `pulseRadius`/`pulseScale`, and the `PointerWatch` window
+pointer tracker), so they wander and follow identically. It is plain CSS,
+not a canvas: the host is a `container-type: size` container and the frame
+loop only writes `--_x`/`--_y`/`--_scale` on the spot, whose transform
+resolves them in `cqw`/`cqh` — so it needs no resize handling, and its
+color, size (default `90cqmin`), and opacity are ordinary custom
+properties that follow theme changes without observers.
+
 `dag-graph-3d` (experimental) is the package's only `three` consumer: a
 first-person view of `dag-graph`'s data, reusing `layoutDag` with `"TB"` so
 dagre's ranks become depth toward the horizon (`-z`) and its x becomes the

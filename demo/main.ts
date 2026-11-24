@@ -92,6 +92,8 @@ import {
   type PhotoGallery,
   type ParticleBackground,
   type ParticleBackgroundMode,
+  type BlurBackground,
+  type BlurBackgroundMode,
   type PixelFire,
   type FloatingText,
   type PhotoGalleryObjectFit,
@@ -162,6 +164,46 @@ document.getElementById("confetti-trigger")?.addEventListener("click", () => {
   el.duration = 4000;
   el.addEventListener("confetti-end", () => el.remove(), { once: true });
   document.body.appendChild(el);
+});
+
+// blur-background
+const blurDemo = document.getElementById("blur-background-demo") as BlurBackground;
+const blurPageToggle = document.getElementById("blur-background-page-toggle") as HTMLButtonElement;
+let pageBlur: BlurBackground | undefined;
+/** Copies the demo's mode and custom properties onto the page-wide instance, if any. */
+function syncPageBlur(): void {
+  if (!pageBlur) return;
+  pageBlur.mode = blurDemo.mode;
+  pageBlur.style.cssText = blurDemo.style.cssText;
+}
+document.getElementById("blur-background-mode")!.addEventListener("change", (event) => {
+  blurDemo.mode = (event.target as HTMLSelectElement).value as BlurBackgroundMode;
+  syncPageBlur();
+});
+document.getElementById("blur-background-color")!.addEventListener("input", (event) => {
+  blurDemo.style.setProperty("--blur-background-color", (event.target as HTMLInputElement).value);
+  syncPageBlur();
+});
+document.getElementById("blur-background-size")!.addEventListener("input", (event) => {
+  blurDemo.style.setProperty("--blur-background-size", `${(event.target as HTMLInputElement).value}cqmin`);
+  syncPageBlur();
+});
+document.getElementById("blur-background-opacity")!.addEventListener("input", (event) => {
+  blurDemo.style.setProperty("--blur-background-opacity", (event.target as HTMLInputElement).value);
+  syncPageBlur();
+});
+blurPageToggle.addEventListener("click", () => {
+  if (pageBlur) {
+    pageBlur.remove();
+    pageBlur = undefined;
+  } else {
+    pageBlur = document.createElement("blur-background");
+    pageBlur.dataset.testid = "blur-background-page";
+    document.body.appendChild(pageBlur);
+    syncPageBlur();
+  }
+  blurPageToggle.setAttribute("aria-pressed", String(Boolean(pageBlur)));
+  blurPageToggle.textContent = pageBlur ? "Remove page background" : "Fill the page background";
 });
 
 // particle-background

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- New `<blur-background>` (1.51.0): a decorative, soft circular glow of one color that gently breathes and moves exactly
+  like `particle-background`'s ring, wandering on its own (`mode="drift"`) or easing toward the pointer
+  (`mode="follow"`). Like `particle-background` it fills the viewport behind the page, or its positioned
+  container with `contained`. `--blur-background-color` (default `--ui-primary`), `--blur-background-size`
+  (default `90cqmin`), and `--blur-background-opacity` (default `0.5`) style it. It is plain CSS (no canvas),
+  rests in the center under reduced motion, and pauses while off-screen or in a hidden tab.
 - New experimental `<dag-graph-3d>`: a first-person 3D view (three.js) of the same `nodes`, `edges`, and
   `kinds` as `dag-graph`, laid out like a street network. The `selected` node is in front of the viewer and
   the nodes it leads to sit further away toward the horizon. Requests set out from the roots as dots at `rate`
