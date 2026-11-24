@@ -2,11 +2,35 @@ import { test, expect, type Locator, type Page } from "@playwright/test";
 
 const gallerySelector = "#photo-gallery-demo";
 
+/**
+ * Fakes the page clock and freezes it before the page loads, so every timer
+ * starts at a known instant and only runs when the test advances the clock,
+ * however long loading takes.
+ */
+async function freezeClock(page: Page): Promise<void> {
+  const start = new Date("2026-01-01T00:00:00Z").getTime();
+  await page.clock.install({ time: start });
+  await page.clock.pauseAt(start + 1000);
+}
+
 /** Disables autoplay so interaction assertions are deterministic. */
 async function disableAutoplay(gallery: Locator): Promise<void> {
   await gallery.evaluate((element) => {
     (element as HTMLElement & { delay: number }).delay = 0;
   });
+}
+
+/**
+ * Opens the playground with the demo gallery's autoplay switched off before
+ * it can advance a slide, then lets the clock run normally again.
+ */
+async function openWithoutAutoplay(page: Page): Promise<Locator> {
+  await freezeClock(page);
+  await page.goto("/");
+  const gallery = page.locator(gallerySelector);
+  await disableAutoplay(gallery);
+  await page.clock.resume();
+  return gallery;
 }
 
 /** Returns the currently exposed image in the gallery shadow root. */
@@ -21,9 +45,7 @@ async function leaveGallery(page: Page): Promise<void> {
 
 test.describe("photo-gallery", () => {
   test("renders responsive image metadata, caption, viewport, and default navigation", async ({ page }) => {
-    await page.goto("/");
-    const gallery = page.locator(gallerySelector);
-    await disableAutoplay(gallery);
+    const gallery = await openWithoutAutoplay(page);
 
     await expect(activeImage(gallery)).toHaveAttribute(
       "alt",
@@ -55,9 +77,7 @@ test.describe("photo-gallery", () => {
   });
 
   test("wraps arrow navigation, exposes currentIndex, and emits slide-change", async ({ page }) => {
-    await page.goto("/");
-    const gallery = page.locator(gallerySelector);
-    await disableAutoplay(gallery);
+    const gallery = await openWithoutAutoplay(page);
     await gallery.evaluate((element) => {
       element.addEventListener("slide-change", (event) => {
         const detail = (event as CustomEvent<{ currentIndex: number; reason: string }>).detail;
@@ -86,9 +106,7 @@ test.describe("photo-gallery", () => {
   });
 
   test("configures arrows, counter, indicators, and indicator navigation", async ({ page }) => {
-    await page.goto("/");
-    const gallery = page.locator(gallerySelector);
-    await disableAutoplay(gallery);
+    const gallery = await openWithoutAutoplay(page);
 
     await gallery.evaluate((element) => {
       const component = element as HTMLElement & {
@@ -132,9 +150,7 @@ test.describe("photo-gallery", () => {
   });
 
   test("supports keyboard navigation and horizontal pointer swipes", async ({ page }) => {
-    await page.goto("/");
-    const gallery = page.locator(gallerySelector);
-    await disableAutoplay(gallery);
+    const gallery = await openWithoutAutoplay(page);
     const keyboardTarget = gallery.locator(".gallery");
 
     await keyboardTarget.focus();
@@ -157,9 +173,8 @@ test.describe("photo-gallery", () => {
   });
 
   test("autoplays, pauses for interaction, restarts, and supports explicit pause", async ({ page }) => {
-    await page.clock.install();
+    await freezeClock(page);
     await page.goto("/");
-    await page.clock.pauseAt(await page.evaluate(() => Date.now()));
     const gallery = page.locator(gallerySelector);
     const viewport = gallery.locator(".viewport");
 
@@ -262,6 +277,8 @@ test.describe("photo-gallery", () => {
 
   test("removes crossfade animation for reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
+    // The crossfade layers are removed 250ms after a slide change.
+    await freezeClock(page);
     await page.goto("/");
     const gallery = page.locator(gallerySelector);
     await disableAutoplay(gallery);
@@ -285,9 +302,7 @@ test.describe("photo-gallery", () => {
   test("keeps a constant height across slides when only some slides have a caption", async ({
     page,
   }) => {
-    await page.goto("/");
-    const gallery = page.locator(gallerySelector);
-    await disableAutoplay(gallery);
+    const gallery = await openWithoutAutoplay(page);
 
     // The third demo slide (cliffs) has no caption; the first two do.
     const heightAt = async (index: number): Promise<number> => {
