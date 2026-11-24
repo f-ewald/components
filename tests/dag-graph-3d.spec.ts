@@ -138,7 +138,11 @@ test.describe("dag-graph-3d", () => {
     await expect.poll(shown).toEqual(["home", "view"]);
 
     const label = labelOf(view, "api-gateway");
-    const where = async () => (await label.boundingBox())!;
+    // Relative to the view: a static view leaves the wheel to the page, which may scroll.
+    const where = async () => {
+      const [inner, outer] = [(await label.boundingBox())!, (await view.boundingBox())!];
+      return { x: inner.x - outer.x, y: inner.y - outer.y };
+    };
     const before = await where();
     await page.getByTestId("dag3d-static").click();
     await expect(view).toHaveAttribute("static", "");
