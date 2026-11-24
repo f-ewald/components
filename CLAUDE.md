@@ -144,6 +144,18 @@ literal below `app-shell`'s chrome (39–41) and `skip-link` (50), so the fire
 never covers navigation or a dialog. Its palette is literal by design, like
 `animate-confetti`'s colors.
 
+`floating-text` recreates antigravity.google's footer wordmark with live
+text instead of an SVG: its last `float-count` characters lift (each a
+fixed share of the next, the last by `lift` em), tilt about their bottom
+edge, and bob on CSS keyframes. The lift is a scroll-linked progress (0 when
+a fifth of the host has entered from the bottom, 1 when all of it has)
+eased by a small rAF loop with no GSAP; a jump of more than half the
+progress within 150ms holds 300ms then floats up over 1.4s. The text comes
+from the host's own light-DOM text content (observed, so edits re-split it;
+no `<slot>`, so the raw text never renders twice) and is split into
+graphemes with `Intl.Segmenter`. A visually hidden copy carries the
+accessible name while the split, `aria-hidden` copy is what's seen.
+
 `particle-background` is the package's first WebGL component: a decorative,
 click-through field of small capsules swimming on layered gradient noise,
 swollen and parted by a pulsing ring that wanders on its own

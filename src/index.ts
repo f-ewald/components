@@ -98,6 +98,7 @@ export { TileGrid } from "./tile-grid.js";
 export { TreeView, type TreeNode } from "./tree-view.js";
 export { ParticleBackground, type ParticleBackgroundMode } from "./particle-background.js";
 export { PixelFire } from "./pixel-fire.js";
+export { FloatingText } from "./floating-text.js";
 export { PopoverPanel } from "./popover-panel.js";
 export {
   DropZone,

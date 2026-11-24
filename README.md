@@ -80,6 +80,7 @@ import "@f-ewald/components/roman-numeral.js";
 | `<dropdown-button>` | [API reference](https://f-ewald.github.io/components/docs/dropdown-button.html) |
 | `<editable-text>` | [API reference](https://f-ewald.github.io/components/docs/editable-text.html) |
 | `<empty-state>` | [API reference](https://f-ewald.github.io/components/docs/empty-state.html) |
+| `<floating-text>` | [API reference](https://f-ewald.github.io/components/docs/floating-text.html) |
 | `<form-actions>` | [API reference](https://f-ewald.github.io/components/docs/form-actions.html) |
 | `<form-field>` | [API reference](https://f-ewald.github.io/components/docs/form-field.html) |
 | `<form-select>` | [API reference](https://f-ewald.github.io/components/docs/form-select.html) |

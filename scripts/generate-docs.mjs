@@ -380,6 +380,10 @@ const EXAMPLES = {
     <!-- icon --><span style="display: var(--app-sidebar-label, inline)">Members</span>
   </a>
 </app-sidebar>`,
+  "floating-text": `<h1><floating-text>Antigravity</floating-text></h1>
+
+<!-- Float the last five characters, higher -->
+<h2><floating-text float-count="5" lift="0.8">Weightless</floating-text></h2>`,
   "form-actions": `<form-actions>
   <ui-button slot="start" variant="danger">Delete</ui-button>
   <ui-button slot="secondary" variant="secondary">Cancel</ui-button>

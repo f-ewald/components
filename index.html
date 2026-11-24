@@ -62,6 +62,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#empty-state">empty-state</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#floating-text">floating-text</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-actions">form-actions</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-field">form-field</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
@@ -1732,6 +1733,44 @@ dropdown.size = "sm";</code></pre>
 &lt;/empty-state&gt;
 
 &lt;empty-state size="sm" heading="No pinned items"&gt;&lt;/empty-state&gt;</code></pre>
+        </section>
+
+        <section id="floating-text" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-floating-text">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#floating-text">floating-text</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Text whose last characters float up and away as it scrolls into view, then bob gently in place. Scroll
+            this example out below the viewport and back to replay it. Uses the surrounding font and color.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Floating characters
+                <select id="floating-text-count" data-testid="floating-text-count" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="5">5</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                Lift
+                <input id="floating-text-lift" data-testid="floating-text-lift" type="range" min="0.1" max="1" step="0.05" value="0.45" />
+              </label>
+              <label class="flex items-center gap-2">
+                Text
+                <input id="floating-text-input" data-testid="floating-text-input" type="text" value="Antigravity" class="rounded-md border border-slate-200 px-2 py-1" />
+              </label>
+            </div>
+            <p class="pt-12 pb-4 text-6xl font-semibold tracking-tight text-slate-900">
+              <floating-text id="floating-text-demo" data-testid="floating-text-demo">Antigravity</floating-text>
+            </p>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/floating-text.js";
+
+&lt;h1&gt;&lt;floating-text&gt;Antigravity&lt;/floating-text&gt;&lt;/h1&gt;
+
+&lt;!-- Float the last five characters, higher --&gt;
+&lt;h2&gt;&lt;floating-text float-count="5" lift="0.8"&gt;Weightless&lt;/floating-text&gt;&lt;/h2&gt;</code></pre>
         </section>
 
         <section id="form-actions" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-form-actions">

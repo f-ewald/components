@@ -10699,6 +10699,312 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/floating-text.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Text whose last few characters float up and away as it scrolls into view,\nthen bob gently in place, as though gravity let go of the end of the word.\nThe lift follows the scroll position smoothly; a sudden jump (a page load\nwith the text already visible, or a fast scroll) holds for a moment, then\nfloats the characters up over about a second and a half. Scrolling back\ndown below the text lets them settle again.\n\nThe text is the element's own text content, rendered in the surrounding\nfont and color — wrap it in a heading to size it. Each floating character\nlifts further than the one before it (the last by `lift`), tilting\nslightly about its bottom edge. Assistive technology reads the text as one\nword. Under `prefers-reduced-motion: reduce` the characters sit in their\nfloated positions without animating.",
+          "name": "FloatingText",
+          "members": [
+            {
+              "kind": "field",
+              "name": "floatCount",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "How many trailing characters float away.",
+              "attribute": "float-count"
+            },
+            {
+              "kind": "field",
+              "name": "lift",
+              "type": {
+                "text": "number"
+              },
+              "default": "0.45",
+              "description": "How far the last character rises when fully floated, in `em`.",
+              "attribute": "lift"
+            },
+            {
+              "kind": "field",
+              "name": "_text",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_inView",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_current",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_target",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_lastTarget",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_history",
+              "type": {
+                "text": "Array<{ time: number; progress: number }>"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_holdUntil",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_entryHold",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_liftUntil",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_liftFrom",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_frame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_lastFrame",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_textObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_intersectionObserver",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_motionQuery",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderFloating",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "char",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "One floating character; `index` counts from the first floating one."
+            },
+            {
+              "kind": "field",
+              "name": "_readText",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_reducedMotion",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onMotionChange",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onIntersect",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_listen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "on",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onScroll",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Records the new scroll progress. A large jump schedules a held, timed\nfloat; the first movement off zero waits one jump window to tell the two\napart."
+            },
+            {
+              "kind": "method",
+              "name": "_stop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_tick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_applyProgress",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Positions every floating character for the current overall progress."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "float-count",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "How many trailing characters float away.",
+              "fieldName": "floatCount"
+            },
+            {
+              "name": "lift",
+              "type": {
+                "text": "number"
+              },
+              "default": "0.45",
+              "description": "How far the last character rises when fully floated, in `em`.",
+              "fieldName": "lift"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "floating-text",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FloatingText",
+          "declaration": {
+            "name": "FloatingText",
+            "module": "src/floating-text.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "floating-text",
+          "declaration": {
+            "name": "FloatingText",
+            "module": "src/floating-text.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/form-actions.ts",
       "declarations": [
         {
@@ -14574,6 +14880,14 @@
           "declaration": {
             "name": "PixelFire",
             "module": "./pixel-fire.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FloatingText",
+          "declaration": {
+            "name": "FloatingText",
+            "module": "./floating-text.js"
           }
         },
         {

@@ -91,6 +91,7 @@ import {
   type ParticleBackground,
   type ParticleBackgroundMode,
   type PixelFire,
+  type FloatingText,
   type PhotoGalleryObjectFit,
   type PhotoGallerySlideChangeDetail,
   type GalleryItem,
@@ -188,6 +189,18 @@ particlePageToggle.addEventListener("click", () => {
   }
   particlePageToggle.setAttribute("aria-pressed", String(Boolean(pageParticles)));
   particlePageToggle.textContent = pageParticles ? "Remove page background" : "Fill the page background";
+});
+
+// floating-text
+const floatingDemo = document.getElementById("floating-text-demo") as FloatingText;
+document.getElementById("floating-text-count")!.addEventListener("change", (event) => {
+  floatingDemo.floatCount = Number((event.target as HTMLSelectElement).value);
+});
+document.getElementById("floating-text-lift")!.addEventListener("input", (event) => {
+  floatingDemo.lift = Number((event.target as HTMLInputElement).value);
+});
+document.getElementById("floating-text-input")!.addEventListener("input", (event) => {
+  floatingDemo.textContent = (event.target as HTMLInputElement).value;
 });
 
 // pixel-fire
