@@ -120,6 +120,11 @@ import {
   type FanChart,
   type FanChartSeries,
   type FanTable,
+  type HeatmapChart,
+  type HeatmapColorScheme,
+  type LineChart,
+  type ScatterChart,
+  type ScatterPoint,
   type FanTableInterval,
   samplePaths,
   sumPaths,
@@ -346,6 +351,8 @@ if (fanBoundHost) {
     goal: true,
     events: true,
     samples: true,
+    interactive: true,
+    tooltip: true,
     locale: "en-US",
     currency: "USD",
     series: [] as FanChartSeries[],
@@ -363,6 +370,8 @@ if (fanBoundHost) {
         .goal=${fanState.goal ? goal : null}
         .events=${fanState.events ? events : []}
         ?log=${fanState.log}
+        .interactive=${fanState.interactive}
+        .tooltip=${fanState.tooltip}
         locale=${fanState.locale}
         currency=${fanState.currency}
         @series-visibility-change=${(event: CustomEvent<{ visible: string[] | null }>) => {
@@ -392,6 +401,8 @@ if (fanBoundHost) {
   checkbox("fan-chart-goal", (checked) => (fanState.goal = checked), true);
   checkbox("fan-chart-events", (checked) => (fanState.events = checked));
   checkbox("fan-chart-samples", (checked) => (fanState.samples = checked), true);
+  checkbox("fan-chart-interactive", (checked) => (fanState.interactive = checked));
+  checkbox("fan-chart-tooltip", (checked) => (fanState.tooltip = checked));
   document.getElementById("fan-chart-locale")!.addEventListener("change", (event) => {
     [fanState.locale, fanState.currency] = (event.target as HTMLSelectElement).value.split("|");
     renderFanChart();
@@ -2465,3 +2476,206 @@ if (specSheet) {
 // would still parse as a truthy Lit boolean.
 const specSlotted = document.getElementById("spec-list-slotted") as SpecList | null;
 if (specSlotted) specSlotted.dividers = false;
+
+// heatmap-chart
+const heatmapDemo = document.getElementById("heatmap-demo") as HeatmapChart | null;
+if (heatmapDemo) {
+  const cols = ["100%", "50%", "25%", "10%", "5%", "1%"];
+  heatmapDemo.columns = cols;
+  heatmapDemo.domain = [0, 0.25];
+  heatmapDemo.valueFormat = (v) => `${Math.round(v * 100)}%`;
+  heatmapDemo.rows = [
+    {
+      label: "GET /feed/updates",
+      meta: 4210,
+      cells: [
+        0.02,
+        0.03,
+        0.05,
+        0.08,
+        0.13,
+        { value: 0.21, marker: "*", note: "1 of 5 seeds had no training traces" },
+      ],
+    },
+    {
+      label: "GET /profile/summary",
+      meta: 1940,
+      cells: [0.03, 0.04, 0.06, 0.11, 0.17, 0.24],
+    },
+    {
+      label: "GET /notifications/badge",
+      meta: 980,
+      cells: [0.01, 0.02, 0.04, 0.09, { value: 0.15, marker: "*", note: "20% of fits missing" }, null],
+    },
+    {
+      label: "POST /messaging/send",
+      meta: 410,
+      cells: [0.04, 0.07, 0.12, 0.19, null, null],
+    },
+  ];
+  const heatmapStatus = document.getElementById("heatmap-status");
+  heatmapDemo.addEventListener("heatmap-column-select", (event) => {
+    const { col, columnLabel } = (event as CustomEvent<{ col: number; columnLabel: string }>).detail;
+    heatmapDemo.selectedColumn = col;
+    if (heatmapStatus) heatmapStatus.textContent = `Selected column: ${columnLabel}`;
+  });
+  heatmapDemo.addEventListener("heatmap-cell-select", (event) => {
+    const { row, col, rowLabel, columnLabel, value } = (
+      event as CustomEvent<{ row: number; col: number; rowLabel: string; columnLabel: string; value: number | null }>
+    ).detail;
+    heatmapDemo.selectedColumn = col;
+    heatmapDemo.selectedCell = { row, col };
+    if (heatmapStatus) {
+      heatmapStatus.textContent = `${rowLabel} @ ${columnLabel}: ${value === null ? "No data" : `${Math.round(value * 100)}%`}`;
+    }
+  });
+  document.getElementById("heatmap-scheme")?.addEventListener("change", (event) => {
+    const scheme = (event.target as HTMLSelectElement).value as HeatmapColorScheme;
+    heatmapDemo.colorScheme = scheme;
+    heatmapDemo.domain = scheme === "diverging" ? [-0.25, 0.25] : [0, 0.25];
+  });
+  document.getElementById("heatmap-values")?.addEventListener("change", (event) => {
+    heatmapDemo.showValues = (event.target as HTMLInputElement).checked;
+  });
+  document.getElementById("heatmap-interactive")?.addEventListener("change", (event) => {
+    heatmapDemo.interactive = (event.target as HTMLInputElement).checked;
+  });
+  document.getElementById("heatmap-tooltip")?.addEventListener("change", (event) => {
+    heatmapDemo.tooltip = (event.target as HTMLInputElement).checked;
+  });
+}
+
+// line-chart
+const lineChartDemo = document.getElementById("line-chart-demo") as LineChart | null;
+if (lineChartDemo) {
+  const predictionBand = [
+    { x: 0, low: 0, high: 0 },
+    { x: 10, low: 3, high: 6 },
+    { x: 25, low: 11, high: 17 },
+    { x: 50, low: 29, high: 39 },
+    { x: 75, low: 49, high: 62 },
+    { x: 100, low: 67, high: 83 },
+  ];
+  const buildSeries = (withBand: boolean) => [
+    {
+      id: "truth",
+      label: "Truth (replay)",
+      points: [
+        { x: 0, y: 0 },
+        { x: 10, y: 4 },
+        { x: 25, y: 12 },
+        { x: 50, y: 31 },
+        { x: 75, y: 54 },
+        { x: 100, y: 78 },
+      ],
+    },
+    {
+      id: "prediction",
+      label: "Prediction",
+      points: [
+        { x: 0, y: 0 },
+        { x: 10, y: 5 },
+        { x: 25, y: 14 },
+        { x: 50, y: 34 },
+        { x: 75, y: 55 },
+        { x: 100, y: 75 },
+      ],
+      band: withBand ? predictionBand : undefined,
+    },
+    {
+      id: "naive",
+      label: "Naive (+delay)",
+      dashed: true,
+      points: [
+        { x: 0, y: 0 },
+        { x: 10, y: 10 },
+        { x: 25, y: 25 },
+        { x: 50, y: 50 },
+        { x: 75, y: 75 },
+        { x: 100, y: 100 },
+      ],
+    },
+  ];
+  lineChartDemo.references = [
+    { axis: "diagonal", label: "Full pass-through" },
+    { axis: "y", value: 50, label: "SLA budget (50 ms)", color: "var(--ui-danger, #dc2626)" },
+  ];
+  lineChartDemo.xFormat = (x) => `${Math.round(x)} ms`;
+  lineChartDemo.yFormat = (y) => `${Math.round(y)} ms`;
+  lineChartDemo.series = buildSeries(true);
+
+  const lineSelected = document.getElementById("line-chart-selected");
+  lineChartDemo.addEventListener("line-point-select", (event) => {
+    const { x } = (event as CustomEvent<{ x: number }>).detail;
+    lineChartDemo.selectedX = x;
+    if (lineSelected) lineSelected.textContent = `Selected delay: ${Math.round(x)} ms`;
+  });
+  document.getElementById("line-chart-curve")?.addEventListener("change", (event) => {
+    lineChartDemo.curve = (event.target as HTMLSelectElement).value as "linear" | "monotone";
+  });
+  document.getElementById("line-chart-points")?.addEventListener("change", (event) => {
+    lineChartDemo.showPoints = (event.target as HTMLInputElement).checked;
+  });
+  document.getElementById("line-chart-band")?.addEventListener("change", (event) => {
+    lineChartDemo.series = buildSeries((event.target as HTMLInputElement).checked);
+  });
+  document.getElementById("line-chart-interactive")?.addEventListener("change", (event) => {
+    lineChartDemo.interactive = (event.target as HTMLInputElement).checked;
+  });
+  document.getElementById("line-chart-tooltip")?.addEventListener("change", (event) => {
+    lineChartDemo.tooltip = (event.target as HTMLInputElement).checked;
+  });
+}
+
+// scatter-chart
+const scatterDemo = document.getElementById("scatter-demo") as ScatterChart | null;
+if (scatterDemo) {
+  const shares = ["100%", "50%", "20%", "5%"];
+  const baseCases = [
+    { id: "feed-25", label: "GET /feed", group: "+25 ms", truth: 12, drift: [1, 3, 6, 11], linked: true },
+    { id: "feed-50", label: "GET /feed", group: "+50 ms", truth: 31, drift: [3, 6, 12, 22], linked: true },
+    { id: "feed-100", label: "GET /feed", group: "+100 ms", truth: 78, drift: [-4, -9, -18, -32], linked: true },
+    { id: "prof-25", label: "GET /profile", group: "+25 ms", truth: 8, drift: [-1, 2, 5, 9], linked: false },
+    { id: "prof-50", label: "GET /profile", group: "+50 ms", truth: 24, drift: [2, -4, -9, -15], linked: true },
+    { id: "prof-100", label: "GET /profile", group: "+100 ms", truth: 62, drift: [4, 9, 17, 29], linked: true },
+    { id: "msg-25", label: "POST /msg", group: "+25 ms", truth: 19, drift: [0, -2, -6, -11], linked: false },
+    { id: "msg-50", label: "POST /msg", group: "+50 ms", truth: 43, drift: [-2, 5, 11, 19], linked: false },
+    { id: "msg-100", label: "POST /msg", group: "+100 ms", truth: 89, drift: [-3, -8, -14, -26], linked: true },
+  ];
+  const pointsAt = (shareIdx: number): ScatterPoint[] =>
+    baseCases.map((c) => ({
+      id: c.id,
+      label: c.label,
+      group: c.group,
+      x: c.truth,
+      y: Math.max(0, c.truth + c.drift[shareIdx]),
+      linked: c.linked,
+      detail: c.linked ? "Linked what-if run — click to inspect" : "Mean across 5 seeds",
+    }));
+  scatterDemo.xDomain = [0, 110];
+  scatterDemo.yDomain = [0, 110];
+  scatterDemo.xFormat = (v) => `${Math.round(v)} ms`;
+  scatterDemo.yFormat = (v) => `${Math.round(v)} ms`;
+  scatterDemo.references = [{ axis: "diagonal", label: "Prediction = truth" }];
+  scatterDemo.points = pointsAt(0);
+
+  const shareLabel = document.getElementById("scatter-share-label");
+  document.getElementById("scatter-share")?.addEventListener("input", (event) => {
+    const idx = Number((event.target as HTMLInputElement).value);
+    if (shareLabel) shareLabel.textContent = shares[idx];
+    scatterDemo.points = pointsAt(idx);
+  });
+  const scatterSelected = document.getElementById("scatter-selected");
+  scatterDemo.addEventListener("scatter-point-select", (event) => {
+    const { point } = (event as CustomEvent<{ point: ScatterPoint }>).detail;
+    if (scatterSelected) {
+      scatterSelected.textContent = `Selected: ${point.label} (${point.group}) — true ${point.x} ms, predicted ${point.y} ms`;
+    }
+  });
+  document.getElementById("scatter-interactive")?.addEventListener("change", (event) => {
+    scatterDemo.interactive = (event.target as HTMLInputElement).checked;
+  });
+  document.getElementById("scatter-tooltip")?.addEventListener("change", (event) => {
+    scatterDemo.tooltip = (event.target as HTMLInputElement).checked;
+  });
+}

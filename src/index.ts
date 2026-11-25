@@ -50,6 +50,28 @@ export {
 } from "./fan-chart.js";
 export { FanTable, type FanTableInterval } from "./fan-table.js";
 export {
+  LineChart,
+  type LineChartBandPoint,
+  type LineChartPoint,
+  type LineChartReference,
+  type LineChartSelectedValue,
+  type LineChartSeries,
+} from "./line-chart.js";
+export {
+  HeatmapChart,
+  type HeatmapCell,
+  type HeatmapColorScheme,
+  type HeatmapColumn,
+  type HeatmapRow,
+} from "./heatmap-chart.js";
+export {
+  ScatterChart,
+  type ScatterGroup,
+  type ScatterPoint,
+  type ScatterReference,
+} from "./scatter-chart.js";
+export type { ChartAxisType, ChartAxisValue } from "./utils/chart.js";
+export {
   samplePaths,
   sumPaths,
   summarizePaths,

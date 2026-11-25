@@ -72,10 +72,12 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-select">form-select</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#frame-box">frame-box</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#fullscreen-button">fullscreen-button</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#heatmap-chart">heatmap-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#icon-button">icon-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kanban-board">kanban-board</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kbd-hint">kbd-hint</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#kind-icon">kind-icon</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#line-chart">line-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#link-card">link-card</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#live-timer">live-timer</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#load-more">load-more</a>
@@ -103,6 +105,7 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#relative-time">relative-time</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#reveal-button">reveal-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#roman-numeral">roman-numeral</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scatter-chart">scatter-chart</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-dots">scroll-dots</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-bottom">scroll-to-bottom</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#scroll-to-top">scroll-to-top</a>
@@ -1943,6 +1946,14 @@ dropdown.size = "sm";</code></pre>
                 Sample paths
               </label>
               <label class="flex items-center gap-2">
+                <input id="fan-chart-interactive" data-testid="fan-chart-interactive" type="checkbox" checked />
+                Interactive
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-tooltip" data-testid="fan-chart-tooltip" type="checkbox" checked />
+                Tooltip
+              </label>
+              <label class="flex items-center gap-2">
                 Locale
                 <select id="fan-chart-locale" data-testid="fan-chart-locale" class="rounded-md border border-slate-200 px-2 py-1">
                   <option value="en-US|USD" selected>en-US · USD</option>
@@ -2368,6 +2379,65 @@ select.addEventListener("change", (e) => console.log(e.detail.value));</code></p
 &lt;/script&gt;</code></pre>
         </section>
 
+        <section id="heatmap-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-heatmap-chart">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#heatmap-chart">heatmap-chart</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Row × column matrix encoding values along a sequential or diverging color ramp, with a gradient legend,
+            missing-data cells, contrast-checked value labels, sticky row labels, selectable columns and cells, and
+            arrow-key grid navigation.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Scheme
+                <select id="heatmap-scheme" data-testid="heatmap-scheme" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="heat" selected>heat</option>
+                  <option value="blue">blue</option>
+                  <option value="green">green</option>
+                  <option value="plasma">plasma</option>
+                  <option value="diverging">diverging</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="heatmap-values" data-testid="heatmap-values" type="checkbox" checked />
+                Show values
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="heatmap-interactive" data-testid="heatmap-interactive" type="checkbox" checked />
+                Interactive
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="heatmap-tooltip" data-testid="heatmap-tooltip" type="checkbox" checked />
+                Tooltip
+              </label>
+              <span id="heatmap-status" data-testid="heatmap-status">Selected column: 100%</span>
+            </div>
+            <heatmap-chart
+              id="heatmap-demo"
+              data-testid="heatmap-demo"
+              x-label="Training data used"
+              row-label="Endpoint"
+              meta-label="Test traces"
+              selected-column="100%"
+            ></heatmap-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/heatmap-chart.js";
+
+&lt;heatmap-chart x-label="Training data used" row-label="Endpoint" meta-label="Test traces" selected-column="100%"&gt;&lt;/heatmap-chart&gt;
+&lt;script type="module"&gt;
+  const map = document.querySelector("heatmap-chart");
+  map.columns = ["100%", "50%", "20%", "5%"];
+  map.domain = [0, 0.25];
+  map.valueFormat = (v) =&gt; `${Math.round(v * 100)}%`;
+  map.rows = [
+    { label: "GET /feed", meta: 4200, cells: [0.02, 0.04, 0.09, 0.19] },
+    { label: "GET /profile", meta: 1850, cells: [0.03, 0.05, { value: 0.14, marker: "*", note: "1 seed missing" }, null] },
+  ];
+  map.addEventListener("heatmap-column-select", (e) =&gt; (map.selectedColumn = e.detail.col));
+  map.addEventListener("heatmap-cell-select", (e) =&gt; console.log(e.detail));
+&lt;/script&gt;</code></pre>
+        </section>
+
         <section id="icon-button" class="scroll-mt-8 py-10" data-testid="section-icon-button">
           <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#icon-button">icon-button</a></h3>
           <p class="mt-1 text-sm text-slate-500">
@@ -2540,6 +2610,64 @@ for (const el of document.querySelectorAll("kind-icon")) el.kinds = kinds;
 
 &lt;kind-icon kind="service" show-label&gt;&lt;/kind-icon&gt;
 &lt;kind-icon kind="package" size="18"&gt;&lt;/kind-icon&gt;</code></pre>
+        </section>
+
+        <section id="line-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-line-chart">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#line-chart">line-chart</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Multi-series line chart on linear, logarithmic, or time axes, with optional shaded bands, dashed reference
+            series, horizontal/vertical/diagonal reference lines, clickable points, and an interactive legend. Click a
+            point to move the <code>selected-x</code> cursor; click a legend entry to isolate a series.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Curve
+                <select id="line-chart-curve" data-testid="line-chart-curve" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="linear" selected>linear</option>
+                  <option value="monotone">monotone</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="line-chart-points" data-testid="line-chart-points" type="checkbox" checked />
+                Show points
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="line-chart-band" data-testid="line-chart-band" type="checkbox" checked />
+                Confidence band
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="line-chart-interactive" data-testid="line-chart-interactive" type="checkbox" checked />
+                Interactive
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="line-chart-tooltip" data-testid="line-chart-tooltip" type="checkbox" checked />
+                Tooltip
+              </label>
+              <span id="line-chart-selected" data-testid="line-chart-selected">Selected delay: 50 ms</span>
+            </div>
+            <line-chart
+              id="line-chart-demo"
+              data-testid="line-chart-demo"
+              x-label="Added delay (ms)"
+              y-label="Change at p90 (ms)"
+              show-points
+              selected-x="50"
+            ></line-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/line-chart.js";
+
+&lt;line-chart x-label="Added delay (ms)" y-label="Change at p90 (ms)" show-points selected-x="50"&gt;&lt;/line-chart&gt;
+&lt;script type="module"&gt;
+  const chart = document.querySelector("line-chart");
+  chart.references = [{ axis: "diagonal", label: "Full pass-through" }];
+  chart.series = [
+    { id: "truth", label: "Truth (replay)", points: [{ x: 0, y: 0 }, { x: 25, y: 12 }, { x: 50, y: 31 }, { x: 100, y: 78 }] },
+    { id: "pred", label: "Prediction", points: [{ x: 0, y: 0 }, { x: 25, y: 14 }, { x: 50, y: 34 }, { x: 100, y: 74 }] },
+    { id: "naive", label: "Naive", dashed: true, points: [{ x: 0, y: 0 }, { x: 25, y: 25 }, { x: 50, y: 50 }, { x: 100, y: 100 }] },
+  ];
+  chart.addEventListener("line-point-select", (e) =&gt; (chart.selectedX = e.detail.x));
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="link-card" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-link-card">
@@ -3671,6 +3799,54 @@ el.addEventListener("change", (e) =&gt; console.log(e.detail.value));</code></pr
           <pre class="usage mt-4"><code>import "@f-ewald/components/roman-numeral.js";
 
 &lt;roman-numeral value="2004"&gt;&lt;/roman-numeral&gt;</code></pre>
+        </section>
+
+        <section id="scatter-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-scatter-chart">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#scatter-chart">scatter-chart</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Interactive 2D scatter plot with grouped colors, an isolate/toggle legend, diagonal and axis reference
+            lines, <code>equal-axes</code> scaling, ringed clickable points, and smooth keyed transitions across data
+            updates (disabled under reduced motion). Drag the training-share slider to watch predictions drift from the
+            diagonal.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Training share
+                <input id="scatter-share" data-testid="scatter-share" type="range" min="0" max="3" step="1" value="0" />
+                <span id="scatter-share-label" data-testid="scatter-share-label">100%</span>
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="scatter-interactive" data-testid="scatter-interactive" type="checkbox" checked />
+                Interactive
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="scatter-tooltip" data-testid="scatter-tooltip" type="checkbox" checked />
+                Tooltip
+              </label>
+              <span id="scatter-selected" data-testid="scatter-selected">Click any dot to inspect</span>
+            </div>
+            <scatter-chart
+              id="scatter-demo"
+              data-testid="scatter-demo"
+              x-label="True change (ms)"
+              y-label="Predicted change (ms)"
+              legend-label="Delay"
+              equal-axes
+            ></scatter-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/scatter-chart.js";
+
+&lt;scatter-chart x-label="True change (ms)" y-label="Predicted change (ms)" legend-label="Delay" equal-axes&gt;&lt;/scatter-chart&gt;
+&lt;script type="module"&gt;
+  const chart = document.querySelector("scatter-chart");
+  chart.references = [{ axis: "diagonal", label: "Prediction = truth" }];
+  chart.points = [
+    { id: "feed-50", x: 31, y: 34, group: "+50 ms", label: "GET /feed", linked: true },
+    { id: "feed-100", x: 78, y: 74, group: "+100 ms", label: "GET /feed", linked: true },
+  ];
+  chart.addEventListener("scatter-point-select", (e) =&gt; console.log(e.detail.point));
+&lt;/script&gt;</code></pre>
         </section>
 
         <section id="scroll-dots" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-scroll-dots">

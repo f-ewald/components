@@ -12352,6 +12352,26 @@
             },
             {
               "kind": "field",
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables legend clicking/toggling (default `true`; accepts `interactive=\"false\"`).",
+              "attribute": "interactive"
+            },
+            {
+              "kind": "field",
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the hover/tap/keyboard tooltip and crosshair (default `true`; accepts `tooltip=\"false\"`).",
+              "attribute": "tooltip"
+            },
+            {
+              "kind": "field",
               "name": "_width",
               "type": {
                 "text": "number"
@@ -13206,6 +13226,24 @@
               "default": "0",
               "description": "Re-run `loader` every N seconds while the tab is visible; 0 (default) disables polling.",
               "fieldName": "refreshInterval"
+            },
+            {
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables legend clicking/toggling (default `true`; accepts `interactive=\"false\"`).",
+              "fieldName": "interactive"
+            },
+            {
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the hover/tap/keyboard tooltip and crosshair (default `true`; accepts `tooltip=\"false\"`).",
+              "fieldName": "tooltip"
             }
           ],
           "superclass": {
@@ -15506,6 +15544,640 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/heatmap-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Interactive row × column matrix chart encoding cell values along a sequential\nor diverging color ramp, with a gradient legend, missing-data cells,\ncontrast-checked value labels, sticky row headings, selectable columns/cells,\nfloating tooltips, and arrow-key grid navigation.",
+          "name": "HeatmapChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "HeatmapColumn[]"
+              },
+              "default": "[]",
+              "description": "Column definitions or labels across the top of the matrix."
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "HeatmapRow[]"
+              },
+              "default": "[]",
+              "description": "Rows of cells; each row's `cells` aligns index-for-index with `columns`."
+            },
+            {
+              "kind": "field",
+              "name": "xLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional column-axis header drawn above the column labels.",
+              "attribute": "x-label"
+            },
+            {
+              "kind": "field",
+              "name": "rowLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional heading for the row-label column.",
+              "attribute": "row-label"
+            },
+            {
+              "kind": "field",
+              "name": "metaLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional heading for the secondary `meta` column (shown when any row has `meta`).",
+              "attribute": "meta-label"
+            },
+            {
+              "kind": "field",
+              "name": "colorScheme",
+              "type": {
+                "text": "HeatmapColorScheme"
+              },
+              "default": "\"heat\"",
+              "description": "Built-in sequential or diverging color ramp.",
+              "attribute": "color-scheme"
+            },
+            {
+              "kind": "field",
+              "name": "colorScale",
+              "type": {
+                "text": "((value: number, t: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Optional custom color function `(value, normalized01) => cssColor`, overriding `color-scheme`."
+            },
+            {
+              "kind": "field",
+              "name": "domain",
+              "type": {
+                "text": "[number, number] | null"
+              },
+              "default": "null",
+              "description": "Fixed `[min, max]` value domain for color mapping; `null` computes it from the data."
+            },
+            {
+              "kind": "field",
+              "name": "showValues",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Renders formatted values inside cells.",
+              "attribute": "show-values",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showLegend",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Renders the gradient color legend above the matrix.",
+              "attribute": "show-legend",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "missingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No data\"",
+              "description": "Label shown for missing (`null`) cells and in the legend.",
+              "attribute": "missing-label"
+            },
+            {
+              "kind": "field",
+              "name": "selectedColumn",
+              "type": {
+                "text": "number | string | null"
+              },
+              "default": "null",
+              "description": "Highlighted column by zero-based index, column `id`, or column `label`.",
+              "attribute": "selected-column"
+            },
+            {
+              "kind": "field",
+              "name": "selectedCell",
+              "type": {
+                "text": "{ row: number; col: number } | null"
+              },
+              "default": "null",
+              "description": "Optional highlighted cell coordinates `{ row, col }`."
+            },
+            {
+              "kind": "field",
+              "name": "cellWidth",
+              "type": {
+                "text": "number"
+              },
+              "default": "56",
+              "description": "Minimum width of each data column in CSS pixels.",
+              "attribute": "cell-width"
+            },
+            {
+              "kind": "field",
+              "name": "cellHeight",
+              "type": {
+                "text": "number"
+              },
+              "default": "28",
+              "description": "Height of each cell button in CSS pixels.",
+              "attribute": "cell-height"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Visible or accessible table caption.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for default number formatting.",
+              "attribute": "locale"
+            },
+            {
+              "kind": "field",
+              "name": "valueFormat",
+              "type": {
+                "text": "((value: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Custom value formatter for cells, legend ticks, and tooltips."
+            },
+            {
+              "kind": "field",
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables clicking cells and column headers (default `true`; accepts `interactive=\"false\"`).",
+              "attribute": "interactive"
+            },
+            {
+              "kind": "field",
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows floating cell tooltips on hover and focus (default `true`; accepts `tooltip=\"false\"`).",
+              "attribute": "tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "_hovered",
+              "type": {
+                "text": "HoveredCell | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_formatter",
+              "privacy": "private",
+              "default": "new ChartFormatter()"
+            },
+            {
+              "kind": "method",
+              "name": "_format",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_computeDomain",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[number, number]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cells",
+                  "type": {
+                    "text": "HeatmapCell[][]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_selectedColIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cols",
+                  "type": {
+                    "text": "NormalizedColumn[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_colorFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "domain",
+                  "type": {
+                    "text": "[number, number]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_selectColumn",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "col",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "NormalizedColumn"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_selectCell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "col",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "rowObj",
+                  "type": {
+                    "text": "HeatmapRow"
+                  }
+                },
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "NormalizedColumn"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "type": {
+                    "text": "HeatmapCell"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hoverCell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "col",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onCellKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "col",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "rowCount",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "colCount",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderLegend",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "domain",
+                  "type": {
+                    "text": "[number, number]"
+                  }
+                },
+                {
+                  "name": "hasMissing",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderTooltip",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "cols",
+                  "type": {
+                    "text": "NormalizedColumn[]"
+                  }
+                },
+                {
+                  "name": "matrix",
+                  "type": {
+                    "text": "HeatmapCell[][]"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "heatmap-column-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked a column header. `detail: { col, columnId, columnLabel }`."
+            },
+            {
+              "name": "heatmap-cell-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked or activated a cell. `detail: { row, col, rowId, columnId, rowLabel, columnLabel, value, cell }`."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "x-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional column-axis header drawn above the column labels.",
+              "fieldName": "xLabel"
+            },
+            {
+              "name": "row-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional heading for the row-label column.",
+              "fieldName": "rowLabel"
+            },
+            {
+              "name": "meta-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional heading for the secondary `meta` column (shown when any row has `meta`).",
+              "fieldName": "metaLabel"
+            },
+            {
+              "name": "color-scheme",
+              "type": {
+                "text": "HeatmapColorScheme"
+              },
+              "default": "\"heat\"",
+              "description": "Built-in sequential or diverging color ramp.",
+              "fieldName": "colorScheme"
+            },
+            {
+              "name": "show-values",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Renders formatted values inside cells.",
+              "fieldName": "showValues"
+            },
+            {
+              "name": "show-legend",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Renders the gradient color legend above the matrix.",
+              "fieldName": "showLegend"
+            },
+            {
+              "name": "missing-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No data\"",
+              "description": "Label shown for missing (`null`) cells and in the legend.",
+              "fieldName": "missingLabel"
+            },
+            {
+              "name": "selected-column",
+              "type": {
+                "text": "number | string | null"
+              },
+              "default": "null",
+              "description": "Highlighted column by zero-based index, column `id`, or column `label`.",
+              "fieldName": "selectedColumn"
+            },
+            {
+              "name": "cell-width",
+              "type": {
+                "text": "number"
+              },
+              "default": "56",
+              "description": "Minimum width of each data column in CSS pixels.",
+              "fieldName": "cellWidth"
+            },
+            {
+              "name": "cell-height",
+              "type": {
+                "text": "number"
+              },
+              "default": "28",
+              "description": "Height of each cell button in CSS pixels.",
+              "fieldName": "cellHeight"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Visible or accessible table caption.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for default number formatting.",
+              "fieldName": "locale"
+            },
+            {
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables clicking cells and column headers (default `true`; accepts `interactive=\"false\"`).",
+              "fieldName": "interactive"
+            },
+            {
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows floating cell tooltips on hover and focus (default `true`; accepts `tooltip=\"false\"`).",
+              "fieldName": "tooltip"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "heatmap-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "HeatmapColorScheme",
+          "declaration": {
+            "name": "HeatmapColorScheme",
+            "module": "./utils/chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HeatmapChart",
+          "declaration": {
+            "name": "HeatmapChart",
+            "module": "src/heatmap-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "heatmap-chart",
+          "declaration": {
+            "name": "HeatmapChart",
+            "module": "src/heatmap-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/icon-button.ts",
       "declarations": [
         {
@@ -17432,6 +18104,142 @@
           "declaration": {
             "name": "FanTableInterval",
             "module": "./fan-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LineChart",
+          "declaration": {
+            "name": "LineChart",
+            "module": "./line-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LineChartBandPoint",
+          "declaration": {
+            "name": "LineChartBandPoint",
+            "module": "./line-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LineChartPoint",
+          "declaration": {
+            "name": "LineChartPoint",
+            "module": "./line-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LineChartReference",
+          "declaration": {
+            "name": "LineChartReference",
+            "module": "./line-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LineChartSelectedValue",
+          "declaration": {
+            "name": "LineChartSelectedValue",
+            "module": "./line-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LineChartSeries",
+          "declaration": {
+            "name": "LineChartSeries",
+            "module": "./line-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HeatmapChart",
+          "declaration": {
+            "name": "HeatmapChart",
+            "module": "./heatmap-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HeatmapCell",
+          "declaration": {
+            "name": "HeatmapCell",
+            "module": "./heatmap-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HeatmapColorScheme",
+          "declaration": {
+            "name": "HeatmapColorScheme",
+            "module": "./heatmap-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HeatmapColumn",
+          "declaration": {
+            "name": "HeatmapColumn",
+            "module": "./heatmap-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HeatmapRow",
+          "declaration": {
+            "name": "HeatmapRow",
+            "module": "./heatmap-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ScatterChart",
+          "declaration": {
+            "name": "ScatterChart",
+            "module": "./scatter-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ScatterGroup",
+          "declaration": {
+            "name": "ScatterGroup",
+            "module": "./scatter-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ScatterPoint",
+          "declaration": {
+            "name": "ScatterPoint",
+            "module": "./scatter-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ScatterReference",
+          "declaration": {
+            "name": "ScatterReference",
+            "module": "./scatter-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChartAxisType",
+          "declaration": {
+            "name": "ChartAxisType",
+            "module": "./utils/chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChartAxisValue",
+          "declaration": {
+            "name": "ChartAxisValue",
+            "module": "./utils/chart.js"
           }
         },
         {
@@ -19964,6 +20772,866 @@
           "declaration": {
             "name": "KindIcon",
             "module": "src/kind-icon.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/line-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Multi-series line chart supporting linear, logarithmic, and time axes,\noptional shaded bands, horizontal/vertical/diagonal reference lines, a\nhighlighted `selected-x` cursor, and clickable points.\n\nThe interactive legend isolates a series on click (clicking it again shows\nall) and toggles one on Ctrl/Cmd-click or a touch long press. Hover, tap, or\ndrag — or focus the plot and use `←`/`→`/`Home`/`End` — to inspect values;\nclick or press `Enter`/`Space` to emit `line-point-select`; `Escape` or a\ntap outside dismisses the tooltip.",
+          "name": "LineChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "series",
+              "type": {
+                "text": "LineChartSeries[]"
+              },
+              "default": "[]",
+              "description": "Series to draw. Assign a new array to redraw."
+            },
+            {
+              "kind": "field",
+              "name": "xType",
+              "type": {
+                "text": "ChartAxisType"
+              },
+              "default": "\"linear\"",
+              "description": "X axis scale: numeric `\"linear\"` (default), `\"log\"`, or `\"time\"`.",
+              "attribute": "x-type"
+            },
+            {
+              "kind": "field",
+              "name": "yType",
+              "type": {
+                "text": "\"linear\" | \"log\""
+              },
+              "default": "\"linear\"",
+              "description": "Y axis scale: `\"linear\"` (default) or `\"log\"`.",
+              "attribute": "y-type"
+            },
+            {
+              "kind": "field",
+              "name": "xLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional x axis title drawn below tick labels.",
+              "attribute": "x-label"
+            },
+            {
+              "kind": "field",
+              "name": "yLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional y axis title drawn along the left edge.",
+              "attribute": "y-label"
+            },
+            {
+              "kind": "field",
+              "name": "xDomain",
+              "type": {
+                "text": "[ChartAxisValue, ChartAxisValue] | null"
+              },
+              "default": "null",
+              "description": "Fixed x axis range `[start, end]`; `null` fits the data."
+            },
+            {
+              "kind": "field",
+              "name": "yDomain",
+              "type": {
+                "text": "[number, number] | null"
+              },
+              "default": "null",
+              "description": "Fixed y axis range `[min, max]`; `null` fits the visible data."
+            },
+            {
+              "kind": "field",
+              "name": "xReverse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Runs the x axis right to left; keyboard arrows still move visually.",
+              "attribute": "x-reverse",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "curve",
+              "type": {
+                "text": "\"linear\" | \"monotone\""
+              },
+              "default": "\"linear\"",
+              "description": "Line interpolation: `\"linear\"` (default) or `\"monotone\"`.",
+              "attribute": "curve"
+            },
+            {
+              "kind": "field",
+              "name": "showPoints",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws markers on every point; series can also set `showPoints` individually.",
+              "attribute": "show-points",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectedX",
+              "type": {
+                "text": "ChartAxisValue | null"
+              },
+              "default": "null",
+              "description": "Optional vertical selection highlight at an x position.",
+              "attribute": "selected-x"
+            },
+            {
+              "kind": "field",
+              "name": "references",
+              "type": {
+                "text": "LineChartReference[]"
+              },
+              "default": "[]",
+              "description": "Horizontal, vertical, or diagonal (`y = x`) reference lines."
+            },
+            {
+              "kind": "field",
+              "name": "visible",
+              "type": {
+                "text": "string[] | null"
+              },
+              "default": "null",
+              "description": "Visible series IDs; `null` (default) shows all. Updated by the legend."
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Plot height in CSS pixels, excluding the legend.",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for default number and date formatting.",
+              "attribute": "locale"
+            },
+            {
+              "kind": "field",
+              "name": "xFormat",
+              "type": {
+                "text": "((x: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Custom formatter for x ticks, tooltip header, and summary."
+            },
+            {
+              "kind": "field",
+              "name": "yFormat",
+              "type": {
+                "text": "((y: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Custom formatter for y ticks, tooltip values, and summary."
+            },
+            {
+              "kind": "field",
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables clicking points and legend toggling (default `true`; accepts `interactive=\"false\"`).",
+              "attribute": "interactive"
+            },
+            {
+              "kind": "field",
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the hover/tap/keyboard tooltip and crosshair (default `true`; accepts `tooltip=\"false\"`).",
+              "attribute": "tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "_width",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_hoverX",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_announcement",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_ro",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pressTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_suppressClick",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_pinned",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_layout",
+              "type": {
+                "text": "Layout | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_formatter",
+              "privacy": "private",
+              "default": "new ChartFormatter()"
+            },
+            {
+              "kind": "method",
+              "name": "_formatY",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_formatX",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "span",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "step",
+                  "default": "Infinity"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_prepare",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PreparedSeries[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_xBounds",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[number, number] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "all",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_yBounds",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[number, number] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "visible",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                },
+                {
+                  "name": "xRange",
+                  "type": {
+                    "text": "[number, number]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_computeLayout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Layout | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "all",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_rowsAt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HoverRow[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_nearestX",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_emitSelect",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hoverAt",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPlotPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onOutsidePointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_unpin",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onPlotClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_describe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onLegendPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_cancelPress",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onLegendClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggleSeries",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toggle",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_summary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderAxes",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderReferences",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderSelectedX",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderSeries",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderHover",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderLegend",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "all",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                },
+                {
+                  "name": "shown",
+                  "type": {
+                    "text": "Set<string>"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "line-point-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked a point/x position or pressed Enter/Space. `detail: { x: number, rawX: ChartAxisValue, points: LineChartSelectedValue[] }`."
+            },
+            {
+              "name": "series-visibility-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Legend changed visible series. `detail: { visible: string[] | null }` (null = all)."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "x-type",
+              "type": {
+                "text": "ChartAxisType"
+              },
+              "default": "\"linear\"",
+              "description": "X axis scale: numeric `\"linear\"` (default), `\"log\"`, or `\"time\"`.",
+              "fieldName": "xType"
+            },
+            {
+              "name": "y-type",
+              "type": {
+                "text": "\"linear\" | \"log\""
+              },
+              "default": "\"linear\"",
+              "description": "Y axis scale: `\"linear\"` (default) or `\"log\"`.",
+              "fieldName": "yType"
+            },
+            {
+              "name": "x-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional x axis title drawn below tick labels.",
+              "fieldName": "xLabel"
+            },
+            {
+              "name": "y-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional y axis title drawn along the left edge.",
+              "fieldName": "yLabel"
+            },
+            {
+              "name": "x-reverse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Runs the x axis right to left; keyboard arrows still move visually.",
+              "fieldName": "xReverse"
+            },
+            {
+              "name": "curve",
+              "type": {
+                "text": "\"linear\" | \"monotone\""
+              },
+              "default": "\"linear\"",
+              "description": "Line interpolation: `\"linear\"` (default) or `\"monotone\"`.",
+              "fieldName": "curve"
+            },
+            {
+              "name": "show-points",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws markers on every point; series can also set `showPoints` individually.",
+              "fieldName": "showPoints"
+            },
+            {
+              "name": "selected-x",
+              "type": {
+                "text": "ChartAxisValue | null"
+              },
+              "default": "null",
+              "description": "Optional vertical selection highlight at an x position.",
+              "fieldName": "selectedX"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "description": "Plot height in CSS pixels, excluding the legend.",
+              "fieldName": "height"
+            },
+            {
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for default number and date formatting.",
+              "fieldName": "locale"
+            },
+            {
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables clicking points and legend toggling (default `true`; accepts `interactive=\"false\"`).",
+              "fieldName": "interactive"
+            },
+            {
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the hover/tap/keyboard tooltip and crosshair (default `true`; accepts `tooltip=\"false\"`).",
+              "fieldName": "tooltip"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "line-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "LineChart",
+          "declaration": {
+            "name": "LineChart",
+            "module": "src/line-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "line-chart",
+          "declaration": {
+            "name": "LineChart",
+            "module": "src/line-chart.ts"
           }
         }
       ]
@@ -25590,6 +27258,738 @@
           "declaration": {
             "name": "RomanNumeral",
             "module": "src/roman-numeral.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/scatter-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Interactive 2D scatter plot with optional grouped colors and legend,\ndiagonal (`y = x`) and axis reference lines, equal-axis scaling, ringed\nclickable points, smooth keyed updates (respecting `prefers-reduced-motion`),\nfloating tooltips, touch tap pinning, and arrow-key navigation.",
+          "name": "ScatterChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "points",
+              "type": {
+                "text": "ScatterPoint[]"
+              },
+              "default": "[]",
+              "description": "Points to plot. Assign a new array to update; give points stable `id`s for smooth movement."
+            },
+            {
+              "kind": "field",
+              "name": "groups",
+              "type": {
+                "text": "ScatterGroup[] | null"
+              },
+              "default": "null",
+              "description": "Optional explicit group order, labels, and colors for the legend."
+            },
+            {
+              "kind": "field",
+              "name": "visible",
+              "type": {
+                "text": "string[] | null"
+              },
+              "default": "null",
+              "description": "Visible group IDs; `null` (default) shows all. Updated by the legend."
+            },
+            {
+              "kind": "field",
+              "name": "xType",
+              "type": {
+                "text": "\"linear\" | \"log\""
+              },
+              "default": "\"linear\"",
+              "description": "X axis scale: `\"linear\"` (default) or `\"log\"`.",
+              "attribute": "x-type"
+            },
+            {
+              "kind": "field",
+              "name": "yType",
+              "type": {
+                "text": "\"linear\" | \"log\""
+              },
+              "default": "\"linear\"",
+              "description": "Y axis scale: `\"linear\"` (default) or `\"log\"`.",
+              "attribute": "y-type"
+            },
+            {
+              "kind": "field",
+              "name": "xLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional x axis title drawn below tick labels.",
+              "attribute": "x-label"
+            },
+            {
+              "kind": "field",
+              "name": "yLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional y axis title drawn along the left edge.",
+              "attribute": "y-label"
+            },
+            {
+              "kind": "field",
+              "name": "xDomain",
+              "type": {
+                "text": "[number, number] | null"
+              },
+              "default": "null",
+              "description": "Fixed x axis range `[min, max]`; `null` fits the data."
+            },
+            {
+              "kind": "field",
+              "name": "yDomain",
+              "type": {
+                "text": "[number, number] | null"
+              },
+              "default": "null",
+              "description": "Fixed y axis range `[min, max]`; `null` fits the data."
+            },
+            {
+              "kind": "field",
+              "name": "equalAxes",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses the same `[min, max]` extent on both axes (ideal for predicted-vs-true diagonal plots).",
+              "attribute": "equal-axes",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "references",
+              "type": {
+                "text": "ScatterReference[]"
+              },
+              "default": "[]",
+              "description": "Diagonal (`y = x`), horizontal, or vertical reference lines."
+            },
+            {
+              "kind": "field",
+              "name": "legendLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional prefix label shown before the group legend items (e.g. `\"Delay\"`).",
+              "attribute": "legend-label"
+            },
+            {
+              "kind": "field",
+              "name": "animated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Smoothly transitions dot positions across updates (disabled under `prefers-reduced-motion`).",
+              "attribute": "animated"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "340",
+              "description": "Plot height in CSS pixels, excluding the legend.",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for default number formatting.",
+              "attribute": "locale"
+            },
+            {
+              "kind": "field",
+              "name": "xFormat",
+              "type": {
+                "text": "((x: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Custom formatter for x ticks, tooltip, and summary."
+            },
+            {
+              "kind": "field",
+              "name": "yFormat",
+              "type": {
+                "text": "((y: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Custom formatter for y ticks, tooltip, and summary."
+            },
+            {
+              "kind": "field",
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables clicking points and legend toggling (default `true`; accepts `interactive=\"false\"`).",
+              "attribute": "interactive"
+            },
+            {
+              "kind": "field",
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the hover/tap/keyboard tooltip and focus ring (default `true`; accepts `tooltip=\"false\"`).",
+              "attribute": "tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "_width",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_activeKey",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_announcement",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_ro",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pressTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_suppressClick",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_pinned",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_layout",
+              "type": {
+                "text": "Layout | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_formatter",
+              "privacy": "private",
+              "default": "new ChartFormatter()"
+            },
+            {
+              "kind": "method",
+              "name": "_formatX",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_formatY",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "v",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_prepareGroups",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PreparedGroup[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_computeLayout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Layout | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_nearestPoint",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PreparedPoint | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "px",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "py",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_emitSelect",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "PreparedPoint"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hoverAt",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPlotPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onOutsidePointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_unpin",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onPlotClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_describe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "p",
+                  "type": {
+                    "text": "PreparedPoint"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onLegendPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_cancelPress",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onLegendClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggleGroup",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toggle",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_summary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderAxes",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderReferences",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderHover",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderLegend",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "groups",
+                  "type": {
+                    "text": "PreparedGroup[]"
+                  }
+                },
+                {
+                  "name": "shown",
+                  "type": {
+                    "text": "Set<string>"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "scatter-point-select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "User clicked a dot or pressed Enter/Space while inspecting it. `detail: { point: ScatterPoint, index: number }`."
+            },
+            {
+              "name": "series-visibility-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Legend changed visible groups. `detail: { visible: string[] | null }` (null = all)."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "x-type",
+              "type": {
+                "text": "\"linear\" | \"log\""
+              },
+              "default": "\"linear\"",
+              "description": "X axis scale: `\"linear\"` (default) or `\"log\"`.",
+              "fieldName": "xType"
+            },
+            {
+              "name": "y-type",
+              "type": {
+                "text": "\"linear\" | \"log\""
+              },
+              "default": "\"linear\"",
+              "description": "Y axis scale: `\"linear\"` (default) or `\"log\"`.",
+              "fieldName": "yType"
+            },
+            {
+              "name": "x-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional x axis title drawn below tick labels.",
+              "fieldName": "xLabel"
+            },
+            {
+              "name": "y-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional y axis title drawn along the left edge.",
+              "fieldName": "yLabel"
+            },
+            {
+              "name": "equal-axes",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses the same `[min, max]` extent on both axes (ideal for predicted-vs-true diagonal plots).",
+              "fieldName": "equalAxes"
+            },
+            {
+              "name": "legend-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional prefix label shown before the group legend items (e.g. `\"Delay\"`).",
+              "fieldName": "legendLabel"
+            },
+            {
+              "name": "animated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Smoothly transitions dot positions across updates (disabled under `prefers-reduced-motion`).",
+              "fieldName": "animated"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "340",
+              "description": "Plot height in CSS pixels, excluding the legend.",
+              "fieldName": "height"
+            },
+            {
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for default number formatting.",
+              "fieldName": "locale"
+            },
+            {
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables clicking points and legend toggling (default `true`; accepts `interactive=\"false\"`).",
+              "fieldName": "interactive"
+            },
+            {
+              "name": "tooltip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the hover/tap/keyboard tooltip and focus ring (default `true`; accepts `tooltip=\"false\"`).",
+              "fieldName": "tooltip"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "scatter-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ScatterChart",
+          "declaration": {
+            "name": "ScatterChart",
+            "module": "src/scatter-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "scatter-chart",
+          "declaration": {
+            "name": "ScatterChart",
+            "module": "src/scatter-chart.ts"
           }
         }
       ]
@@ -31322,6 +33722,422 @@
           "declaration": {
             "name": "overlapsTimedRange",
             "module": "src/utils/calendar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/chart.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "defaultTrueBoolean",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ fromAttribute: (value: string | null) => value !== \"false\", toAttribute: (value: boolean) => (value ? \"\" : \"false\"), }",
+          "description": "Attribute converter for `true`-by-default boolean properties: accepts both\nJS `.prop=${false}` and HTML `prop=\"false\"`, while omitted/bare/`\"true\"`\nattributes stay `true`."
+        },
+        {
+          "kind": "variable",
+          "name": "CHART_COLORS",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ \"var(--ui-primary, #4f46e5)\", \"var(--ui-warning, #d97706)\", \"var(--ui-danger, #dc2626)\", \"var(--ui-info, #0ea5e9)\", \"var(--ui-success, #16a34a)\", ]"
+        },
+        {
+          "kind": "function",
+          "name": "parseAxisValue",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "ChartAxisValue"
+              }
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "ChartAxisType"
+              }
+            }
+          ],
+          "description": "Parses an axis value for `type` into a number (epoch ms for `\"time\"`); `NaN` when invalid or `<= 0` on `\"log\"`."
+        },
+        {
+          "kind": "function",
+          "name": "logTicks",
+          "return": {
+            "type": {
+              "text": "number[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "ticks",
+              "type": {
+                "text": "number[]"
+              }
+            },
+            {
+              "name": "limit",
+              "default": "8"
+            }
+          ],
+          "description": "Keeps 1/2/5 × 10ⁿ ticks of a log scale, or only powers of ten when there are\nmore than `limit`. A narrow range within about one decade keeps every\n`limit`-th tick instead so at least a few ticks stay visible."
+        },
+        {
+          "kind": "function",
+          "name": "buildAxisScale",
+          "return": {
+            "type": {
+              "text": "ChartScale"
+            }
+          },
+          "parameters": [
+            {
+              "name": "type",
+              "type": {
+                "text": "ChartAxisType"
+              }
+            },
+            {
+              "name": "lo",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "hi",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "range",
+              "type": {
+                "text": "[number, number]"
+              }
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "{ reverse?: boolean; nice?: boolean }"
+              }
+            }
+          ],
+          "description": "Builds a linear, log, or time scale over `[lo, hi]` mapped onto `range`."
+        },
+        {
+          "kind": "function",
+          "name": "timeTickOptions",
+          "return": {
+            "type": {
+              "text": "Intl.DateTimeFormatOptions"
+            }
+          },
+          "parameters": [
+            {
+              "name": "spanMs",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Chooses `Intl.DateTimeFormatOptions` suited to a time axis span."
+        },
+        {
+          "kind": "class",
+          "description": "Cached locale-aware number and date formatter with en-US fallback.",
+          "name": "ChartFormatter",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cache",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, Intl.NumberFormat | Intl.DateTimeFormat>()"
+            },
+            {
+              "kind": "method",
+              "name": "number",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "locale",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Formats a number compactly (`1.2K`, `0.45`) in `locale`."
+            },
+            {
+              "kind": "method",
+              "name": "date",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "locale",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "Intl.DateTimeFormatOptions"
+                  }
+                }
+              ],
+              "description": "Formats epoch milliseconds `t` in `locale`."
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "sampleColorRamp",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "scheme",
+              "type": {
+                "text": "HeatmapColorScheme"
+              }
+            },
+            {
+              "name": "t",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Samples a built-in color ramp at normalized `t` in `[0, 1]`."
+        },
+        {
+          "kind": "function",
+          "name": "rampCssGradient",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "scheme",
+              "type": {
+                "text": "HeatmapColorScheme"
+              }
+            }
+          ],
+          "description": "Returns a CSS `linear-gradient(90deg, ...)` string matching `scheme`."
+        },
+        {
+          "kind": "function",
+          "name": "needsLightText",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Returns true when white text achieves higher WCAG contrast on `color` than dark slate (`#0f172a`)."
+        },
+        {
+          "kind": "function",
+          "name": "toggleLegendVisibility",
+          "return": {
+            "type": {
+              "text": "string[] | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "allIds",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "name": "visible",
+              "type": {
+                "text": "string[] | null"
+              }
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "toggle",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "Computes the next `visible` ID list after a legend interaction:\nplain click isolates `id` (or shows all again when it is already isolated);\n`toggle` adds or removes `id`. Returns `null` when all items are visible."
+        },
+        {
+          "kind": "function",
+          "name": "resolveVisibleIds",
+          "return": {
+            "type": {
+              "text": "Set<string>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "allIds",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "name": "visible",
+              "type": {
+                "text": "string[] | null"
+              }
+            }
+          ],
+          "description": "Resolves the active ID set: `visible` filtered to `allIds`, falling back to all when empty."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defaultTrueBoolean",
+          "declaration": {
+            "name": "defaultTrueBoolean",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CHART_COLORS",
+          "declaration": {
+            "name": "CHART_COLORS",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseAxisValue",
+          "declaration": {
+            "name": "parseAxisValue",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "logTicks",
+          "declaration": {
+            "name": "logTicks",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "buildAxisScale",
+          "declaration": {
+            "name": "buildAxisScale",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "timeTickOptions",
+          "declaration": {
+            "name": "timeTickOptions",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ChartFormatter",
+          "declaration": {
+            "name": "ChartFormatter",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sampleColorRamp",
+          "declaration": {
+            "name": "sampleColorRamp",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "rampCssGradient",
+          "declaration": {
+            "name": "rampCssGradient",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "needsLightText",
+          "declaration": {
+            "name": "needsLightText",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toggleLegendVisibility",
+          "declaration": {
+            "name": "toggleLegendVisibility",
+            "module": "src/utils/chart.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveVisibleIds",
+          "declaration": {
+            "name": "resolveVisibleIds",
+            "module": "src/utils/chart.ts"
           }
         }
       ]

@@ -1385,7 +1385,7 @@ the last two with the first, so set `color` when showing more than three.
 
 Import: `import "@f-ewald/components/fan-chart.js";`
 
-Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `log` (attribute `log`) : boolean, default false; `visible` (JS property only) : string[] | null, default null; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `now` (attribute `now`) : FanX | null, default null; `nowLabel` (attribute `now-label`) : string, default "Today"; `height` (attribute `height`) : number, default 320; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `xType` (attribute `x-type`) : FanXType, default "time"; `xFormat` (JS property only) : ((x: number) => string) | null, default null; `xLabel` (attribute `x-label`) : string, default ""; `xDomain` (JS property only) : [FanX, FanX] | null, default null; `xReverse` (attribute `x-reverse`) : boolean, default false; `loader` (JS property only) : FanChartLoader | null, default null; `refreshInterval` (attribute `refresh-interval`) : number, default 0
+Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `log` (attribute `log`) : boolean, default false; `visible` (JS property only) : string[] | null, default null; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `now` (attribute `now`) : FanX | null, default null; `nowLabel` (attribute `now-label`) : string, default "Today"; `height` (attribute `height`) : number, default 320; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `xType` (attribute `x-type`) : FanXType, default "time"; `xFormat` (JS property only) : ((x: number) => string) | null, default null; `xLabel` (attribute `x-label`) : string, default ""; `xDomain` (JS property only) : [FanX, FanX] | null, default null; `xReverse` (attribute `x-reverse`) : boolean, default false; `loader` (JS property only) : FanChartLoader | null, default null; `refreshInterval` (attribute `refresh-interval`) : number, default 0; `interactive` (attribute `interactive`) : boolean, default true; `tooltip` (attribute `tooltip`) : boolean, default true
 Events: `fan-chart-load`, `fan-chart-error`, `series-visibility-change`
 CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-radius-circle`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`
 
@@ -1711,6 +1711,35 @@ Example:
 ></gallery-item-variant>
 ```
 
+## <heatmap-chart>
+
+Interactive row × column matrix chart encoding cell values along a sequential
+or diverging color ramp, with a gradient legend, missing-data cells,
+contrast-checked value labels, sticky row headings, selectable columns/cells,
+floating tooltips, and arrow-key grid navigation.
+
+Import: `import "@f-ewald/components/heatmap-chart.js";`
+
+Properties: `columns` (JS property only) : HeatmapColumn[], default []; `rows` (JS property only) : HeatmapRow[], default []; `xLabel` (attribute `x-label`) : string, default ""; `rowLabel` (attribute `row-label`) : string, default ""; `metaLabel` (attribute `meta-label`) : string, default ""; `colorScheme` (attribute `color-scheme`) : HeatmapColorScheme, default "heat"; `colorScale` (JS property only) : ((value: number, t: number) => string) | null, default null; `domain` (JS property only) : [number, number] | null, default null; `showValues` (attribute `show-values`) : boolean, default true; `showLegend` (attribute `show-legend`) : boolean, default true; `missingLabel` (attribute `missing-label`) : string, default "No data"; `selectedColumn` (attribute `selected-column`) : number | string | null, default null; `selectedCell` (JS property only) : { row: number; col: number } | null, default null; `cellWidth` (attribute `cell-width`) : number, default 56; `cellHeight` (attribute `cell-height`) : number, default 28; `caption` (attribute `caption`) : string, default ""; `locale` (attribute `locale`) : string, default "en-US"; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `interactive` (attribute `interactive`) : boolean, default true; `tooltip` (attribute `tooltip`) : boolean, default true
+Events: `heatmap-column-select`, `heatmap-cell-select`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-bold`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-glyph`, `--ui-line-height-normal`, `--ui-numeric`, `--ui-primary`, `--ui-radius`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`, `--ui-tracking-wide`
+
+Example:
+```html
+<heatmap-chart x-label="Training data used" row-label="Endpoint" meta-label="Traces" selected-column="100%"></heatmap-chart>
+<script type="module">
+  const map = document.querySelector("heatmap-chart");
+  map.columns = ["100%", "50%", "20%", "5%"];
+  map.domain = [0, 0.25];
+  map.valueFormat = (v) => `${Math.round(v * 100)}%`;
+  map.rows = [
+    { label: "GET /feed", meta: 4200, cells: [0.02, 0.04, 0.09, 0.19] },
+    { label: "GET /profile", meta: 1850, cells: [0.03, 0.05, { value: 0.14, marker: "*", note: "1 of 3 seeds missing" }, null] },
+  ];
+  map.addEventListener("heatmap-column-select", (e) => (map.selectedColumn = e.detail.col));
+</script>
+```
+
 ## <icon-button>
 
 A borderless button wrapping a passed-in icon, with a rounded
@@ -1886,6 +1915,39 @@ Example:
     package: { label: "External package", icon: iconCube, color: "#9498a0" },
   };
   for (const el of document.querySelectorAll("kind-icon")) el.kinds = kinds;
+</script>
+```
+
+## <line-chart>
+
+Multi-series line chart supporting linear, logarithmic, and time axes,
+optional shaded bands, horizontal/vertical/diagonal reference lines, a
+highlighted `selected-x` cursor, and clickable points.
+
+The interactive legend isolates a series on click (clicking it again shows
+all) and toggles one on Ctrl/Cmd-click or a touch long press. Hover, tap, or
+drag — or focus the plot and use `←`/`→`/`Home`/`End` — to inspect values;
+click or press `Enter`/`Space` to emit `line-point-select`; `Escape` or a
+tap outside dismisses the tooltip.
+
+Import: `import "@f-ewald/components/line-chart.js";`
+
+Properties: `series` (JS property only) : LineChartSeries[], default []; `xType` (attribute `x-type`) : ChartAxisType, default "linear"; `yType` (attribute `y-type`) : "linear" | "log", default "linear"; `xLabel` (attribute `x-label`) : string, default ""; `yLabel` (attribute `y-label`) : string, default ""; `xDomain` (JS property only) : [ChartAxisValue, ChartAxisValue] | null, default null; `yDomain` (JS property only) : [number, number] | null, default null; `xReverse` (attribute `x-reverse`) : boolean, default false; `curve` (attribute `curve`) : "linear" | "monotone", default "linear"; `showPoints` (attribute `show-points`) : boolean, default false; `selectedX` (attribute `selected-x`) : ChartAxisValue | null, default null; `references` (JS property only) : LineChartReference[], default []; `visible` (JS property only) : string[] | null, default null; `height` (attribute `height`) : number, default 300; `locale` (attribute `locale`) : string, default "en-US"; `xFormat` (JS property only) : ((x: number) => string) | null, default null; `yFormat` (JS property only) : ((y: number) => string) | null, default null; `interactive` (attribute `interactive`) : boolean, default true; `tooltip` (attribute `tooltip`) : boolean, default true
+Events: `line-point-select`, `series-visibility-change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-primary`, `--ui-radius-circle`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`
+
+Example:
+```html
+<line-chart x-label="Added delay (ms)" y-label="Change at p90 (ms)" show-points selected-x="50"></line-chart>
+<script type="module">
+  const chart = document.querySelector("line-chart");
+  chart.references = [{ axis: "diagonal", label: "Full pass-through" }];
+  chart.series = [
+    { id: "truth", label: "Truth (replay)", points: [{ x: 0, y: 0 }, { x: 25, y: 12 }, { x: 50, y: 31 }, { x: 100, y: 78 }] },
+    { id: "pred", label: "Prediction", points: [{ x: 0, y: 0 }, { x: 25, y: 14 }, { x: 50, y: 34 }, { x: 100, y: 74 }] },
+    { id: "naive", label: "Naive", dashed: true, points: [{ x: 0, y: 0 }, { x: 25, y: 25 }, { x: 50, y: 50 }, { x: 100, y: 100 }] },
+  ];
+  chart.addEventListener("line-point-select", (e) => (chart.selectedX = e.detail.x));
 </script>
 ```
 
@@ -2682,6 +2744,34 @@ CSS custom properties: none
 Example:
 ```html
 <roman-numeral value="2004"></roman-numeral>
+```
+
+## <scatter-chart>
+
+Interactive 2D scatter plot with optional grouped colors and legend,
+diagonal (`y = x`) and axis reference lines, equal-axis scaling, ringed
+clickable points, smooth keyed updates (respecting `prefers-reduced-motion`),
+floating tooltips, touch tap pinning, and arrow-key navigation.
+
+Import: `import "@f-ewald/components/scatter-chart.js";`
+
+Properties: `points` (JS property only) : ScatterPoint[], default []; `groups` (JS property only) : ScatterGroup[] | null, default null; `visible` (JS property only) : string[] | null, default null; `xType` (attribute `x-type`) : "linear" | "log", default "linear"; `yType` (attribute `y-type`) : "linear" | "log", default "linear"; `xLabel` (attribute `x-label`) : string, default ""; `yLabel` (attribute `y-label`) : string, default ""; `xDomain` (JS property only) : [number, number] | null, default null; `yDomain` (JS property only) : [number, number] | null, default null; `equalAxes` (attribute `equal-axes`) : boolean, default false; `references` (JS property only) : ScatterReference[], default []; `legendLabel` (attribute `legend-label`) : string, default ""; `animated` (attribute `animated`) : boolean, default true; `height` (attribute `height`) : number, default 340; `locale` (attribute `locale`) : string, default "en-US"; `xFormat` (JS property only) : ((x: number) => string) | null, default null; `yFormat` (JS property only) : ((y: number) => string) | null, default null; `interactive` (attribute `interactive`) : boolean, default true; `tooltip` (attribute `tooltip`) : boolean, default true
+Events: `scatter-point-select`, `series-visibility-change`
+CSS custom properties: `--ui-border`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-primary`, `--ui-radius-circle`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`, `--ui-tracking-wide`
+
+Example:
+```html
+<scatter-chart x-label="True change (ms)" y-label="Predicted change (ms)" legend-label="Delay" equal-axes></scatter-chart>
+<script type="module">
+  const chart = document.querySelector("scatter-chart");
+  chart.references = [{ axis: "diagonal", label: "Prediction = truth" }];
+  chart.points = [
+    { id: "feed-50", x: 31, y: 34, group: "+50 ms", label: "GET /feed", linked: true },
+    { id: "feed-100", x: 78, y: 74, group: "+100 ms", label: "GET /feed", linked: true },
+    { id: "prof-50", x: 12, y: 16, group: "+50 ms", label: "GET /profile" },
+  ];
+  chart.addEventListener("scatter-point-select", (e) => console.log(e.detail.point));
+</script>
 ```
 
 ## <scroll-dots>

@@ -4,6 +4,7 @@ import { bisector, max, min } from "d3-array";
 import { scaleLinear, scaleLog, scaleTime } from "d3-scale";
 import { area, curveMonotoneX, line } from "d3-shape";
 import { tokens } from "./tokens.js";
+import { defaultTrueBoolean } from "./utils/chart.js";
 import {
   FanFormatter,
   bandNames,
@@ -215,6 +216,12 @@ export class FanChart extends LitElement {
         font-weight: var(--ui-font-weight-regular, 400);
         font-variant-numeric: var(--ui-numeric, normal);
       }
+      .legend-item.static {
+        cursor: default;
+      }
+      .legend-item.static:hover {
+        background: none;
+      }
       .legend-item:hover {
         background: var(--ui-surface-muted, #f8fafc);
       }
@@ -222,7 +229,8 @@ export class FanChart extends LitElement {
         outline: none;
         box-shadow: var(--ui-focus-ring, 0 0 0 3px rgb(79 70 229 / 0.35));
       }
-      .legend-item[aria-pressed="false"] {
+      .legend-item[aria-pressed="false"],
+      .legend-item.dimmed {
         color: var(--ui-text-muted, #64748b);
       }
       .swatch {
@@ -232,7 +240,8 @@ export class FanChart extends LitElement {
         border-radius: var(--ui-radius-circle, 50%);
         background: currentColor;
       }
-      .legend-item[aria-pressed="false"] .swatch {
+      .legend-item[aria-pressed="false"] .swatch,
+      .legend-item.dimmed .swatch {
         opacity: 0.35;
       }
       .plot {
@@ -458,6 +467,10 @@ export class FanChart extends LitElement {
   @property({ attribute: false }) loader: FanChartLoader | null = null;
   /** Re-run `loader` every N seconds while the tab is visible; 0 (default) disables polling. */
   @property({ type: Number, attribute: "refresh-interval" }) refreshInterval = 0;
+  /** Enables legend clicking/toggling (default `true`; accepts `interactive="false"`). */
+  @property({ type: Boolean, converter: defaultTrueBoolean }) interactive = true;
+  /** Shows the hover/tap/keyboard tooltip and crosshair (default `true`; accepts `tooltip="false"`). */
+  @property({ type: Boolean, converter: defaultTrueBoolean }) tooltip = true;
 
   @state() private _width = 0;
   @state() private _hoverT: number | null = null;
@@ -501,6 +514,11 @@ export class FanChart extends LitElement {
   override updated(changed: Map<string, unknown>) {
     if (changed.has("loader") && this.loader) void this.refresh();
     if (changed.has("loader") || changed.has("refreshInterval")) this._syncTimer();
+    if (changed.has("tooltip") && !this.tooltip) {
+      this._hoverT = null;
+      this._announcement = "";
+      this._unpin();
+    }
   }
 
   /**
@@ -708,6 +726,7 @@ export class FanChart extends LitElement {
   }
 
   private _hoverAt(event: PointerEvent) {
+    if (!this.tooltip) return;
     const layout = this._layout;
     if (!layout) return;
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
@@ -720,7 +739,7 @@ export class FanChart extends LitElement {
   }
 
   private _onPlotPointerDown(event: PointerEvent) {
-    if (event.pointerType === "mouse") return;
+    if (!this.tooltip || event.pointerType === "mouse") return;
     this._hoverAt(event);
     if (this._pinned) return;
     this._pinned = true;
@@ -740,6 +759,7 @@ export class FanChart extends LitElement {
   }
 
   private _onKeyDown(event: KeyboardEvent) {
+    if (!this.tooltip) return;
     const layout = this._layout;
     if (!layout || layout.times.length === 0) return;
     const { times } = layout;
@@ -958,7 +978,9 @@ export class FanChart extends LitElement {
   }
 
   private _renderHover(layout: Layout) {
-    if (this._hoverT === null || !layout.times.includes(this._hoverT)) return { marks: nothing, tip: nothing };
+    if (!this.tooltip || this._hoverT === null || !layout.times.includes(this._hoverT)) {
+      return { marks: nothing, tip: nothing };
+    }
     const t = this._hoverT;
     const px = layout.x(t);
     const rows = this._rowsAt(layout, t);
@@ -1051,6 +1073,19 @@ export class FanChart extends LitElement {
 
   private _renderLegend(all: PreparedSeries[], shown: Set<string>) {
     if (all.length < 2) return nothing;
+    if (!this.interactive) {
+      return html`<div class="legend" role="group" aria-label="Series">
+        ${all.map(
+          (s) => html`<span class="legend-item static ${shown.has(s.source.id) ? "" : "dimmed"}" data-series=${s.source.id}>
+            <span class="swatch" style="color: ${s.color}"></span>
+            <span class="legend-text">
+              <span class="legend-name">${s.source.label}</span>
+              <span class="legend-value">${this._legendValue(s)}</span>
+            </span>
+          </span>`,
+        )}
+      </div>`;
+    }
     return html`<div class="legend" role="group" aria-label="Series">
       ${all.map(
         (s) => html`<button
@@ -1087,8 +1122,10 @@ export class FanChart extends LitElement {
       <div
         class="plot"
         style="height: ${Math.max(this.height, 80)}px"
-        tabindex=${layout ? "0" : "-1"}
-        aria-label=${`Chart values: use the left and right arrow keys to step through ${this.xType === "time" ? "dates" : "points"}`}
+        tabindex=${layout && this.tooltip ? "0" : "-1"}
+        aria-label=${this.tooltip
+          ? `Chart values: use the left and right arrow keys to step through ${this.xType === "time" ? "dates" : "points"}`
+          : nothing}
         aria-busy=${this._loading ? "true" : "false"}
         @pointerdown=${this._onPlotPointerDown}
         @pointermove=${this._hoverAt}

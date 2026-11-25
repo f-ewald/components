@@ -256,6 +256,22 @@ test.describe("fan-chart", () => {
     await expect(chart.locator(".tooltip-date")).toHaveText("Mar 3, 2024");
   });
 
+  test("interactive=false disables legend toggling and tooltip=false disables hover tooltips", async ({ page }) => {
+    const chart = await mount(page);
+    await chart.evaluate((el) => {
+      el.setAttribute("interactive", "false");
+      el.setAttribute("tooltip", "false");
+    });
+    await expect(chart.locator("button.legend-item")).toHaveCount(0);
+    await expect(chart.locator("span.legend-item.static")).toHaveCount(2);
+    await expect(chart.locator(".plot")).toHaveAttribute("tabindex", "-1");
+
+    const box = (await chart.locator(".plot").boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(chart.locator(".tooltip")).toHaveCount(0);
+    await expect(chart.locator(".crosshair")).toHaveCount(0);
+  });
+
   test.describe("on touch screens", () => {
     test.use({ hasTouch: true });
 

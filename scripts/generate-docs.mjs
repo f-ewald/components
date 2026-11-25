@@ -514,6 +514,40 @@ const EXAMPLES = {
     },
   ];
 </script>`,
+  "heatmap-chart": `<heatmap-chart x-label="Training data used" row-label="Endpoint" meta-label="Traces" selected-column="100%"></heatmap-chart>
+<script type="module">
+  const map = document.querySelector("heatmap-chart");
+  map.columns = ["100%", "50%", "20%", "5%"];
+  map.domain = [0, 0.25];
+  map.valueFormat = (v) => \`\${Math.round(v * 100)}%\`;
+  map.rows = [
+    { label: "GET /feed", meta: 4200, cells: [0.02, 0.04, 0.09, 0.19] },
+    { label: "GET /profile", meta: 1850, cells: [0.03, 0.05, { value: 0.14, marker: "*", note: "1 of 3 seeds missing" }, null] },
+  ];
+  map.addEventListener("heatmap-column-select", (e) => (map.selectedColumn = e.detail.col));
+</script>`,
+  "line-chart": `<line-chart x-label="Added delay (ms)" y-label="Change at p90 (ms)" show-points selected-x="50"></line-chart>
+<script type="module">
+  const chart = document.querySelector("line-chart");
+  chart.references = [{ axis: "diagonal", label: "Full pass-through" }];
+  chart.series = [
+    { id: "truth", label: "Truth (replay)", points: [{ x: 0, y: 0 }, { x: 25, y: 12 }, { x: 50, y: 31 }, { x: 100, y: 78 }] },
+    { id: "pred", label: "Prediction", points: [{ x: 0, y: 0 }, { x: 25, y: 14 }, { x: 50, y: 34 }, { x: 100, y: 74 }] },
+    { id: "naive", label: "Naive", dashed: true, points: [{ x: 0, y: 0 }, { x: 25, y: 25 }, { x: 50, y: 50 }, { x: 100, y: 100 }] },
+  ];
+  chart.addEventListener("line-point-select", (e) => (chart.selectedX = e.detail.x));
+</script>`,
+  "scatter-chart": `<scatter-chart x-label="True change (ms)" y-label="Predicted change (ms)" legend-label="Delay" equal-axes></scatter-chart>
+<script type="module">
+  const chart = document.querySelector("scatter-chart");
+  chart.references = [{ axis: "diagonal", label: "Prediction = truth" }];
+  chart.points = [
+    { id: "feed-50", x: 31, y: 34, group: "+50 ms", label: "GET /feed", linked: true },
+    { id: "feed-100", x: 78, y: 74, group: "+100 ms", label: "GET /feed", linked: true },
+    { id: "prof-50", x: 12, y: 16, group: "+50 ms", label: "GET /profile" },
+  ];
+  chart.addEventListener("scatter-point-select", (e) => console.log(e.detail.point));
+</script>`,
   "fan-table": `<fan-table caption="Savings forecast" interval="year"></fan-table>
 <script type="module">
   const table = document.querySelector("fan-table");

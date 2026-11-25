@@ -2,7 +2,24 @@
 
 ## Unreleased
 
-- `fan-chart`: a more flexible x axis. `x-type="linear"` or `"log"` plots against numbers instead of dates (age,
+- New `<line-chart>` (1.53.0): multi-series line chart with linear, logarithmic, or time x axes, linear/log y axes,
+  optional shaded bands per series, dashed series lines, horizontal/vertical/diagonal (`y = x`) reference lines,
+  clickable points (`line-point-select`), a `selected-x` vertical highlight, an interactive isolate/toggle
+  legend (`series-visibility-change`), hover/touch/arrow-key tooltips, and `interactive`/`tooltip` toggles
+  (both default `true`, accepting `"false"` in HTML).
+- New `<heatmap-chart>` (1.53.0): interactive row × column matrix chart with built-in sequential and diverging color ramps
+  (`heat`, `blue`, `green`, `plasma`, `diverging`) or a custom `colorScale`, automatic contrast-checked value
+  labels, missing (`null`) cells, a gradient legend, sticky row headings with an optional `meta` column,
+  selectable columns and cells (`heatmap-column-select`, `heatmap-cell-select`), floating tooltips, arrow-key
+  grid navigation, and `interactive`/`tooltip` toggles (default `true`).
+- New `<scatter-chart>` (1.53.0): interactive 2D scatter plot with grouped colors and an isolate/toggle legend,
+  diagonal (`y = x`) and axis reference lines, `equal-axes` scaling, ringed clickable `linked` points
+  (`scatter-point-select`), smooth keyed position transitions across updates (disabled under
+  `prefers-reduced-motion`), floating tooltips, touch pinning, keyboard navigation, and `interactive`/`tooltip`
+  toggles (default `true`).
+- `fan-chart` (1.53.0): added `interactive` and `tooltip` properties (default `true`, accepting `"false"` in HTML) to
+  disable legend toggling and hover/keyboard tooltips independently.
+- `fan-chart` (1.53.0): a more flexible x axis. `x-type="linear"` or `"log"` plots against numbers instead of dates (age,
   years invested, a share, …) — every `date` field (points, events, `now`) then takes a number, and the
   `FanX`/`FanXType` types are exported. `xFormat` formats the x ticks, tooltip, legend, and summary on any axis;
   `x-label` adds an axis title; `xDomain` pins the range and rescales the y axis to the points in view; and

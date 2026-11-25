@@ -98,6 +98,8 @@ import "@f-ewald/components/fan-chart.js";
 | `xReverse` | `x-reverse` | `boolean` | `false` | Runs the x axis right to left (e.g. most training data first); arrow keys still move visually. |
 | `loader` | _(JS property only)_ | `FanChartLoader | null` | `null` | Optional data source; its result replaces `series`. See the class docs. |
 | `refreshInterval` | `refresh-interval` | `number` | `0` | Re-run `loader` every N seconds while the tab is visible; 0 (default) disables polling. |
+| `interactive` | `interactive` | `boolean` | `true` | Enables legend clicking/toggling (default `true`; accepts `interactive="false"`). |
+| `tooltip` | `tooltip` | `boolean` | `true` | Shows the hover/tap/keyboard tooltip and crosshair (default `true`; accepts `tooltip="false"`). |
 
 ## Events
 
