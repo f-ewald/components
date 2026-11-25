@@ -196,6 +196,66 @@ test.describe("fan-chart", () => {
     await expect(chart.locator(".range-value")).toHaveText(["300 €", "1200 €"]);
   });
 
+  test("playground numeric demo plots against age and switches axis type and direction", async ({ page }) => {
+    await page.goto("/");
+    const chart = page.getByTestId("fan-chart-numeric-demo");
+    await expect(chart.locator(".x-title")).toHaveText("Age");
+    await expect(chart.locator(".x-tick").first()).toHaveText("30");
+    await page.getByTestId("fan-chart-x-type").selectOption("log");
+    await page.getByTestId("fan-chart-x-reverse").check();
+    await expect(chart).toHaveAttribute("x-reverse", "");
+    await expect(chart.locator(".x-tick").first()).toHaveText("65");
+  });
+
+  test("plots a numeric log x axis with a title, custom format, nearest-point events, and reverse", async ({ page }) => {
+    const series = [
+      {
+        id: "n",
+        label: "Numeric",
+        actual: [{ date: 0, value: 50 }, { date: 1, value: 100 }, { date: 2, value: 200 }],
+        projection: [{ date: "4", values: [150, 300, 900] }, { date: 8, values: [200, 600, 4000] }],
+      },
+    ];
+    const chart = await mount(page, { series, xType: "log", xLabel: "Years", events: [{ date: 3.6, label: "Bonus" }] });
+    await chart.evaluate((element: HTMLElementTagNameMap["fan-chart"]) => (element.xFormat = (x) => `${x} y`));
+    await expect(chart.locator(".x-title")).toHaveText("Years");
+    for (const tick of await chart.locator(".x-tick").allTextContents()) expect(tick).toMatch(/ y$/);
+
+    const plot = chart.locator(".plot");
+    await plot.focus();
+    await page.keyboard.press("Home");
+    // x = 0 is dropped on a log axis, so the first point is 1.
+    await expect(chart.locator(".tooltip-date")).toHaveText("1 y");
+    await page.keyboard.press("End");
+    await page.keyboard.press("ArrowLeft");
+    await expect(chart.locator(".tooltip-date")).toHaveText("4 y · Bonus");
+
+    await chart.evaluate((element: HTMLElementTagNameMap["fan-chart"]) => (element.xReverse = true));
+    await page.keyboard.press("Home");
+    await expect(chart.locator(".tooltip-date")).toHaveText("8 y");
+    const leftX = Number(await chart.locator(".crosshair").getAttribute("x1"));
+    await page.keyboard.press("ArrowRight");
+    await expect(chart.locator(".tooltip-date")).toHaveText("4 y · Bonus");
+    expect(Number(await chart.locator(".crosshair").getAttribute("x1"))).toBeGreaterThan(leftX);
+  });
+
+  test("fits the y axis to a fixed x-domain and shows day precision for daily data", async ({ page }) => {
+    const chart = await mount(page, { xDomain: ["2024-01-01", "2025-01-01"] });
+    await expect(chart.locator(".y-tick").last()).toHaveText("$600");
+    await chart.locator(".plot").focus();
+    await page.keyboard.press("End");
+    await expect(chart.locator(".tooltip-date")).toHaveText("Jan 2025");
+
+    await chart.evaluate((element: HTMLElementTagNameMap["fan-chart"]) => {
+      element.xDomain = null;
+      element.series = [
+        { id: "d", label: "Daily", actual: ["2024-03-01", "2024-03-02", "2024-03-03"].map((date, i) => ({ date, value: i })) },
+      ];
+    });
+    await page.keyboard.press("End");
+    await expect(chart.locator(".tooltip-date")).toHaveText("Mar 3, 2024");
+  });
+
   test.describe("on touch screens", () => {
     test.use({ hasTouch: true });
 

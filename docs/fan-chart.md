@@ -17,6 +17,12 @@ tap outside) clears.
 Values default to compact currency in `currency` and `locale` (USD, en-US);
 dates follow `locale`. `valueFormat` overrides value formatting entirely.
 
+X axis: dates by default. `x-type="linear"` or `"log"` reads every `date`
+field (points, events, `now`, `xDomain`) as a number instead — e.g. age,
+years invested, or a share — formatted compactly in `locale` unless
+`xFormat` is set. `xDomain` pins the range (the y axis fits the points in
+view), `x-reverse` runs it right to left, and `x-label` adds an axis title.
+
 Totals: percentiles do not add across series, so build a total series from
 the run-by-run sum of the accounts' simulated paths (`sumPaths()`), not by
 adding their percentiles.
@@ -79,12 +85,17 @@ import "@f-ewald/components/fan-chart.js";
 | `visible` | _(JS property only)_ | `string[] | null` | `null` | IDs of the series to show; `null` (default) shows all. Updated by the legend. |
 | `goal` | _(JS property only)_ | `FanChartGoal | null` | `null` | Optional horizontal goal line; always kept within the y axis. |
 | `events` | _(JS property only)_ | `FanChartEvent[]` | `[]` | Optional labelled vertical markers, e.g. retirement. |
-| `now` | `now` | `string | null` | `null` | Position of the "today" divider as an ISO date. Defaults to the latest observed date. |
+| `now` | `now` | `FanX | null` | `null` | Position of the "today" divider (an ISO date, or a number on a numeric axis). Defaults to the latest observed point. |
 | `nowLabel` | `now-label` | `string` | `"Today"` | Label drawn on the "today" divider. |
 | `height` | `height` | `number` | `320` | Plot height in CSS pixels, excluding the legend. |
 | `locale` | `locale` | `string` | `"en-US"` | BCP 47 locale for numbers and dates. |
 | `currency` | `currency` | `string` | `"USD"` | ISO 4217 currency code for the default value format. |
 | `valueFormat` | _(JS property only)_ | `((value: number) => string) | null` | `null` | Formats axis, legend, and tooltip values. Defaults to compact `currency` in `locale` (`$1.2M`). |
+| `xType` | `x-type` | `FanXType` | `"time"` | X axis type: dates (default), plain numbers, or logarithmic numbers (positions ≤ 0 are dropped). |
+| `xFormat` | _(JS property only)_ | `((x: number) => string) | null` | `null` | Formats x positions on the axis, in the tooltip, legend, and summary; gets epoch milliseconds on a time axis. Defaults to `locale` dates (or compact numbers). |
+| `xLabel` | `x-label` | `string` | `""` | Optional x axis title, drawn below the tick labels. |
+| `xDomain` | _(JS property only)_ | `[FanX, FanX] | null` | `null` | Fixed x axis range `[start, end]`, in the axis' units; `null` (default) fits the data. |
+| `xReverse` | `x-reverse` | `boolean` | `false` | Runs the x axis right to left (e.g. most training data first); arrow keys still move visually. |
 | `loader` | _(JS property only)_ | `FanChartLoader | null` | `null` | Optional data source; its result replaces `series`. See the class docs. |
 | `refreshInterval` | `refresh-interval` | `number` | `0` | Re-run `loader` every N seconds while the tab is visible; 0 (default) disables polling. |
 

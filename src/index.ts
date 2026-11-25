@@ -45,6 +45,8 @@ export {
   type FanChartLoader,
   type FanChartPoint,
   type FanChartSeries,
+  type FanX,
+  type FanXType,
 } from "./fan-chart.js";
 export { FanTable, type FanTableInterval } from "./fan-table.js";
 export {

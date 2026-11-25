@@ -2,10 +2,20 @@ import { bisector } from "d3-array";
 import { parseIsoDate } from "./calendar.js";
 import type { FanChartProjectionPoint } from "./percentiles.js";
 
+/**
+ * A position on the x axis. With `x-type="time"` (default): an ISO date
+ * (`"YYYY-MM-DD"` or any `Date`-parseable string), a `Date`, or epoch
+ * milliseconds. With `"linear"` or `"log"`: a number or numeric string.
+ */
+export type FanX = string | number | Date;
+
+/** How x positions are read and scaled: dates, plain numbers, or logarithmic numbers (> 0). */
+export type FanXType = "time" | "linear" | "log";
+
 /** One observed (real, past) value in a `fan-chart`/`fan-table` series. */
 export interface FanChartPoint {
-  /** ISO date (`"YYYY-MM-DD"` or any `Date`-parseable string). */
-  date: string;
+  /** X position: a date by default, or a number on a numeric axis (see {@link FanX}). */
+  date: FanX;
   value: number;
 }
 
@@ -37,8 +47,8 @@ export interface FanChartGoal {
 
 /** A labelled vertical marker, e.g. a retirement or house-purchase date. */
 export interface FanChartEvent {
-  /** ISO date (`"YYYY-MM-DD"` or any `Date`-parseable string). */
-  date: string;
+  /** X position: a date by default, or a number on a numeric axis (see {@link FanX}). */
+  date: FanX;
   label: string;
 }
 
@@ -90,6 +100,14 @@ export function toTime(date: string): number {
 }
 
 /** Returns the bracketing samples and interpolation weight at `t`, or null when `t` is outside the samples. */
+/** Parses an x position for `type` to a number; NaN when invalid (or ≤ 0 on a log axis). */
+export function toX(value: FanX, type: FanXType = "time"): number {
+  if (value instanceof Date) return value.getTime();
+  if (type === "time") return typeof value === "number" ? value : toTime(value);
+  const n = typeof value === "number" ? value : value.trim() === "" ? Number.NaN : Number(value);
+  return type === "log" && !(n > 0) ? Number.NaN : n;
+}
+
 export function bracket<T extends { t: number }>(points: T[], t: number): [T, T, number] | null {
   if (points.length === 0 || t < points[0].t || t > points[points.length - 1].t) return null;
   const i = byTime.left(points, t);
@@ -101,12 +119,6 @@ export function bracket<T extends { t: number }>(points: T[], t: number): [T, T,
 
 export function lerp(a: number, b: number, k: number): number {
   return a + (b - a) * k;
-}
-
-export function sameMonth(a: number, b: number): boolean {
-  const da = new Date(a);
-  const db = new Date(b);
-  return da.getFullYear() === db.getFullYear() && da.getMonth() === db.getMonth();
 }
 
 /** Median of one projection point, or the midpoint of the two middle values for an even percentile count. */
@@ -125,15 +137,16 @@ export function prepareSeries(
   series: FanChartSeries[],
   percentiles: number[],
   goal: number | undefined,
+  xType: FanXType = "time",
 ): PreparedSeries[] {
   const width = percentiles.length;
   return series.map((source, index) => {
     const actual = (source.actual ?? [])
-      .map((p) => ({ t: toTime(p.date), v: p.value }))
+      .map((p) => ({ t: toX(p.date, xType), v: p.value }))
       .filter((p) => Number.isFinite(p.t) && Number.isFinite(p.v))
       .sort((a, b) => a.t - b.t);
     const entries = (source.projection ?? [])
-      .map((p, i) => ({ t: toTime(p.date), values: p.values, goal: p.goalProbability, i }))
+      .map((p, i) => ({ t: toX(p.date, xType), values: p.values, goal: p.goalProbability, i }))
       .filter((p) => Number.isFinite(p.t) && p.values.length === width && p.values.every(Number.isFinite))
       .sort((a, b) => a.t - b.t);
     const projection: ProjectionSample[] = entries.map(({ t, values, goal }) => ({ t, values, goal }));
@@ -201,6 +214,22 @@ export class FanFormatter {
         format = new Intl.NumberFormat(locale, options);
       } catch {
         format = new Intl.NumberFormat("en-US", { ...options, currency: "USD" });
+      }
+      this.cache.set(key, format);
+    }
+    return format.format(value);
+  }
+
+  /** Formats a plain number in `locale`, compact with 3 significant digits (`1.5K`, `0.25`). */
+  number(value: number, locale: string): string {
+    const key = `x|${locale}`;
+    let format = this.cache.get(key) as Intl.NumberFormat | undefined;
+    if (!format) {
+      const options: Intl.NumberFormatOptions = { notation: "compact", maximumSignificantDigits: 3 };
+      try {
+        format = new Intl.NumberFormat(locale, options);
+      } catch {
+        format = new Intl.NumberFormat("en-US", options);
       }
       this.cache.set(key, format);
     }

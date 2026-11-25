@@ -12164,7 +12164,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Multi-series time-series fan chart: observed history as a solid line, and a\nprojection as percentile bands around a dashed median — e.g. Monte Carlo\nsavings forecasts. A \"today\" divider separates the past from the projection,\nand each fan starts at its series' last observed value. Optional extras: a\n`goal` line (the tooltip shows each projection's `goalProbability`), labelled\n`events` markers, and per-series `samples` (individual runs as thin lines).\n\nThe legend shows each series' final value under its name and toggles\nseries: a click shows only that series (clicking it again shows all);\nCtrl/Cmd-click — or a long press on touch screens — adds or removes one.\nThe y axis rescales to the visible series. Hover, tap, or drag across the\nplot — or focus it and use ←/→/Home/End — to inspect values; Escape (or a\ntap outside) clears.\n\nValues default to compact currency in `currency` and `locale` (USD, en-US);\ndates follow `locale`. `valueFormat` overrides value formatting entirely.\n\nTotals: percentiles do not add across series, so build a total series from\nthe run-by-run sum of the accounts' simulated paths (`sumPaths()`), not by\nadding their percentiles.\n\nLive data: `series` is a reactive property, so binding it from a parent Lit\ntemplate (`.series=${this.data}`) or assigning a new array redraws in place.\nUpdates must be immutable (a new array); after mutating in place, call\n`refresh()`. Alternatively set `loader` to a function returning the series\n(sync or async): it runs on connect, on `refresh()`, and every\n`refresh-interval` seconds while the tab is visible. A newer load aborts the\nolder one, and a failed load keeps the last good data.\n\nSeries colors default to the theme's primary, warning, danger, info, and\nsuccess tokens, so the chart follows light/dark themes; some themes share\nthe last two with the first, so set `color` when showing more than three.",
+          "description": "Multi-series time-series fan chart: observed history as a solid line, and a\nprojection as percentile bands around a dashed median — e.g. Monte Carlo\nsavings forecasts. A \"today\" divider separates the past from the projection,\nand each fan starts at its series' last observed value. Optional extras: a\n`goal` line (the tooltip shows each projection's `goalProbability`), labelled\n`events` markers, and per-series `samples` (individual runs as thin lines).\n\nThe legend shows each series' final value under its name and toggles\nseries: a click shows only that series (clicking it again shows all);\nCtrl/Cmd-click — or a long press on touch screens — adds or removes one.\nThe y axis rescales to the visible series. Hover, tap, or drag across the\nplot — or focus it and use ←/→/Home/End — to inspect values; Escape (or a\ntap outside) clears.\n\nValues default to compact currency in `currency` and `locale` (USD, en-US);\ndates follow `locale`. `valueFormat` overrides value formatting entirely.\n\nX axis: dates by default. `x-type=\"linear\"` or `\"log\"` reads every `date`\nfield (points, events, `now`, `xDomain`) as a number instead — e.g. age,\nyears invested, or a share — formatted compactly in `locale` unless\n`xFormat` is set. `xDomain` pins the range (the y axis fits the points in\nview), `x-reverse` runs it right to left, and `x-label` adds an axis title.\n\nTotals: percentiles do not add across series, so build a total series from\nthe run-by-run sum of the accounts' simulated paths (`sumPaths()`), not by\nadding their percentiles.\n\nLive data: `series` is a reactive property, so binding it from a parent Lit\ntemplate (`.series=${this.data}`) or assigning a new array redraws in place.\nUpdates must be immutable (a new array); after mutating in place, call\n`refresh()`. Alternatively set `loader` to a function returning the series\n(sync or async): it runs on connect, on `refresh()`, and every\n`refresh-interval` seconds while the tab is visible. A newer load aborts the\nolder one, and a failed load keeps the last good data.\n\nSeries colors default to the theme's primary, warning, danger, info, and\nsuccess tokens, so the chart follows light/dark themes; some themes share\nthe last two with the first, so set `color` when showing more than three.",
           "name": "FanChart",
           "members": [
             {
@@ -12227,10 +12227,10 @@
               "kind": "field",
               "name": "now",
               "type": {
-                "text": "string | null"
+                "text": "FanX | null"
               },
               "default": "null",
-              "description": "Position of the \"today\" divider as an ISO date. Defaults to the latest observed date.",
+              "description": "Position of the \"today\" divider (an ISO date, or a number on a numeric axis). Defaults to the latest observed point.",
               "attribute": "now"
             },
             {
@@ -12281,6 +12281,55 @@
               },
               "default": "null",
               "description": "Formats axis, legend, and tooltip values. Defaults to compact `currency` in `locale` (`$1.2M`)."
+            },
+            {
+              "kind": "field",
+              "name": "xType",
+              "type": {
+                "text": "FanXType"
+              },
+              "default": "\"time\"",
+              "description": "X axis type: dates (default), plain numbers, or logarithmic numbers (positions ≤ 0 are dropped).",
+              "attribute": "x-type"
+            },
+            {
+              "kind": "field",
+              "name": "xFormat",
+              "type": {
+                "text": "((x: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Formats x positions on the axis, in the tooltip, legend, and summary; gets\nepoch milliseconds on a time axis. Defaults to `locale` dates (or compact numbers)."
+            },
+            {
+              "kind": "field",
+              "name": "xLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional x axis title, drawn below the tick labels.",
+              "attribute": "x-label"
+            },
+            {
+              "kind": "field",
+              "name": "xDomain",
+              "type": {
+                "text": "[FanX, FanX] | null"
+              },
+              "default": "null",
+              "description": "Fixed x axis range `[start, end]`, in the axis' units; `null` (default) fits the data."
+            },
+            {
+              "kind": "field",
+              "name": "xReverse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Runs the x axis right to left (e.g. most training data first); arrow keys still move visually.",
+              "attribute": "x-reverse",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -12479,7 +12528,7 @@
             },
             {
               "kind": "method",
-              "name": "_month",
+              "name": "_xText",
               "privacy": "private",
               "return": {
                 "type": {
@@ -12492,8 +12541,63 @@
                   "type": {
                     "text": "number"
                   }
+                },
+                {
+                  "name": "step",
+                  "default": "Infinity"
                 }
-              ]
+              ],
+              "description": "Formats an x position for the tooltip and summary: `xFormat`, a date at the data's precision, or a number."
+            },
+            {
+              "kind": "method",
+              "name": "_xScale",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "XScale"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "lo",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "hi",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "range",
+                  "type": {
+                    "text": "[number, number]"
+                  }
+                }
+              ],
+              "description": "Builds the x scale over `[lo, hi]` for the current `x-type` and `x-reverse`."
+            },
+            {
+              "kind": "method",
+              "name": "_xExtent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[number, number]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "times",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ],
+              "description": "The x axis range: `x-domain` when valid, else the data's extent (widened when it is a single point)."
             },
             {
               "kind": "method",
@@ -12720,7 +12824,8 @@
                     "text": "number"
                   }
                 }
-              ]
+              ],
+              "description": "Labels of the events whose nearest data point is `t`."
             },
             {
               "kind": "method",
@@ -12826,7 +12931,7 @@
                   }
                 }
               ],
-              "description": "The series' final projected median (or last observed value) and its year, for the legend."
+              "description": "The series' final projected median (or last observed value) and where it is (its year on a time axis), for the legend."
             },
             {
               "kind": "method",
@@ -12858,6 +12963,25 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "_xTickFormat",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "(t: number) => string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ],
+              "description": "Formats an x tick: `xFormat`, a date at a precision suited to the axis span, or a compact number."
             },
             {
               "kind": "method",
@@ -13005,10 +13129,10 @@
             {
               "name": "now",
               "type": {
-                "text": "string | null"
+                "text": "FanX | null"
               },
               "default": "null",
-              "description": "Position of the \"today\" divider as an ISO date. Defaults to the latest observed date.",
+              "description": "Position of the \"today\" divider (an ISO date, or a number on a numeric axis). Defaults to the latest observed point.",
               "fieldName": "now"
             },
             {
@@ -13046,6 +13170,33 @@
               "default": "\"USD\"",
               "description": "ISO 4217 currency code for the default value format.",
               "fieldName": "currency"
+            },
+            {
+              "name": "x-type",
+              "type": {
+                "text": "FanXType"
+              },
+              "default": "\"time\"",
+              "description": "X axis type: dates (default), plain numbers, or logarithmic numbers (positions ≤ 0 are dropped).",
+              "fieldName": "xType"
+            },
+            {
+              "name": "x-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Optional x axis title, drawn below the tick labels.",
+              "fieldName": "xLabel"
+            },
+            {
+              "name": "x-reverse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Runs the x axis right to left (e.g. most training data first); arrow keys still move visually.",
+              "fieldName": "xReverse"
             },
             {
               "name": "refresh-interval",
@@ -13108,6 +13259,22 @@
         },
         {
           "kind": "js",
+          "name": "FanX",
+          "declaration": {
+            "name": "FanX",
+            "module": "./utils/fan-data.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanXType",
+          "declaration": {
+            "name": "FanXType",
+            "module": "./utils/fan-data.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "FanChart",
           "declaration": {
             "name": "FanChart",
@@ -13130,7 +13297,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Tabular companion to `fan-chart`: the same `series`, `percentiles`, `goal`,\nand `events`, shown as one row per date and one column per series. Rows are\ngrouped into observed and projected sections around the \"today\" date\n(`now`, defaulting to the latest observed date). Observed cells show the\nvalue; projected cells show the median, the outer percentile range (e.g.\nP10–P90) beneath it, and — when the projection provides `goalProbability`\nand a `goal` is set — the share of runs reaching the goal. Events are named\nunder the date of the row they fall in.\n\n`interval` picks the rows: the last date of each year (default) or month, or\nevery date. Values use whole `currency` units in `locale` (en-US, USD), or\ncompact ones with `compact`; `valueFormat` overrides both. Pair it with a\nchart by forwarding `fan-chart`'s `series-visibility-change` detail to\n`visible`.\n\nThe header and date column stay pinned while the table scrolls; cap its\nheight with `--fan-table-max-height` (default none).",
+          "description": "Tabular companion to `fan-chart`: the same `series`, `percentiles`, `goal`,\nand `events`, shown as one row per date and one column per series. Rows are\ngrouped into observed and projected sections around the \"today\" date\n(`now`, defaulting to the latest observed date). Observed cells show the\nvalue; projected cells show the median, the outer percentile range (e.g.\nP10–P90) beneath it, and — when the projection provides `goalProbability`\nand a `goal` is set — the share of runs reaching the goal. Events are named\nunder the date of the row they fall in.\n\n`interval` picks the rows: the last date of each year (default) or month, or\nevery date. Values use whole `currency` units in `locale` (en-US, USD), or\ncompact ones with `compact`; `valueFormat` overrides both. Pair it with a\nchart by forwarding `fan-chart`'s `series-visibility-change` detail to\n`visible`.\n\nWith `x-type=\"linear\"` or `\"log\"`, `date` fields are numbers (as in\n`fan-chart`): every point becomes a row, labelled by `xFormat` or a compact\nnumber. `xFormat` also replaces the date labels on a time axis.\n\nThe header and date column stay pinned while the table scrolls; cap its\nheight with `--fan-table-max-height` (default none).",
           "name": "FanTable",
           "members": [
             {
@@ -13182,11 +13349,30 @@
               "kind": "field",
               "name": "now",
               "type": {
-                "text": "string | null"
+                "text": "FanX | null"
               },
               "default": "null",
-              "description": "Date splitting observed from projected rows, as an ISO date. Defaults to the latest observed date.",
+              "description": "Point splitting observed from projected rows (an ISO date, or a number on a numeric axis). Defaults to the latest observed point.",
               "attribute": "now"
+            },
+            {
+              "kind": "field",
+              "name": "xType",
+              "type": {
+                "text": "FanXType"
+              },
+              "default": "\"time\"",
+              "description": "How `date` fields are read: dates (default), or numbers for `\"linear\"`/`\"log\"` (as in `fan-chart`).",
+              "attribute": "x-type"
+            },
+            {
+              "kind": "field",
+              "name": "xFormat",
+              "type": {
+                "text": "((x: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Formats row labels; gets epoch milliseconds on a time axis. Defaults to `locale` dates (or compact numbers)."
             },
             {
               "kind": "field",
@@ -13195,7 +13381,7 @@
                 "text": "FanTableInterval"
               },
               "default": "\"year\"",
-              "description": "Rows: the last date of each year (default) or month, or every date.",
+              "description": "Rows: the last date of each year (default) or month, or every date. Numeric axes always show every point.",
               "attribute": "interval"
             },
             {
@@ -13388,11 +13574,20 @@
             {
               "name": "now",
               "type": {
-                "text": "string | null"
+                "text": "FanX | null"
               },
               "default": "null",
-              "description": "Date splitting observed from projected rows, as an ISO date. Defaults to the latest observed date.",
+              "description": "Point splitting observed from projected rows (an ISO date, or a number on a numeric axis). Defaults to the latest observed point.",
               "fieldName": "now"
+            },
+            {
+              "name": "x-type",
+              "type": {
+                "text": "FanXType"
+              },
+              "default": "\"time\"",
+              "description": "How `date` fields are read: dates (default), or numbers for `\"linear\"`/`\"log\"` (as in `fan-chart`).",
+              "fieldName": "xType"
             },
             {
               "name": "interval",
@@ -13400,7 +13595,7 @@
                 "text": "FanTableInterval"
               },
               "default": "\"year\"",
-              "description": "Rows: the last date of each year (default) or month, or every date.",
+              "description": "Rows: the last date of each year (default) or month, or every date. Numeric axes always show every point.",
               "fieldName": "interval"
             },
             {
@@ -17204,6 +17399,22 @@
           "name": "FanChartSeries",
           "declaration": {
             "name": "FanChartSeries",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanX",
+          "declaration": {
+            "name": "FanX",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanXType",
+          "declaration": {
+            "name": "FanXType",
             "module": "./fan-chart.js"
           }
         },
@@ -31897,6 +32108,31 @@
         },
         {
           "kind": "function",
+          "name": "toX",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "FanX"
+              }
+            },
+            {
+              "name": "type",
+              "default": "\"time\"",
+              "type": {
+                "text": "FanXType"
+              }
+            }
+          ],
+          "description": "Parses an x position for `type` to a number; NaN when invalid (or ≤ 0 on a log axis)."
+        },
+        {
+          "kind": "function",
           "name": "bracket",
           "return": {
             "type": {
@@ -31916,8 +32152,7 @@
                 "text": "number"
               }
             }
-          ],
-          "description": "Returns the bracketing samples and interpolation weight at `t`, or null when `t` is outside the samples."
+          ]
         },
         {
           "kind": "function",
@@ -31942,29 +32177,6 @@
             },
             {
               "name": "k",
-              "type": {
-                "text": "number"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "sameMonth",
-          "return": {
-            "type": {
-              "text": "boolean"
-            }
-          },
-          "parameters": [
-            {
-              "name": "a",
-              "type": {
-                "text": "number"
-              }
-            },
-            {
-              "name": "b",
               "type": {
                 "text": "number"
               }
@@ -32014,6 +32226,13 @@
               "name": "goal",
               "type": {
                 "text": "number | undefined"
+              }
+            },
+            {
+              "name": "xType",
+              "default": "\"time\"",
+              "type": {
+                "text": "FanXType"
               }
             }
           ],
@@ -32141,6 +32360,30 @@
             },
             {
               "kind": "method",
+              "name": "number",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "locale",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Formats a plain number in `locale`, compact with 3 significant digits (`1.5K`, `0.25`)."
+            },
+            {
+              "kind": "method",
               "name": "date",
               "return": {
                 "type": {
@@ -32191,6 +32434,14 @@
         },
         {
           "kind": "js",
+          "name": "toX",
+          "declaration": {
+            "name": "toX",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "bracket",
           "declaration": {
             "name": "bracket",
@@ -32202,14 +32453,6 @@
           "name": "lerp",
           "declaration": {
             "name": "lerp",
-            "module": "src/utils/fan-data.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "sameMonth",
-          "declaration": {
-            "name": "sameMonth",
             "module": "src/utils/fan-data.ts"
           }
         },
@@ -32556,9 +32799,9 @@
             {
               "name": "dates",
               "type": {
-                "text": "string[]"
+                "text": "FanX[]"
               },
-              "description": "One date per time step."
+              "description": "One x position per step: dates, or numbers for a numeric axis."
             },
             {
               "name": "paths",

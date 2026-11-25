@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- `fan-chart`: a more flexible x axis. `x-type="linear"` or `"log"` plots against numbers instead of dates (age,
+  years invested, a share, …) — every `date` field (points, events, `now`) then takes a number, and the
+  `FanX`/`FanXType` types are exported. `xFormat` formats the x ticks, tooltip, legend, and summary on any axis;
+  `x-label` adds an axis title; `xDomain` pins the range and rescales the y axis to the points in view; and
+  `x-reverse` runs the axis right to left (the arrow keys still move visually). Time axes now show the day in the
+  tooltip for data finer than monthly, events appear in the tooltip of their nearest point, and narrow log ranges
+  keep readable ticks. `fan-table` accepts the same `x-type` and `xFormat` (numeric axes list every point), and
+  `summarizePaths()` takes numeric x positions too.
 - New `<fan-table>` (1.52.0): the tabular companion to `fan-chart`, taking the same `series`, `percentiles`, `goal`, and
   `events`. One row per year (`interval="year"`, default), month, or date, and one column per `visible` series,
   grouped into observed and projected sections around `now` (`observed-label`, `projected-label`). Projected cells

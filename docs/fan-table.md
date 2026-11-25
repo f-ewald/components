@@ -15,6 +15,10 @@ compact ones with `compact`; `valueFormat` overrides both. Pair it with a
 chart by forwarding `fan-chart`'s `series-visibility-change` detail to
 `visible`.
 
+With `x-type="linear"` or `"log"`, `date` fields are numbers (as in
+`fan-chart`): every point becomes a row, labelled by `xFormat` or a compact
+number. `xFormat` also replaces the date labels on a time axis.
+
 The header and date column stay pinned while the table scrolls; cap its
 height with `--fan-table-max-height` (default none).
 
@@ -56,8 +60,10 @@ import "@f-ewald/components/fan-table.js";
 | `goal` | _(JS property only)_ | `FanChartGoal | null` | `null` | Optional goal; projected cells show the share of runs reaching it when the data provides `goalProbability`. |
 | `events` | _(JS property only)_ | `FanChartEvent[]` | `[]` | Optional labelled dates, named under the row they fall in. |
 | `visible` | _(JS property only)_ | `string[] | null` | `null` | IDs of the series to show as columns; `null` (default) shows all. |
-| `now` | `now` | `string | null` | `null` | Date splitting observed from projected rows, as an ISO date. Defaults to the latest observed date. |
-| `interval` | `interval` | `FanTableInterval` | `"year"` | Rows: the last date of each year (default) or month, or every date. |
+| `now` | `now` | `FanX | null` | `null` | Point splitting observed from projected rows (an ISO date, or a number on a numeric axis). Defaults to the latest observed point. |
+| `xType` | `x-type` | `FanXType` | `"time"` | How `date` fields are read: dates (default), or numbers for `"linear"`/`"log"` (as in `fan-chart`). |
+| `xFormat` | _(JS property only)_ | `((x: number) => string) | null` | `null` | Formats row labels; gets epoch milliseconds on a time axis. Defaults to `locale` dates (or compact numbers). |
+| `interval` | `interval` | `FanTableInterval` | `"year"` | Rows: the last date of each year (default) or month, or every date. Numeric axes always show every point. |
 | `locale` | `locale` | `string` | `"en-US"` | BCP 47 locale for numbers and dates. |
 | `currency` | `currency` | `string` | `"USD"` | ISO 4217 currency code for the default value format. |
 | `compact` | `compact` | `boolean` | `false` | Compact values (`$1.2M`) instead of whole units (`$1,234,567`). |

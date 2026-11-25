@@ -9,26 +9,29 @@ import {
   bandNames,
   center,
   prepareSeries,
-  sameMonth,
-  toTime,
+  toX,
   valueAt,
   visibleIds,
   type FanChartEvent,
   type FanChartGoal,
   type FanChartSeries,
   type FanValue,
+  type FanX,
+  type FanXType,
   type PreparedSeries,
   type ProjectionSample,
   type Sample,
 } from "./utils/fan-data.js";
 
 export type { FanChartProjectionPoint } from "./utils/percentiles.js";
-export type { FanChartEvent, FanChartGoal, FanChartPoint, FanChartSeries } from "./utils/fan-data.js";
+export type { FanChartEvent, FanChartGoal, FanChartPoint, FanChartSeries, FanX, FanXType } from "./utils/fan-data.js";
 
 /** Loads chart data; called with a signal that aborts when a newer load supersedes this one. */
 export type FanChartLoader = (signal: AbortSignal) => FanChartSeries[] | Promise<FanChartSeries[]>;
 
 const MARGIN = { top: 16, right: 16, bottom: 28 };
+/** Extra bottom room for the `x-label` axis title. */
+const X_LABEL_PX = 18;
 const TICK_FONT_PX = 11;
 /** Vertical distance between stacked marker-label rows above the plot. */
 const LABEL_ROW_PX = 14;
@@ -36,7 +39,8 @@ const MAX_LABEL_ROWS = 3;
 /** Tooltip width in pixels; matches the `.tooltip` CSS width (16rem). */
 const TOOLTIP_W = 256;
 const LONG_PRESS_MS = 500;
-const YEAR_MS = 365.25 * 86_400_000;
+const DAY_MS = 86_400_000;
+const YEAR_MS = 365.25 * DAY_MS;
 
 interface TooltipRow extends FanValue {
   series: PreparedSeries;
@@ -52,6 +56,9 @@ interface TopLabel {
 
 type YScale = ((value: number) => number) & { ticks(count?: number): number[] };
 
+/** An x scale over numbers (epoch ms on a time axis), whatever its type. */
+type XScale = ((value: number) => number) & { invert(px: number): number; ticks(count: number): number[] };
+
 interface Layout {
   width: number;
   height: number;
@@ -59,7 +66,12 @@ interface Layout {
   left: number;
   plotW: number;
   bottom: number;
-  x: ReturnType<typeof scaleTime<number, number>>;
+  x: XScale;
+  /** Axis range, low to high (before any `x-reverse`). */
+  xRange: [number, number];
+  /** Smallest gap between neighbouring x positions, for choosing the date precision. */
+  step: number;
+  now: number | null;
   y: YScale;
   times: number[];
   visible: PreparedSeries[];
@@ -67,11 +79,28 @@ interface Layout {
   events: { t: number; label: string }[];
 }
 
-/** Keeps the 1/2/5 × 10ⁿ ticks of a log scale, or only powers of ten when those are still too many. */
-function logTicks(ticks: number[]): number[] {
+/** Points within `[lo, hi]`, plus the nearest one outside each end so lines crossing an edge stay in range. */
+function inWindow<T extends { t: number }>(points: T[], [lo, hi]: [number, number]): T[] {
+  const first = points.findIndex((p) => p.t >= lo);
+  if (first === -1) return points.slice(-1);
+  let last = first;
+  while (last < points.length && points[last].t <= hi) last++;
+  return points.slice(Math.max(first - 1, 0), last + 1);
+}
+
+/**
+ * Keeps the 1/2/5 × 10ⁿ ticks of a log scale, or only powers of ten when there
+ * are more than `limit`. A range within about one decade keeps every `limit`-th
+ * of the scale's own ticks instead, since 1/2/5 would leave fewer than three.
+ */
+function logTicks(ticks: number[], limit = 8): number[] {
   const leading = (v: number) => v / 10 ** Math.floor(Math.log10(v) + 1e-9);
   const nice = ticks.filter((v) => [1, 2, 5].some((d) => Math.abs(leading(v) - d) < 1e-6));
-  return nice.length > 8 ? nice.filter((v) => Math.abs(leading(v) - 1) < 1e-6) : nice;
+  if (nice.length < 3) {
+    const every = Math.ceil(ticks.length / Math.max(limit, 2));
+    return ticks.filter((_, i) => i % every === 0);
+  }
+  return nice.length > limit ? nice.filter((v) => Math.abs(leading(v) - 1) < 1e-6) : nice;
 }
 
 /**
@@ -91,6 +120,12 @@ function logTicks(ticks: number[]): number[] {
  *
  * Values default to compact currency in `currency` and `locale` (USD, en-US);
  * dates follow `locale`. `valueFormat` overrides value formatting entirely.
+ *
+ * X axis: dates by default. `x-type="linear"` or `"log"` reads every `date`
+ * field (points, events, `now`, `xDomain`) as a number instead — e.g. age,
+ * years invested, or a share — formatted compactly in `locale` unless
+ * `xFormat` is set. `xDomain` pins the range (the y axis fits the points in
+ * view), `x-reverse` runs it right to left, and `x-label` adds an axis title.
  *
  * Totals: percentiles do not add across series, so build a total series from
  * the run-by-run sum of the accounts' simulated paths (`sumPaths()`), not by
@@ -394,8 +429,8 @@ export class FanChart extends LitElement {
   @property({ attribute: false }) goal: FanChartGoal | null = null;
   /** Optional labelled vertical markers, e.g. retirement. */
   @property({ attribute: false }) events: FanChartEvent[] = [];
-  /** Position of the "today" divider as an ISO date. Defaults to the latest observed date. */
-  @property() now: string | null = null;
+  /** Position of the "today" divider (an ISO date, or a number on a numeric axis). Defaults to the latest observed point. */
+  @property() now: FanX | null = null;
   /** Label drawn on the "today" divider. */
   @property({ attribute: "now-label" }) nowLabel = "Today";
   /** Plot height in CSS pixels, excluding the legend. */
@@ -406,6 +441,19 @@ export class FanChart extends LitElement {
   @property() currency = "USD";
   /** Formats axis, legend, and tooltip values. Defaults to compact `currency` in `locale` (`$1.2M`). */
   @property({ attribute: false }) valueFormat: ((value: number) => string) | null = null;
+  /** X axis type: dates (default), plain numbers, or logarithmic numbers (positions ≤ 0 are dropped). */
+  @property({ attribute: "x-type" }) xType: FanXType = "time";
+  /**
+   * Formats x positions on the axis, in the tooltip, legend, and summary; gets
+   * epoch milliseconds on a time axis. Defaults to `locale` dates (or compact numbers).
+   */
+  @property({ attribute: false }) xFormat: ((x: number) => string) | null = null;
+  /** Optional x axis title, drawn below the tick labels. */
+  @property({ attribute: "x-label" }) xLabel = "";
+  /** Fixed x axis range `[start, end]`, in the axis' units; `null` (default) fits the data. */
+  @property({ attribute: false }) xDomain: [FanX, FanX] | null = null;
+  /** Runs the x axis right to left (e.g. most training data first); arrow keys still move visually. */
+  @property({ type: Boolean, reflect: true, attribute: "x-reverse" }) xReverse = false;
   /** Optional data source; its result replaces `series`. See the class docs. */
   @property({ attribute: false }) loader: FanChartLoader | null = null;
   /** Re-run `loader` every N seconds while the tab is visible; 0 (default) disables polling. */
@@ -510,8 +558,40 @@ export class FanChart extends LitElement {
     return this._formatter.date(t, this.locale, options);
   }
 
-  private _month(t: number): string {
-    return this._formatDate(t, { month: "short", year: "numeric" });
+  /** Formats an x position for the tooltip and summary: `xFormat`, a date at the data's precision, or a number. */
+  private _xText(t: number, step = Infinity): string {
+    if (this.xFormat) return this.xFormat(t);
+    if (this.xType !== "time") return this._formatter.number(t, this.locale);
+    return step < 28 * DAY_MS
+      ? this._formatDate(t, { day: "numeric", month: "short", year: "numeric" })
+      : this._formatDate(t, { month: "short", year: "numeric" });
+  }
+
+  /** Builds the x scale over `[lo, hi]` for the current `x-type` and `x-reverse`. */
+  private _xScale(lo: number, hi: number, range: [number, number]): XScale {
+    const [a, b] = this.xReverse ? [hi, lo] : [lo, hi];
+    if (this.xType === "time") {
+      const scale = scaleTime<number, number>().domain([new Date(a), new Date(b)]).range(range);
+      return Object.assign((v: number) => scale(v), {
+        invert: (px: number) => scale.invert(px).getTime(),
+        ticks: (count: number) => scale.ticks(count).map((d) => d.getTime()),
+      });
+    }
+    const scale = (this.xType === "log" ? scaleLog() : scaleLinear()).domain([a, b]).range(range);
+    const ticks = (count: number) =>
+      this.xType === "log" ? logTicks(scale.ticks(), count) : scale.ticks(count);
+    return Object.assign((v: number) => scale(v), { invert: (px: number) => scale.invert(px), ticks });
+  }
+
+  /** The x axis range: `x-domain` when valid, else the data's extent (widened when it is a single point). */
+  private _xExtent(times: number[]): [number, number] {
+    const fixed = this.xDomain?.map((v) => toX(v, this.xType));
+    if (fixed && fixed.every(Number.isFinite) && fixed[0] !== fixed[1]) return [Math.min(...fixed), Math.max(...fixed)];
+    const t0 = min(times)!;
+    const t1 = max(times)!;
+    if (t1 > t0) return [t0, t1];
+    if (this.xType === "time") return [t0, t0 + DAY_MS];
+    return this.xType === "log" ? [t0, t0 * 10] : [t0, t0 + 1];
   }
 
   private _goalText(): string {
@@ -519,7 +599,7 @@ export class FanChart extends LitElement {
   }
 
   private _prepare(): PreparedSeries[] {
-    return prepareSeries(this.series, this.percentiles, this.goal?.value);
+    return prepareSeries(this.series, this.percentiles, this.goal?.value, this.xType);
   }
 
   private _visibleIds(all: PreparedSeries[]): Set<string> {
@@ -569,21 +649,20 @@ export class FanChart extends LitElement {
     if (visible.length === 0) return null;
 
     const allTimes = all.flatMap((s) => [...s.actual.map((p) => p.t), ...s.projection.map((p) => p.t)]);
+    const xRange = this._xExtent(allTimes);
     const values = visible.flatMap((s) => [
-      ...s.actual.map((p) => p.v),
-      ...s.projection.flatMap((p) => p.values),
-      ...s.samples.flatMap((run) => run.map((p) => p.v)),
+      ...inWindow(s.actual, xRange).map((p) => p.v),
+      ...inWindow(s.projection, xRange).flatMap((p) => p.values),
+      ...s.samples.flatMap((run) => inWindow(run, xRange).map((p) => p.v)),
     ]);
     const goal = this.goal?.value;
     if (goal !== undefined && Number.isFinite(goal) && (!this.log || goal > 0)) values.push(goal);
     const latestActual = max(all.flatMap((s) => s.actual.map((p) => p.t)));
-    const nowT = this.now ? toTime(this.now) : (latestActual ?? null);
+    const nowT = this.now !== null && this.now !== "" ? toX(this.now, this.xType) : (latestActual ?? null);
     const now = nowT !== null && Number.isFinite(nowT) ? nowT : null;
 
-    const t0 = min(allTimes)!;
-    const t1 = max(allTimes)!;
     const height = Math.max(this.height, 80);
-    const bottom = height - MARGIN.bottom;
+    const bottom = height - MARGIN.bottom - (this.xLabel ? X_LABEL_PX : 0);
     const makeY = this._yFactory(values, bottom);
 
     const tickCount = Math.max(2, Math.floor((bottom - MARGIN.top) / 50));
@@ -591,12 +670,10 @@ export class FanChart extends LitElement {
     const longest = max(tickLabels, (label) => label.length) ?? 4;
     const left = Math.min(Math.max(Math.ceil(longest * TICK_FONT_PX * 0.62) + 12, 40), 120);
     const plotW = Math.max(this._width - left - MARGIN.right, 1);
-    const x = scaleTime<number, number>()
-      .domain([new Date(t0), new Date(t1 > t0 ? t1 : t0 + 86_400_000)])
-      .range([left, left + plotW]);
+    const x = this._xScale(xRange[0], xRange[1], [left, left + plotW]);
 
     const events = this.events
-      .map((e) => ({ t: toTime(e.date), label: e.label }))
+      .map((e) => ({ t: toX(e.date, this.xType), label: e.label }))
       .filter((e) => Number.isFinite(e.t))
       .sort((a, b) => a.t - b.t);
     const inPlot = (px: number) => px >= left && px <= left + plotW;
@@ -608,8 +685,12 @@ export class FanChart extends LitElement {
     const top = MARGIN.top + (rows - 1) * LABEL_ROW_PX;
 
     const visibleTimes = new Set(visible.flatMap((s) => [...s.actual.map((p) => p.t), ...s.projection.map((p) => p.t)]));
-    const times = [...visibleTimes].sort((a, b) => a - b);
-    return { width: this._width, height, top, left, plotW, bottom, x, y: makeY(top), times, visible, labels, events };
+    const times = [...visibleTimes].filter((t) => t >= xRange[0] && t <= xRange[1]).sort((a, b) => a - b);
+    const step = min(times.slice(1).map((t, i) => t - times[i])) ?? Infinity;
+    return {
+      width: this._width, height, top, left, plotW, bottom, x, xRange, step, now,
+      y: makeY(top), times, visible, labels, events,
+    };
   }
 
   private _rowsAt(layout: Layout, t: number): TooltipRow[] {
@@ -635,7 +716,7 @@ export class FanChart extends LitElement {
       if (event.pointerType === "mouse") this._hoverT = null;
       return;
     }
-    this._hoverT = this._nearestTime(layout, layout.x.invert(px).getTime());
+    this._hoverT = this._nearestTime(layout, layout.x.invert(px));
   }
 
   private _onPlotPointerDown(event: PointerEvent) {
@@ -671,22 +752,24 @@ export class FanChart extends LitElement {
       return;
     }
     const current = this._hoverT === null ? -1 : times.indexOf(this._hoverT);
-    const nowLabel = layout.labels.find((l) => l.kind === "today");
-    const startT = nowLabel ? layout.x.invert(nowLabel.x).getTime() : times[0];
-    const start = times.indexOf(this._nearestTime(layout, startT)!);
+    const inRange = layout.now !== null && layout.now >= layout.xRange[0] && layout.now <= layout.xRange[1];
+    const start = inRange ? times.indexOf(this._nearestTime(layout, layout.now!)!) : this.xReverse ? times.length - 1 : 0;
+    // Times ascend in value; on a reversed axis that is right to left, so flip the keys.
+    const dir = this.xReverse ? -1 : 1;
     let next: number;
-    if (event.key === "ArrowRight") next = current >= 0 ? current + 1 : start;
-    else if (event.key === "ArrowLeft") next = current >= 0 ? current - 1 : start;
-    else if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = times.length - 1;
+    if (event.key === "ArrowRight") next = current >= 0 ? current + dir : start;
+    else if (event.key === "ArrowLeft") next = current >= 0 ? current - dir : start;
+    else if (event.key === "Home") next = this.xReverse ? times.length - 1 : 0;
+    else if (event.key === "End") next = this.xReverse ? 0 : times.length - 1;
     else return;
     event.preventDefault();
     this._hoverT = times[Math.min(Math.max(next, 0), times.length - 1)];
     this._announcement = this._describe(layout, this._hoverT);
   }
 
+  /** Labels of the events whose nearest data point is `t`. */
   private _eventsAt(layout: Layout, t: number): string[] {
-    return layout.events.filter((e) => sameMonth(e.t, t)).map((e) => e.label);
+    return layout.events.filter((e) => this._nearestTime(layout, e.t) === t).map((e) => e.label);
   }
 
   private _describe(layout: Layout, t: number): string {
@@ -697,7 +780,7 @@ export class FanChart extends LitElement {
       return `${row.series.source.label} ${this._format(row.value)}${range}${goal}`;
     });
     const events = this._eventsAt(layout, t);
-    return `${this._month(t)}${events.length > 0 ? ` (${events.join(", ")})` : ""}: ${rows.join("; ")}`;
+    return `${this._xText(t, layout.step)}${events.length > 0 ? ` (${events.join(", ")})` : ""}: ${rows.join("; ")}`;
   }
 
   private _onLegendPointerDown(id: string, event: PointerEvent) {
@@ -739,31 +822,33 @@ export class FanChart extends LitElement {
     );
   }
 
-  /** The series' final projected median (or last observed value) and its year, for the legend. */
+  /** The series' final projected median (or last observed value) and where it is (its year on a time axis), for the legend. */
   private _legendValue(s: PreparedSeries): string {
+    const where = (t: number) =>
+      this.xType === "time" && !this.xFormat ? this._formatDate(t, { year: "numeric" }) : this._xText(t);
     const projected = s.projection[s.projection.length - 1];
-    if (projected && projected.values.length > 0) {
-      return `${this._format(center(projected.values))} · ${this._formatDate(projected.t, { year: "numeric" })}`;
-    }
+    if (projected && projected.values.length > 0) return `${this._format(center(projected.values))} · ${where(projected.t)}`;
     const observed = s.actual[s.actual.length - 1];
-    return observed ? `${this._format(observed.v)} · ${this._formatDate(observed.t, { year: "numeric" })}` : "";
+    return observed ? `${this._format(observed.v)} · ${where(observed.t)}` : "";
   }
 
   private _summary(layout: Layout): string {
     const parts = layout.visible.map((s) => {
       const lastActual = s.actual[s.actual.length - 1];
       const lastProjection = s.projection[s.projection.length - 1];
-      const observed = lastActual ? ` ${this._format(lastActual.v)} in ${this._month(lastActual.t)}` : "";
+      const at = (t: number) => this._xText(t, layout.step);
+      const [inWord, byWord] = this.xType === "time" ? ["in", "by"] : ["at", "at"];
+      const observed = lastActual ? ` ${this._format(lastActual.v)} ${inWord} ${at(lastActual.t)}` : "";
       if (!lastProjection) return `${s.source.label}:${observed}`;
       const row = this._rowsAt({ ...layout, visible: [s] }, lastProjection.t)[0];
       const outer = row?.bands[0];
       const range = outer ? ` (${this._format(outer[0])} to ${this._format(outer[1])})` : "";
-      const projected = row ? `projected ${this._format(row.value)}${range} by ${this._month(lastProjection.t)}` : "";
+      const projected = row ? `projected ${this._format(row.value)}${range} ${byWord} ${at(lastProjection.t)}` : "";
       return `${s.source.label}:${observed}${observed && projected ? "," : ""} ${projected}`.trim();
     });
     const goal = this.goal ? ` ${this._goalText()}.` : "";
     const events = layout.events.length > 0
-      ? ` Events: ${layout.events.map((e) => `${e.label} (${this._month(e.t)})`).join(", ")}.`
+      ? ` Events: ${layout.events.map((e) => `${e.label} (${this._xText(e.t, layout.step)})`).join(", ")}.`
       : "";
     return `Fan chart, ${layout.visible.length} series. ${parts.join(". ")}.${goal}${events}`;
   }
@@ -811,14 +896,21 @@ export class FanChart extends LitElement {
     return svg`${bands}${samples}${lines}`;
   }
 
+  /** Formats an x tick: `xFormat`, a date at a precision suited to the axis span, or a compact number. */
+  private _xTickFormat(layout: Layout): (t: number) => string {
+    if (this.xFormat) return this.xFormat;
+    if (this.xType !== "time") return (t) => this._formatter.number(t, this.locale);
+    const span = layout.xRange[1] - layout.xRange[0];
+    const options: Intl.DateTimeFormatOptions =
+      span >= 3 * YEAR_MS ? { year: "numeric" } : span >= YEAR_MS / 4 ? { month: "short", year: "2-digit" } : { month: "short", day: "numeric" };
+    return (t) => this._formatDate(t, options);
+  }
+
   private _renderAxes(layout: Layout) {
-    const { x, y, left, plotW, top, bottom, height } = layout;
+    const { x, y, left, plotW, top, bottom } = layout;
     const yTicks = y.ticks(Math.max(2, Math.floor((bottom - top) / 50)));
     const xTicks = x.ticks(Math.max(2, Math.floor(plotW / 96)));
-    const [d0, d1] = x.domain();
-    const span = d1.getTime() - d0.getTime();
-    const xOptions: Intl.DateTimeFormatOptions =
-      span >= 3 * YEAR_MS ? { year: "numeric" } : span >= YEAR_MS / 4 ? { month: "short", year: "2-digit" } : { month: "short", day: "numeric" };
+    const xText = this._xTickFormat(layout);
     return svg`
       ${yTicks.map(
         (v) => svg`
@@ -828,9 +920,13 @@ export class FanChart extends LitElement {
         `,
       )}
       ${xTicks.map(
-        (d) => svg`<text class="axis-label x-tick" x=${x(d)} y=${height - 8} text-anchor="middle"
-          font-size=${TICK_FONT_PX}>${this._formatDate(d.getTime(), xOptions)}</text>`,
+        (t) => svg`<text class="axis-label x-tick" x=${x(t)} y=${bottom + MARGIN.bottom - 8} text-anchor="middle"
+          font-size=${TICK_FONT_PX}>${xText(t)}</text>`,
       )}
+      ${this.xLabel
+        ? svg`<text class="axis-label x-title" x=${left + plotW / 2} y=${layout.height - 4} text-anchor="middle"
+            font-size=${TICK_FONT_PX}>${this.xLabel}</text>`
+        : nothing}
     `;
   }
 
@@ -878,7 +974,7 @@ export class FanChart extends LitElement {
     const events = this._eventsAt(layout, t);
     const tip = html`
       <div class="tooltip" style="left: ${tipLeft}px" aria-hidden="true">
-        <div class="tooltip-date">${this._month(t)}${events.length > 0 ? ` · ${events.join(", ")}` : ""}</div>
+        <div class="tooltip-date">${this._xText(t, layout.step)}${events.length > 0 ? ` · ${events.join(", ")}` : ""}</div>
         ${rows.map(
           (row) => html`
             <div class="tooltip-row">
@@ -992,7 +1088,7 @@ export class FanChart extends LitElement {
         class="plot"
         style="height: ${Math.max(this.height, 80)}px"
         tabindex=${layout ? "0" : "-1"}
-        aria-label="Chart values: use the left and right arrow keys to step through dates"
+        aria-label=${`Chart values: use the left and right arrow keys to step through ${this.xType === "time" ? "dates" : "points"}`}
         aria-busy=${this._loading ? "true" : "false"}
         @pointerdown=${this._onPlotPointerDown}
         @pointermove=${this._hoverAt}

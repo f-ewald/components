@@ -89,4 +89,21 @@ test.describe("fan-table", () => {
     await expect(last.locator(".median")).toHaveText("600 €");
     await expect(last.locator(".sub").first()).toHaveText("300 € – 1200 €");
   });
+
+  test("a numeric x axis lists every point, split at a numeric now, labelled by xFormat", async ({ page }) => {
+    const series = [
+      {
+        id: "n",
+        label: "Numeric",
+        actual: [{ date: 30, value: 100 }, { date: 31, value: 200 }],
+        projection: [{ date: 32, values: [150, 300, 900] }, { date: 32.5, values: [200, 600, 4000] }],
+      },
+    ];
+    const table = await mount(page, { series, xType: "linear", now: "30.5", events: [{ date: 32, label: "Move" }] });
+    await expect(table.locator("th[scope=row] .value")).toHaveText(["30", "31", "32", "32.5"]);
+    await expect(table.locator("tbody").nth(0).locator("th[scope=row] .value")).toHaveText(["30"]);
+    await expect(table.locator("th[scope=row]").nth(2).locator(".sub")).toHaveText("Move");
+    await table.evaluate((element: HTMLElementTagNameMap["fan-table"]) => (element.xFormat = (x) => `Age ${x}`));
+    await expect(table.locator("th[scope=row] .value").first()).toHaveText("Age 30");
+  });
 });

@@ -1361,6 +1361,12 @@ tap outside) clears.
 Values default to compact currency in `currency` and `locale` (USD, en-US);
 dates follow `locale`. `valueFormat` overrides value formatting entirely.
 
+X axis: dates by default. `x-type="linear"` or `"log"` reads every `date`
+field (points, events, `now`, `xDomain`) as a number instead — e.g. age,
+years invested, or a share — formatted compactly in `locale` unless
+`xFormat` is set. `xDomain` pins the range (the y axis fits the points in
+view), `x-reverse` runs it right to left, and `x-label` adds an axis title.
+
 Totals: percentiles do not add across series, so build a total series from
 the run-by-run sum of the accounts' simulated paths (`sumPaths()`), not by
 adding their percentiles.
@@ -1379,7 +1385,7 @@ the last two with the first, so set `color` when showing more than three.
 
 Import: `import "@f-ewald/components/fan-chart.js";`
 
-Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `log` (attribute `log`) : boolean, default false; `visible` (JS property only) : string[] | null, default null; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `now` (attribute `now`) : string | null, default null; `nowLabel` (attribute `now-label`) : string, default "Today"; `height` (attribute `height`) : number, default 320; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `loader` (JS property only) : FanChartLoader | null, default null; `refreshInterval` (attribute `refresh-interval`) : number, default 0
+Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `log` (attribute `log`) : boolean, default false; `visible` (JS property only) : string[] | null, default null; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `now` (attribute `now`) : FanX | null, default null; `nowLabel` (attribute `now-label`) : string, default "Today"; `height` (attribute `height`) : number, default 320; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `xType` (attribute `x-type`) : FanXType, default "time"; `xFormat` (JS property only) : ((x: number) => string) | null, default null; `xLabel` (attribute `x-label`) : string, default ""; `xDomain` (JS property only) : [FanX, FanX] | null, default null; `xReverse` (attribute `x-reverse`) : boolean, default false; `loader` (JS property only) : FanChartLoader | null, default null; `refreshInterval` (attribute `refresh-interval`) : number, default 0
 Events: `fan-chart-load`, `fan-chart-error`, `series-visibility-change`
 CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-radius-circle`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`
 
@@ -1429,12 +1435,16 @@ compact ones with `compact`; `valueFormat` overrides both. Pair it with a
 chart by forwarding `fan-chart`'s `series-visibility-change` detail to
 `visible`.
 
+With `x-type="linear"` or `"log"`, `date` fields are numbers (as in
+`fan-chart`): every point becomes a row, labelled by `xFormat` or a compact
+number. `xFormat` also replaces the date labels on a time axis.
+
 The header and date column stay pinned while the table scrolls; cap its
 height with `--fan-table-max-height` (default none).
 
 Import: `import "@f-ewald/components/fan-table.js";`
 
-Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `visible` (JS property only) : string[] | null, default null; `now` (attribute `now`) : string | null, default null; `interval` (attribute `interval`) : FanTableInterval, default "year"; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `compact` (attribute `compact`) : boolean, default false; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `caption` (attribute `caption`) : string, default ""; `dateLabel` (attribute `date-label`) : string, default "Date"; `observedLabel` (attribute `observed-label`) : string, default "Observed"; `projectedLabel` (attribute `projected-label`) : string, default "Projected"
+Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `visible` (JS property only) : string[] | null, default null; `now` (attribute `now`) : FanX | null, default null; `xType` (attribute `x-type`) : FanXType, default "time"; `xFormat` (JS property only) : ((x: number) => string) | null, default null; `interval` (attribute `interval`) : FanTableInterval, default "year"; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `compact` (attribute `compact`) : boolean, default false; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `caption` (attribute `caption`) : string, default ""; `dateLabel` (attribute `date-label`) : string, default "Date"; `observedLabel` (attribute `observed-label`) : string, default "Observed"; `projectedLabel` (attribute `projected-label`) : string, default "Projected"
 Events: none
 CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-tight`, `--ui-radius`, `--ui-radius-circle`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`
 

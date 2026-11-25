@@ -1,9 +1,10 @@
 import { quantileSorted } from "d3-array";
+import type { FanX } from "./fan-data.js";
 
-/** One projected date in a `fan-chart` series: values aligned index-for-index with the chart's `percentiles`. */
+/** One projected point in a `fan-chart` series: values aligned index-for-index with the chart's `percentiles`. */
 export interface FanChartProjectionPoint {
-  /** ISO date (`"YYYY-MM-DD"` or any `Date`-parseable string). */
-  date: string;
+  /** X position: a date by default, or a number on a numeric axis (see `FanX`). */
+  date: FanX;
   /** Value at each of the chart's `percentiles`, in the same order. */
   values: number[];
   /** Share of simulated runs (0–1) at or above the chart's `goal` on this date; shown in the tooltip. */
@@ -25,7 +26,7 @@ function assertAligned(paths: number[][], length: number): void {
 /**
  * Summarizes raw simulation paths into `fan-chart` projection points.
  *
- * @param dates - One date per time step.
+ * @param dates - One x position per step: dates, or numbers for a numeric axis.
  * @param paths - Simulated runs; each is one value per date, so `paths[run][step]`.
  * @param percentiles - Percentiles (0–100) to compute at every step.
  * @param options - `goal` adds each step's share of runs at or above it.
@@ -33,7 +34,7 @@ function assertAligned(paths: number[][], length: number): void {
  * @throws RangeError when a path's length differs from `dates.length`.
  */
 export function summarizePaths(
-  dates: string[],
+  dates: FanX[],
   paths: number[][],
   percentiles: number[] = [10, 25, 50, 75, 90],
   options: SummarizePathsOptions = {},

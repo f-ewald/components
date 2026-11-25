@@ -1915,7 +1915,9 @@ dropdown.size = "sm";</code></pre>
             correct. Click a legend entry to show only that series, click it again to show all; Ctrl/Cmd-click or
             long-press toggles one. Hover, tap, or drag — or focus the plot and use the arrow keys — to inspect values. The first example binds <code>.series</code> from Lit state, so the slider
             and re-run redraw in place; the second uses a <code>loader</code> with optional polling, a single 5–95
-            band, and a custom <code>valueFormat</code>.
+            band, and a custom <code>valueFormat</code>; the third plots against age instead of dates
+            (<code>x-type="linear"</code> or <code>"log"</code>, with <code>x-label</code>, <code>x-reverse</code>,
+            <code>xDomain</code>, and <code>xFormat</code>).
           </p>
           <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
             <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
@@ -1965,6 +1967,37 @@ dropdown.size = "sm";</code></pre>
             </div>
             <fan-chart id="fan-chart-loader-demo" data-testid="fan-chart-loader-demo" height="240" now-label="Now"></fan-chart>
           </div>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                X axis
+                <select id="fan-chart-x-type" data-testid="fan-chart-x-type" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="linear" selected>linear</option>
+                  <option value="log">log</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-x-reverse" data-testid="fan-chart-x-reverse" type="checkbox" />
+                Reverse
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-x-domain" data-testid="fan-chart-x-domain" type="checkbox" />
+                Zoom to ages 30–45
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-x-format" data-testid="fan-chart-x-format" type="checkbox" />
+                Custom x format
+              </label>
+            </div>
+            <fan-chart
+              id="fan-chart-numeric-demo"
+              data-testid="fan-chart-numeric-demo"
+              height="240"
+              x-type="linear"
+              x-label="Age"
+              now-label="Now"
+            ></fan-chart>
+          </div>
           <pre class="usage mt-4"><code>import "@f-ewald/components/fan-chart.js";
 import { samplePaths, sumPaths, summarizePaths } from "@f-ewald/components";
 
@@ -1988,7 +2021,13 @@ const totalPaths = sumPaths(brokeragePaths, retirementPaths);
 // Or pull data from a function, optionally polling every 60 s.
 chart.loader = async (signal) =&gt; (await fetch("/api/forecast", { signal })).json();
 chart.refreshInterval = 60;
-chart.refresh(); // re-run on demand</code></pre>
+chart.refresh(); // re-run on demand
+
+// Numeric x axis: every `date` field is a number (age, years invested, a share, …).
+html`&lt;fan-chart x-type="linear" x-label="Age" .now=${35} .xDomain=${[30, 65]}
+  .xFormat=${(age) =&gt; `Age ${age}`} .series=${[{ id: "total", label: "Total",
+    actual: [{ date: 30, value: 140000 }, /* … */],
+    projection: summarizePaths([36, 37, /* … */ 65], paths) }]}&gt;&lt;/fan-chart&gt;`;</code></pre>
         </section>
 
         <section id="fan-table" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-fan-table">

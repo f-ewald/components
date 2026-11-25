@@ -424,6 +424,36 @@ if (fanLoaderDemo) {
   });
 }
 
+const fanNumericDemo = document.getElementById("fan-chart-numeric-demo") as FanChart | null;
+if (fanNumericDemo) {
+  // The monthly demo total, resampled to one point per year of age (observed 30–35, projected 36–65).
+  const [total] = fanDemoSeries(1500, 7, { goal: 1_000_000, samples: true });
+  const startAge = 30;
+  const yearly = <T,>(points: T[], offset: number) => points.filter((_, i) => i % 12 === offset);
+  fanNumericDemo.series = [
+    {
+      ...total,
+      actual: yearly(total.actual!, 0).map((p, i) => ({ date: startAge + i, value: p.value })),
+      projection: yearly(total.projection!, 11).map((p, i) => ({ ...p, date: startAge + 6 + i })),
+      samples: total.samples!.map((run) => yearly(run, 11)),
+    },
+  ];
+  fanNumericDemo.goal = { value: 1_000_000, label: "Goal" };
+  fanNumericDemo.events = [{ date: 62, label: "Retire" }];
+  document.getElementById("fan-chart-x-type")!.addEventListener("change", (event) => {
+    fanNumericDemo.xType = (event.target as HTMLSelectElement).value as FanChart["xType"];
+  });
+  document.getElementById("fan-chart-x-reverse")!.addEventListener("change", (event) => {
+    fanNumericDemo.xReverse = (event.target as HTMLInputElement).checked;
+  });
+  document.getElementById("fan-chart-x-domain")!.addEventListener("change", (event) => {
+    fanNumericDemo.xDomain = (event.target as HTMLInputElement).checked ? [30, 45] : null;
+  });
+  document.getElementById("fan-chart-x-format")!.addEventListener("change", (event) => {
+    fanNumericDemo.xFormat = (event.target as HTMLInputElement).checked ? (age) => `Age ${Math.round(age)}` : null;
+  });
+}
+
 const fanTableDemo = document.getElementById("fan-table-demo") as FanTable | null;
 if (fanTableDemo) {
   fanTableDemo.series = fanDemoSeries(1500, 1, { goal: 1_000_000 });

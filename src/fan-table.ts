@@ -6,13 +6,15 @@ import {
   FanFormatter,
   bandNames,
   prepareSeries,
-  toTime,
+  toX,
   valueAt,
   visibleIds,
   type FanChartEvent,
   type FanChartGoal,
   type FanChartSeries,
   type FanValue,
+  type FanX,
+  type FanXType,
   type PreparedSeries,
 } from "./utils/fan-data.js";
 
@@ -64,6 +66,10 @@ function sampleTimes(times: number[], interval: FanTableInterval): number[] {
  * compact ones with `compact`; `valueFormat` overrides both. Pair it with a
  * chart by forwarding `fan-chart`'s `series-visibility-change` detail to
  * `visible`.
+ *
+ * With `x-type="linear"` or `"log"`, `date` fields are numbers (as in
+ * `fan-chart`): every point becomes a row, labelled by `xFormat` or a compact
+ * number. `xFormat` also replaces the date labels on a time axis.
  *
  * The header and date column stay pinned while the table scrolls; cap its
  * height with `--fan-table-max-height` (default none).
@@ -229,9 +235,13 @@ export class FanTable extends LitElement {
   @property({ attribute: false }) events: FanChartEvent[] = [];
   /** IDs of the series to show as columns; `null` (default) shows all. */
   @property({ attribute: false }) visible: string[] | null = null;
-  /** Date splitting observed from projected rows, as an ISO date. Defaults to the latest observed date. */
-  @property() now: string | null = null;
-  /** Rows: the last date of each year (default) or month, or every date. */
+  /** Point splitting observed from projected rows (an ISO date, or a number on a numeric axis). Defaults to the latest observed point. */
+  @property() now: FanX | null = null;
+  /** How `date` fields are read: dates (default), or numbers for `"linear"`/`"log"` (as in `fan-chart`). */
+  @property({ attribute: "x-type" }) xType: FanXType = "time";
+  /** Formats row labels; gets epoch milliseconds on a time axis. Defaults to `locale` dates (or compact numbers). */
+  @property({ attribute: false }) xFormat: ((x: number) => string) | null = null;
+  /** Rows: the last date of each year (default) or month, or every date. Numeric axes always show every point. */
   @property() interval: FanTableInterval = "year";
   /** BCP 47 locale for numbers and dates. */
   @property() locale = "en-US";
@@ -258,6 +268,9 @@ export class FanTable extends LitElement {
 
   /** Labels each row at the interval's precision, refining any labels that would otherwise repeat. */
   private _labels(times: number[]): string[] {
+    const format = this.xFormat;
+    if (format) return times.map((t) => format(t));
+    if (this.xType !== "time") return times.map((t) => this._formatter.number(t, this.locale));
     const levels = times.map(() => (this.interval === "year" ? 0 : 1));
     const label = (i: number) => this._formatter.date(times[i], this.locale, LABEL_FORMATS[levels[i]]);
     for (let pass = 0; pass < LABEL_FORMATS.length; pass++) {
@@ -277,16 +290,18 @@ export class FanTable extends LitElement {
   }
 
   private _rows(all: PreparedSeries[], columns: PreparedSeries[]): { observed: TableRow[]; projected: TableRow[] } {
-    const nowT = this.now ? toTime(this.now) : (max(all.flatMap((s) => s.actual.map((p) => p.t))) ?? Number.NaN);
+    const latest = max(all.flatMap((s) => s.actual.map((p) => p.t))) ?? Number.NaN;
+    const nowT = this.now !== null && this.now !== "" ? toX(this.now, this.xType) : latest;
+    const interval = this.xType === "time" ? this.interval : "all";
     const times = [...new Set(columns.flatMap((s) => [...s.actual.map((p) => p.t), ...s.projection.map((p) => p.t)]))];
     const isObserved = (t: number) => Number.isFinite(nowT) && t <= nowT;
     const picked = [
-      ...sampleTimes(times.filter(isObserved), this.interval),
-      ...sampleTimes(times.filter((t) => !isObserved(t)), this.interval),
+      ...sampleTimes(times.filter(isObserved), interval),
+      ...sampleTimes(times.filter((t) => !isObserved(t)), interval),
     ];
     const labels = this._labels(picked);
     const events = this.events
-      .map((e) => ({ t: toTime(e.date), label: e.label }))
+      .map((e) => ({ t: toX(e.date, this.xType), label: e.label }))
       .filter((e) => Number.isFinite(e.t));
     const rows = picked.map((t, i): TableRow => ({
       t,
@@ -327,7 +342,7 @@ export class FanTable extends LitElement {
   }
 
   override render() {
-    const all = prepareSeries(this.series, this.percentiles, this.goal?.value);
+    const all = prepareSeries(this.series, this.percentiles, this.goal?.value, this.xType);
     const ids = visibleIds(all, this.visible);
     const columns = all.filter((s) => ids.has(s.source.id));
     const { observed, projected } = this._rows(all, columns);
