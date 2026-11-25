@@ -489,6 +489,49 @@ const EXAMPLES = {
     { date: "2024-02-01", price: 680000, eventType: "Sold" },
   ];
 </script>`,
+  "fan-chart": `<fan-chart locale="en-US" currency="USD"></fan-chart>
+<script type="module">
+  import { summarizePaths, samplePaths, sumPaths } from "@f-ewald/components";
+
+  const chart = document.querySelector("fan-chart");
+  chart.goal = { value: 250000, label: "Goal" };
+  chart.events = [{ date: "2032-06-01", label: "Retirement" }];
+  // projection values align with the chart's percentiles (default 10, 25, 50, 75, 90).
+  // From raw simulation runs: summarizePaths(dates, runs, undefined, { goal: 250000 }),
+  // samples: samplePaths(runs, 5); for a total, summarize sumPaths(runsA, runsB).
+  chart.series = [
+    {
+      id: "brokerage",
+      label: "Brokerage",
+      actual: [
+        { date: "2024-01-01", value: 40000 },
+        { date: "2025-01-01", value: 52000 },
+      ],
+      projection: [
+        { date: "2030-01-01", values: [70000, 90000, 110000, 135000, 170000] },
+        { date: "2035-01-01", values: [95000, 140000, 190000, 250000, 340000] },
+      ],
+    },
+  ];
+</script>`,
+  "fan-table": `<fan-table caption="Savings forecast" interval="year"></fan-table>
+<script type="module">
+  const table = document.querySelector("fan-table");
+  table.goal = { value: 250000, label: "Goal" };
+  table.events = [{ date: "2032-06-01", label: "Retirement" }];
+  // Same series format as fan-chart; values align with percentiles (default 10, 25, 50, 75, 90).
+  table.series = [
+    {
+      id: "brokerage",
+      label: "Brokerage",
+      actual: [{ date: "2025-01-01", value: 52000 }],
+      projection: [
+        { date: "2030-01-01", values: [70000, 90000, 110000, 135000, 170000], goalProbability: 0.05 },
+        { date: "2035-01-01", values: [95000, 140000, 190000, 250000, 340000], goalProbability: 0.48 },
+      ],
+    },
+  ];
+</script>`,
   "progress-bar": `<progress-bar value="3" max="14" label="Question 3 out of 14"></progress-bar>
 <progress-bar value="7" max="10" color="#dc2626" track-color="#fecaca"></progress-bar>`,
   "distribution-chart": `<distribution-chart metric="sqft"></distribution-chart>

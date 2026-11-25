@@ -1342,6 +1342,124 @@ Example:
 <empty-state size="sm" heading="No pinned items"></empty-state>
 ```
 
+## <fan-chart>
+
+Multi-series time-series fan chart: observed history as a solid line, and a
+projection as percentile bands around a dashed median — e.g. Monte Carlo
+savings forecasts. A "today" divider separates the past from the projection,
+and each fan starts at its series' last observed value. Optional extras: a
+`goal` line (the tooltip shows each projection's `goalProbability`), labelled
+`events` markers, and per-series `samples` (individual runs as thin lines).
+
+The legend shows each series' final value under its name and toggles
+series: a click shows only that series (clicking it again shows all);
+Ctrl/Cmd-click — or a long press on touch screens — adds or removes one.
+The y axis rescales to the visible series. Hover, tap, or drag across the
+plot — or focus it and use ←/→/Home/End — to inspect values; Escape (or a
+tap outside) clears.
+
+Values default to compact currency in `currency` and `locale` (USD, en-US);
+dates follow `locale`. `valueFormat` overrides value formatting entirely.
+
+Totals: percentiles do not add across series, so build a total series from
+the run-by-run sum of the accounts' simulated paths (`sumPaths()`), not by
+adding their percentiles.
+
+Live data: `series` is a reactive property, so binding it from a parent Lit
+template (`.series=${this.data}`) or assigning a new array redraws in place.
+Updates must be immutable (a new array); after mutating in place, call
+`refresh()`. Alternatively set `loader` to a function returning the series
+(sync or async): it runs on connect, on `refresh()`, and every
+`refresh-interval` seconds while the tab is visible. A newer load aborts the
+older one, and a failed load keeps the last good data.
+
+Series colors default to the theme's primary, warning, danger, info, and
+success tokens, so the chart follows light/dark themes; some themes share
+the last two with the first, so set `color` when showing more than three.
+
+Import: `import "@f-ewald/components/fan-chart.js";`
+
+Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `log` (attribute `log`) : boolean, default false; `visible` (JS property only) : string[] | null, default null; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `now` (attribute `now`) : string | null, default null; `nowLabel` (attribute `now-label`) : string, default "Today"; `height` (attribute `height`) : number, default 320; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `loader` (JS property only) : FanChartLoader | null, default null; `refreshInterval` (attribute `refresh-interval`) : number, default 0
+Events: `fan-chart-load`, `fan-chart-error`, `series-visibility-change`
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-danger`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-normal`, `--ui-line-height-tight`, `--ui-numeric`, `--ui-radius-circle`, `--ui-radius-pill`, `--ui-radius-sm`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tooltip`, `--ui-tooltip-text`
+
+Example:
+```html
+<fan-chart locale="en-US" currency="USD"></fan-chart>
+<script type="module">
+  import { summarizePaths, samplePaths, sumPaths } from "@f-ewald/components";
+
+  const chart = document.querySelector("fan-chart");
+  chart.goal = { value: 250000, label: "Goal" };
+  chart.events = [{ date: "2032-06-01", label: "Retirement" }];
+  // projection values align with the chart's percentiles (default 10, 25, 50, 75, 90).
+  // From raw simulation runs: summarizePaths(dates, runs, undefined, { goal: 250000 }),
+  // samples: samplePaths(runs, 5); for a total, summarize sumPaths(runsA, runsB).
+  chart.series = [
+    {
+      id: "brokerage",
+      label: "Brokerage",
+      actual: [
+        { date: "2024-01-01", value: 40000 },
+        { date: "2025-01-01", value: 52000 },
+      ],
+      projection: [
+        { date: "2030-01-01", values: [70000, 90000, 110000, 135000, 170000] },
+        { date: "2035-01-01", values: [95000, 140000, 190000, 250000, 340000] },
+      ],
+    },
+  ];
+</script>
+```
+
+## <fan-table>
+
+Tabular companion to `fan-chart`: the same `series`, `percentiles`, `goal`,
+and `events`, shown as one row per date and one column per series. Rows are
+grouped into observed and projected sections around the "today" date
+(`now`, defaulting to the latest observed date). Observed cells show the
+value; projected cells show the median, the outer percentile range (e.g.
+P10–P90) beneath it, and — when the projection provides `goalProbability`
+and a `goal` is set — the share of runs reaching the goal. Events are named
+under the date of the row they fall in.
+
+`interval` picks the rows: the last date of each year (default) or month, or
+every date. Values use whole `currency` units in `locale` (en-US, USD), or
+compact ones with `compact`; `valueFormat` overrides both. Pair it with a
+chart by forwarding `fan-chart`'s `series-visibility-change` detail to
+`visible`.
+
+The header and date column stay pinned while the table scrolls; cap its
+height with `--fan-table-max-height` (default none).
+
+Import: `import "@f-ewald/components/fan-table.js";`
+
+Properties: `series` (JS property only) : FanChartSeries[], default []; `percentiles` (JS property only) : number[], default [10, 25, 50, 75, 90]; `goal` (JS property only) : FanChartGoal | null, default null; `events` (JS property only) : FanChartEvent[], default []; `visible` (JS property only) : string[] | null, default null; `now` (attribute `now`) : string | null, default null; `interval` (attribute `interval`) : FanTableInterval, default "year"; `locale` (attribute `locale`) : string, default "en-US"; `currency` (attribute `currency`) : string, default "USD"; `compact` (attribute `compact`) : boolean, default false; `valueFormat` (JS property only) : ((value: number) => string) | null, default null; `caption` (attribute `caption`) : string, default ""; `dateLabel` (attribute `date-label`) : string, default "Date"; `observedLabel` (attribute `observed-label`) : string, default "Observed"; `projectedLabel` (attribute `projected-label`) : string, default "Projected"
+Events: none
+CSS custom properties: `--ui-border`, `--ui-border-width`, `--ui-focus-ring`, `--ui-font`, `--ui-font-size`, `--ui-font-size-sm`, `--ui-font-size-xs`, `--ui-font-weight-medium`, `--ui-font-weight-regular`, `--ui-font-weight-semibold`, `--ui-label-transform`, `--ui-line-height-tight`, `--ui-radius`, `--ui-radius-circle`, `--ui-surface`, `--ui-surface-muted`, `--ui-text`, `--ui-text-muted`, `--ui-tracking-wide`
+
+Example:
+```html
+<fan-table caption="Savings forecast" interval="year"></fan-table>
+<script type="module">
+  const table = document.querySelector("fan-table");
+  table.goal = { value: 250000, label: "Goal" };
+  table.events = [{ date: "2032-06-01", label: "Retirement" }];
+  // Same series format as fan-chart; values align with percentiles (default 10, 25, 50, 75, 90).
+  table.series = [
+    {
+      id: "brokerage",
+      label: "Brokerage",
+      actual: [{ date: "2025-01-01", value: 52000 }],
+      projection: [
+        { date: "2030-01-01", values: [70000, 90000, 110000, 135000, 170000], goalProbability: 0.05 },
+        { date: "2035-01-01", values: [95000, 140000, 190000, 250000, 340000], goalProbability: 0.48 },
+      ],
+    },
+  ];
+</script>
+```
+
 ## <floating-text>
 
 Text whose last few characters float up and away as it scrolls into view,

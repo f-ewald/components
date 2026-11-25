@@ -64,6 +64,8 @@
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#dropdown-button">dropdown-button</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#editable-text">editable-text</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#empty-state">empty-state</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#fan-chart">fan-chart</a>
+          <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#fan-table">fan-table</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#floating-text">floating-text</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-actions">form-actions</a>
           <a class="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100" href="#form-field">form-field</a>
@@ -1902,6 +1904,149 @@ dropdown.size = "sm";</code></pre>
 &lt;/empty-state&gt;
 
 &lt;empty-state size="sm" heading="No pinned items"&gt;&lt;/empty-state&gt;</code></pre>
+        </section>
+
+        <section id="fan-chart" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-fan-chart">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#fan-chart">fan-chart</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Multi-series time-series fan chart: observed history as a solid line, then a projected percentile fan
+            (10–90 and 25–75 bands around a dashed median) from the "today" divider, with an optional goal line, event
+            markers, and sample runs. "Total" is summarized from the accounts' summed runs, so its percentiles are
+            correct. Click a legend entry to show only that series, click it again to show all; Ctrl/Cmd-click or
+            long-press toggles one. Hover, tap, or drag — or focus the plot and use the arrow keys — to inspect values. The first example binds <code>.series</code> from Lit state, so the slider
+            and re-run redraw in place; the second uses a <code>loader</code> with optional polling, a single 5–95
+            band, and a custom <code>valueFormat</code>.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Monthly contribution
+                <input id="fan-chart-contribution" data-testid="fan-chart-contribution" type="range" min="0" max="5000" step="250" value="1500" />
+                <span id="fan-chart-contribution-value">$1,500</span>
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-log" data-testid="fan-chart-log" type="checkbox" />
+                Log scale
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-goal" data-testid="fan-chart-goal" type="checkbox" checked />
+                Goal
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-events" data-testid="fan-chart-events" type="checkbox" checked />
+                Events
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-samples" data-testid="fan-chart-samples" type="checkbox" checked />
+                Sample paths
+              </label>
+              <label class="flex items-center gap-2">
+                Locale
+                <select id="fan-chart-locale" data-testid="fan-chart-locale" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="en-US|USD" selected>en-US · USD</option>
+                  <option value="de-DE|EUR">de-DE · EUR</option>
+                  <option value="en-GB|GBP">en-GB · GBP</option>
+                  <option value="ja-JP|JPY">ja-JP · JPY</option>
+                </select>
+              </label>
+              <ui-button id="fan-chart-rerun" data-testid="fan-chart-rerun" size="sm" variant="secondary">Re-run simulation</ui-button>
+              <span id="fan-chart-visible" data-testid="fan-chart-visible">Visible: all</span>
+            </div>
+            <div id="fan-chart-bound"></div>
+          </div>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <ui-button id="fan-chart-refresh" data-testid="fan-chart-refresh" size="sm" variant="secondary">Refresh</ui-button>
+              <label class="flex items-center gap-2">
+                <input id="fan-chart-poll" data-testid="fan-chart-poll" type="checkbox" />
+                Refresh every 5 s
+              </label>
+              <span id="fan-chart-loads" data-testid="fan-chart-loads">Loads: 0</span>
+            </div>
+            <fan-chart id="fan-chart-loader-demo" data-testid="fan-chart-loader-demo" height="240" now-label="Now"></fan-chart>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/fan-chart.js";
+import { samplePaths, sumPaths, summarizePaths } from "@f-ewald/components";
+
+// Lit: bind .series from state; assigning a new array redraws in place.
+html`&lt;fan-chart .series=${this.series} ?log=${this.log} locale="de-DE" currency="EUR"
+  .goal=${{ value: 1_000_000, label: "Goal" }}
+  .events=${[{ date: "2050-06-01", label: "Retirement" }]}&gt;&lt;/fan-chart&gt;`;
+
+this.series = [{
+  id: "brokerage",
+  label: "Brokerage",
+  actual: [{ date: "2025-01-01", value: 42000 }, /* … */],
+  // values align with the chart's percentiles (default 10, 25, 50, 75, 90)
+  projection: summarizePaths(futureDates, simulatedPaths, undefined, { goal: 1_000_000 }),
+  samples: samplePaths(simulatedPaths, 5), // a few individual runs as thin lines
+}];
+
+// Totals: sum the accounts' runs first — percentiles don't add.
+const totalPaths = sumPaths(brokeragePaths, retirementPaths);
+
+// Or pull data from a function, optionally polling every 60 s.
+chart.loader = async (signal) =&gt; (await fetch("/api/forecast", { signal })).json();
+chart.refreshInterval = 60;
+chart.refresh(); // re-run on demand</code></pre>
+        </section>
+
+        <section id="fan-table" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-fan-table">
+          <h3 class="text-xl font-semibold text-slate-900"><a class="hover:underline" href="#fan-table">fan-table</a></h3>
+          <p class="mt-1 text-sm text-slate-500">
+            The same forecast data as <code>fan-chart</code>, as a table: one row per year (or month, or date), one
+            column per series. Projected cells show the median, the P10–P90 range, and the share of runs reaching the
+            goal; events are named under their row. The header and date column stay pinned while it scrolls.
+          </p>
+          <div class="mt-6 demo-example rounded-lg border border-slate-200 p-6">
+            <div class="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+              <label class="flex items-center gap-2">
+                Rows
+                <select id="fan-table-interval" data-testid="fan-table-interval" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="year" selected>Every year</option>
+                  <option value="month">Every month</option>
+                  <option value="all">Every date</option>
+                </select>
+              </label>
+              <label class="flex items-center gap-2">
+                <input id="fan-table-compact" data-testid="fan-table-compact" type="checkbox" />
+                Compact values
+              </label>
+              <label class="flex items-center gap-2">
+                Locale
+                <select id="fan-table-locale" data-testid="fan-table-locale" class="rounded-md border border-slate-200 px-2 py-1">
+                  <option value="en-US|USD" selected>en-US · USD</option>
+                  <option value="de-DE|EUR">de-DE · EUR</option>
+                  <option value="en-GB|GBP">en-GB · GBP</option>
+                  <option value="ja-JP|JPY">ja-JP · JPY</option>
+                </select>
+              </label>
+              <span class="flex items-center gap-3" id="fan-table-columns" data-testid="fan-table-columns">
+                Columns
+                <label class="flex items-center gap-1"><input type="checkbox" value="total" checked /> Total</label>
+                <label class="flex items-center gap-1"><input type="checkbox" value="brokerage" checked /> Brokerage</label>
+                <label class="flex items-center gap-1"><input type="checkbox" value="retirement" checked /> 401(k)</label>
+                <label class="flex items-center gap-1"><input type="checkbox" value="cash" checked /> Savings</label>
+              </span>
+            </div>
+            <fan-table
+              id="fan-table-demo"
+              data-testid="fan-table-demo"
+              caption="Savings forecast"
+              projected-label="Forecast"
+              style="--fan-table-max-height: 24rem"
+            ></fan-table>
+          </div>
+          <pre class="usage mt-4"><code>import "@f-ewald/components/fan-table.js";
+
+&lt;fan-table caption="Savings forecast" interval="year" locale="en-US" currency="USD"&gt;&lt;/fan-table&gt;
+
+// Same data as fan-chart.
+table.series = chart.series;
+table.goal = chart.goal;
+table.events = chart.events;
+// Follow the chart's legend.
+chart.addEventListener("series-visibility-change", (e) =&gt; (table.visible = e.detail.visible));</code></pre>
         </section>
 
         <section id="floating-text" class="scroll-mt-8 border-b border-slate-100 py-10" data-testid="section-floating-text">

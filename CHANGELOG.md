@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- New `<fan-table>` (1.52.0): the tabular companion to `fan-chart`, taking the same `series`, `percentiles`, `goal`, and
+  `events`. One row per year (`interval="year"`, default), month, or date, and one column per `visible` series,
+  grouped into observed and projected sections around `now` (`observed-label`, `projected-label`). Projected cells
+  show the median, the outer percentile range, and the share of runs reaching the goal; events are named under
+  their row. Values are whole `currency` units in `locale` (default en-US, USD), or compact with `compact`;
+  `valueFormat` overrides both. The header and date column stay pinned while it scrolls
+  (`--fan-table-max-height`).
+- New `<fan-chart>` (1.52.0): a multi-series time-series chart for forecasts such as Monte Carlo savings projections.
+  Each series draws its observed history as a solid line and its projection as percentile bands around a
+  dashed median (`percentiles`, default 10/25/50/75/90), starting from the last observed value at a "today"
+  divider (`now`, `now-label`). Optional extras: a `goal` line (the tooltip shows the share of runs reaching
+  it), labelled `events` markers, and per-series `samples` drawn as thin individual runs. The legend shows each
+  series' final value under its name; clicking an entry shows only that series and clicking it again shows
+  all, while Ctrl/Cmd-click or a long press toggles one (`visible`, `series-visibility-change`). The y axis
+  rescales to the visible series; `log` switches it to a logarithmic scale (off by default). Hover, tap, drag,
+  or the arrow keys show a tooltip with each value and a miniature range bar of its bands; on touch screens a
+  tap pins it until a tap outside. Values and dates follow `locale` and `currency` (default en-US, USD), or a
+  custom `valueFormat`. Data redraws in place when `series` is reassigned or bound from Lit state, or comes
+  from a `loader` function re-run by `refresh()` and an optional `refresh-interval` (`fan-chart-load`,
+  `fan-chart-error`). New helpers: `summarizePaths()` turns raw simulation runs into the chart's percentile
+  format (optionally with each date's goal share), `samplePaths()` picks representative runs, and `sumPaths()`
+  adds accounts run by run so a total series has correct percentiles.
 - Dark-theme fixes (1.51.1): `code-diff` now tints added and removed lines from the theme's `--ui-success` /
   `--ui-danger` tokens instead of fixed light-theme colors, and `distribution-chart`'s default `markerColors`
   are now the theme's primary, warning, success, and danger tokens, so markers keep their contrast in dark

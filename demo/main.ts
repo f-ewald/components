@@ -117,7 +117,15 @@ import {
   type StatStrip,
   type StepLadder,
   type TerminalBlock,
+  type FanChart,
+  type FanChartSeries,
+  type FanTable,
+  type FanTableInterval,
+  samplePaths,
+  sumPaths,
+  summarizePaths,
 } from "../src/index.js";
+import { html, render } from "lit";
 import { addDays, toIsoDate } from "../src/utils/calendar.js";
 import {
   blueprintTokenValues,
@@ -234,6 +242,212 @@ particlePageToggle.addEventListener("click", () => {
   particlePageToggle.setAttribute("aria-pressed", String(Boolean(pageParticles)));
   particlePageToggle.textContent = pageParticles ? "Remove page background" : "Fill the page background";
 });
+
+// fan-chart — a small seeded Monte Carlo (demo only; the package ships no simulator).
+interface FanDemoAccount {
+  id: string;
+  label: string;
+  start: number;
+  contributionShare: number;
+  annualReturn: number;
+  annualVolatility: number;
+}
+
+const fanDemoAccounts: FanDemoAccount[] = [
+  { id: "brokerage", label: "Brokerage", start: 40000, contributionShare: 0.5, annualReturn: 0.07, annualVolatility: 0.16 },
+  { id: "retirement", label: "401(k)", start: 85000, contributionShare: 0.4, annualReturn: 0.06, annualVolatility: 0.12 },
+  { id: "cash", label: "Savings", start: 15000, contributionShare: 0.1, annualReturn: 0.02, annualVolatility: 0.01 },
+];
+
+/** Seeded uniform RNG (mulberry32), so a given seed always yields the same simulation. */
+function fanDemoRng(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Monthly ISO dates (first of the month), `offset` months from the current month. */
+function fanDemoMonth(offset: number): string {
+  const now = new Date();
+  const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+  return toIsoDate(d);
+}
+
+/** Simulates 5 years of "observed" history and 400 30-year runs for one account. */
+function fanDemoAccount(account: FanDemoAccount, monthlyContribution: number, rand: () => number) {
+  const normal = (r: () => number) => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+  const mu = account.annualReturn / 12;
+  const sigma = account.annualVolatility / Math.sqrt(12);
+  const contribution = monthlyContribution * account.contributionShare;
+  const historyRand = fanDemoRng(account.id.length * 7919);
+  let value = account.start;
+  const actual = Array.from({ length: 61 }, (_, i) => {
+    if (i > 0) value = Math.max(value * (1 + mu + sigma * normal(historyRand)) + 1000 * account.contributionShare, 0);
+    return { date: fanDemoMonth(i - 60), value: Math.round(value) };
+  });
+  const last = actual[actual.length - 1].value;
+  const paths = Array.from({ length: 400 }, () => {
+    let v = last;
+    return Array.from({ length: 360 }, () => (v = Math.max(v * (1 + mu + sigma * normal(rand)) + contribution, 0)));
+  });
+  return { actual, paths };
+}
+
+interface FanDemoOptions {
+  percentiles?: number[];
+  goal?: number;
+  samples?: boolean;
+}
+
+/** Builds a "Total" series (from summed runs, so its percentiles are correct) followed by one series per account. */
+function fanDemoSeries(monthlyContribution: number, seed: number, options: FanDemoOptions = {}): FanChartSeries[] {
+  const rand = fanDemoRng(seed);
+  const futureDates = Array.from({ length: 360 }, (_, i) => fanDemoMonth(i + 1));
+  const simulated = fanDemoAccounts.map((account) => fanDemoAccount(account, monthlyContribution, rand));
+  const totalPaths = sumPaths(...simulated.map((s) => s.paths));
+  const total: FanChartSeries = {
+    id: "total",
+    label: "Total",
+    actual: simulated[0].actual.map((p, i) => ({
+      date: p.date,
+      value: simulated.reduce((sum, s) => sum + s.actual[i].value, 0),
+    })),
+    projection: summarizePaths(futureDates, totalPaths, options.percentiles, { goal: options.goal }),
+    samples: options.samples ? samplePaths(totalPaths, 5) : undefined,
+  };
+  return [
+    total,
+    ...fanDemoAccounts.map((account, i) => ({
+      id: account.id,
+      label: account.label,
+      actual: simulated[i].actual,
+      projection: summarizePaths(futureDates, simulated[i].paths, options.percentiles),
+    })),
+  ];
+}
+
+const fanBoundHost = document.getElementById("fan-chart-bound");
+if (fanBoundHost) {
+  const goal = { value: 1_000_000, label: "Goal" };
+  const events = [
+    { date: fanDemoMonth(72), label: "House" },
+    { date: fanDemoMonth(168), label: "College" },
+    { date: fanDemoMonth(300), label: "Retirement" },
+  ];
+  const fanState = {
+    contribution: 1500,
+    seed: 1,
+    log: false,
+    goal: true,
+    events: true,
+    samples: true,
+    locale: "en-US",
+    currency: "USD",
+    series: [] as FanChartSeries[],
+  };
+  const simulate = () =>
+    (fanState.series = fanDemoSeries(fanState.contribution, fanState.seed, {
+      goal: fanState.goal ? goal.value : undefined,
+      samples: fanState.samples,
+    }));
+  const renderFanChart = () =>
+    render(
+      html`<fan-chart
+        data-testid="fan-chart-demo"
+        .series=${fanState.series}
+        .goal=${fanState.goal ? goal : null}
+        .events=${fanState.events ? events : []}
+        ?log=${fanState.log}
+        locale=${fanState.locale}
+        currency=${fanState.currency}
+        @series-visibility-change=${(event: CustomEvent<{ visible: string[] | null }>) => {
+          const visible = event.detail.visible;
+          document.getElementById("fan-chart-visible")!.textContent = `Visible: ${visible ? visible.join(", ") : "all"}`;
+        }}
+      ></fan-chart>`,
+      fanBoundHost,
+    );
+  const resimulate = () => {
+    simulate();
+    renderFanChart();
+  };
+  resimulate();
+  const checkbox = (id: string, apply: (checked: boolean) => void, rerun = false) =>
+    document.getElementById(id)!.addEventListener("change", (event) => {
+      apply((event.target as HTMLInputElement).checked);
+      if (rerun) resimulate();
+      else renderFanChart();
+    });
+  document.getElementById("fan-chart-contribution")!.addEventListener("input", (event) => {
+    fanState.contribution = Number((event.target as HTMLInputElement).value);
+    document.getElementById("fan-chart-contribution-value")!.textContent = `$${fanState.contribution.toLocaleString("en-US")}`;
+    resimulate();
+  });
+  checkbox("fan-chart-log", (checked) => (fanState.log = checked));
+  checkbox("fan-chart-goal", (checked) => (fanState.goal = checked), true);
+  checkbox("fan-chart-events", (checked) => (fanState.events = checked));
+  checkbox("fan-chart-samples", (checked) => (fanState.samples = checked), true);
+  document.getElementById("fan-chart-locale")!.addEventListener("change", (event) => {
+    [fanState.locale, fanState.currency] = (event.target as HTMLSelectElement).value.split("|");
+    renderFanChart();
+  });
+  document.getElementById("fan-chart-rerun")!.addEventListener("click", () => {
+    fanState.seed += 1;
+    resimulate();
+  });
+}
+
+const fanLoaderDemo = document.getElementById("fan-chart-loader-demo") as FanChart | null;
+if (fanLoaderDemo) {
+  let fanLoads = 0;
+  // One 5–95 band, whole-thousand labels, and an explicit divider date.
+  fanLoaderDemo.percentiles = [5, 50, 95];
+  fanLoaderDemo.valueFormat = (value) => `$${Math.round(value / 1000).toLocaleString("en-US")}k`;
+  fanLoaderDemo.now = fanDemoMonth(0);
+  fanLoaderDemo.loader = async (signal) => {
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    if (signal.aborted) return [];
+    return fanDemoSeries(1000, 100 + fanLoads, { percentiles: [5, 50, 95] }).slice(1, 3);
+  };
+  fanLoaderDemo.addEventListener("fan-chart-load", () => {
+    fanLoads += 1;
+    document.getElementById("fan-chart-loads")!.textContent = `Loads: ${fanLoads}`;
+  });
+  document.getElementById("fan-chart-refresh")!.addEventListener("click", () => void fanLoaderDemo.refresh());
+  document.getElementById("fan-chart-poll")!.addEventListener("change", (event) => {
+    fanLoaderDemo.refreshInterval = (event.target as HTMLInputElement).checked ? 5 : 0;
+  });
+}
+
+const fanTableDemo = document.getElementById("fan-table-demo") as FanTable | null;
+if (fanTableDemo) {
+  fanTableDemo.series = fanDemoSeries(1500, 1, { goal: 1_000_000 });
+  fanTableDemo.goal = { value: 1_000_000, label: "Goal" };
+  fanTableDemo.events = [
+    { date: fanDemoMonth(72), label: "House" },
+    { date: fanDemoMonth(168), label: "College" },
+    { date: fanDemoMonth(300), label: "Retirement" },
+  ];
+  document.getElementById("fan-table-interval")!.addEventListener("change", (event) => {
+    fanTableDemo.interval = (event.target as HTMLSelectElement).value as FanTableInterval;
+  });
+  document.getElementById("fan-table-compact")!.addEventListener("change", (event) => {
+    fanTableDemo.compact = (event.target as HTMLInputElement).checked;
+  });
+  document.getElementById("fan-table-locale")!.addEventListener("change", (event) => {
+    [fanTableDemo.locale, fanTableDemo.currency] = (event.target as HTMLSelectElement).value.split("|");
+  });
+  const columns = document.getElementById("fan-table-columns")!;
+  columns.addEventListener("change", () => {
+    const checked = [...columns.querySelectorAll<HTMLInputElement>("input:checked")].map((input) => input.value);
+    fanTableDemo.visible = checked;
+  });
+}
 
 // floating-text
 const floatingDemo = document.getElementById("floating-text-demo") as FloatingText;

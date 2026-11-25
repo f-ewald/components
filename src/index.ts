@@ -39,6 +39,22 @@ export { DistributionChart, type DistributionValue } from "./distribution-chart.
 export { PercentBarChart, type PercentBarGroup } from "./percent-bar-chart.js";
 export { WeightBarChart, type WeightBarItem } from "./weight-bar-chart.js";
 export {
+  FanChart,
+  type FanChartEvent,
+  type FanChartGoal,
+  type FanChartLoader,
+  type FanChartPoint,
+  type FanChartSeries,
+} from "./fan-chart.js";
+export { FanTable, type FanTableInterval } from "./fan-table.js";
+export {
+  samplePaths,
+  sumPaths,
+  summarizePaths,
+  type FanChartProjectionPoint,
+  type SummarizePathsOptions,
+} from "./utils/percentiles.js";
+export {
   DagGraph,
   type DagControl,
   type DagDirection,

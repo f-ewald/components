@@ -12160,6 +12160,1342 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/fan-chart.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Multi-series time-series fan chart: observed history as a solid line, and a\nprojection as percentile bands around a dashed median — e.g. Monte Carlo\nsavings forecasts. A \"today\" divider separates the past from the projection,\nand each fan starts at its series' last observed value. Optional extras: a\n`goal` line (the tooltip shows each projection's `goalProbability`), labelled\n`events` markers, and per-series `samples` (individual runs as thin lines).\n\nThe legend shows each series' final value under its name and toggles\nseries: a click shows only that series (clicking it again shows all);\nCtrl/Cmd-click — or a long press on touch screens — adds or removes one.\nThe y axis rescales to the visible series. Hover, tap, or drag across the\nplot — or focus it and use ←/→/Home/End — to inspect values; Escape (or a\ntap outside) clears.\n\nValues default to compact currency in `currency` and `locale` (USD, en-US);\ndates follow `locale`. `valueFormat` overrides value formatting entirely.\n\nTotals: percentiles do not add across series, so build a total series from\nthe run-by-run sum of the accounts' simulated paths (`sumPaths()`), not by\nadding their percentiles.\n\nLive data: `series` is a reactive property, so binding it from a parent Lit\ntemplate (`.series=${this.data}`) or assigning a new array redraws in place.\nUpdates must be immutable (a new array); after mutating in place, call\n`refresh()`. Alternatively set `loader` to a function returning the series\n(sync or async): it runs on connect, on `refresh()`, and every\n`refresh-interval` seconds while the tab is visible. A newer load aborts the\nolder one, and a failed load keeps the last good data.\n\nSeries colors default to the theme's primary, warning, danger, info, and\nsuccess tokens, so the chart follows light/dark themes; some themes share\nthe last two with the first, so set `color` when showing more than three.",
+          "name": "FanChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "series",
+              "type": {
+                "text": "FanChartSeries[]"
+              },
+              "default": "[]",
+              "description": "Series to draw. Assign a new array (or bind `.series` from Lit state) to redraw."
+            },
+            {
+              "kind": "field",
+              "name": "percentiles",
+              "type": {
+                "text": "number[]"
+              },
+              "default": "[10, 25, 50, 75, 90]",
+              "description": "Percentiles (0–100) that each projection point's `values` are aligned to.\nPaired outside-in into bands (first with last, …); an unpaired middle value\nis drawn as the median line."
+            },
+            {
+              "kind": "field",
+              "name": "log",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Logarithmic y axis. Off by default; values ≤ 0 are drawn at the axis floor.",
+              "attribute": "log",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "visible",
+              "type": {
+                "text": "string[] | null"
+              },
+              "default": "null",
+              "description": "IDs of the series to show; `null` (default) shows all. Updated by the legend."
+            },
+            {
+              "kind": "field",
+              "name": "goal",
+              "type": {
+                "text": "FanChartGoal | null"
+              },
+              "default": "null",
+              "description": "Optional horizontal goal line; always kept within the y axis."
+            },
+            {
+              "kind": "field",
+              "name": "events",
+              "type": {
+                "text": "FanChartEvent[]"
+              },
+              "default": "[]",
+              "description": "Optional labelled vertical markers, e.g. retirement."
+            },
+            {
+              "kind": "field",
+              "name": "now",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Position of the \"today\" divider as an ISO date. Defaults to the latest observed date.",
+              "attribute": "now"
+            },
+            {
+              "kind": "field",
+              "name": "nowLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Today\"",
+              "description": "Label drawn on the \"today\" divider.",
+              "attribute": "now-label"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "320",
+              "description": "Plot height in CSS pixels, excluding the legend.",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for numbers and dates.",
+              "attribute": "locale"
+            },
+            {
+              "kind": "field",
+              "name": "currency",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"USD\"",
+              "description": "ISO 4217 currency code for the default value format.",
+              "attribute": "currency"
+            },
+            {
+              "kind": "field",
+              "name": "valueFormat",
+              "type": {
+                "text": "((value: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Formats axis, legend, and tooltip values. Defaults to compact `currency` in `locale` (`$1.2M`)."
+            },
+            {
+              "kind": "field",
+              "name": "loader",
+              "type": {
+                "text": "FanChartLoader | null"
+              },
+              "default": "null",
+              "description": "Optional data source; its result replaces `series`. See the class docs."
+            },
+            {
+              "kind": "field",
+              "name": "refreshInterval",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Re-run `loader` every N seconds while the tab is visible; 0 (default) disables polling.",
+              "attribute": "refresh-interval"
+            },
+            {
+              "kind": "field",
+              "name": "_width",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_hoverT",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_announcement",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "_loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_error",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_ro",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_abort",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_timer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pressTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_suppressClick",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_pinned",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_layout",
+              "type": {
+                "text": "Layout | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_formatter",
+              "privacy": "private",
+              "default": "new FanFormatter()"
+            },
+            {
+              "kind": "method",
+              "name": "refresh",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "description": "Re-runs `loader` and redraws with its result; without a loader, just\nredraws (use after mutating `series` in place). Resolves once rendered."
+            },
+            {
+              "kind": "method",
+              "name": "_syncTimer",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_clearTimer",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_format",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_formatDate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "Intl.DateTimeFormatOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_month",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_goalText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_prepare",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PreparedSeries[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_visibleIds",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Set<string>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "all",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_yFactory",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "(top: number) => YScale"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "values",
+                  "type": {
+                    "text": "number[]"
+                  }
+                },
+                {
+                  "name": "bottom",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Returns a factory for the y scale given the plot's top edge, which depends on the marker-label rows."
+            },
+            {
+              "kind": "method",
+              "name": "_placeLabels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TopLabel[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "candidates",
+                  "type": {
+                    "text": "Omit<TopLabel, \"anchor\" | \"row\">[]"
+                  }
+                },
+                {
+                  "name": "right",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Places the \"today\" and event labels above the plot, stacking overlapping ones into extra rows."
+            },
+            {
+              "kind": "method",
+              "name": "_computeLayout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Layout | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "all",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_rowsAt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TooltipRow[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_nearestTime",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hoverAt",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onPlotPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onOutsidePointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_unpin",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_eventsAt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_describe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                },
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onLegendPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_cancelPress",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onLegendClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggleSeries",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toggle",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Shows only `id` (or all again when it is already the only one shown), or with `toggle` adds/removes it."
+            },
+            {
+              "kind": "method",
+              "name": "_legendValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "s",
+                  "type": {
+                    "text": "PreparedSeries"
+                  }
+                }
+              ],
+              "description": "The series' final projected median (or last observed value) and its year, for the legend."
+            },
+            {
+              "kind": "method",
+              "name": "_summary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderSeries",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderAxes",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderMarkers",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderGoal",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderHover",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderRange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "TooltipRow"
+                  }
+                }
+              ],
+              "description": "A miniature of the fan at one date: shaded bands scaled to the outer range, with the median as a dot."
+            },
+            {
+              "kind": "method",
+              "name": "_bandCaption",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "Names the range ends and inner bands for the tooltip, e.g. \"Range: P10–P90 · band: P25–P75\"."
+            },
+            {
+              "kind": "method",
+              "name": "_renderPlot",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "Layout | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderLegend",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "all",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                },
+                {
+                  "name": "shown",
+                  "type": {
+                    "text": "Set<string>"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "fan-chart-load",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`loader` resolved and the chart redrew. `detail: { series: FanChartSeries[] }`."
+            },
+            {
+              "name": "fan-chart-error",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`loader` threw or rejected; the last good data stays drawn. `detail: { error: unknown }`."
+            },
+            {
+              "name": "series-visibility-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Legend changed the visible series. `detail: { visible: string[] | null }` (null = all)."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "log",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Logarithmic y axis. Off by default; values ≤ 0 are drawn at the axis floor.",
+              "fieldName": "log"
+            },
+            {
+              "name": "now",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Position of the \"today\" divider as an ISO date. Defaults to the latest observed date.",
+              "fieldName": "now"
+            },
+            {
+              "name": "now-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Today\"",
+              "description": "Label drawn on the \"today\" divider.",
+              "fieldName": "nowLabel"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "320",
+              "description": "Plot height in CSS pixels, excluding the legend.",
+              "fieldName": "height"
+            },
+            {
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for numbers and dates.",
+              "fieldName": "locale"
+            },
+            {
+              "name": "currency",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"USD\"",
+              "description": "ISO 4217 currency code for the default value format.",
+              "fieldName": "currency"
+            },
+            {
+              "name": "refresh-interval",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Re-run `loader` every N seconds while the tab is visible; 0 (default) disables polling.",
+              "fieldName": "refreshInterval"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "fan-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FanChartProjectionPoint",
+          "declaration": {
+            "name": "FanChartProjectionPoint",
+            "module": "./utils/percentiles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartEvent",
+          "declaration": {
+            "name": "FanChartEvent",
+            "module": "./utils/fan-data.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartGoal",
+          "declaration": {
+            "name": "FanChartGoal",
+            "module": "./utils/fan-data.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartPoint",
+          "declaration": {
+            "name": "FanChartPoint",
+            "module": "./utils/fan-data.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartSeries",
+          "declaration": {
+            "name": "FanChartSeries",
+            "module": "./utils/fan-data.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChart",
+          "declaration": {
+            "name": "FanChart",
+            "module": "src/fan-chart.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "fan-chart",
+          "declaration": {
+            "name": "FanChart",
+            "module": "src/fan-chart.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/fan-table.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Tabular companion to `fan-chart`: the same `series`, `percentiles`, `goal`,\nand `events`, shown as one row per date and one column per series. Rows are\ngrouped into observed and projected sections around the \"today\" date\n(`now`, defaulting to the latest observed date). Observed cells show the\nvalue; projected cells show the median, the outer percentile range (e.g.\nP10–P90) beneath it, and — when the projection provides `goalProbability`\nand a `goal` is set — the share of runs reaching the goal. Events are named\nunder the date of the row they fall in.\n\n`interval` picks the rows: the last date of each year (default) or month, or\nevery date. Values use whole `currency` units in `locale` (en-US, USD), or\ncompact ones with `compact`; `valueFormat` overrides both. Pair it with a\nchart by forwarding `fan-chart`'s `series-visibility-change` detail to\n`visible`.\n\nThe header and date column stay pinned while the table scrolls; cap its\nheight with `--fan-table-max-height` (default none).",
+          "name": "FanTable",
+          "members": [
+            {
+              "kind": "field",
+              "name": "series",
+              "type": {
+                "text": "FanChartSeries[]"
+              },
+              "default": "[]",
+              "description": "Series to show, in `fan-chart`'s format. Assign a new array (or bind `.series` from Lit state) to redraw."
+            },
+            {
+              "kind": "field",
+              "name": "percentiles",
+              "type": {
+                "text": "number[]"
+              },
+              "default": "[10, 25, 50, 75, 90]",
+              "description": "Percentiles (0–100) that each projection point's `values` are aligned to; the outermost pair is shown."
+            },
+            {
+              "kind": "field",
+              "name": "goal",
+              "type": {
+                "text": "FanChartGoal | null"
+              },
+              "default": "null",
+              "description": "Optional goal; projected cells show the share of runs reaching it when the data provides `goalProbability`."
+            },
+            {
+              "kind": "field",
+              "name": "events",
+              "type": {
+                "text": "FanChartEvent[]"
+              },
+              "default": "[]",
+              "description": "Optional labelled dates, named under the row they fall in."
+            },
+            {
+              "kind": "field",
+              "name": "visible",
+              "type": {
+                "text": "string[] | null"
+              },
+              "default": "null",
+              "description": "IDs of the series to show as columns; `null` (default) shows all."
+            },
+            {
+              "kind": "field",
+              "name": "now",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Date splitting observed from projected rows, as an ISO date. Defaults to the latest observed date.",
+              "attribute": "now"
+            },
+            {
+              "kind": "field",
+              "name": "interval",
+              "type": {
+                "text": "FanTableInterval"
+              },
+              "default": "\"year\"",
+              "description": "Rows: the last date of each year (default) or month, or every date.",
+              "attribute": "interval"
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for numbers and dates.",
+              "attribute": "locale"
+            },
+            {
+              "kind": "field",
+              "name": "currency",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"USD\"",
+              "description": "ISO 4217 currency code for the default value format.",
+              "attribute": "currency"
+            },
+            {
+              "kind": "field",
+              "name": "compact",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Compact values (`$1.2M`) instead of whole units (`$1,234,567`).",
+              "attribute": "compact",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "valueFormat",
+              "type": {
+                "text": "((value: number) => string) | null"
+              },
+              "default": "null",
+              "description": "Formats values. Defaults to `currency` in `locale`, whole or `compact`."
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Visible table caption; when empty, a visually hidden \"Forecast\" caption names the table.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "dateLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Date\"",
+              "description": "Header of the date column.",
+              "attribute": "date-label"
+            },
+            {
+              "kind": "field",
+              "name": "observedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Observed\"",
+              "description": "Heading of the observed row group.",
+              "attribute": "observed-label"
+            },
+            {
+              "kind": "field",
+              "name": "projectedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Projected\"",
+              "description": "Heading of the projected row group.",
+              "attribute": "projected-label"
+            },
+            {
+              "kind": "field",
+              "name": "_formatter",
+              "privacy": "private",
+              "default": "new FanFormatter()"
+            },
+            {
+              "kind": "method",
+              "name": "_format",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_labels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "times",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ],
+              "description": "Labels each row at the interval's precision, refining any labels that would otherwise repeat."
+            },
+            {
+              "kind": "method",
+              "name": "_rows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ observed: TableRow[]; projected: TableRow[] }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "all",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                },
+                {
+                  "name": "columns",
+                  "type": {
+                    "text": "PreparedSeries[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderCell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "cell",
+                  "type": {
+                    "text": "FanValue | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderGroup",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "rows",
+                  "type": {
+                    "text": "TableRow[]"
+                  }
+                },
+                {
+                  "name": "span",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "now",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Date splitting observed from projected rows, as an ISO date. Defaults to the latest observed date.",
+              "fieldName": "now"
+            },
+            {
+              "name": "interval",
+              "type": {
+                "text": "FanTableInterval"
+              },
+              "default": "\"year\"",
+              "description": "Rows: the last date of each year (default) or month, or every date.",
+              "fieldName": "interval"
+            },
+            {
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"en-US\"",
+              "description": "BCP 47 locale for numbers and dates.",
+              "fieldName": "locale"
+            },
+            {
+              "name": "currency",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"USD\"",
+              "description": "ISO 4217 currency code for the default value format.",
+              "fieldName": "currency"
+            },
+            {
+              "name": "compact",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Compact values (`$1.2M`) instead of whole units (`$1,234,567`).",
+              "fieldName": "compact"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Visible table caption; when empty, a visually hidden \"Forecast\" caption names the table.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "date-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Date\"",
+              "description": "Header of the date column.",
+              "fieldName": "dateLabel"
+            },
+            {
+              "name": "observed-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Observed\"",
+              "description": "Heading of the observed row group.",
+              "fieldName": "observedLabel"
+            },
+            {
+              "name": "projected-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Projected\"",
+              "description": "Heading of the projected row group.",
+              "fieldName": "projectedLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "fan-table",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FanTable",
+          "declaration": {
+            "name": "FanTable",
+            "module": "src/fan-table.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "fan-table",
+          "declaration": {
+            "name": "FanTable",
+            "module": "src/fan-table.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/floating-text.ts",
       "declarations": [
         {
@@ -15821,6 +17157,110 @@
           "declaration": {
             "name": "WeightBarItem",
             "module": "./weight-bar-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChart",
+          "declaration": {
+            "name": "FanChart",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartEvent",
+          "declaration": {
+            "name": "FanChartEvent",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartGoal",
+          "declaration": {
+            "name": "FanChartGoal",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartLoader",
+          "declaration": {
+            "name": "FanChartLoader",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartPoint",
+          "declaration": {
+            "name": "FanChartPoint",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartSeries",
+          "declaration": {
+            "name": "FanChartSeries",
+            "module": "./fan-chart.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanTable",
+          "declaration": {
+            "name": "FanTable",
+            "module": "./fan-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanTableInterval",
+          "declaration": {
+            "name": "FanTableInterval",
+            "module": "./fan-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "samplePaths",
+          "declaration": {
+            "name": "samplePaths",
+            "module": "./utils/percentiles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sumPaths",
+          "declaration": {
+            "name": "sumPaths",
+            "module": "./utils/percentiles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "summarizePaths",
+          "declaration": {
+            "name": "summarizePaths",
+            "module": "./utils/percentiles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanChartProjectionPoint",
+          "declaration": {
+            "name": "FanChartProjectionPoint",
+            "module": "./utils/percentiles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SummarizePathsOptions",
+          "declaration": {
+            "name": "SummarizePathsOptions",
+            "module": "./utils/percentiles.js"
           }
         },
         {
@@ -30427,6 +31867,404 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utils/fan-data.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "FAN_COLORS",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ \"var(--ui-primary, #4f46e5)\", \"var(--ui-warning, #d97706)\", \"var(--ui-danger, #dc2626)\", \"var(--ui-info, #0ea5e9)\", \"var(--ui-success, #16a34a)\", ]"
+        },
+        {
+          "kind": "function",
+          "name": "toTime",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parses an ISO date (date-only strings as local midnight) to epoch milliseconds; NaN when invalid."
+        },
+        {
+          "kind": "function",
+          "name": "bracket",
+          "return": {
+            "type": {
+              "text": "[T, T, number] | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "points",
+              "type": {
+                "text": "T[]"
+              }
+            },
+            {
+              "name": "t",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Returns the bracketing samples and interpolation weight at `t`, or null when `t` is outside the samples."
+        },
+        {
+          "kind": "function",
+          "name": "lerp",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "a",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "b",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "k",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "sameMonth",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "a",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "b",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "center",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "values",
+              "type": {
+                "text": "number[]"
+              }
+            }
+          ],
+          "description": "Median of one projection point, or the midpoint of the two middle values for an even percentile count."
+        },
+        {
+          "kind": "function",
+          "name": "prepareSeries",
+          "return": {
+            "type": {
+              "text": "PreparedSeries[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "series",
+              "type": {
+                "text": "FanChartSeries[]"
+              }
+            },
+            {
+              "name": "percentiles",
+              "type": {
+                "text": "number[]"
+              }
+            },
+            {
+              "name": "goal",
+              "type": {
+                "text": "number | undefined"
+              }
+            }
+          ],
+          "description": "Parses, validates, and sorts series for rendering. Projection points whose\n`values` don't match `percentiles` are dropped, and each projection (and its\nsamples) is anchored at the last observed value so past and future connect."
+        },
+        {
+          "kind": "function",
+          "name": "visibleIds",
+          "return": {
+            "type": {
+              "text": "Set<string>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "series",
+              "type": {
+                "text": "PreparedSeries[]"
+              }
+            },
+            {
+              "name": "visible",
+              "type": {
+                "text": "string[] | null"
+              }
+            }
+          ],
+          "description": "IDs of the series to show: `visible` filtered to known IDs, or all when that leaves none."
+        },
+        {
+          "kind": "function",
+          "name": "valueAt",
+          "return": {
+            "type": {
+              "text": "FanValue | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "series",
+              "type": {
+                "text": "PreparedSeries"
+              }
+            },
+            {
+              "name": "t",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "withGoal",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "Interpolates a series at `t`: the observed value when `t` is within its\nhistory, otherwise the projected median, bands, and goal share. Returns null\nwhen `t` is outside the series."
+        },
+        {
+          "kind": "function",
+          "name": "bandNames",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "percentiles",
+              "type": {
+                "text": "number[]"
+              }
+            }
+          ],
+          "description": "Names the outer range and inner bands, e.g. [\"P10–P90\", \"P25–P75\"]."
+        },
+        {
+          "kind": "class",
+          "description": "Cached `Intl` currency and date formatting; invalid locales or currencies fall back to en-US / USD.",
+          "name": "FanFormatter",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cache",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, Intl.NumberFormat | Intl.DateTimeFormat>()"
+            },
+            {
+              "kind": "method",
+              "name": "money",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "locale",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "currency",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "compact",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Formats `value` as `currency` in `locale`, compact (`$1.2M`, 3 significant digits) or whole units."
+            },
+            {
+              "kind": "method",
+              "name": "date",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "locale",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "Intl.DateTimeFormatOptions"
+                  }
+                }
+              ],
+              "description": "Formats epoch milliseconds `t` in `locale`."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FAN_COLORS",
+          "declaration": {
+            "name": "FAN_COLORS",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toTime",
+          "declaration": {
+            "name": "toTime",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bracket",
+          "declaration": {
+            "name": "bracket",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "lerp",
+          "declaration": {
+            "name": "lerp",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sameMonth",
+          "declaration": {
+            "name": "sameMonth",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "center",
+          "declaration": {
+            "name": "center",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "prepareSeries",
+          "declaration": {
+            "name": "prepareSeries",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "visibleIds",
+          "declaration": {
+            "name": "visibleIds",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "valueAt",
+          "declaration": {
+            "name": "valueAt",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bandNames",
+          "declaration": {
+            "name": "bandNames",
+            "module": "src/utils/fan-data.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FanFormatter",
+          "declaration": {
+            "name": "FanFormatter",
+            "module": "src/utils/fan-data.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utils/form-field-control.ts",
       "declarations": [
         {
@@ -30698,6 +32536,123 @@
           "declaration": {
             "name": "claimEscape",
             "module": "src/utils/layer-stack.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils/percentiles.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "summarizePaths",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "dates",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "One date per time step."
+            },
+            {
+              "name": "paths",
+              "type": {
+                "text": "number[][]"
+              },
+              "description": "Simulated runs; each is one value per date, so `paths[run][step]`."
+            },
+            {
+              "name": "percentiles",
+              "default": "[10, 25, 50, 75, 90]",
+              "type": {
+                "text": "number[]"
+              },
+              "description": "Percentiles (0–100) to compute at every step."
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "SummarizePathsOptions"
+              },
+              "description": "`goal` adds each step's share of runs at or above it."
+            }
+          ],
+          "description": "Summarizes raw simulation paths into `fan-chart` projection points."
+        },
+        {
+          "kind": "function",
+          "name": "samplePaths",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "paths",
+              "type": {
+                "text": "number[][]"
+              },
+              "description": "Simulated runs, `paths[run][step]`."
+            },
+            {
+              "name": "count",
+              "default": "5",
+              "description": "Number of runs to pick."
+            }
+          ],
+          "description": "Picks representative runs to draw as a series' `samples`: the runs whose\nfinal values sit at evenly spaced ranks (e.g. 10th, 30th, 50th, 70th, and\n90th percentile for five)."
+        },
+        {
+          "kind": "function",
+          "name": "sumPaths",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "pathSets",
+              "type": {
+                "text": "number[][][]"
+              },
+              "description": "One `paths[run][step]` array per account, from the same simulated scenarios."
+            }
+          ],
+          "description": "Adds simulated runs of several accounts run-by-run, giving the runs of\ntheir total. Percentiles do not add — the 10th percentile of a total is not\nthe sum of each account's 10th percentile — so summarize a total series from\nthese summed runs rather than by adding summarized values."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "summarizePaths",
+          "declaration": {
+            "name": "summarizePaths",
+            "module": "src/utils/percentiles.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "samplePaths",
+          "declaration": {
+            "name": "samplePaths",
+            "module": "src/utils/percentiles.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sumPaths",
+          "declaration": {
+            "name": "sumPaths",
+            "module": "src/utils/percentiles.ts"
           }
         }
       ]
