@@ -30582,6 +30582,28 @@
             },
             {
               "kind": "method",
+              "name": "_restoreTimers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Restores active deadlines after a host is moved back into the document."
+            },
+            {
+              "kind": "method",
+              "name": "_clearTimers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Cancels every scheduled toast update without changing the visible stack."
+            },
+            {
+              "kind": "method",
               "name": "_scheduleTimer",
               "privacy": "private",
               "return": {
@@ -30806,6 +30828,10 @@
         {
           "kind": "variable",
           "name": "duration"
+        },
+        {
+          "kind": "variable",
+          "name": "remaining"
         },
         {
           "kind": "function",

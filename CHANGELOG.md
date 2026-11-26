@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Fixed component lifecycle edge cases (1.53.1): `fan-chart` now shows “No data” when a fixed x range contains no points;
+- Fixed component lifecycle edge cases (1.53.2): `fan-chart` now shows “No data” when a fixed x range contains no points;
   `percent-bar-chart`, `distribution-chart`, and `dag-graph` resume responsive measurement after being reattached;
   `form-field` restores native/delegated floating-label wiring after reattach; and `toast-notification` drops expired
   timers and resumes active ones when its host reconnects.
