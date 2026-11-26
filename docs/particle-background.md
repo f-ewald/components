@@ -48,7 +48,7 @@ import "@f-ewald/components/particle-background.js";
 | --- | --- | --- | --- | --- |
 | `mode` | `mode` | `ParticleBackgroundMode` | `"drift"` | How the ring moves: `drift` wanders on its own, `follow` eases toward the pointer while it is over the host. |
 | `contained` | `contained` | `boolean` | `false` | Fills the nearest positioned ancestor instead of the viewport. |
-| `spacing` | `spacing` | `number` | `24` | Average distance between particles in CSS pixels (minimum `4`). Particle size scales with it. |
+| `spacing` | `spacing` | `number` | `34` | Average distance between particles in CSS pixels (minimum `4`). Particle size scales with it. |
 
 ## Events
 

@@ -2388,7 +2388,7 @@ hidden. The canvas is hidden from assistive technology.
 
 Import: `import "@f-ewald/components/particle-background.js";`
 
-Properties: `mode` (attribute `mode`) : ParticleBackgroundMode, default "drift"; `contained` (attribute `contained`) : boolean, default false; `spacing` (attribute `spacing`) : number, default 24
+Properties: `mode` (attribute `mode`) : ParticleBackgroundMode, default "drift"; `contained` (attribute `contained`) : boolean, default false; `spacing` (attribute `spacing`) : number, default 34
 Events: none
 CSS custom properties: `--ui-danger`, `--ui-primary`, `--ui-warning`
 

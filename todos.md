@@ -1,7 +1,6 @@
 # TODO
 
-- [x] Extend the playground to show a calendar with the current day on the next three day. Use the calendar day component for this. The current day should be on the left, the next day should be in the middle and the day after that should be on the right.
-- [x] For the calendar day I would like to add the optional Boolean flag to show a time marker which should be a fine line similar to Google Calendar showing the current time on the day. 
-- [x] Again, also for calendar day, weekends should be highlighted similar to the monthly view.
-- [x] Calendar entries for days weekly view and monthly view should support an optional location slot that is prefixed with a location marker. 
-- [x] In a container it should be possible to line up as many days next to each other as the user wants when the width of each single day exceeds the viewport it should be auto scrollable to the left and right. 
+- [ ] 
+- [ ] html standards follow-ups (see `claude-skills/programming-standards/html.md`): `popover-panel` centered mode is still a hand-rolled modal (`role="dialog" aria-modal` + own focus trap) — move it to native `<dialog>`; anchored mode waits on CSS anchor positioning / `popover` support.
+- [ ] `dropdown-button` keeps `role="menu"`/`menuitem` deliberately (no native menu widget); revisit only if it adopts `popover` for light-dismiss/top-layer.
+- [ ] `chevron-panel` already uses a real `<button aria-expanded>`; could become `<details>`/`<summary>` if the chevron rotation and `toggle` event contract can be kept.

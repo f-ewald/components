@@ -24415,7 +24415,7 @@
               "type": {
                 "text": "number"
               },
-              "default": "24",
+              "default": "34",
               "description": "Average distance between particles in CSS pixels (minimum `4`). Particle\nsize scales with it.",
               "attribute": "spacing"
             },
@@ -24796,7 +24796,7 @@
               "type": {
                 "text": "number"
               },
-              "default": "24",
+              "default": "34",
               "description": "Average distance between particles in CSS pixels (minimum `4`). Particle\nsize scales with it.",
               "fieldName": "spacing"
             }

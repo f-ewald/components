@@ -11,7 +11,7 @@ const MAX_PARTICLES = 40_000;
 /** Smallest accepted `spacing`, in CSS pixels. */
 const MIN_SPACING = 4;
 /** Particle length per unit of scale, as a share of the spacing. */
-const SIZE_PER_SPACING = 0.15;
+const SIZE_PER_SPACING = 0.11;
 /** Fixed clock and ring position for the reduced-motion still frame. */
 const STILL_TIME = 12;
 /** Elapsed seconds wrap here to keep shader noise inputs well-conditioned. */
@@ -75,7 +75,7 @@ const VERTEX_SHADER = /* glsl */ `#version 300 es
   }
 
   void main() {
-    float t = uTime * 0.5;
+    float t = uTime * 0.9;
     vec2 p = aRest / uUnit;
     float dist = distance(p, uRing);
     float dist1 = distance(p + noise(vec3(p * 0.1 + 18.49, t * 0.5)) * 0.01, uRing);
@@ -87,25 +87,25 @@ const VERTEX_SHADER = /* glsl */ `#version 300 es
 
     float scale = wide + narrow * 3.0 + disc * 0.4;
     scale += noise(vec3(p * 13.5 + 11.49, t * 0.5)) * disc * 0.5;
-    scale += pow((ambient + 1.5) * 0.5, 2.0) * 0.6;
+    scale += pow((ambient + 1.0) * 0.5, 2.0) * 0.45;
 
     vec2 disp = vec2(
-      noise(vec3(p * 1.8 + vec2(88.49, 32.44), t * 0.35)),
-      noise(vec3(p * 1.8 + vec2(50.90, 120.95), t * 0.35))
-    ) * 0.06;
+      noise(vec3(p * 1.8 + vec2(88.49, 32.44), t * 0.55)),
+      noise(vec3(p * 1.8 + vec2(50.90, 120.95), t * 0.55))
+    ) * 0.08;
     disp += vec2(
       noise(vec3(p * 9.0 + vec2(18.49, 72.97), t * 0.5)),
       noise(vec3(p * 9.0 + vec2(50.90, 120.95), t * 0.5))
-    ) * 0.011;
+    ) * 0.018;
     float far = clamp(dist, 0.0, 1.0) * 0.044;
     disp += vec2(sin(p.x * 9.0 + t * 4.0), cos(p.y * 9.0 + t * 3.0)) * far;
 
     vec2 pos = p + disp;
-    pos += (pos - uRing) * pow(narrow, 0.75) * 0.08;
+    pos += (pos - uRing) * pow(narrow, 0.75) * 0.12;
 
     vScale = scale;
-    vAngle = atan(p.y - uRing.y, p.x - uRing.x) + noise(vec3(p * 4.5 + 7.3, uTime * 0.85)) * 0.5;
-    vTone = noise(vec3(p * 0.9 + vec2(74.66, 91.56), uTime * 0.5)) * 0.5 + 0.5;
+    vAngle = atan(p.y - uRing.y, p.x - uRing.x) + noise(vec3(p * 4.5 + 7.3, uTime * 1.1)) * 0.75;
+    vTone = noise(vec3(p * 0.9 + vec2(74.66, 91.56), uTime * 0.75)) * 0.5 + 0.5;
 
     vec2 clip = (pos * uUnit / uResolution) * 2.0 - 1.0;
     gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
@@ -245,7 +245,7 @@ export class ParticleBackground extends LitElement {
    * size scales with it.
    */
   @property({ type: Number })
-  spacing: number = 24;
+  spacing: number = 34;
 
   private _gl?: WebGL2RenderingContext;
   private _program?: WebGLProgram;
@@ -361,7 +361,7 @@ export class ParticleBackground extends LitElement {
   }
 
   private get _spacing(): number {
-    return Number.isFinite(this.spacing) ? Math.max(MIN_SPACING, this.spacing) : 24;
+    return Number.isFinite(this.spacing) ? Math.max(MIN_SPACING, this.spacing) : 34;
   }
 
   private get _animating(): boolean {
