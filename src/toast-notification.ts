@@ -368,10 +368,41 @@ export class ToastNotification extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     if ("popover" in HTMLElement.prototype) this.popover = "manual";
+    this._restoreTimers();
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
+    this._clearTimers();
+    this._interaction.clear();
+  }
+
+  /** Restores active deadlines after a host is moved back into the document. */
+  private _restoreTimers(): void {
+    this._clearTimers();
+    const now = Date.now();
+    const restored: Toast[] = [];
+    for (const toast of this._toasts) {
+      if (toast.duration === 0) {
+        restored.push(toast);
+        continue;
+      }
+      const remaining = toast.paused ? toast.remaining : toast.endTime - now;
+      if (remaining <= 0) {
+        this._interaction.delete(toast.id);
+        continue;
+      }
+      const next = { ...toast, paused: false, remaining, endTime: now + remaining };
+      restored.push(next);
+      this._scheduleTimer(next.id, remaining);
+    }
+    this._toasts = restored;
+    this._syncTicking();
+    if (restored.length > 0) this._promote();
+  }
+
+  /** Cancels every scheduled toast update without changing the visible stack. */
+  private _clearTimers(): void {
     for (const timer of this._timers.values()) clearTimeout(timer);
     this._timers.clear();
     if (this._tickTimer) clearInterval(this._tickTimer);

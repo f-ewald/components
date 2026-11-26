@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Fixed component lifecycle edge cases (1.53.1): `fan-chart` now shows “No data” when a fixed x range contains no points;
+  `percent-bar-chart`, `distribution-chart`, and `dag-graph` resume responsive measurement after being reattached;
+  `form-field` restores native/delegated floating-label wiring after reattach; and `toast-notification` drops expired
+  timers and resumes active ones when its host reconnects.
 - New `<line-chart>` (1.53.0): multi-series line chart with linear, logarithmic, or time x axes, linear/log y axes,
   optional shaded bands per series, dashed series lines, horizontal/vertical/diagonal (`y = x`) reference lines,
   clickable points (`line-point-select`), a `selected-x` vertical highlight, an interactive isolate/toggle

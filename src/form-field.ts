@@ -341,6 +341,12 @@ export class FormField extends LitElement {
     });
   };
 
+  /** Restores delegated labels and native listeners after this field is reattached. */
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (this.hasUpdated) this.#syncControls();
+  }
+
   /** Synchronizes label configuration after the component first renders. */
   protected override firstUpdated(): void {
     this.#syncControls();

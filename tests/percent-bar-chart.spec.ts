@@ -217,4 +217,21 @@ test.describe("percent-bar-chart", () => {
     // the full 96px track (COL_TRACK_H) that an auto-computed domain would reach.
     expect(Math.max(...heights)).toBeLessThan(96 * 0.5);
   });
+
+  test("resumes measuring after the chart is removed and reattached", async ({ page }) => {
+    await page.goto("/");
+    const chart = page.locator("#percent-bar-demo");
+    await chart.evaluate((element: HTMLElement) => {
+      element.style.display = "block";
+      element.style.width = "300px";
+    });
+    await expect(chart.locator("svg")).toHaveAttribute("width", "300");
+
+    await chart.evaluate((element: HTMLElement) => {
+      element.remove();
+      element.style.width = "600px";
+      document.body.append(element);
+    });
+    await expect(chart.locator("svg")).toHaveAttribute("width", "600");
+  });
 });

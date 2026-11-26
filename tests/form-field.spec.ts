@@ -155,6 +155,44 @@ test.describe("form-field", () => {
     ).toHaveClass(/multiline/);
   });
 
+  test("restores native and delegated floating-label wiring after reattach", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(async () => {
+      const nativeField = Object.assign(document.createElement("form-field"), {
+        id: "reattach-native-field",
+        floatingLabel: true,
+        label: "Name",
+      });
+      const input = Object.assign(document.createElement("input"), {
+        id: "reattach-native-input",
+        placeholder: "Your name",
+      });
+      nativeField.append(input);
+
+      const delegatedField = Object.assign(document.createElement("form-field"), {
+        id: "reattach-delegated-field",
+        floatingLabel: true,
+        label: "Language",
+      });
+      const autocomplete = Object.assign(document.createElement("autocomplete-input"), {
+        id: "reattach-autocomplete",
+      });
+      delegatedField.append(autocomplete);
+      document.body.append(nativeField, delegatedField);
+      await Promise.all([nativeField.updateComplete, delegatedField.updateComplete]);
+
+      nativeField.remove();
+      delegatedField.remove();
+      document.body.append(nativeField, delegatedField);
+    });
+
+    await expect(page.locator("#reattach-autocomplete .floating-label")).toHaveText("Language");
+    const input = page.locator("#reattach-native-input");
+    await input.fill("Ada");
+    await input.blur();
+    await expect(page.locator("#reattach-native-field .control-label")).toHaveClass(/has-value/);
+  });
+
   test("floating-label falls back to the external label for unsupported controls", async ({
     page,
   }) => {

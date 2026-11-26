@@ -256,6 +256,23 @@ test.describe("fan-chart", () => {
     await expect(chart.locator(".tooltip-date")).toHaveText("Mar 3, 2024");
   });
 
+  test("shows the no-data state when a fixed x-domain contains no values", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      const chart = Object.assign(document.createElement("fan-chart"), {
+        id: "fan-empty-window",
+        series: [{ id: "a", label: "Alpha", actual: [{ date: "2024-01-01", value: 100 }] }],
+        xDomain: ["2030-01-01", "2031-01-01"],
+      });
+      chart.style.cssText = "display:block;width:600px";
+      document.body.append(chart);
+    });
+
+    const chart = page.locator("#fan-empty-window");
+    await expect(chart.locator(".message")).toHaveText("No data");
+    await expect(chart.locator("svg")).toHaveCount(0);
+  });
+
   test("interactive=false disables legend toggling and tooltip=false disables hover tooltips", async ({ page }) => {
     const chart = await mount(page);
     await chart.evaluate((el) => {

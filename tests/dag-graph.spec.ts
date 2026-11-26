@@ -272,4 +272,23 @@ test.describe("dag-graph", () => {
     await expect(empty.locator('svg[role="group"]')).toHaveAttribute("aria-label", "Empty graph: 0 nodes, 0 edges");
     await expect(empty.getByText("Select a package to see its dependencies.")).toBeVisible();
   });
+
+  test("resumes measuring after the graph is removed and reattached", async ({ page }) => {
+    const graph = await openDemo(page);
+    await graph.evaluate((element: HTMLElement & { isStatic: boolean }) => {
+      element.style.display = "block";
+      element.style.width = "300px";
+      element.style.height = "240px";
+      element.isStatic = true;
+    });
+    await expect(graph.locator('svg[role="group"]')).toBeVisible();
+    const before = await transform(graph);
+
+    await graph.evaluate((element: HTMLElement) => {
+      element.remove();
+      element.style.width = "600px";
+      document.body.append(element);
+    });
+    await expect.poll(() => transform(graph)).not.toBe(before);
+  });
 });

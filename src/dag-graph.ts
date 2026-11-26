@@ -416,6 +416,8 @@ export class DagGraph extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this._resizeObserver = new ResizeObserver((entries) => this._resize(entries[0]?.contentRect));
+    const canvas = this.renderRoot.querySelector(".canvas");
+    if (canvas) this._resizeObserver.observe(canvas);
   }
 
   override disconnectedCallback(): void {

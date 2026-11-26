@@ -124,7 +124,8 @@ export class PercentBarChart extends LitElement {
     return Math.max(0.000001, ...this.groups.map((g) => g.value));
   }
 
-  override firstUpdated() {
+  override connectedCallback() {
+    super.connectedCallback();
     this._ro = new ResizeObserver((entries) => {
       const w = Math.floor(entries[0].contentRect.width);
       if (w > 0 && w !== this._width) this._width = w;

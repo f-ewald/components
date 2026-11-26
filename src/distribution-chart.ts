@@ -177,15 +177,12 @@ export class DistributionChart extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this._maybeFetch();
-  }
-
-  override firstUpdated() {
     this._ro = new ResizeObserver((entries) => {
       const w = Math.floor(entries[0].contentRect.width);
       if (w > 0 && w !== this._width) this._width = w;
     });
     this._ro.observe(this);
+    this._maybeFetch();
   }
 
   override disconnectedCallback() {

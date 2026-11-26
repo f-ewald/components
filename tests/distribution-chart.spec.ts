@@ -90,4 +90,22 @@ test.describe("distribution-chart", () => {
     await resolveMetric("empty", true);
     await expect(chart.locator(".empty")).toHaveText("No distribution data");
   });
+
+  test("resumes measuring after the chart is removed and reattached", async ({ page }) => {
+    await page.goto("/");
+    const chart = page.locator("#distribution-demo");
+    await expect(chart.locator("svg")).toBeVisible();
+    await chart.evaluate((element: HTMLElement) => {
+      element.style.display = "block";
+      element.style.width = "300px";
+    });
+    await expect(chart.locator("svg")).toHaveAttribute("width", "300");
+
+    await chart.evaluate((element: HTMLElement) => {
+      element.remove();
+      element.style.width = "600px";
+      document.body.append(element);
+    });
+    await expect(chart.locator("svg")).toHaveAttribute("width", "600");
+  });
 });

@@ -668,6 +668,16 @@ export class FanChart extends LitElement {
 
     const allTimes = all.flatMap((s) => [...s.actual.map((p) => p.t), ...s.projection.map((p) => p.t)]);
     const xRange = this._xExtent(allTimes);
+    const [lo, hi] = xRange;
+    const hasDataInWindow = visible.some((s) => {
+      const runs = [s.actual, s.projection, ...s.samples];
+      return runs.some(
+        (run) =>
+          run.some((point) => point.t >= lo && point.t <= hi) ||
+          (run.length > 1 && run[0].t < lo && run[run.length - 1].t > hi),
+      );
+    });
+    if (!hasDataInWindow) return null;
     const values = visible.flatMap((s) => [
       ...inWindow(s.actual, xRange).map((p) => p.v),
       ...inWindow(s.projection, xRange).flatMap((p) => p.values),

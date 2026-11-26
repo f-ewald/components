@@ -289,4 +289,40 @@ test.describe("toast-notification", () => {
     await expect(toast).toBeVisible();
     await expect(toast).toHaveCount(0, { timeout: 3500 });
   });
+
+  test("drops timed-out toasts when the host is reattached after a deadline", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      const host = document.createElement("toast-notification") as HTMLElement & {
+        show: (message: string, options: { duration: number }) => number;
+      };
+      host.id = "reattach-toast";
+      document.body.append(host);
+      host.show("Expires while detached", { duration: 100 });
+      host.remove();
+      setTimeout(() => document.body.append(host), 250);
+    });
+
+    const host = page.locator("#reattach-toast");
+    await expect(host).toBeAttached();
+    await expect(host.locator(".toast")).toHaveCount(0);
+  });
+
+  test("resumes an active toast deadline after reattach", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      const host = document.createElement("toast-notification") as HTMLElement & {
+        show: (message: string, options: { duration: number }) => number;
+      };
+      host.id = "active-reattach-toast";
+      document.body.append(host);
+      host.show("Resumes after detach", { duration: 1000 });
+      host.remove();
+      setTimeout(() => document.body.append(host), 100);
+    });
+
+    const host = page.locator("#active-reattach-toast");
+    await expect(host.locator(".toast")).toHaveCount(1);
+    await expect(host.locator(".toast")).toHaveCount(0, { timeout: 1300 });
+  });
 });
